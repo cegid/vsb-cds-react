@@ -1,7 +1,7 @@
 {
   "name": "@cegid/vsb-cds-react",
-  "version": "0.0.1",
-  "description": "xxx",
+  "version": "0.1.0",
+  "description": "The BIM! by Cegid theme for the Cegid Design System",
   "main": "dist/index.js",
   "module": "dist/bimp-ds.esm.js",
   "types": "dist/index.d.ts",
@@ -32,9 +32,11 @@
     "ui",
     "components"
   ],
-  "author": "xxx",
+  "author": "Cegid",
   "license": "ISC",
   "peerDependencies": {
+    "@cegid/cds-react": "^3.26.1",
+    "@cegid/icons-react": "^3.2.3",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
     "@mui/material": "^5.0.0",
@@ -42,6 +44,8 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@cegid/cds-react": "^3.26.1",
+    "@cegid/icons-react": "^3.3.0",
     "@chromatic-com/storybook": "^3.2.6",
     "@date-io/date-fns": "^3.2.1",
     "@emotion/react": "^11.14.0",
