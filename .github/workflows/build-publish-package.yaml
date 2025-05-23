@@ -14,6 +14,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Install dependencies
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_EMAIL: ${{ secrets.NPM_AUTH_EMAIL }}
+        run: |
+          echo "email=${NPM_AUTH_EMAIL}" > .npmrc
+          echo "always-auth=true" >> .npmrc
+          echo "registry=https://cegid.jfrog.io/artifactory/api/npm/all-npm/" >> .npmrc
+          echo "//cegid.jfrog.io/artifactory/api/npm/all-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          echo "//cegid.jfrog.io/artifactory/api/npm/aca-npm-all/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          echo "//cegid.jfrog.io/cegid/api/npm/all-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          echo "//cegid.jfrog.io/cegid/api/npm/yupana-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          echo "//cegid.jfrog.io/cegid/api/npm/loop-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          pnpm install --frozen-lockfile
       - run: npm ci
       - run: npm test
 
