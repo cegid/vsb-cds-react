@@ -34,7 +34,7 @@ jobs:
       
       - run: npm pack
       
-      - name: Install dependencies
+      - name: Update npmrc
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           NPM_AUTH_EMAIL: ${{ secrets.NPM_AUTH_EMAIL }}
@@ -43,5 +43,5 @@ jobs:
           echo "always-auth=true" >> .npmrc
           echo "@vsbCdsReact=https://cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/" >> .npmrc
 
-      - run: npm publish --scpope @vsbCdsReact
+      - run: npm publish --scope @vsbCdsReact
 
