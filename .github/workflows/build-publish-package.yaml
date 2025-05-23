@@ -41,7 +41,8 @@ jobs:
         run: |
           echo "email=${NPM_AUTH_EMAIL}" > .npmrc
           echo "always-auth=true" >> .npmrc
-          echo "@vsbCdsReact=https://cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          echo "registryCegid=https://cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/" >> .npmrc
+          echo "//cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
 
-      - run: npm publish --scope @vsbCdsReact
+      - run: npm publish --scope=registryCegid
 
