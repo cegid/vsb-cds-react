@@ -11,9 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          registry-url: https://cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/
+          
       - name: Install dependencies
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -28,19 +31,17 @@ jobs:
           echo "//cegid.jfrog.io/cegid/api/npm/yupana-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
           echo "//cegid.jfrog.io/cegid/api/npm/loop-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
           npm install --frozen-lockfile
-      - run: npm ci
-      - run: npm test
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: https://cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/
-      - run: npm ci
-      - run: npm publish
+      
+      - run: npm pack
+      
+      - name: Install dependencies
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_EMAIL: ${{ secrets.NPM_AUTH_EMAIL }}
+        run: |
+          echo "email=${NPM_AUTH_EMAIL}" > .npmrc
+          echo "always-auth=true" >> .npmrc
+          echo "@vsbCdsReact=https://cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/" >> .npmrc
+
+      - run: npm publish --scpope @vsbCdsReact
+
