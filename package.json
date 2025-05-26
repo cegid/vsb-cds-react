@@ -1,7 +1,7 @@
 {
-  "name": "@cegid/bim-ds",
+  "name": "@cegid/vsb-cds-react",
   "version": "0.2.0",
-  "description": "Thème BIM personnalisé et composants",
+  "description": "The BIM! by Cegid theme for the Cegid Design System",
   "main": "dist/index.js",
   "module": "dist/bimp-ds.esm.js",
   "types": "dist/index.d.ts",
