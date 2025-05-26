@@ -1,16 +1,20 @@
-import '@mui/material/styles';
-import '@mui/material/Typography';
-import '@cegid/cds-react';
+import "@mui/material/styles";
+import "@mui/material/Typography";
+import "@cegid/cds-react";
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface TypographyVariants {
     // Title styles
+    displayMRegular: React.CSSProperties;
+    displayMSemiBold: React.CSSProperties;
+    displaySRegular: React.CSSProperties;
+    displaySSemiBold: React.CSSProperties;
+    headLineMRegular: React.CSSProperties;
+    headLineMSemiBold: React.CSSProperties;
+    headLineSRegular: React.CSSProperties;
+    headLineSSemiBold: React.CSSProperties;
     titleLRegular: React.CSSProperties;
     titleLSemiBold: React.CSSProperties;
-    titleMRegular: React.CSSProperties;
-    titleMSemiBold: React.CSSProperties;
-    titleSRegular: React.CSSProperties;
-    titleSSemiBold: React.CSSProperties;
 
     // Body styles
     bodyMRegular: React.CSSProperties;
@@ -18,27 +22,31 @@ declare module '@mui/material/styles' {
     bodySRegular: React.CSSProperties;
     bodySMedium: React.CSSProperties;
     bodySSemiBold: React.CSSProperties;
-    bodyXSRegular: React.CSSProperties;
-    bodyXSSemiBold: React.CSSProperties;
+    captionSemiBold: React.CSSProperties;
+    captionRegular: React.CSSProperties;
   }
 
   interface TypographyVariantsOptions {
     // Title styles
-    titleLRegular?: React.CSSProperties;
-    titleLSemiBold?: React.CSSProperties;
-    titleMRegular?: React.CSSProperties;
-    titleMSemiBold?: React.CSSProperties;
-    titleSRegular?: React.CSSProperties;
-    titleSSemiBold?: React.CSSProperties;
+    displayMRegular: React.CSSProperties;
+    displayMSemiBold: React.CSSProperties;
+    displaySRegular: React.CSSProperties;
+    displaySSemiBold: React.CSSProperties;
+    headLineMRegular: React.CSSProperties;
+    headLineMSemiBold: React.CSSProperties;
+    headLineSRegular: React.CSSProperties;
+    headLineSSemiBold: React.CSSProperties;
+    titleLRegular: React.CSSProperties;
+    titleLSemiBold: React.CSSProperties;
 
     // Body styles
-    bodyMRegular?: React.CSSProperties;
-    bodyMSemiBold?: React.CSSProperties;
-    bodySRegular?: React.CSSProperties;
-    bodySMedium?: React.CSSProperties;
-    bodySSemiBold?: React.CSSProperties;
-    bodyXSRegular?: React.CSSProperties;
-    bodyXSSemiBold?: React.CSSProperties;
+    bodyMRegular: React.CSSProperties;
+    bodyMSemiBold: React.CSSProperties;
+    bodySRegular: React.CSSProperties;
+    bodySMedium: React.CSSProperties;
+    bodySSemiBold: React.CSSProperties;
+    captionSemiBold: React.CSSProperties;
+    captionRegular: React.CSSProperties;
   }
 
   interface TypeBackground {
@@ -89,37 +97,40 @@ declare module '@mui/material/styles' {
     };
   }
   interface Palette {
-    neutral: Palette['primary'];
-    yellow: Palette['primary'];
-    banana: Palette['primary'];
-    critical: Palette['primary'];
-    pink: Palette['primary'];
-    purple: Palette['primary'];
-    plum: Palette['primary'];
-    beige: Palette['primary'];
+    neutral: Palette["primary"];
+    yellow: Palette["primary"];
+    banana: Palette["primary"];
+    critical: Palette["primary"];
+    pink: Palette["primary"];
+    purple: Palette["primary"];
+    plum: Palette["primary"];
+    beige: Palette["primary"];
   }
 
   interface PaletteOptions {
-    neutral?: PaletteOptions['primary'];
-    yellow?: PaletteOptions['primary'];
-    banana?: PaletteOptions['primary'];
-    critical?: PaletteOptions['primary'];
-    pink?: PaletteOptions['primary'];
-    purple?: PaletteOptions['primary'];
-    plum?: PaletteOptions['primary'];
-    beige?: PaletteOptions['primary'];
+    neutral?: PaletteOptions["primary"];
+    yellow?: PaletteOptions["primary"];
+    banana?: PaletteOptions["primary"];
+    critical?: PaletteOptions["primary"];
+    pink?: PaletteOptions["primary"];
+    purple?: PaletteOptions["primary"];
+    plum?: PaletteOptions["primary"];
+    beige?: PaletteOptions["primary"];
   }
 }
 
-declare module '@mui/material/Typography' {
+declare module "@mui/material/Typography" {
   interface TypographyPropsVariantOverrides {
     // Title styles
+    displayMRegular: true;
+    displaySRegular: true;
+    displaySSemiBold: true;
+    headLineMRegular: true;
+    headLineMSemiBold: true;
+    headLineSRegular: true;
+    headLineSSemiBold: true;
     titleLRegular: true;
     titleLSemiBold: true;
-    titleMRegular: true;
-    titleMSemiBold: true;
-    titleSRegular: true;
-    titleSSemiBold: true;
 
     // Body styles
     bodyMRegular: true;
@@ -127,7 +138,7 @@ declare module '@mui/material/Typography' {
     bodySRegular: true;
     bodySMedium: true;
     bodySSemiBold: true;
-    bodyXSRegular: true;
-    bodyXSSemiBold: true;
+    captionSemiBold: true;
+    captionRegular: true;
   }
 }

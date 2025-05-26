@@ -59,31 +59,23 @@ export const VSBTheme = createTheme({
     MuiCssBaseline: {
       styleOverrides: `
         @font-face {
-          font-family: 'ManropeRegular';
-          src: url('/theme/fonts/Manrope-Regular.woff2') format('woff2');
+          font-family: 'DMSansRegular';
+          src: url('/theme/fonts/DMSans-Regular.woff2') format('woff2');
           font-style: normal;
           font-display: swap;
         }
         @font-face {
-          font-family: 'ManropeMedium';
-          src: url('/theme/fonts/Manrope-Medium.woff2') format('woff2');
+          font-family: 'DMSansSemiBold';
+          src: url('/theme/fonts/DMSans-SemiBold.woff2') format('woff2');
           font-style: normal;
           font-display: swap;
         }
         @font-face {
-          font-family: 'ManropeSemiBold';
-          src: url('/theme/fonts/Manrope-SemiBold.woff2') format('woff2');
+          font-family: 'DMSansMedium';
+          src: url('/theme/fonts/DMSans-Medium.woff2') format('woff2');
           font-style: normal;
           font-display: swap;
         }
-        @font-face {
-          font-family: 'ManropeBold';
-          src: url('/theme/fonts/Manrope-Bold.woff2') format('woff2');
-          font-weight: 700;
-          font-style: normal;
-          font-display: swap;
-        }
-        
         body {
           font-family: 'ManropeRegular', sans-serif;
         }
