@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Box as CegidBox } from '@cegid/cds-react';
 
-import colorPalettes, { CustomColorString, IColorPalettes } from '../../../theme/colors';
+import colorPalettes, { CustomColorString, IColorPalettes } from '../../theme/colors';
 
 type CegidBoxProps = React.ComponentProps<typeof CegidBox>;
 

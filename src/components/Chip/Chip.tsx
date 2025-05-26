@@ -4,8 +4,8 @@ import React from 'react';
 
 import { Chip as CegidChip, ChipProps as CegidChipProps, styled } from '@cegid/cds-react';
 
-import colorPalettes, { white } from '../../../theme/colors';
-import typography from '../../../theme/typography';
+import colorPalettes, { white } from '../../theme/colors';
+import typography from '../../theme/typography';
 
 interface ChipProps extends Omit<CegidChipProps, 'size' | 'variant' | 'color' | 'avatar'> {
   size?: 'small' | 'medium';

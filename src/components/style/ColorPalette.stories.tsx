@@ -7,7 +7,7 @@ import {
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import colorPalettes from '../../../theme/colors';
+import colorPalettes from '../../theme/colors';
 import Typography from '../Typography/Typography';
 
 interface ColorSampleProps {

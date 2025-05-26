@@ -3,7 +3,7 @@ import { Box, Card, Divider, Grid, Paper, Typography } from '@mui/material';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import { ELEVATION, ELEVATION_CSS } from '../../../theme/shadows';
+import { ELEVATION, ELEVATION_CSS } from '../../theme/shadows';
 
 interface ElevationCardProps {
   level: number;

@@ -6,8 +6,8 @@ import React from 'react';
 import { Typography as CegidTypography } from '@cegid/cds-react';
 import type { TypographyProps as CegidTypographyProps } from '@cegid/cds-react';
 
-import colorPalettes, { CustomColorString, IColorPalettes } from '../../../theme/colors';
-import { CustomVariant } from '../../../theme/typography';
+import colorPalettes, { CustomColorString, IColorPalettes } from '../../theme/colors';
+import { CustomVariant } from '../../theme/typography';
 
 export type ExtendedVariant = Variant | 'inherit' | CustomVariant;
 

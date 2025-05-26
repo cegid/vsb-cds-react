@@ -5,8 +5,8 @@ import React from 'react';
 
 import { Select as CegidSelect, SelectProps as CegidSelectProps } from '@cegid/cds-react';
 
-import { colorPalettes } from '../../../theme/colors';
-import typography from '../../../theme/typography';
+import { colorPalettes } from '../../theme/colors';
+import typography from '../../theme/typography';
 
 const { primary, neutral } = colorPalettes;
 

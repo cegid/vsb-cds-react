@@ -9,8 +9,8 @@ import {
   styled,
 } from '@cegid/cds-react';
 
-import colorPalettes from '../../../theme/colors';
-import { RADIUS } from '../../../theme/radius';
+import colorPalettes from '../../theme/colors';
+import { RADIUS } from '../../theme/radius';
 
 const { primary, secondary, success, critical, yellow, plum, neutral } = colorPalettes;
 

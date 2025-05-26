@@ -1,8 +1,8 @@
 'use client';
 
 import { Tab as CegidTab, TabProps as CegidTabProps, styled } from "@cegid/cds-react";
-import { neutral, primary } from "@vsb-cds/theme";
 import React from "react";
+import { neutral, primary } from "../../theme";
 
 const StyledCegidTab = styled(CegidTab)({
   color: neutral[50],

@@ -1,8 +1,8 @@
 'use client';
 
 import { Tabs as CegidTabs, TabsProps as CegidTabsProps, styled } from "@cegid/cds-react";
-import { primary } from "@vsb-cds/theme";
 import React from "react";
+import { primary } from "../../theme";
 
 const StyledTabs = styled(CegidTabs)({
     height: '40px',

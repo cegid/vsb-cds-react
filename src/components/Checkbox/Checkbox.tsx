@@ -3,7 +3,7 @@
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-import { neutral, primary } from '../../../theme/colors';
+import { neutral, primary } from '../../theme/colors';
 
 export type CheckBoxSize = 'S' | 'L';
 const StyledInput = styled('input')(
