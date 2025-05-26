@@ -76,8 +76,6 @@ export default defineConfig({
           "@cegid/cds-react": "CegidCdsReact",
           "@cegid/icons-react": "CegidIconsReact",
         },
-        preserveModules: true,
-        preserveModulesRoot: "src",
       },
     },
   },
