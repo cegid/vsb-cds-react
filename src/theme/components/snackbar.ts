@@ -1,4 +1,5 @@
 import { TypographyVariantsOptions } from '@mui/material';
+import { color } from 'framer-motion';
 
 import { Theme } from '@cegid/cds-react';
 

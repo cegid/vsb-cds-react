@@ -18,9 +18,7 @@
     }
   },
   "files": [
-    "dist",
-    "src",
-    "README.md"
+    "dist"
   ],
   "scripts": {
     "build": "tsc && vite build",

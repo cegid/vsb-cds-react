@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Typography from './Typography';
-import { Box, Stack } from '@cegid/cds-react';
+import Stack from '../Stack';
+import Box from '../Box';
 
 const meta = {
   title: 'Components/Typography',
@@ -40,10 +41,16 @@ const meta = {
       options: ['inherit', 'left', 'center', 'right', 'justify'],
       description: 'Text alignment',
     },
+    component: {
+      control: 'select',
+      options: ['span', 'p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label'],
+      description: 'The HTML element or React component to render',
+    },
   },
   args: {
     variant: 'bodyMRegular',
     align: 'inherit',
+    component: 'span',
   },
 } satisfies Meta<typeof Typography>;
 
@@ -77,7 +84,7 @@ export const Variants: Story = {
         titleSRegular - Weight: 400 - Size: 20px - Line Height: 32px
       </Typography>
 
-      <Box sx={{ mt: 2 }} />
+      <Box mt={2} />
 
       <Typography {...args} variant="bodyMSemiBold">
         bodyMSemiBold - Weight: 600 - Size: 16px - Line Height: 24px
@@ -156,6 +163,89 @@ export const Alignment: Story = {
       <Typography {...args} align="justify">
         This text is justify aligned. Lorem ipsum dolor sit amet, consectetur adipiscing elit. This
         should stretch to fill the entire width of its container when there is enough text.
+      </Typography>
+    </Stack>
+  ),
+};
+
+export const Components: Story = {
+  render: (args) => (
+    <Stack spacing={3}>
+      <Box>
+        <Typography {...args} variant="titleMSemiBold" component="h1">
+          H1 - Rendered as h1 element
+        </Typography>
+        <Typography variant="bodySRegular" component="p" color="neutral/70">
+          (Inspect the DOM to see the HTML element)
+        </Typography>
+      </Box>
+
+      <Box>
+        <Typography {...args} variant="titleSSemiBold" component="h2">
+          H2 - Rendered as h2 element
+        </Typography>
+        <Typography variant="bodySRegular" component="p" color="neutral/70">
+          (Inspect the DOM to see the HTML element)
+        </Typography>
+      </Box>
+
+      <Box>
+        <Typography {...args} variant="bodyMRegular" component="p">
+          This is a paragraph rendered as a p element. Lorem ipsum dolor sit amet, consectetur
+          adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </Typography>
+      </Box>
+
+      <Box>
+        <Typography {...args} variant="bodySRegular" component="div">
+          This is text rendered as a div element. It maintains the typography styling
+          but uses a div container instead of the default span.
+        </Typography>
+      </Box>
+
+      <Box>
+        <Typography {...args} variant="bodyXSRegular" component="label">
+          This is rendered as a label element (useful for form labels)
+        </Typography>
+      </Box>
+
+      <Box>
+        <Typography {...args} variant="bodyMRegular" component="span">
+          This is the default span element rendering.
+        </Typography>
+      </Box>
+    </Stack>
+  ),
+};
+
+export const SemanticHeaders: Story = {
+  render: (args) => (
+    <Stack spacing={2}>
+      <Typography {...args} variant="titleLSemiBold" component="h1">
+        Main Title (H1)
+      </Typography>
+
+      <Typography {...args} variant="titleMSemiBold" component="h2">
+        Section Title (H2)
+      </Typography>
+
+      <Typography {...args} variant="titleSSemiBold" component="h3">
+        Subsection Title (H3)
+      </Typography>
+
+      <Typography {...args} variant="bodyMRegular" component="p">
+        This is body text in a paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        quis nostrud exercitation ullamco laboris.
+      </Typography>
+
+      <Typography {...args} variant="titleSSemiBold" component="h4">
+        Sub-subsection Title (H4)
+      </Typography>
+
+      <Typography {...args} variant="bodyMRegular" component="p">
+        Another paragraph of body text to demonstrate the semantic structure.
+        Each element uses the appropriate HTML tag for better accessibility and SEO.
       </Typography>
     </Stack>
   ),

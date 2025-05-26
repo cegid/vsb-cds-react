@@ -6,13 +6,15 @@ import React from 'react';
 import { Typography as CegidTypography } from '@cegid/cds-react';
 import type { TypographyProps as CegidTypographyProps } from '@cegid/cds-react';
 
-import colorPalettes, { CustomColorString, IColorPalettes } from '../../theme/colors';
-import { CustomVariant } from '../../theme/typography';
+import colorPalettes, { CustomColorString, IColorPalettes } from '../../../theme/colors';
+import { CustomVariant } from '../../../theme/typography';
 
 export type ExtendedVariant = Variant | 'inherit' | CustomVariant;
-interface CustomTypographyProps extends Omit<CegidTypographyProps, 'color' | 'variant'> {
+
+interface CustomTypographyProps extends Omit<CegidTypographyProps, 'color' | 'variant' | 'component'> {
   color?: CustomColorString;
   variant?: ExtendedVariant;
+  component?: React.ElementType;
 }
 
 type ShadeKey = keyof IColorPalettes;
@@ -48,7 +50,14 @@ const parseCustomColor = (colorValue: string): string | undefined => {
 };
 
 const Typography = React.forwardRef<HTMLElement, CustomTypographyProps>((props, ref) => {
-  const { color, variant, style = {}, ...otherProps } = props;
+  const {
+    color,
+    variant,
+    component = 'span',
+    style = {},
+    ...otherProps
+  } = props;
+
   const customStyle = { ...style };
 
   if (typeof color === 'string') {
@@ -60,12 +69,9 @@ const Typography = React.forwardRef<HTMLElement, CustomTypographyProps>((props, 
         <CegidTypography
           ref={ref}
           style={customStyle}
-          component={otherProps.component as any}
+          component={component}
           variant={variant as any}
-          align={otherProps.align}
-          gutterBottom={otherProps.gutterBottom}
-          noWrap={otherProps.noWrap}
-          className={otherProps.className}
+          {...otherProps}
         >
           {otherProps.children}
         </CegidTypography>
@@ -78,12 +84,9 @@ const Typography = React.forwardRef<HTMLElement, CustomTypographyProps>((props, 
       ref={ref}
       color={color as any}
       style={style}
-      component={otherProps.component as any}
+      component={component}
       variant={variant as any}
-      align={otherProps.align}
-      gutterBottom={otherProps.gutterBottom}
-      noWrap={otherProps.noWrap}
-      className={otherProps.className}
+      {...otherProps}
     >
       {otherProps.children}
     </CegidTypography>

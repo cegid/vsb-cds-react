@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Stack } from '@cegid/cds-react';
-
 import { Add, Delete, Edit, Favorite, Search, Settings } from '@cegid/icons-react';
 
 import Button from './Button';
+import Stack from '../Stack';
 
 const meta = {
   title: 'Components/Button',

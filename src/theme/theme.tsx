@@ -1,4 +1,5 @@
 'use client';
+
 import type { SxProps } from '@mui/material/styles';
 import { ReactNode } from 'react';
 import colorPalettes, { IColorPalettes } from './colors';

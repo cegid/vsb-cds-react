@@ -1,7 +1,10 @@
-import { Box, Divider, Paper, Stack, Typography } from '@mui/material';
+import { Divider, Paper } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
+import Box from '../Box';
+import Stack from '../Stack';
+import Typography from '../Typography';
 
 const SpacingVisualization = () => {
   const theme = useTheme();
@@ -32,8 +35,8 @@ const SpacingVisualization = () => {
     const spacingValue = theme.spacing(value);
 
     return (
-      <Box sx={{ mb: 3 }}>
-        <Typography variant="bodyMRegular" sx={{ mb: 1 }}>
+      <Box mb={3}>
+        <Typography variant="bodyMRegular" mb={3}>
           {label}: <code>spacing({value})</code> = <code>{spacingValue}</code>
         </Typography>
         <Paper
@@ -56,16 +59,16 @@ const SpacingVisualization = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 800 }}>
-      <Typography variant="titleMSemiBold" component="h1" sx={{ mb: 3 }}>
+    <Box maxWidth={800}>
+      <Typography variant="titleMSemiBold" mb={3}>
         Spacing System
       </Typography>
 
-      <Box sx={{ mb: 6 }}>
-        <Typography variant="titleLSemiBold" sx={{ mb: 2 }}>
+      <Box mb={6}>
+        <Typography variant="titleLSemiBold" mb={2}>
           Small Spacings
         </Typography>
-        <Box sx={{ pl: 2 }}>
+        <Box pl={2}>
           {smallSpacings.map((value) => (
             <SpacingExample key={value} value={value} label={getLabel(value)} />
           ))}
@@ -74,11 +77,11 @@ const SpacingVisualization = () => {
 
       <Divider sx={{ mb: 6 }} />
 
-      <Box sx={{ mb: 6 }}>
-        <Typography variant="titleLSemiBold" sx={{ mb: 2 }}>
+      <Box mb={6}>
+        <Typography variant="titleLSemiBold" mb={2}>
           Medium Spacings
         </Typography>
-        <Box sx={{ pl: 2 }}>
+        <Box pl={2}>
           {mediumSpacings.map((value) => (
             <SpacingExample key={value} value={value} label={getLabel(value)} />
           ))}
@@ -87,11 +90,11 @@ const SpacingVisualization = () => {
 
       <Divider sx={{ mb: 6 }} />
 
-      <Box sx={{ mb: 6 }}>
-        <Typography variant="titleLSemiBold" sx={{ mb: 2 }}>
+      <Box mb={6} >
+        <Typography variant="titleLSemiBold" mb={2}>
           Large Spacings
         </Typography>
-        <Box sx={{ pl: 2 }}>
+        <Box pl={2}>
           {largeSpacings.map((value) => (
             <SpacingExample key={value} value={value} label={getLabel(value)} />
           ))}
@@ -107,20 +110,20 @@ const SpacingUsage = () => {
       <Typography variant="titleSRegular">Usage Examples in sx</Typography>
 
       <Box>
-        <Typography variant="bodyMRegular" sx={{ mb: 1 }}>
+        <Typography variant="bodyMRegular" mb={1}>
           Margins with <code>m: 4</code> (8px)
         </Typography>
         <Paper sx={{ bgcolor: 'grey.100', p: 2 }}>
           <Box
+            m={4}
+            backgroundColor='primary/50'
+            width={100}
+            height={100}
+            display='flex'
+            alignItems="center"
+            justifyContent="center"
             sx={{
-              bgcolor: 'primary.main',
-              width: 100,
-              height: 100,
-              m: 4,
               color: 'white',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
             }}
           >
             m: 4
@@ -129,22 +132,19 @@ const SpacingUsage = () => {
       </Box>
 
       <Box>
-        <Typography variant="bodyMRegular" sx={{ mb: 1 }}>
+        <Typography variant="bodyMRegular" mb={1}>
           Padding with <code>p: 6</code> (16px)
         </Typography>
         <Box
+          backgroundColor='primary/50'
+          display="inline-block"
           sx={{
-            bgcolor: 'primary.main',
-            color: 'white',
-            display: 'inline-block',
+            color: 'white'
           }}
         >
           <Box
-            sx={{
-              bgcolor: 'background.paper',
-              color: 'text.primary',
-              p: 6,
-            }}
+            backgroundColor="primary/50"
+            padding={6}
           >
             Content with p: 6
           </Box>
@@ -152,90 +152,76 @@ const SpacingUsage = () => {
       </Box>
 
       <Box>
-        <Typography variant="bodyMRegular" sx={{ mb: 1 }}>
+        <Typography variant="bodyMRegular" marginBottom={1}>
           Horizontal spacing with <code>ml: 9</code> (32px) and <code>mr: 5</code> (12px)
         </Typography>
         <Paper sx={{ bgcolor: 'grey.100', p: 2, display: 'flex', alignItems: 'center' }}>
           <Box
-            sx={{
-              bgcolor: 'error.main',
-              width: 50,
-              height: 50,
-            }}
+            width={50}
+            height={50}
+            backgroundColor='critical/40'
           />
           <Box
-            sx={{
-              bgcolor: 'primary.main',
-              width: 50,
-              height: 50,
-              ml: 9,
-            }}
+            width={50}
+            height={50}
+            backgroundColor='primary/50'
+            ml={9}
           />
           <Box
-            sx={{
-              bgcolor: 'success.main',
-              width: 50,
-              height: 50,
-              ml: 5,
-            }}
+            width={50}
+            height={50}
+            backgroundColor='success/50'
+            ml={5}
           />
         </Paper>
       </Box>
 
       <Box>
-        <Typography variant="bodyMRegular" sx={{ mb: 1 }}>
+        <Typography variant="bodyMRegular" mb={1}>
           Vertical spacing with <code>mt: 7</code> (20px) and <code>mb: 11</code> (48px)
         </Typography>
         <Paper sx={{ bgcolor: 'grey.100', p: 2 }}>
           <Box
-            sx={{
-              bgcolor: 'primary.main',
-              width: 100,
-              height: 20,
-            }}
+            width={100}
+            height={20}
+            backgroundColor='primary/50'
           />
           <Box
-            sx={{
-              bgcolor: 'secondary.main',
-              width: 100,
-              height: 20,
-              mt: 7,
-            }}
+            backgroundColor='secondary/50'
+            width={100}
+            height={20}
+            mt={7}
           />
           <Box
-            sx={{
-              bgcolor: 'info.main',
-              width: 100,
-              height: 20,
-              mt: 11,
-            }}
+            backgroundColor='plum/50'
+            width={100}
+            height={20}
+            mt={11}
           />
         </Paper>
       </Box>
 
       <Box>
-        <Typography variant="bodyMRegular" sx={{ mb: 1 }}>
+        <Typography variant="bodyMRegular" mb={1}>
           Gap in a Grid with <code>gap: 8</code> (24px)
         </Typography>
         <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 8,
-            bgcolor: 'grey.100',
-            p: 2,
-          }}
+          gap={8}
+          display={"grid"}
+          gridTemplateColumns={'repeat(3, 1fr)'}
+          backgroundColor='neutral/90'
+          padding={2}
         >
           {[...Array(6)].map((_, index) => (
             <Box
               key={index}
+              height={50}
+              borderRadius={1}
+              backgroundColor='primary/50'
+              display='flex'
+              alignItems="center"
+              justifyContent="center"
               sx={{
-                bgcolor: 'primary.main',
-                height: 50,
-                borderRadius: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
                 color: 'white',
               }}
             >
@@ -250,7 +236,7 @@ const SpacingUsage = () => {
 
 const DetailedSpacingUsage = () => {
   return (
-    <Box sx={{ maxWidth: 800 }}>
+    <Box maxWidth={800}>
       <Typography variant="titleMSemiBold" gutterBottom>
         Spacing Usage Guide in sx
       </Typography>
@@ -260,8 +246,8 @@ const DetailedSpacingUsage = () => {
           Basic Syntax
         </Typography>
 
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="bodyMRegular" sx={{ mb: 2 }}>
+        <Box mb={3}>
+          <Typography variant="bodyMRegular" mb={2}>
             <strong>Format:</strong> <code>property: value</code>
           </Typography>
 
@@ -426,7 +412,7 @@ const DetailedSpacingUsage = () => {
               Advanced Properties:
             </Typography>
 
-            <Stack spacing={1} sx={{ mb: 2 }}>
+            <Stack spacing={1} mb={2}>
               <Box>
                 <code>gap: 4</code> - Space between elements in flex/grid (8px)
               </Box>
@@ -442,7 +428,7 @@ const DetailedSpacingUsage = () => {
       </Paper>
 
       <Paper sx={{ p: 4 }}>
-        <Typography variant="titleLSemiBold" gutterBottom sx={{ mb: 3 }}>
+        <Typography variant="titleLSemiBold" gutterBottom mb={3}>
           Best Practices
         </Typography>
 
@@ -455,17 +441,17 @@ const DetailedSpacingUsage = () => {
               Always use the indices of the spacing system rather than arbitrary values to maintain
               consistency.
             </Typography>
-            <Box sx={{ display: 'flex', mt: 2 }}>
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="bodySSemiBold" sx={{ color: 'success.main' }}>
+            <Box display="flex" mt={2}>
+              <Box flex={1}>
+                <Typography variant="bodySSemiBold" color='success/50'>
                   ✓ CORRECT
                 </Typography>
                 <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.100' }}>
                   <code>{`<Box mt={4} />`}</code>
                 </Paper>
               </Box>
-              <Box sx={{ flex: 1, ml: 2 }}>
-                <Typography variant="bodySSemiBold" sx={{ color: 'error.main' }}>
+              <Box flex={1} ml={2}>
+                <Typography variant="bodySSemiBold" color='critical/40'>
                   ✗ INCORRECT
                 </Typography>
                 <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.100' }}>
@@ -480,20 +466,20 @@ const DetailedSpacingUsage = () => {
               2. Use Shortcuts
             </Typography>
             <Typography variant="bodyMRegular">
-              Shortcuts like <code>mx</code>, <code>my</code>, <code>px</code>, <code>py</code>{' '}
+              Shortcuts like <code>mx</code>, <code>my</code>, <code>px</code>, <code>py</code>
               allow you to apply the same spacing horizontally or vertically.
             </Typography>
-            <Box sx={{ display: 'flex', mt: 2 }}>
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="bodySSemiBold" sx={{ color: 'success.main' }}>
+            <Box display='flex' mt={2}>
+              <Box flex={1}>
+                <Typography variant="bodySSemiBold" color='success/50'>
                   ✓ CORRECT
                 </Typography>
                 <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.100' }}>
                   <code>{`<Box mx={4} />`}</code>
                 </Paper>
               </Box>
-              <Box sx={{ flex: 1, ml: 2 }}>
-                <Typography variant="bodySSemiBold" sx={{ color: 'error.main' }}>
+              <Box flex={1} ml={2} >
+                <Typography variant="bodySSemiBold" color="critical/40">
                   ✗ LESS OPTIMAL
                 </Typography>
                 <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.100' }}>
@@ -511,17 +497,17 @@ const DetailedSpacingUsage = () => {
               Combine <code>gap</code>, <code>rowGap</code> and <code>columnGap</code> properties
               with flexbox and grid for cleaner layouts.
             </Typography>
-            <Box sx={{ display: 'flex', mt: 2 }}>
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="bodySSemiBold" sx={{ color: 'success.main' }}>
+            <Box display={"flex"} mt={2}>
+              <Box flex={1}>
+                <Typography variant="bodySSemiBold" color='success/50'>
                   ✓ CORRECT
                 </Typography>
                 <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.100' }}>
                   <code>{`<Stack spacing={2}>\n  <Item />\n  <Item />\n</Stack>`}</code>
                 </Paper>
               </Box>
-              <Box sx={{ flex: 1, ml: 2 }}>
-                <Typography variant="bodySSemiBold" sx={{ color: 'error.main' }}>
+              <Box flex={1} ml={2}>
+                <Typography variant="bodySSemiBold" color='critical/40'>
                   ✗ LESS OPTIMAL
                 </Typography>
                 <Paper elevation={0} sx={{ p: 2, bgcolor: 'grey.100' }}>

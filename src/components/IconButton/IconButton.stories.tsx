@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import IconButton from './IconButton';
 import { Add, Delete, Edit, Favorite, Search, Settings } from '@cegid/icons-react';
-import { Stack } from '@cegid/cds-react';
+import Stack from '../Stack';
 
 const meta = {
   title: 'Components/IconButton',

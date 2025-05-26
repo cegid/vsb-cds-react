@@ -1,9 +1,11 @@
+'use client';
+
 import React from 'react';
 
 import { Chip as CegidChip, ChipProps as CegidChipProps, styled } from '@cegid/cds-react';
 
-import colorPalettes, { white } from '../../theme/colors';
-import typography from '../../theme/typography';
+import colorPalettes, { white } from '../../../theme/colors';
+import typography from '../../../theme/typography';
 
 interface ChipProps extends Omit<CegidChipProps, 'size' | 'variant' | 'color' | 'avatar'> {
   size?: 'small' | 'medium';
@@ -11,7 +13,7 @@ interface ChipProps extends Omit<CegidChipProps, 'size' | 'variant' | 'color' | 
 
 const { primary, neutral } = colorPalettes;
 
-const StyledChip = styled(CegidChip)<ChipProps>(({ theme, size }) => ({
+const StyledChip = styled(CegidChip)<ChipProps>(({ size }) => ({
   backgroundColor: white,
   border: `1px solid ${neutral[90]}`,
   borderRadius: size === 'small' ? '10px' : '12px',

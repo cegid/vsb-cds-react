@@ -1,19 +1,18 @@
 import {
-  Box,
   Divider,
   FormControl,
   FormControlLabel,
   FormGroup,
   FormHelperText,
   FormLabel,
-  Paper,
-  Stack,
-  Typography,
 } from '@mui/material';
 import type { Meta, StoryObj } from '@storybook/react';
 import React, { useState } from 'react';
 
 import Checkbox from './Checkbox';
+import Box from '../Box';
+import Stack from '../Stack';
+import Typography from '../Typography';
 
 const meta = {
   title: 'Components/Checkbox',
@@ -52,10 +51,10 @@ export const Default: Story = {
   args: {
     checked: false,
     name: 'default',
-    onChange: () => {},
+    onChange: () => { },
   },
   render: (args) => (
-    <Box sx={{ p: 2 }}>
+    <Box p={2} >
       <Checkbox {...args} />
     </Box>
   ),
@@ -65,10 +64,10 @@ export const WithLabel: Story = {
   args: {
     checked: false,
     name: 'withLabel',
-    onChange: () => {},
+    onChange: () => { },
   },
   render: (args) => (
-    <Box sx={{ p: 2 }}>
+    <Box p={2}>
       <FormControlLabel control={<Checkbox {...args} />} label="I accept the terms" />
     </Box>
   ),
@@ -78,10 +77,10 @@ export const Sizes: Story = {
   args: {
     checked: true,
     name: 'sizes',
-    onChange: () => {},
+    onChange: () => { },
   },
   render: (args) => (
-    <Box sx={{ p: 2 }}>
+    <Box p={2}>
       <Stack direction="row" spacing={2} flexWrap="wrap">
         <FormControlLabel control={<Checkbox {...args} size="S" />} label="S" />
         <FormControlLabel control={<Checkbox {...args} />} label="L (default)" />
@@ -94,16 +93,16 @@ export const States: Story = {
   args: {
     checked: false,
     name: 'states',
-    onChange: () => {},
+    onChange: () => { },
   },
   render: (args) => (
-    <Box sx={{ p: 3 }}>
-      <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ mb: 2 }}>
+    <Box p={3}>
+      <Stack direction="row" spacing={2} flexWrap="wrap" mb={2}>
         <FormControlLabel control={<Checkbox {...args} />} label="Unchecked" />
         <FormControlLabel control={<Checkbox {...args} checked />} label="Checked" />
       </Stack>
       <Divider sx={{ my: 2 }} />
-      <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ mb: 2 }}>
+      <Stack direction="row" spacing={2} flexWrap="wrap" mb={2}>
         <FormControlLabel control={<Checkbox {...args} disabled />} label="Disabled" />
         <FormControlLabel
           control={<Checkbox {...args} disabled checked />}
@@ -111,7 +110,7 @@ export const States: Story = {
         />
       </Stack>
       <Divider sx={{ my: 2 }} />
-      <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ mb: 2 }}>
+      <Stack direction="row" spacing={2} flexWrap="wrap" mb={2}>
         <FormControlLabel control={<Checkbox {...args} undetermined />} label="Undetermined" />
       </Stack>
     </Box>
@@ -122,7 +121,7 @@ export const CheckboxGroup: Story = {
   args: {
     checked: false,
     name: 'checkboxGroup',
-    onChange: () => {},
+    onChange: () => { },
   },
   render: () => {
     const [state, setState] = useState({
@@ -141,7 +140,7 @@ export const CheckboxGroup: Story = {
     const { Karadoc, Leodagan, Perceval } = state;
 
     return (
-      <Box sx={{ p: 3 }}>
+      <Box p={3}>
         <FormControl component="fieldset" variant="standard" sx={{ width: '100%' }}>
           <FormLabel component="legend" sx={{ mb: 2 }}>
             <Typography variant="subtitle1" fontWeight="medium">
@@ -149,7 +148,7 @@ export const CheckboxGroup: Story = {
             </Typography>
           </FormLabel>
           <FormGroup>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box display='flex' flexDirection="column" gap={1}>
               <FormControlLabel
                 control={<Checkbox checked={Karadoc} onChange={handleChange} name="Karadoc" />}
                 label="Karadoc"
@@ -175,11 +174,11 @@ export const LabelPlacement: Story = {
   args: {
     checked: true,
     name: 'labelPlacement',
-    onChange: () => {},
+    onChange: () => { },
   },
   render: (args) => (
-    <Box sx={{ p: 3 }}>
-      <Stack spacing={2} sx={{ mt: 2 }}>
+    <Box p={3}>
+      <Stack spacing={2} mt={2}>
         <FormControlLabel
           value="end"
           control={<Checkbox {...args} />}

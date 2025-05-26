@@ -4,8 +4,9 @@ import { InfoOutlined } from '@cegid/icons-react';
 
 import colorPalettes, { PaletteNames } from '../../../theme/colors';
 import Status from './Status';
-import { Stack } from '@cegid/cds-react';
 import Box from '../Box';
+import Stack from '../Stack';
+import { Typography } from '@mui/material';
 
 const colorNames = Object.keys(colorPalettes);
 
@@ -79,9 +80,9 @@ export const Colors: Story = {
   render: (args) => (
     <Stack direction="column" spacing={3}>
       <Box>
-        <Box component="h3" sx={{ mb: 1 }}>
+        <Typography variant='titleMSemiBold' mb={1}>
           Light Variant
-        </Box>
+        </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
           {colorNames.map((colorName) => (
             <Status
@@ -97,9 +98,9 @@ export const Colors: Story = {
       </Box>
 
       <Box>
-        <Box component="h3" sx={{ mb: 1 }}>
+        <Typography variant='titleMSemiBold' mb={1}>
           Solid Variant
-        </Box>
+        </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
           {colorNames.map((colorName) => (
             <Status
@@ -121,9 +122,9 @@ export const SizeComparison: Story = {
   render: (args) => (
     <Stack direction="column" spacing={3}>
       <Box>
-        <Box component="h3" sx={{ mb: 1 }}>
+        <Typography variant='titleMSemiBold' mb={1}>
           Medium Size
-        </Box>
+        </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
           {colorNames.slice(0, 4).map((colorName, index) => (
             <Status
@@ -140,9 +141,9 @@ export const SizeComparison: Story = {
       </Box>
 
       <Box>
-        <Box component="h3" sx={{ mb: 1 }}>
+        <Typography variant='titleMSemiBold' mb={1}>
           Small Size
-        </Box>
+        </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
           {colorNames.slice(0, 4).map((colorName, index) => (
             <Status
@@ -182,12 +183,10 @@ export const AllColors: Story = {
       {colorNames.map((colorName) => (
         <Box
           key={colorName}
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, auto)',
-            gap: 2,
-            alignItems: 'center',
-          }}
+          display='grid'
+          gridTemplateColumns='repeat(4, auto)'
+          gap={2}
+          alignItems="center"
         >
           <Status
             size="medium"

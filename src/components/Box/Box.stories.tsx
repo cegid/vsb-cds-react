@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Stack } from '@cegid/cds-react';
-
 import Box from './Box';
 import Typography from '../Typography';
+import Stack from '../Stack';
 
 const meta = {
   title: 'Components/Box',

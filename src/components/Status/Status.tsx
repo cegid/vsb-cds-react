@@ -4,9 +4,9 @@ import React from 'react';
 
 import { Box, OverridableComponent, SvgIconTypeMap } from '@cegid/cds-react';
 
-import colorPalettes, { PaletteNames } from '../../theme/colors';
-import { RADIUS } from '../../theme/radius';
-import spacing from '../../theme/spacing';
+import colorPalettes, { PaletteNames } from '../../../theme/colors';
+import { RADIUS } from '../../../theme/radius';
+import spacing from '../../../theme/spacing';
 import Typography from '../Typography/Typography';
 
 export interface StatusProps {

@@ -1,20 +1,21 @@
 'use client';
 
+import React from 'react';
+
 import {
   TextField as CegidTextField,
   TextFieldProps as CegidTextFieldProps,
   styled,
 } from '@cegid/cds-react';
 
-import { colorPalettes } from '../../theme/colors';
-import { RADIUS } from '../../theme/radius';
-import typography from '../../theme/typography';
+import { colorPalettes } from '../../../theme/colors';
+import { RADIUS } from '../../../theme/radius';
+import typography from '../../../theme/typography';
 
 const { primary, neutral, critical } = colorPalettes;
 
 const StyledTextField = styled(CegidTextField)(({ theme, label }) => ({
   width: '100%',
-  marginBottom: '8px',
 
   '& .MuiInputBase-root': {
     width: '100%',

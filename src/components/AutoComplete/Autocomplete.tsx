@@ -6,8 +6,8 @@ import {
   AutocompleteProps as CegidAutocompleteProps
 } from '@cegid/cds-react';
 
-import { colorPalettes } from '../../theme/colors';
-import typography from '../../theme/typography';
+import { colorPalettes } from '../../../theme/colors';
+import typography from '../../../theme/typography';
 
 const { primary, neutral } = colorPalettes;
 
