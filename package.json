@@ -1,6 +1,6 @@
 {
   "name": "@cegid/bim-ds",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Thème BIM personnalisé et composants",
   "main": "dist/index.js",
   "module": "dist/bimp-ds.esm.js",
