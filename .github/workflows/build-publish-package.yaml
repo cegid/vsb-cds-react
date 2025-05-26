@@ -11,22 +11,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm test
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/
-      - run: npm ci
-      - run: npm publish
+          
+      - name: Install dependencies
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_EMAIL: ${{ secrets.NPM_AUTH_EMAIL }}
+        run: |
+          echo "email=${NPM_AUTH_EMAIL}" > .npmrc
+          echo "always-auth=true" >> .npmrc
+          echo "registry=https://cegid.jfrog.io/artifactory/api/npm/all-npm/" >> .npmrc
+          echo "//cegid.jfrog.io/artifactory/api/npm/all-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          echo "//cegid.jfrog.io/artifactory/api/npm/aca-npm-all/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          echo "//cegid.jfrog.io/cegid/api/npm/all-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          echo "//cegid.jfrog.io/cegid/api/npm/yupana-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          echo "//cegid.jfrog.io/cegid/api/npm/loop-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+          npm install --frozen-lockfile
+      
+      - run: npm pack
+      
+      - name: Update npmrc
+        env:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          NPM_AUTH_EMAIL: ${{ secrets.NPM_AUTH_EMAIL }}
+        run: |
+          echo "email=${NPM_AUTH_EMAIL}" > .npmrc
+          echo "always-auth=true" >> .npmrc
+          echo "registryCegid=https://cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/" >> .npmrc
+          echo "//cegid.jfrog.io/artifactory/api/npm/vsb-cds-react/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
+      - run: npm publish --scope registryCegid
