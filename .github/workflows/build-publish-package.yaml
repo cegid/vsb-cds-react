@@ -31,7 +31,7 @@ jobs:
           echo "//cegid.jfrog.io/cegid/api/npm/yupana-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
           echo "//cegid.jfrog.io/cegid/api/npm/loop-npm/:_authToken=${NPM_AUTH_TOKEN}" >> .npmrc
           npm install --frozen-lockfile
-      
+      - run: npm run build
       - run: npm pack
       
       - name: Update npmrc
