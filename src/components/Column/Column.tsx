@@ -7,7 +7,7 @@ export interface ColumnProps
    * The content to be rendered inside the column container.
    * Elements will be stacked vertically in column direction with full width.
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const Column: React.FC<ColumnProps> = (props) => {
