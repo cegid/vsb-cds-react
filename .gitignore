@@ -17,6 +17,7 @@
 /dist
 /packages
 *.tgz
+/storybook-static
 
 # misc
 .DS_Store
