@@ -5,7 +5,7 @@ import { Add, Delete, Edit, Favorite, Search, Settings } from '@cegid/icons-reac
 import Stack from '../Stack';
 
 const meta = {
-  title: 'Components/IconButton',
+  title: 'Components/Buttons/IconButton',
   component: IconButton,
   parameters: {
     layout: 'centered',

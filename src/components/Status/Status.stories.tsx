@@ -11,7 +11,7 @@ import { Typography } from '@mui/material';
 const colorNames = Object.keys(colorPalettes);
 
 const meta = {
-  title: 'Components/Status',
+  title: 'Components/Display/Status',
   component: Status,
   parameters: {
     layout: 'padded',

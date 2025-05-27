@@ -15,7 +15,7 @@ import Stack from '../Stack';
 import Typography from '../Typography';
 
 const meta = {
-  title: 'Components/Checkbox',
+  title: 'Components/Inputs/Checkbox',
   component: Checkbox,
   parameters: {
     layout: 'centered',

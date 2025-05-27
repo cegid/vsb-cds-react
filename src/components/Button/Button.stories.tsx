@@ -6,7 +6,7 @@ import Button from './Button';
 import Stack from '../Stack';
 
 const meta = {
-  title: 'Components/Button',
+  title: 'Components/Buttons/Button',
   component: Button,
   parameters: {
     layout: 'centered',

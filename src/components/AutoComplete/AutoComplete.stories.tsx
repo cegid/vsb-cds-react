@@ -5,7 +5,7 @@ import { Search } from '@cegid/icons-react';
 import AutoComplete from './Autocomplete';
 
 const meta = {
-  title: 'Components/AutoComplete',
+  title: 'Components/Inputs/AutoComplete',
   component: AutoComplete,
   parameters: {
     layout: 'centered',

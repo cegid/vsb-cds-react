@@ -8,7 +8,7 @@ import Typography from '../Typography';
 import { Stack } from '@cegid/cds-react';
 
 const meta = {
-  title: 'Components/Chip',
+  title: 'Components/Display/Chip',
   component: Chip,
   parameters: {
     layout: 'padded',
