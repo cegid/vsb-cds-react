@@ -1,8 +1,5 @@
 import {
   Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
   FormHelperText,
   FormLabel,
 } from '@mui/material';
@@ -13,6 +10,9 @@ import Checkbox from './Checkbox';
 import Box from '../Box';
 import Stack from '../Stack';
 import Typography from '../Typography';
+import FormControlLabel from '../FormControlLabel';
+import FormControl from '../FormControl';
+import FormGroup from '../FormGroup';
 
 const meta = {
   title: 'Components/Inputs/Checkbox',

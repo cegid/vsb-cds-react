@@ -5,7 +5,7 @@ import { Check, Close, Face } from '@cegid/icons-react';
 import Chip from './Chip';
 import Box from '../Box';
 import Typography from '../Typography';
-import { Stack } from '@cegid/cds-react';
+import Stack from '../Stack';
 
 const meta = {
   title: 'Components/Display/Chip',
@@ -82,7 +82,7 @@ export const SizeComparison: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Box>
-        <Typography variant="titleMSemiBold" gutterBottom>
+        <Typography variant="titleLSemiBold" gutterBottom>
           Taille Medium
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -90,7 +90,7 @@ export const SizeComparison: Story = {
         </Box>
       </Box>
       <Box>
-        <Typography variant="titleMSemiBold" gutterBottom>
+        <Typography variant="titleLSemiBold" gutterBottom>
           Taille Small
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -104,7 +104,7 @@ export const SizeComparison: Story = {
 export const IconsAndNoIcons: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleMSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold" gutterBottom>
         Chips avec et sans icônes
       </Typography>
       <Stack spacing={2}>
@@ -124,7 +124,7 @@ export const IconsAndNoIcons: Story = {
 export const WithDeleteIcon: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleMSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold" gutterBottom>
         Chips avec icône de suppression
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -137,7 +137,7 @@ export const WithDeleteIcon: Story = {
 export const Clickable: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleMSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold" gutterBottom>
         Chips cliquables
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -157,7 +157,7 @@ export const Clickable: Story = {
 export const Disabled: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleMSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold" gutterBottom>
         Chips désactivés
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>

@@ -1,9 +1,10 @@
 // ElevationDemo.stories.tsx
-import { Box, Card, Divider, Grid, Paper, Typography } from '@mui/material';
-import { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
+import { Card, Divider, Grid, Paper } from "@mui/material";
+import { Meta, StoryObj } from "@storybook/react";
 
-import { ELEVATION, ELEVATION_CSS } from '../../theme/shadows';
+import { ELEVATION, ELEVATION_CSS } from "../../theme/shadows";
+import Typography from "../Typography";
+import Box from "../Box";
 
 interface ElevationCardProps {
   level: number;
@@ -17,26 +18,15 @@ const ElevationCard = ({ level, name, cssValue }: ElevationCardProps) => (
     sx={{
       p: 3,
       mb: 2,
-      height: '100%',
+      height: "100%",
       borderRadius: 0,
     }}
   >
-    <Typography variant="titleSSemiBold">{name}</Typography>
-    <Box
-      sx={{
-        p: 2,
-        bgcolor: 'neutral.95',
-        borderRadius: 0,
-        mb: 2,
-        mt: 2,
-        fontSize: '12px',
-        fontFamily: 'monospace',
-        overflow: 'auto',
-      }}
-    >
+    <Typography variant="titleLSemiBold">{name}</Typography>
+    <Box p={2} backgroundColor="neutral/95" mb={2} mt={2}>
       <Typography variant="bodySRegular">{cssValue}</Typography>
     </Box>
-    <Typography variant="bodySSemiBold" color="primary.500">
+    <Typography variant="bodySSemiBold" color="primary/50">
       elevation={level}
     </Typography>
   </Paper>
@@ -44,8 +34,8 @@ const ElevationCard = ({ level, name, cssValue }: ElevationCardProps) => (
 
 const ElevationExamples = () => {
   return (
-    <Box sx={{ mb: 6 }}>
-      <Typography variant="titleMSemiBold" sx={{ mb: 2 }}>
+    <Box mb={6}>
+      <Typography variant="titleLSemiBold" mb={2}>
         Examples of Using Elevations
       </Typography>
       <Divider sx={{ mb: 3 }} />
@@ -55,15 +45,15 @@ const ElevationExamples = () => {
           <Typography variant="titleLSemiBold" sx={{ mb: 2 }}>
             Cards with Different Elevations
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Box display="flex" gap={2} flexWrap="wrap">
             <Card
               elevation={ELEVATION.LEVEL_1}
               sx={{
                 width: 180,
                 height: 120,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 borderRadius: 0,
               }}
             >
@@ -74,9 +64,9 @@ const ElevationExamples = () => {
               sx={{
                 width: 180,
                 height: 120,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 borderRadius: 0,
               }}
             >
@@ -87,9 +77,9 @@ const ElevationExamples = () => {
               sx={{
                 width: 180,
                 height: 120,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
                 borderRadius: 0,
               }}
             >
@@ -102,46 +92,37 @@ const ElevationExamples = () => {
           <Typography variant="titleLSemiBold" sx={{ mb: 2 }}>
             Using CSS boxShadow Property
           </Typography>
-          <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+          <Box display="flex" gap={2} flexWrap="wrap">
             <Box
-              sx={{
-                width: 180,
-                height: 120,
-                bgcolor: 'white',
-                borderRadius: 0,
-                boxShadow: ELEVATION_CSS.LEVEL_2,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              width={180}
+              height={120}
+              backgroundColor="white"
+              boxShadow={ELEVATION_CSS.LEVEL_2}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
               <Typography variant="bodyMSemiBold">boxShadow Level 2</Typography>
             </Box>
             <Box
-              sx={{
-                width: 180,
-                height: 120,
-                bgcolor: 'white',
-                borderRadius: 0,
-                boxShadow: ELEVATION_CSS.LEVEL_4,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              width={180}
+              height={120}
+              backgroundColor="white"
+              boxShadow={ELEVATION_CSS.LEVEL_4}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
               <Typography variant="bodyMSemiBold">boxShadow Level 4</Typography>
             </Box>
             <Box
-              sx={{
-                width: 180,
-                height: 120,
-                bgcolor: 'white',
-                borderRadius: 0,
-                boxShadow: ELEVATION_CSS.LEVEL_6,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              width={180}
+              height={120}
+              backgroundColor="white"
+              boxShadow={ELEVATION_CSS.LEVEL_6}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
             >
               <Typography variant="bodyMSemiBold">boxShadow Level 6</Typography>
             </Box>
@@ -153,33 +134,22 @@ const ElevationExamples = () => {
 };
 
 const SxExamples = () => (
-  <Box sx={{ mb: 6 }}>
-    <Typography variant="titleMSemiBold" sx={{ mb: 2 }}>
+  <Box mb={6}>
+    <Typography variant="titleLSemiBold" mb={2}>
       Code Examples Using the sx Property
     </Typography>
     <Divider sx={{ mb: 3 }} />
 
     <Grid container spacing={4}>
       <Grid item xs={12} md={6}>
-        <Typography variant="titleLSemiBold" sx={{ mb: 2 }}>
+        <Typography variant="titleLSemiBold" mb={2}>
           Using Elevation
         </Typography>
         <Paper sx={{ p: 3, borderRadius: 0 }}>
-          <Typography variant="bodyMSemiBold" sx={{ mb: 2 }}>
+          <Typography variant="bodyMSemiBold" mb={2}>
             With elevation (MUI property)
           </Typography>
-          <Box
-            component="pre"
-            sx={{
-              p: 2,
-              bgcolor: 'neutral.95',
-              borderRadius: 0,
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              mb: 3,
-              overflow: 'auto',
-            }}
-          >
+          <Box component="pre" p={2} backgroundColor="neutral/95" mb={3}>
             {`<Paper elevation={ELEVATION.LEVEL_2}>
   Content with elevation 2
 </Paper>
@@ -190,20 +160,10 @@ const SxExamples = () => (
 </Card>`}
           </Box>
 
-          <Typography variant="bodyMSemiBold" sx={{ mb: 2 }}>
+          <Typography variant="bodyMSemiBold" mb={2}>
             With boxShadow (sx property)
           </Typography>
-          <Box
-            component="pre"
-            sx={{
-              p: 2,
-              bgcolor: 'neutral.95',
-              borderRadius: 0,
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              overflow: 'auto',
-            }}
-          >
+          <Box component="pre" p={2} backgroundColor="neutral/95" mb={3}>
             {`<Box sx={{ 
   boxShadow: ELEVATION_CSS.LEVEL_3,
   // other sx properties
@@ -215,25 +175,14 @@ const SxExamples = () => (
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <Typography variant="titleLSemiBold" sx={{ mb: 2 }}>
+        <Typography variant="titleLSemiBold" mb={2}>
           Common Use Cases
         </Typography>
         <Paper sx={{ p: 3, borderRadius: 0 }}>
-          <Typography variant="bodyMSemiBold" sx={{ mb: 2 }}>
+          <Typography variant="bodyMSemiBold" mb={2}>
             Card Component with Elevation
           </Typography>
-          <Box
-            component="pre"
-            sx={{
-              p: 2,
-              bgcolor: 'neutral.95',
-              borderRadius: 0,
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              mb: 3,
-              overflow: 'auto',
-            }}
-          >
+          <Box component="pre" p={2} backgroundColor="neutral/95" mb={3}>
             {`// Usage with a Card component
 <Card 
   elevation={ELEVATION.LEVEL_2}
@@ -245,20 +194,10 @@ const SxExamples = () => (
 </Card>`}
           </Box>
 
-          <Typography variant="bodyMSemiBold" sx={{ mb: 2 }}>
+          <Typography variant="bodyMSemiBold" mb={2}>
             Box Component with boxShadow
           </Typography>
-          <Box
-            component="pre"
-            sx={{
-              p: 2,
-              bgcolor: 'neutral.95',
-              borderRadius: 0,
-              fontSize: '12px',
-              fontFamily: 'monospace',
-              overflow: 'auto',
-            }}
-          >
+          <Box component="pre" p={2} backgroundColor="neutral/95" mb={3}>
             {`// Usage with any div/Box
 <Box
   sx={{
@@ -278,14 +217,14 @@ const SxExamples = () => (
 
 const ElevationDemo = () => {
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="titleLSemiBold" sx={{ mb: 1 }}>
+    <Box p={3}>
+      <Typography variant="titleLSemiBold" mb={1}>
         VSB Elevations
       </Typography>
 
       <Divider sx={{ mb: 4 }} />
-      <Box sx={{ mb: 6 }}>
-        <Typography variant="titleMSemiBold" sx={{ mb: 2 }}>
+      <Box mb={6}>
+        <Typography variant="titleLSemiBold" mb={1}>
           Available Elevation Levels
         </Typography>
         <Divider sx={{ mb: 3 }} />
@@ -349,10 +288,10 @@ const ElevationDemo = () => {
 };
 
 const meta: Meta = {
-  title: 'Theme/Elevation Usage',
+  title: "Theme/Elevation Usage",
   component: ElevationDemo,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
 };
 
