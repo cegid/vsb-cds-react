@@ -5,10 +5,34 @@ import { MoreVert, Settings } from "@cegid/icons-react";
 import Row from "../Row";
 
 export interface HeaderProps {
+  /**
+   * The main title text displayed in the header.
+   * Uses the titleLSemiBold variant with primary/10 color.
+   */
   title: string;
+
+  /**
+   * The text content displayed inside the primary action button.
+   * Only visible when primaryAction is provided.
+   */
   buttonText: string;
+
+  /**
+   * Optional callback function triggered when the primary button is clicked.
+   * When provided, displays a tonal variant button with the buttonText.
+   */
   primaryAction?: () => void;
+
+  /**
+   * Optional callback function triggered when the settings icon is clicked.
+   * When provided, displays a neutral-colored settings icon button.
+   */
   settingsAction?: () => void;
+
+  /**
+   * Optional callback function triggered when the more options icon is clicked.
+   * When provided, displays a neutral-colored vertical dots icon button.
+   */
   moreAction?: () => void;
 }
 

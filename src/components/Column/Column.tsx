@@ -3,6 +3,10 @@ import Box, { CustomBoxProps } from "../Box";
 
 export interface ColumnProps
   extends Omit<CustomBoxProps, "display" | "flexDirection" | "ref"> {
+  /**
+   * The content to be rendered inside the column container.
+   * Elements will be stacked vertically in column direction with full width.
+   */
   children: React.ReactNode;
 }
 
