@@ -5,7 +5,7 @@ import { Check, Close, Face } from '@cegid/icons-react';
 import Chip from './Chip';
 import Box from '../Box';
 import Typography from '../Typography';
-import { Stack } from '@cegid/cds-react';
+import Stack from '../Stack';
 
 const meta = {
   title: 'Components/Display/Chip',

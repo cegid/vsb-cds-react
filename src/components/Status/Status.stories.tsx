@@ -6,7 +6,8 @@ import colorPalettes, { PaletteNames } from '../../theme/colors';
 import Status from './Status';
 import Box from '../Box';
 import Stack from '../Stack';
-import { Typography } from '@mui/material';
+import Typography from '../Typography';
+
 
 const colorNames = Object.keys(colorPalettes);
 
@@ -80,7 +81,7 @@ export const Colors: Story = {
   render: (args) => (
     <Stack direction="column" spacing={3}>
       <Box>
-        <Typography variant='titleMSemiBold' mb={1}>
+        <Typography variant='titleLSemiBold' mb={1}>
           Light Variant
         </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
@@ -98,7 +99,7 @@ export const Colors: Story = {
       </Box>
 
       <Box>
-        <Typography variant='titleMSemiBold' mb={1}>
+        <Typography variant='titleLSemiBold' mb={1}>
           Solid Variant
         </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
@@ -122,7 +123,7 @@ export const SizeComparison: Story = {
   render: (args) => (
     <Stack direction="column" spacing={3}>
       <Box>
-        <Typography variant='titleMSemiBold' mb={1}>
+        <Typography variant='titleLSemiBold' mb={1}>
           Medium Size
         </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
@@ -141,7 +142,7 @@ export const SizeComparison: Story = {
       </Box>
 
       <Box>
-        <Typography variant='titleMSemiBold' mb={1}>
+        <Typography variant='titleLSemiBold' mb={1}>
           Small Size
         </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
