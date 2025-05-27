@@ -24,3 +24,5 @@ export { default as Stack } from "./Stack";
 export * from "./Stack";
 export { default as Chip } from './Chip';
 export * from './Chip';
+export { default as Column } from './Column';
+export * from './Column';

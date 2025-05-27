@@ -8,7 +8,7 @@ import colorPalettes, { CustomColorString, IColorPalettes } from '../../theme/co
 
 type CegidBoxProps = React.ComponentProps<typeof CegidBox>;
 
-interface CustomBoxProps
+export interface CustomBoxProps
   extends Omit<
     CegidBoxProps,
     | 'bgcolor'
