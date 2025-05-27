@@ -7,7 +7,7 @@ export interface RowProps
    * The content to be rendered inside the row container.
    * Elements will be arranged horizontally in row direction with full width.
    */
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const Row: React.FC<RowProps> = (props) => {
