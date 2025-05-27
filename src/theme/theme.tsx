@@ -1,16 +1,22 @@
-'use client';
+"use client";
 
-import type { SxProps } from '@mui/material/styles';
-import { ReactNode } from 'react';
-import colorPalettes, { IColorPalettes } from './colors';
-import { tabStyles } from './components/tabs';
-import { RADIUS } from './radius';
-import shadows from './shadows';
-import spacing from './spacing';
-import typography from './typography';
-import { snackbarStyles } from './components/snackbar';
-import { createTheme, CssBaseline, Theme, ThemeOptions, ThemeProvider } from '@cegid/cds-react';
-
+import type { SxProps } from "@mui/material/styles";
+import { ReactNode } from "react";
+import colorPalettes, { IColorPalettes } from "./colors";
+import { tabStyles } from "./components/tabs";
+import { RADIUS } from "./radius";
+import shadows from "./shadows";
+import spacing from "./spacing";
+import typography from "./typography";
+import { snackbarStyles } from "./components/snackbar";
+import {
+  createTheme,
+  CssBaseline,
+  Theme,
+  ThemeOptions,
+  ThemeProvider,
+} from "@cegid/cds-react";
+import "./fonts/fonts.css";
 
 const createCompletePalette = (colorObj: IColorPalettes) => ({
   50: colorObj[95],
@@ -22,12 +28,25 @@ const createCompletePalette = (colorObj: IColorPalettes) => ({
   600: colorObj[40],
   700: colorObj[30],
   800: colorObj[20],
-  900: colorObj[10]
+  900: colorObj[10],
 });
 
 const defaultTheme = createTheme();
 
-const { primary, secondary, success, critical, yellow, plum, neutral, banana, pink, purple, info, beige } = colorPalettes;
+const {
+  primary,
+  secondary,
+  success,
+  critical,
+  yellow,
+  plum,
+  neutral,
+  banana,
+  pink,
+  purple,
+  info,
+  beige,
+} = colorPalettes;
 
 export type SxPropsTheme = SxProps<Theme>;
 
@@ -47,7 +66,7 @@ export const VSBTheme = createTheme({
     plum: createCompletePalette(plum),
     yellow: createCompletePalette(yellow),
     beige: createCompletePalette(beige),
-  } as ThemeOptions['palette'],
+  } as ThemeOptions["palette"],
   typography: typography,
   shadows: shadows,
   spacing: spacing,
@@ -56,26 +75,14 @@ export const VSBTheme = createTheme({
   },
   components: {
     ...defaultTheme.components,
+    fontFamily: [
+      "DMSansRegular",
+      "DMSansSemiBold",
+      "DMSansMedium",
+      "sans-serif",
+    ].join(","),
     MuiCssBaseline: {
       styleOverrides: `
-        @font-face {
-          font-family: 'DMSansRegular';
-          src: url('/theme/fonts/DMSans-Regular.woff2') format('woff2');
-          font-style: normal;
-          font-display: swap;
-        }
-        @font-face {
-          font-family: 'DMSansSemiBold';
-          src: url('/theme/fonts/DMSans-SemiBold.woff2') format('woff2');
-          font-style: normal;
-          font-display: swap;
-        }
-        @font-face {
-          font-family: 'DMSansMedium';
-          src: url('/theme/fonts/DMSans-Medium.woff2') format('woff2');
-          font-style: normal;
-          font-display: swap;
-        }
         body {
           font-family: 'ManropeRegular', sans-serif;
         }
@@ -96,7 +103,9 @@ interface VSBThemeProviderProps {
   children: ReactNode;
 }
 
-export const VSBThemeProvider: React.FC<VSBThemeProviderProps> = ({ children }) => {
+export const VSBThemeProvider: React.FC<VSBThemeProviderProps> = ({
+  children,
+}) => {
   return (
     <ThemeProvider theme={VSBTheme}>
       <CssBaseline />

@@ -1,0 +1,18 @@
+@font-face {
+  font-family: "DMSansRegular";
+  src: url("./DMSans-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DMSansSemiBold";
+  src: url("./DMSans-SemiBold.woff2") format("woff2");
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DMSansMedium";
+  src: url("./DMSans-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-display: swap;
+}

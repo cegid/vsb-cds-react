@@ -6,7 +6,7 @@ import { TypographyPropsVariantOverrides } from "@cegid/cds-react/Typography";
 
 const typography: TypographyVariantsOptions = {
   allVariants: { letterSpacing: "normal", textTransform: "none" },
-  fontFamily: "DMSansRegular, sans-serif",
+  fontFamily: "DMSans, sans-serif",
   // Title styles
   displayMRegular: {
     fontFamily: "DMSansRegular, sans-serif",
@@ -103,6 +103,7 @@ export type TypographyVariants = OverridableStringUnion<
 
 export type CustomVariant =
   | "displayMRegular"
+  | "displayMSemiBold"
   | "displaySRegular"
   | "displaySSemiBold"
   | "headLineMRegular"
