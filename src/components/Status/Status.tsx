@@ -85,7 +85,7 @@ const Status: React.FC<StatusProps> = ({
         />
       )}
       <Typography
-        variant={size === 'small' ? 'bodyXSRegular' : 'bodySRegular'}
+        variant={size === 'small' ? 'bodySRegular' : 'bodyMRegular'}
         sx={{
           whiteSpace: 'nowrap',
           overflow: 'hidden',

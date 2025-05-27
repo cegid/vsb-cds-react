@@ -21,7 +21,7 @@ const StyledChip = styled(CegidChip)<ChipProps>(({ size }) => ({
   color: neutral[50],
   paddingLeft: size === 'small' ? '4px' : '8px',
   paddingRight: size === 'small' ? '4px' : '8px',
-  ...((size === 'small' ? typography.bodyXSSemiBold : typography.bodySSemiBold) || {}),
+  ...((size === 'small' ? typography.bodySSemiBold : typography.bodyMSemiBold) || {}),
   '& .MuiChip-label': {
     color: 'inherit',
     paddingLeft: '4px',
