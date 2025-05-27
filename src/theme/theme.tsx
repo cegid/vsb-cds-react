@@ -84,7 +84,7 @@ export const VSBTheme = createTheme({
     MuiCssBaseline: {
       styleOverrides: `
         body {
-          font-family: 'ManropeRegular', sans-serif;
+          font-family: 'DMSansRegular', sans-serif;
         }
         .MuiSelect-select:not(.Mui-focused):has(+ .MuiSelect-nativeInput:not([value])) {
           color: ${neutral[50]} !important;
