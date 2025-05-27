@@ -3,17 +3,24 @@ FROM node:18-alpine
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers package.json et package-lock.json
+# Copier les fichiers de dépendances
 COPY package*.json ./
+COPY .npmrc ./
 
-# Installer les dépendances
-RUN npm install
+# Installer les dépendances du projet
+RUN npm ci
 
-# Copier le reste du code
+# Copier tout le code source
 COPY . .
 
-# Exposer le port Storybook
-EXPOSE 6006
+# Builder le storybook (cela va créer le dossier storybook-static)
+RUN npm run build-storybook
 
-# Exécuter Storybook en mode développement
-CMD ["npm", "run", "storybook", "--", "--host", "0.0.0.0", "--ci"]
+# Installer http-server globalement
+RUN npm install -g http-server
+
+# Exposer le port pour Heroku
+EXPOSE $PORT
+
+# Servir les fichiers depuis storybook-static avec le port dynamique d'Heroku
+CMD http-server storybook-static -p $PORT

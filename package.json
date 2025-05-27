@@ -22,7 +22,8 @@
   ],
   "scripts": {
     "build": "tsc && vite build",
-    "storybook": "storybook dev -p 6006"
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "keywords": [
     "design-system",
