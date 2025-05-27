@@ -26,3 +26,7 @@ export { default as Chip } from './Chip';
 export * from './Chip';
 export { default as Column } from './Column';
 export * from './Column';
+export { default as Header } from './Header';
+export * from './Header';
+export { default as Row } from './Row';
+export * from './Row';
