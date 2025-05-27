@@ -1,56 +1,71 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import Typography from './Typography';
-import Stack from '../Stack';
-import Box from '../Box';
+import Typography from "./Typography";
+import Stack from "../Stack";
+import Box from "../Box";
 
 const meta = {
-  title: 'Components/Typography',
+  title: "Components/Typography",
   component: Typography,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     variant: {
-      control: 'select',
+      control: "select",
       options: [
-        'titleLRegular',
-        'titleLSemiBold',
-        'titleMRegular',
-        'titleMSemiBold',
-        'titleSRegular',
-        'titleSSemiBold',
-        'bodyMRegular',
-        'bodyMSemiBold',
-        'bodySRegular',
-        'bodySMedium',
-        'bodySSemiBold',
-        'bodyXSRegular',
-        'bodyXSSemiBold',
+        "displayMRegular",
+        "displayMSemiBold",
+        "displaySRegular",
+        "displaySSemiBold",
+        "headLineMRegular",
+        "headLineMSemiBold",
+        "headLineSRegular",
+        "headLineSSemiBold",
+        "titleLRegular",
+        "titleLSemiBold",
+        "bodyMRegular",
+        "bodyMSemiBold",
+        "bodySRegular",
+        "bodySMedium",
+        "bodySSemiBold",
+        "captionSemiBold",
+        "captionRegular",
       ],
-      description: 'The variant to use',
+      description: "The variant to use",
     },
     color: {
-      control: 'text',
+      control: "text",
       description:
         'The color of the component. Can use format "palette/shade" (e.g., "primary/50")',
     },
     align: {
-      control: 'select',
-      options: ['inherit', 'left', 'center', 'right', 'justify'],
-      description: 'Text alignment',
+      control: "select",
+      options: ["inherit", "left", "center", "right", "justify"],
+      description: "Text alignment",
     },
     component: {
-      control: 'select',
-      options: ['span', 'p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label'],
-      description: 'The HTML element or React component to render',
+      control: "select",
+      options: [
+        "span",
+        "p",
+        "div",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "label",
+      ],
+      description: "The HTML element or React component to render",
     },
   },
   args: {
-    variant: 'bodyMRegular',
-    align: 'inherit',
-    component: 'span',
+    variant: "bodyMRegular",
+    align: "inherit",
+    component: "span",
   },
 } satisfies Meta<typeof Typography>;
 
@@ -59,53 +74,84 @@ type Story = StoryObj<typeof meta>;
 
 export const Standard: Story = {
   args: {},
-  render: (args) => <Typography {...args}>Default Typography Text</Typography>,
+  render: (args) => (
+    <Typography {...args}>
+      Tokyo, Japan’s busy capital, mixes the ultramodern and the traditional,
+      from historic temples to neon-lit skyscrapers.
+    </Typography>
+  ),
 };
 
 export const Variants: Story = {
   render: (args) => (
     <Stack spacing={2}>
-      <Typography {...args} variant="titleLSemiBold">
-        titleLSemiBold - Weight: 600 - Size: 28px - Line Height: 36px
+      {/* Display variants */}
+      <Typography {...args} variant="displayMRegular">
+        displayMRegular - Size: 45px - Line Height: 52px - Regular
       </Typography>
-      <Typography {...args} variant="titleLRegular">
-        titleLRegular - Weight: 400 - Size: 28px - Line Height: 36px
+      <Typography {...args} variant="displayMSemiBold">
+        displayMRegular - Size: 45px - Line Height: 52px - Regular
       </Typography>
-      <Typography {...args} variant="titleMSemiBold">
-        titleMSemiBold - Weight: 600 - Size: 24px - Line Height: 36px
+      <Typography {...args} variant="displaySRegular">
+        displaySRegular - Size: 36px - Line Height: 44px - Regular
       </Typography>
-      <Typography {...args} variant="titleMRegular">
-        titleMRegular - Weight: 400 - Size: 24px - Line Height: 36px
-      </Typography>
-      <Typography {...args} variant="titleSSemiBold">
-        titleSSemiBold - Weight: 600 - Size: 20px - Line Height: 32px
-      </Typography>
-      <Typography {...args} variant="titleSRegular">
-        titleSRegular - Weight: 400 - Size: 20px - Line Height: 32px
+      <Typography {...args} variant="displaySSemiBold">
+        displaySSemiBold - Size: 36px - Line Height: 44px - SemiBold
       </Typography>
 
       <Box mt={2} />
 
-      <Typography {...args} variant="bodyMSemiBold">
-        bodyMSemiBold - Weight: 600 - Size: 16px - Line Height: 24px
+      {/* Headline variants */}
+      <Typography {...args} variant="headLineMRegular">
+        headLineMRegular - Size: 28px - Line Height: 36px - Regular
       </Typography>
+      <Typography {...args} variant="headLineMSemiBold">
+        headLineMSemiBold - Size: 28px - Line Height: 36px - SemiBold
+      </Typography>
+      <Typography {...args} variant="headLineSRegular">
+        headLineSRegular - Size: 24px - Line Height: 36px - Regular
+      </Typography>
+      <Typography {...args} variant="headLineSSemiBold">
+        headLineSSemiBold - Size: 24px - Line Height: 36px - SemiBold
+      </Typography>
+
+      <Box mt={2} />
+
+      {/* Title variants */}
+      <Typography {...args} variant="titleLRegular">
+        titleLRegular - Size: 20px - Line Height: 32px - Regular
+      </Typography>
+      <Typography {...args} variant="titleLSemiBold">
+        titleLSemiBold - Size: 20px - Line Height: 32px - SemiBold
+      </Typography>
+
+      <Box mt={2} />
+
+      {/* Body variants */}
       <Typography {...args} variant="bodyMRegular">
-        bodyMRegular - Weight: 400 - Size: 16px - Line Height: 24px
+        bodyMRegular - Size: 16px - Line Height: 24px - Regular
       </Typography>
-      <Typography {...args} variant="bodySSemiBold">
-        bodySSemiBold - Weight: 600 - Size: 14px - Line Height: 20px
-      </Typography>
-      <Typography {...args} variant="bodySMedium">
-        bodySMedium - Weight: 500 - Size: 14px - Line Height: 20px
+      <Typography {...args} variant="bodyMSemiBold">
+        bodyMSemiBold - Size: 16px - Line Height: 24px - SemiBold
       </Typography>
       <Typography {...args} variant="bodySRegular">
-        bodySRegular - Weight: 400 - Size: 14px - Line Height: 20px
+        bodySRegular - Size: 14px - Line Height: 20px - Regular
       </Typography>
-      <Typography {...args} variant="bodyXSSemiBold">
-        bodyXSSemiBold - Weight: 600 - Size: 12px - Line Height: 16px
+      <Typography {...args} variant="bodySMedium">
+        bodySMedium - Size: 14px - Line Height: 20px - Medium
       </Typography>
-      <Typography {...args} variant="bodyXSRegular">
-        bodyXSRegular - Weight: 400 - Size: 12px - Line Height: 16px
+      <Typography {...args} variant="bodySSemiBold">
+        bodySSemiBold - Size: 14px - Line Height: 20px - SemiBold
+      </Typography>
+
+      <Box mt={2} />
+
+      {/* Caption variants */}
+      <Typography {...args} variant="captionRegular">
+        captionRegular - Size: 12px - Line Height: 16px - Regular
+      </Typography>
+      <Typography {...args} variant="captionSemiBold">
+        captionSemiBold - Size: 12px - Line Height: 16px - SemiBold
       </Typography>
     </Stack>
   ),
@@ -150,19 +196,23 @@ export const CustomColors: Story = {
 
 export const Alignment: Story = {
   render: (args) => (
-    <Stack spacing={2} sx={{ width: '100%', maxWidth: '500px' }}>
+    <Stack spacing={2} sx={{ width: "100%", maxWidth: "500px" }}>
       <Typography {...args} align="left">
-        This text is left aligned. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        This text is left aligned. Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit.
       </Typography>
       <Typography {...args} align="center">
-        This text is center aligned. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        This text is center aligned. Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit.
       </Typography>
       <Typography {...args} align="right">
-        This text is right aligned. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        This text is right aligned. Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit.
       </Typography>
       <Typography {...args} align="justify">
-        This text is justify aligned. Lorem ipsum dolor sit amet, consectetur adipiscing elit. This
-        should stretch to fill the entire width of its container when there is enough text.
+        This text is justify aligned. Lorem ipsum dolor sit amet, consectetur
+        adipiscing elit. This should stretch to fill the entire width of its
+        container when there is enough text.
       </Typography>
     </Stack>
   ),
@@ -172,7 +222,7 @@ export const Components: Story = {
   render: (args) => (
     <Stack spacing={3}>
       <Box>
-        <Typography {...args} variant="titleMSemiBold" component="h1">
+        <Typography {...args} variant="titleLSemiBold" component="h1">
           H1 - Rendered as h1 element
         </Typography>
         <Typography variant="bodySRegular" component="p" color="neutral/70">
@@ -181,7 +231,7 @@ export const Components: Story = {
       </Box>
 
       <Box>
-        <Typography {...args} variant="titleSSemiBold" component="h2">
+        <Typography {...args} variant="titleLSemiBold" component="h2">
           H2 - Rendered as h2 element
         </Typography>
         <Typography variant="bodySRegular" component="p" color="neutral/70">
@@ -191,26 +241,27 @@ export const Components: Story = {
 
       <Box>
         <Typography {...args} variant="bodyMRegular" component="p">
-          This is a paragraph rendered as a p element. Lorem ipsum dolor sit amet, consectetur
-          adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          This is a paragraph rendered as a p element. Lorem ipsum dolor sit
+          amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
+          labore et dolore magna aliqua.
         </Typography>
       </Box>
 
       <Box>
         <Typography {...args} variant="bodySRegular" component="div">
-          This is text rendered as a div element. It maintains the typography styling
-          but uses a div container instead of the default span.
+          This is text rendered as a div element. It maintains the typography
+          styling but uses a div container instead of the default span.
         </Typography>
       </Box>
 
       <Box>
-        <Typography {...args} variant="bodyXSRegular" component="label">
+        <Typography {...args} variant="caption" component="label">
           This is rendered as a label element (useful for form labels)
         </Typography>
       </Box>
 
       <Box>
-        <Typography {...args} variant="bodyMRegular" component="span">
+        <Typography {...args} variant="caption" component="span">
           This is the default span element rendering.
         </Typography>
       </Box>
@@ -225,27 +276,29 @@ export const SemanticHeaders: Story = {
         Main Title (H1)
       </Typography>
 
-      <Typography {...args} variant="titleMSemiBold" component="h2">
+      <Typography {...args} variant="titleLSemiBold" component="h2">
         Section Title (H2)
       </Typography>
 
-      <Typography {...args} variant="titleSSemiBold" component="h3">
+      <Typography {...args} variant="titleLSemiBold" component="h3">
         Subsection Title (H3)
       </Typography>
 
       <Typography {...args} variant="bodyMRegular" component="p">
-        This is body text in a paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris.
+        This is body text in a paragraph. Lorem ipsum dolor sit amet,
+        consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore
+        et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+        exercitation ullamco laboris.
       </Typography>
 
-      <Typography {...args} variant="titleSSemiBold" component="h4">
+      <Typography {...args} variant="titleLSemiBold" component="h4">
         Sub-subsection Title (H4)
       </Typography>
 
       <Typography {...args} variant="bodyMRegular" component="p">
         Another paragraph of body text to demonstrate the semantic structure.
-        Each element uses the appropriate HTML tag for better accessibility and SEO.
+        Each element uses the appropriate HTML tag for better accessibility and
+        SEO.
       </Typography>
     </Stack>
   ),
