@@ -30,3 +30,5 @@ export { default as Header } from './Header';
 export * from './Header';
 export { default as Row } from './Row';
 export * from './Row';
+export { default as Callout } from './Callout';
+export * from './Callout';
