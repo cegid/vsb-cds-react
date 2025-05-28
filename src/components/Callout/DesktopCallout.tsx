@@ -18,6 +18,8 @@ const DesktopCallout: React.FC<CalloutProps> = ({
     size
 }) => {
     const config = VARIANT_CONFIG[variant];
+    const isMediumSize = size === "M";
+    const isExtraSmallSize = size === "XS";
 
     const borderStyle: BorderProps = {
         style: "solid",
@@ -51,6 +53,33 @@ const DesktopCallout: React.FC<CalloutProps> = ({
         });
     };
 
+    const renderContent = () => (
+        <Column>
+            {isMediumSize && (
+                <Typography variant="bodySSemiBold" color="neutral/10">
+                    {title}
+                </Typography>
+            )}
+            <Typography
+                variant={isMediumSize ? "captionRegular" : "bodyMRegular"}
+                color={isMediumSize ? "neutral/50" : "neutral/10"}
+            >
+                {description}
+            </Typography>
+        </Column>
+    );
+
+    const renderMediumSizeButtons = () => (
+        <>
+            <Button variant="tonal" onClick={buttonActionClick} color={variant}>
+                {buttonLabel}
+            </Button>
+            <Button variant="outlined" onClick={onClose} color={variant}>
+                Fermer
+            </Button>
+        </>
+    );
+
     const renderChevronButton = () => (
         <Box
             sx={{ cursor: "pointer" }}
@@ -61,6 +90,18 @@ const DesktopCallout: React.FC<CalloutProps> = ({
             <ChevronRight sx={{ fontSize: "16px" }} />
         </Box>
     );
+
+    const renderActions = () => {
+        if (isMediumSize) {
+            return renderMediumSizeButtons();
+        }
+
+        if (isExtraSmallSize) {
+            return renderChevronButton();
+        }
+
+        return null;
+    };
 
     return (
         <Row
@@ -74,33 +115,9 @@ const DesktopCallout: React.FC<CalloutProps> = ({
         >
             <Row alignItems="center" gap={5} position="relative">
                 {image && renderImage(image)}
-                <Column>
-                    {
-                        size === "M" &&
-                        <Typography variant="bodySSemiBold" color="neutral/10">
-                            {title}
-                        </Typography>
-                    }
-                    <Typography variant={size === "M" ? "captionRegular" : "bodyMRegular"} color={size === "M" ? "neutral/50" : "neutral/10"}>
-                        {description}
-                    </Typography>
-                </Column>
+                {renderContent()}
             </Row>
-            {
-                size === "M" &&
-                <>
-                    <Button variant="tonal" onClick={buttonActionClick} color={variant}>
-                        {buttonLabel}
-                    </Button>
-                    <Button variant="outlined" onClick={onClose} color={variant}>
-                        Fermer
-                    </Button>
-                </>
-            }
-            {
-                size === "XS" && renderChevronButton()
-            }
-
+            {renderActions()}
         </Row>
     );
 };
