@@ -31,6 +31,7 @@ const meta = {
     buttonLabel: "Action",
     variant: "error",
     image: TestIcon,
+    size: "XS",
   },
 } satisfies Meta<typeof Callout>;
 
