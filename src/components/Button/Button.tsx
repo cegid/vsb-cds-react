@@ -9,7 +9,7 @@ import type { ButtonProps as CegidButtonProps } from '@cegid/cds-react';
 import colorPalettes from '../../theme/colors';
 import { RADIUS } from '../../theme/radius';
 
-const { primary, secondary, success, critical, yellow, plum, neutral, banana, pink, purple } =
+const { primary, secondary, success, critical, yellow, plum, neutral, info } =
   colorPalettes;
 
 const createTextButtonStyle = (color: any, colorIndex = 50, hoverIndex = 60, activeIndex = 60) => ({
@@ -192,8 +192,8 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
     borderColor: success[80],
   },
   '&.MuiButton-outlinedInfo': {
-    ...createOutlinedButtonStyle(success),
-    borderColor: plum[80],
+    ...createOutlinedButtonStyle(info),
+    borderColor: info[80],
   },
 
   '&.MuiButton-text': {
