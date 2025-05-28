@@ -136,7 +136,7 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
     ...createContainedButtonStyle(success),
   },
   '&.MuiButton-containedWarning': {
-    ...createContainedButtonStyle(yellow, 50, 45, 40),
+    ...createContainedButtonStyle(yellow, 50, 40, 40),
   },
   '&.MuiButton-containedInfo': {
     ...createContainedButtonStyle(plum),
@@ -180,7 +180,7 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
     borderColor: neutral[90],
   },
   '&.MuiButton-outlinedError': {
-    ...createOutlinedButtonStyle(critical, 40, 45, 45),
+    ...createOutlinedButtonStyle(critical, 40, 40, 40),
     borderColor: critical[80],
   },
   '&.MuiButton-outlinedWarning': {
@@ -207,7 +207,7 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
     },
   },
   '&.MuiButton-textError': {
-    ...createTextButtonStyle(critical, 40, 45, 45),
+    ...createTextButtonStyle(critical, 40, 40, 40),
   },
   '&.MuiButton-textWarning': {
     ...createTextButtonStyle(yellow, 40),
@@ -237,7 +237,7 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
     },
   },
   '&.MuiButton-tonalError': {
-    ...createTonalButtonStyle(critical, 40, 45, 45),
+    ...createTonalButtonStyle(critical, 40, 40, 40),
   },
   '&.MuiButton-tonalWarning': {
     ...createTonalButtonStyle(yellow),
