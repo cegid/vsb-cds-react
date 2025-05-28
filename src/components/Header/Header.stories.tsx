@@ -14,13 +14,22 @@ const meta = {
       control: "text",
       description: "The title for header",
     },
-    buttonText: {
+    primaryButtonText: {
       control: "text",
-      description: "The text for the button",
+      description: "The text for the primary action button",
+    },
+    secondaryButtonText: {
+      control: "text",
+      description: "The text for the secondary action button",
     },
     primaryAction: {
       control: "boolean",
       description: "has a primary action",
+      defaultValue: true,
+    },
+    secondaryAction: {
+      control: "boolean",
+      description: "has a secondary action",
       defaultValue: true,
     },
     settingsAction: {
@@ -36,10 +45,12 @@ const meta = {
   },
   args: {
     title: "Page Title",
-    buttonText: "Button",
-    primaryAction: () => {},
-    settingsAction: () => {},
-    moreAction: () => {},
+    primaryButtonText: "Button",
+    secondaryButtonText: "Button",
+    primaryAction: () => { },
+    secondaryAction: () => { },
+    settingsAction: () => { },
+    moreAction: () => { },
   },
 } satisfies Meta<typeof Header>;
 
@@ -52,6 +63,7 @@ export const Default: Story = {
     <Header
       {...args}
       primaryAction={args.primaryAction ? args.primaryAction : undefined}
+      secondaryAction={args.secondaryAction ? args.secondaryAction : undefined}
       settingsAction={args.settingsAction ? args.settingsAction : undefined}
       moreAction={args.moreAction ? args.moreAction : undefined}
     ></Header>
