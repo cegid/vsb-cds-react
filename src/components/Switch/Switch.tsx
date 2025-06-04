@@ -22,24 +22,6 @@ export interface CustomSwitchProps {
     onClick: () => void;
 }
 
-/**
- * Custom Toggle Switch Component
- * 
- * A customizable switch component with active/inactive states and hover effects.
- * Supports disabled state and external click handling.
- * 
- * @param props - The Switch component properties
- * @returns An interactive switch component with active/inactive states
- * 
- * @example
- * ```tsx
- * <Switch 
- *   disabled={false} 
- *   isActive={true}
- *   onClick={() => console.log('Switch clicked')} 
- * />
- * ```
- */
 const Switch: React.FC<CustomSwitchProps> = ({ disabled = false, isActive = true, onClick }) => {
     const [isSwitched, setisSwitched] = useState(isActive);
 
