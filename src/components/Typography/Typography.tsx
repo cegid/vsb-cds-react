@@ -6,9 +6,10 @@ import React from "react";
 import { Typography as CegidTypography } from "@cegid/cds-react";
 import type { TypographyProps as CegidTypographyProps } from "@cegid/cds-react";
 
-import colorPalettes, {
+import {
   CustomColorString,
   IColorPalettes,
+  parseCustomColor,
 } from "../../theme/colors";
 import { CustomVariant } from "../../theme/typography";
 
@@ -40,36 +41,6 @@ interface CustomTypographyProps
 }
 
 type ShadeKey = keyof IColorPalettes;
-
-const parseCustomColor = (colorValue: string): string | undefined => {
-  if (!colorValue || typeof colorValue !== "string") {
-    return undefined;
-  }
-
-  if (colorValue === "white") {
-    return "#FFFFFF";
-  }
-  const matches = colorValue.match(/^([a-z]+)\/(\d+)$/);
-
-  if (!matches) {
-    return undefined;
-  }
-
-  const [, paletteName, shade] = matches;
-
-  if (!colorPalettes[paletteName as keyof typeof colorPalettes]) {
-    return undefined;
-  }
-
-  const palette = colorPalettes[paletteName as keyof typeof colorPalettes];
-  const shadeKey = shade as unknown as ShadeKey;
-
-  if (!palette[shadeKey]) {
-    return undefined;
-  }
-
-  return palette[shadeKey];
-};
 
 const Typography = React.forwardRef<HTMLElement, CustomTypographyProps>(
   (props, ref) => {

@@ -17,6 +17,7 @@ import {
   ThemeProvider,
 } from "@cegid/cds-react";
 import "./fonts/fonts.css";
+import "./icons/hugeicons-font.css";
 
 const createCompletePalette = (colorObj: IColorPalettes) => ({
   50: colorObj[95],
