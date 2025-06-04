@@ -4,8 +4,7 @@ import React from "react";
 
 import { Box, OverridableComponent, SvgIconTypeMap } from "@cegid/cds-react";
 
-import colorPalettes, { PaletteNames } from "../../theme/colors";
-import { RADIUS } from "../../theme/radius";
+import colorPalettes, { PaletteNames, white } from "../../theme/colors";
 import spacing from "../../theme/spacing";
 import Typography from "../Typography/Typography";
 
@@ -34,11 +33,9 @@ export interface StatusProps {
 
   /**
    * Controls the visual style of the status badge.
-   * 'solid' renders with the main color background and white text.
-   * 'light' renders with a light background (palette[95]) and main color text (palette[40]).
    * @default 'light'
    */
-  variant?: "solid" | "light";
+  variant?: "dark" | "light";
 
   /**
    * Optional icon to display before the label text.
@@ -84,20 +81,21 @@ const Status: React.FC<StatusProps> = ({
   const paddingRight = size === "small" ? 6 : 10;
   const iconSize = size === "small" ? 12 : 14;
 
-  const mainColor = palette[40];
-  const bgColor = palette[95];
-
-  const solidStyle = {
-    backgroundColor: mainColor,
-    color: "#FFFFFF",
+  const darkStyle = {
+    backgroundColor: palette[50],
+    color: white,
+    border: "1px solid",
+    borderColor: `${palette[30]}4D`
   };
 
   const lightStyle = {
-    backgroundColor: bgColor,
-    color: mainColor,
+    backgroundColor: palette[99],
+    color: palette[30],
+    border: "1px solid",
+    borderColor: `${palette[30]}4D`
   };
 
-  const style = variant === "solid" ? solidStyle : lightStyle;
+  const style = variant === "dark" ? darkStyle : lightStyle;
 
   return (
     <Box
@@ -105,7 +103,7 @@ const Status: React.FC<StatusProps> = ({
         display: "inline-flex",
         alignItems: "center",
         height: height,
-        borderRadius: RADIUS.FULL,
+        borderRadius: '6px',
         paddingLeft: `${paddingLeft}px`,
         paddingRight: `${paddingRight}px`,
         width: "fit-content",
@@ -128,7 +126,7 @@ const Status: React.FC<StatusProps> = ({
         />
       )}
       <Typography
-        variant={size === "small" ? "bodySRegular" : "bodyMRegular"}
+        variant={size === "small" ? "captionRegular" : "bodySRegular"}
         sx={{
           whiteSpace: "nowrap",
           overflow: "hidden",

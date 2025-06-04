@@ -31,7 +31,7 @@ const meta = {
     },
     variant: {
       control: 'radio',
-      options: ['light', 'solid'],
+      options: ['light', 'dark'],
       description: "Le style d'affichage",
     },
     icon: {
@@ -51,7 +51,7 @@ const meta = {
   args: {
     size: 'medium',
     color: 'primary',
-    variant: 'solid',
+    variant: 'dark',
     icon: InfoOutlined,
     label: 'Status',
   },
@@ -71,7 +71,7 @@ export const Variants: Story = {
     <Stack direction="column" spacing={2}>
       <Stack direction="row" spacing={2} flexWrap="wrap" alignItems="center">
         <Status {...args} variant="light" color="success" icon={InfoOutlined} label="Light" />
-        <Status {...args} variant="solid" color="success" icon={InfoOutlined} label="Solid" />
+        <Status {...args} variant="dark" color="success" icon={InfoOutlined} label="dark" />
       </Stack>
     </Stack>
   ),
@@ -100,14 +100,14 @@ export const Colors: Story = {
 
       <Box>
         <Typography variant='titleLSemiBold' mb={1}>
-          Solid Variant
+          dark Variant
         </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
           {colorNames.map((colorName) => (
             <Status
-              key={`solid-${colorName}`}
+              key={`dark-${colorName}`}
               {...args}
-              variant="solid"
+              variant="dark"
               color={colorName as PaletteNames}
               icon={InfoOutlined}
               label={colorName}
@@ -132,7 +132,7 @@ export const SizeComparison: Story = {
               key={`medium-${colorName}`}
               {...args}
               size="medium"
-              variant={index % 2 === 0 ? 'light' : 'solid'}
+              variant={index % 2 === 0 ? 'light' : 'dark'}
               color={colorName as PaletteNames}
               icon={InfoOutlined}
               label={colorName}
@@ -151,7 +151,7 @@ export const SizeComparison: Story = {
               key={`small-${colorName}`}
               {...args}
               size="small"
-              variant={index % 2 === 0 ? 'light' : 'solid'}
+              variant={index % 2 === 0 ? 'light' : 'dark'}
               color={colorName as PaletteNames}
               icon={InfoOutlined}
               label={colorName}
@@ -171,8 +171,8 @@ export const IconsAndNoIcons: Story = {
         <Status {...args} color="success" label="No Icon" />
       </Stack>
       <Stack direction="row" spacing={2} flexWrap="wrap">
-        <Status {...args} variant="solid" color="yellow" icon={InfoOutlined} label="With Icon" />
-        <Status {...args} variant="solid" color="yellow" label="No Icon" />
+        <Status {...args} variant="dark" color="yellow" icon={InfoOutlined} label="With Icon" />
+        <Status {...args} variant="dark" color="yellow" label="No Icon" />
       </Stack>
     </Stack>
   ),
@@ -198,7 +198,7 @@ export const AllColors: Story = {
           />
           <Status
             size="medium"
-            variant="solid"
+            variant="dark"
             color={colorName as PaletteNames}
             icon={InfoOutlined}
             label={colorName}
@@ -212,7 +212,7 @@ export const AllColors: Story = {
           />
           <Status
             size="small"
-            variant="solid"
+            variant="dark"
             color={colorName as PaletteNames}
             icon={InfoOutlined}
             label={colorName}
