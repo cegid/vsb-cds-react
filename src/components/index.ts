@@ -32,3 +32,5 @@ export { default as Row } from './Row';
 export * from './Row';
 export { default as Callout } from './Callout';
 export * from './Callout';
+export { default as Tooltip } from './Tooltip';
+export * from './Tooltip';

@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 import {
   TextField as CegidTextField,
   TextFieldProps as CegidTextFieldProps,
