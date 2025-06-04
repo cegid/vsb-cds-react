@@ -1,15 +1,16 @@
 import React from 'react';
 import { styled } from '@mui/material';
-import { Tooltip as CegidTooltip } from "@cegid/cds-react";
+import { Tooltip as CegidTooltip, TooltipProps } from "@cegid/cds-react";
 import { neutral, RADIUS, white } from '../../theme';
 import typography from '../../theme/typography';
 import { ELEVATION } from '../../theme/shadows';
 
-interface CustomTooltipProps {
+interface CustomTooltipProps extends TooltipProps {
+    /**
+     * Controls the visual style of the tooltip badge.
+     * @default 'light'
+     */
     color?: 'dark' | 'light';
-    children: React.ReactElement;
-    title: React.ReactNode;
-    [key: string]: any;
 }
 
 const StyledTooltip = styled(({ className, color, ...props }: CustomTooltipProps) => (
