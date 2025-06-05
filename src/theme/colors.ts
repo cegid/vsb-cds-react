@@ -73,7 +73,7 @@ export const yellow: IColorPalettes = {
   99: "#FFFEEA",
 };
 
-// Banana/Tread
+// Banana
 export const banana: IColorPalettes = {
   10: "#271900",
   20: "#422C00",
@@ -90,9 +90,9 @@ export const banana: IColorPalettes = {
 
 // Critical
 export const critical: IColorPalettes = {
-  20: "#480907",
-  30: "#841B18",
-  35: "#A01714",
+  10: "#480907",
+  20: "#841B18",
+  30: "#A01714",
   40: "#C11814",
   50: "#E5221D",
   60: "#F8403B",
@@ -182,13 +182,9 @@ export interface IColorPalettes {
   10?: string;
   20: string;
   30: string;
-  35?: string;
   40: string;
-  45?: string;
   50: string;
-  55?: string;
   60: string;
-  65?: string;
   70: string;
   80: string;
   90: string;
