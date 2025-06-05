@@ -24,6 +24,7 @@ const StyledTooltip = styled(({ className, color, ...props }: CustomTooltipProps
         paddingBottom: '4px',
         paddingLeft: '8px',
         paddingRight: '8px',
+        marginTop: '8px',
         backgroundColor: color === 'dark' ? neutral[10] : neutral[99],
         color: color === 'dark' ? white : neutral[10],
         ...typography.captionSemiBold,
