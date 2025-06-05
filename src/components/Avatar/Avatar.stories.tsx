@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Avatar from "./Avatar";
-import { Add, Settings, Mail, Contacts } from "@cegid/icons-react";
 import Box from "../Box";
 import Typography from "../Typography";
 import Icon from "../Icon";
