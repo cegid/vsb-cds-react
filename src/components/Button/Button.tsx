@@ -8,7 +8,6 @@ import type { ButtonProps as CegidButtonProps } from "@cegid/cds-react";
 
 import colorPalettes from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
-import { BorderColor } from "@cegid/icons-react";
 
 const { primary, secondary, success, critical, yellow, plum, neutral, info } =
   colorPalettes;
