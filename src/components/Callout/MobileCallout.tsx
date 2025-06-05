@@ -23,7 +23,7 @@ const MobileCallout: React.FC<CalloutProps> = ({
 
     const getBorderStyle = (): BorderProps => ({
         style: "solid",
-        width: 1.5,
+        width: 1,
         color: config.border
     });
 
@@ -64,7 +64,7 @@ const MobileCallout: React.FC<CalloutProps> = ({
                 position="absolute"
                 top={0}
                 right={0}
-                sx={{ cursor: "pointer" }}
+                sx={{ cursor: "pointer"}}
                 onClick={onClose}
             >
                 <Close sx={{ fontSize: "16px" }} />
@@ -102,7 +102,7 @@ const MobileCallout: React.FC<CalloutProps> = ({
 
     const renderActionButton = () => (
         isMediumSize && (
-            <Button variant="tonal" onClick={buttonActionClick} color={variant}>
+            <Button variant="contained" onClick={buttonActionClick} color={variant}>
                 {buttonLabel}
             </Button>
         )
