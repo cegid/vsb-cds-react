@@ -7,6 +7,7 @@ import { Box, OverridableComponent, SvgIconTypeMap } from "@cegid/cds-react";
 import colorPalettes, { PaletteNames, white } from "../../theme/colors";
 import spacing from "../../theme/spacing";
 import Typography from "../Typography/Typography";
+import { RADIUS } from "../../theme";
 
 export interface StatusProps {
   /**
@@ -103,7 +104,7 @@ const Status: React.FC<StatusProps> = ({
         display: "inline-flex",
         alignItems: "center",
         height: height,
-        borderRadius: '6px',
+        borderRadius: RADIUS.S,
         paddingLeft: `${paddingLeft}px`,
         paddingRight: `${paddingRight}px`,
         width: "fit-content",
