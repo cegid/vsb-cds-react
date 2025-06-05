@@ -211,7 +211,7 @@ export type PaletteNames = keyof typeof colorPalettes;
 
 type ShadeKey = keyof IColorPalettes;
 
-export type CustomColorString = `${PaletteNames}/${ShadeKey}` | 'white';
+export type CustomColorString = `${PaletteNames}/${ShadeKey}` | 'white' | 'transparent';
 
 export default colorPalettes;
 

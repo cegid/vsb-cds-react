@@ -36,3 +36,5 @@ export { default as Tooltip } from './Tooltip';
 export * from './Tooltip';
 export { default as Icon } from './Icon';
 export * from './Icon';
+export { default as Badge } from './Badge';
+export * from './Badge';
