@@ -91,7 +91,7 @@ const Status: React.FC<StatusProps> = ({
 
   const lightStyle = {
     backgroundColor: palette[99],
-    color: palette[30],
+    color: palette[50],
     border: "1px solid",
     borderColor: `${palette[30]}4D`
   };
@@ -104,7 +104,7 @@ const Status: React.FC<StatusProps> = ({
         display: "inline-flex",
         alignItems: "center",
         height: height,
-        borderRadius: RADIUS.S,
+        borderRadius: 2,
         paddingLeft: `${paddingLeft}px`,
         paddingRight: `${paddingRight}px`,
         width: "fit-content",
