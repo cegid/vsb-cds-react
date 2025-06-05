@@ -3,10 +3,13 @@
 import React from "react";
 import { CustomColorString, parseCustomColor } from "../../theme/colors";
 
+export type IconVariant = "bulk" | "duotone" | "solid" | "stroke" | "twotone";
+export type IconStyle = "rounded" | "sharp" | "standard";
+
 /**
  * Props for the Icon component using Huge Icons Pro fonts
  */
-interface IconProps {
+export interface IconProps {
   /**
    * The icon name (e.g., "add-female", "user", "home")
    * @example "add-female"
@@ -36,7 +39,7 @@ interface IconProps {
    * - twotone: Icon with two shades
    * @default "stroke"
    */
-  variant?: "bulk" | "duotone" | "solid" | "stroke" | "twotone";
+  variant?: IconVariant;
 
   /**
    * Icon corner style
@@ -45,7 +48,7 @@ interface IconProps {
    * - standard: Standard style
    * @default "rounded"
    */
-  style?: "rounded" | "sharp" | "standard";
+  style?: IconStyle;
 
   /**
    * Additional CSS classes to apply
