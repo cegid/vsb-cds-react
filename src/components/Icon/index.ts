@@ -1,2 +1,2 @@
-export { default } from "@cegid/cds-react";
-export * from "@cegid/cds-react";
+export { default } from "./Icon";
+export * from "./Icon";
