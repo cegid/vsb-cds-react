@@ -21,7 +21,7 @@ const meta = {
     },
   },
   args: {
-    children: "3-d-view",
+    children: "add-circle",
     color: "primary/50",
   },
 } satisfies Meta<typeof Icon>;

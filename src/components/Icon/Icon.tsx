@@ -24,7 +24,7 @@ interface IconProps {
 
   /**
    * Icon color using the custom color system
-  */
+   */
   color?: CustomColorString;
 
   /**
@@ -52,12 +52,6 @@ interface IconProps {
    * @example "my-custom-class"
    */
   className?: string;
-
-  /**
-   * Function called when the icon is clicked
-   * Makes the icon clickable and changes cursor to pointer
-   */
-  onClick?: () => void;
 }
 
 const Icon: React.FC<IconProps> = ({
@@ -67,20 +61,18 @@ const Icon: React.FC<IconProps> = ({
   variant = "stroke",
   style = "rounded",
   className = "",
-  onClick,
   ...props
 }) => {
   const getIconClass = () => {
     const variantClass = `hgi-${variant}`;
-    const styleClass = `hgi-${style}`;
+    const styleClass = `${style === "standard" ? "" : "hgi-" + style}`;
     const iconClass = `hgi-${children}`;
-    return `${variantClass} ${styleClass} ${iconClass}`;
+    return `hgi ${variantClass} ${styleClass} ${iconClass}`;
   };
 
   const iconStyle: React.CSSProperties = {
     fontSize: typeof size === "number" ? `${size}px` : size,
     color: color ? parseCustomColor(color) : "inherit",
-    cursor: onClick ? "pointer" : "inherit",
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
@@ -91,7 +83,6 @@ const Icon: React.FC<IconProps> = ({
     <i
       className={`${getIconClass()} ${className}`}
       style={iconStyle}
-      onClick={onClick}
       {...props}
     />
   );
