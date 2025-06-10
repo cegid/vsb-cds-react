@@ -15,7 +15,7 @@ const MobileCallout: React.FC<CalloutProps> = ({
   variant = "info",
   image,
   onClose,
-  size,
+  size = "M",
 }) => {
   const config = VARIANT_CONFIG[variant];
   const isMediumSize = size === "M";

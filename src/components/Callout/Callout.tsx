@@ -59,7 +59,7 @@ export interface CalloutProps {
    * Controls the overall size and spacing of the callout component.
    * 'M' renders a medium-sized callout with standard spacing.
    * 'XS' renders a compact callout with reduced padding and spacing.
-   * @default undefined
+   * @default M
    */
   size?: CalloutSize;
 }

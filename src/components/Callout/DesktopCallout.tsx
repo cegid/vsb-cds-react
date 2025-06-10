@@ -5,7 +5,6 @@ import Column from "../Column";
 import Typography from "../Typography";
 import Row from "../Row";
 import Box, { BorderProps } from "../Box";
-import { ChevronRight } from "@cegid/icons-react";
 import Icon from "../Icon";
 
 const DesktopCallout: React.FC<CalloutProps> = ({
@@ -16,7 +15,7 @@ const DesktopCallout: React.FC<CalloutProps> = ({
   variant = "info",
   image,
   onClose,
-  size,
+  size = "M",
 }) => {
   const config = VARIANT_CONFIG[variant];
   const isMediumSize = size === "M";
