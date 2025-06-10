@@ -21,7 +21,7 @@ const meta = {
   argTypes: {
     size: {
       control: "radio",
-      options: ["extraSmall", "medium"],
+      options: ["small", "medium"],
       description: "La taille du Status",
     },
     color: {
@@ -159,14 +159,14 @@ export const SizeComparison: Story = {
 
       <Box>
         <Typography variant="titleLSemiBold" mb={1}>
-          extraSmall Size
+          small Size
         </Typography>
         <Box display="flex" gap={2} flexWrap="wrap">
           {colorNames.slice(0, 4).map((colorName, index) => (
             <Status
-              key={`extraSmall-${colorName}`}
+              key={`small-${colorName}`}
               {...args}
-              size="extraSmall"
+              size="small"
               variant={index % 2 === 0 ? "light" : "dark"}
               color={colorName as PaletteNames}
               icon="information-circle"
@@ -231,14 +231,14 @@ export const AllColors: Story = {
             label={colorName}
           />
           <Status
-            size="extraSmall"
+            size="small"
             variant="light"
             color={colorName as PaletteNames}
             icon="information-circle"
             label={colorName}
           />
           <Status
-            size="extraSmall"
+            size="small"
             variant="dark"
             color={colorName as PaletteNames}
             icon="information-circle"
@@ -262,21 +262,21 @@ export const WithAvatars: Story = {
             {...args}
             variant="light"
             color="primary"
-            avatar={<Avatar size="extraSmall" color="primary" trigram="JD" />}
+            avatar={<Avatar size="small" color="primary" trigram="JD" />}
             label="John Doe"
           />
           <Status
             {...args}
             variant="dark"
             color="success"
-            avatar={<Avatar size="extraSmall" color="success" trigram="AM" />}
+            avatar={<Avatar size="small" color="success" trigram="AM" />}
             label="Alice Martin"
           />
           <Status
             {...args}
             variant="link"
             color="yellow"
-            avatar={<Avatar size="extraSmall" color="yellow" trigram="BL" />}
+            avatar={<Avatar size="small" color="yellow" trigram="BL" />}
             label="Bob Lee"
           />
         </Stack>
@@ -293,7 +293,7 @@ export const WithAvatars: Story = {
             color="primary"
             avatar={
               <Avatar
-                size="extraSmall"
+                size="small"
                 color="primary"
                 imageUrl="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
               />
@@ -306,7 +306,7 @@ export const WithAvatars: Story = {
             color="info"
             avatar={
               <Avatar
-                size="extraSmall"
+                size="small"
                 color="info"
                 imageUrl="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
               />
@@ -326,7 +326,7 @@ export const WithAvatars: Story = {
             variant="light"
             color="critical"
             avatar={
-              <Avatar size="extraSmall" color="critical" icon={<span>👤</span>} />
+              <Avatar size="small" color="critical" icon={<span>👤</span>} />
             }
             label="Admin"
           />
@@ -335,7 +335,7 @@ export const WithAvatars: Story = {
             variant="dark"
             color="secondary"
             avatar={
-              <Avatar size="extraSmall" color="secondary" icon={<span>⚙️</span>} />
+              <Avatar size="small" color="secondary" icon={<span>⚙️</span>} />
             }
             label="Settings"
           />
@@ -344,3 +344,4 @@ export const WithAvatars: Story = {
     </Stack>
   ),
 };
+
