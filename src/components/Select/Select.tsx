@@ -1,7 +1,6 @@
 'use client'
 
 import { useTheme } from '@mui/material/styles';
-import React from 'react';
 
 import { Select as CegidSelect, SelectProps as CegidSelectProps } from '@cegid/cds-react';
 
