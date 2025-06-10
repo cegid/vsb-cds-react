@@ -2,18 +2,23 @@
 
 import React from "react";
 
-import { Box, OverridableComponent, SvgIconTypeMap } from "@cegid/cds-react";
+import { OverridableComponent, SvgIconTypeMap } from "@cegid/cds-react";
 
 import colorPalettes, { PaletteNames, white } from "../../theme/colors";
 import spacing from "../../theme/spacing";
 import Typography from "../Typography/Typography";
+import typography from "../../theme/typography";
+import Box from "../Box";
+import Icon from "../Icon";
+import Avatar from "../Avatar";
 
+export type StatusVariant = "dark" | "light" | "link";
 export interface StatusProps {
   /**
    * The text content displayed inside the status badge.
    * Text is rendered with ellipsis overflow handling for long content.
    */
-  label: string;
+  label?: string;
 
   /**
    * Controls the size of the status badge.
@@ -35,14 +40,25 @@ export interface StatusProps {
    * Controls the visual style of the status badge.
    * @default 'light'
    */
-  variant?: "dark" | "light";
+  variant?: StatusVariant;
 
   /**
-   * Optional icon to display before the label text.
+   * Optional icon name to display before the label text.
    * Icon size automatically adjusts based on the size prop (12px for small, 14px for medium).
    * Includes proper spacing between icon and text.
+   * @example "user"
+   * @example "check-circle"
    */
-  icon?: SVGIconType;
+  icon?: string;
+
+  /**
+   * Optional avatar component to display before the label text.
+   * Takes priority over icon if both are provided.
+   * Avatar size automatically adjusts based on the size prop (20px for small, 24px for medium).
+   * Includes proper spacing between avatar and text.
+   * @example <Avatar size="small" color="primary" trigram="JD" />
+   */
+  avatar?: React.ReactElement<typeof Avatar>;
 
   /**
    * Additional CSS styles to apply to the status badge container.
@@ -69,6 +85,7 @@ const Status: React.FC<StatusProps> = ({
   icon,
   sx,
   className,
+  avatar,
 }) => {
   if (!colorPalettes[color]) {
     color = "primary";
@@ -78,24 +95,49 @@ const Status: React.FC<StatusProps> = ({
 
   const height = size === "small" ? 20 : 24;
   const paddingLeft = size === "small" ? 6 : 8;
-  const paddingRight = size === "small" ? 6 : 10;
+  let paddingRight;
+  if (size === "small") {
+    paddingRight = icon ? 6 : 8;
+  } else {
+    paddingRight = icon ? 10 : 8;
+  }
   const iconSize = size === "small" ? 12 : 14;
 
   const darkStyle = {
+    ...typography.bodySMedium,
     backgroundColor: palette[50],
     color: white,
     border: "1px solid",
-    borderColor: `${palette[30]}4D`
+    borderColor: `${palette[30]}4D`,
   };
 
   const lightStyle = {
+    ...typography.bodySMedium,
     backgroundColor: palette[99],
     color: palette[50],
     border: "1px solid",
-    borderColor: `${palette[30]}4D`
+    borderColor: `${palette[30]}4D`,
   };
 
-  const style = variant === "dark" ? darkStyle : lightStyle;
+  const linkStyle = {
+    ...typography.bodySMedium,
+    backgroundColor: white,
+    color: palette[60],
+    border: "1px solid",
+    borderColor: `${palette[40]}4D`,
+  };
+
+  const getStyle = () => {
+    switch (variant) {
+      case "dark":
+        return darkStyle;
+      case "link":
+        return linkStyle;
+      case "light":
+      default:
+        return lightStyle;
+    }
+  };
 
   return (
     <Box
@@ -107,24 +149,33 @@ const Status: React.FC<StatusProps> = ({
         paddingLeft: `${paddingLeft}px`,
         paddingRight: `${paddingRight}px`,
         width: "fit-content",
-        ...style,
+        ...getStyle(),
         ...sx,
       }}
       className={className}
     >
-      {icon && (
+      {avatar ? (
         <Box
-          component={icon}
           sx={{
-            width: `${iconSize}px !important`,
-            height: `${iconSize}px !important`,
-            fontSize: `${iconSize}px !important`,
-            minWidth: `${iconSize}px !important`,
-            minHeight: `${iconSize}px !important`,
-            marginRight: spacing(2),
+            display: "inline-flex",
+            alignItems: "center",
+            marginRight: label ? spacing(2) : 0,
           }}
-        />
-      )}
+        >
+          {avatar}
+        </Box>
+      ) : icon ? (
+        <Box
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            marginRight: label ? spacing(2) : 0,
+          }}
+        >
+          <Icon size={iconSize}>{icon}</Icon>
+        </Box>
+      ) : null}
+
       <Typography
         variant={size === "small" ? "captionRegular" : "bodySRegular"}
         sx={{
