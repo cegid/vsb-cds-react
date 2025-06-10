@@ -71,7 +71,7 @@ export const VARIANT_CONFIG = {
   },
   error: {
     background: "critical/99",
-    border: "critical/35"
+    border: "critical/30"
   },
   info: {
     background: "info/99",

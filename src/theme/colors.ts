@@ -152,30 +152,30 @@ export const white = "#ffffff";
 
 // Info
 export const info: IColorPalettes = {
-  20: '#124C68',
-  30: '#0F5C7D',
-  40: '#0D6D97',
-  50: '#0F89BA',
-  60: '#27B2E3',
-  70: '#45C0EB',
-  80: '#85D6F4',
-  90: '#BEE8F9',
-  95: '#E2F3FC',
-  99: '#F1FAFE',
+  20: "#124C68",
+  30: "#0F5C7D",
+  40: "#0D6D97",
+  50: "#0F89BA",
+  60: "#27B2E3",
+  70: "#45C0EB",
+  80: "#85D6F4",
+  90: "#BEE8F9",
+  95: "#E2F3FC",
+  99: "#F1FAFE",
 };
 
 // Beige
 export const beige: IColorPalettes = {
-  20: '#5B4F3E',
-  30: '#817159',
-  40: '#9A8D74',
-  50: '#B4A98F',
-  60: '#CEC6AB',
-  70: '#DBD4BE',
-  80: '#E8E3D1',
-  90: '#F6F2E4',
-  95: '#F9F6ED',
-  99: '#FCFAF6',
+  20: "#5B4F3E",
+  30: "#817159",
+  40: "#9A8D74",
+  50: "#B4A98F",
+  60: "#CEC6AB",
+  70: "#DBD4BE",
+  80: "#E8E3D1",
+  90: "#F6F2E4",
+  95: "#F9F6ED",
+  99: "#FCFAF6",
 };
 
 export interface IColorPalettes {
@@ -211,7 +211,10 @@ export type PaletteNames = keyof typeof colorPalettes;
 
 type ShadeKey = keyof IColorPalettes;
 
-export type CustomColorString = `${PaletteNames}/${ShadeKey}` | 'white' | 'transparent';
+export type CustomColorString =
+  | `${PaletteNames}/${ShadeKey}`
+  | "white"
+  | "transparent";
 
 export default colorPalettes;
 
@@ -244,3 +247,13 @@ export const parseCustomColor = (colorValue: string): string | undefined => {
 
   return palette[shadeKey];
 };
+
+export function opacityToHex(opacity: number) {
+  if (opacity < 1 || opacity > 100) {
+    throw new Error("opacity should be between 1 eand 100");
+  }
+
+  const alpha = Math.round((opacity / 100) * 255);
+
+  return alpha.toString(16).toUpperCase().padStart(2, "0");
+}
