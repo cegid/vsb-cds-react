@@ -4,8 +4,15 @@ import { styled } from "@mui/material/styles";
 import React from "react";
 
 import { neutral, primary } from "../../theme/colors";
+import Icon from "../Icon";
 
 export type CheckBoxSize = "S" | "L";
+
+const CheckboxContainer = styled("div")({
+  position: "relative",
+  display: "flex",
+});
+
 const StyledInput = styled("input")(
   ({
     checkboxSize,
@@ -33,33 +40,17 @@ const StyledInput = styled("input")(
     },
 
     "&:focus": {
-      outline: "2px solid #3169FF",
+      outline: `2px solid ${primary[70]}`,
       outlineOffset: "1px",
     },
 
     "&:checked": {
       backgroundColor: primary[60],
-      borderColor: primary[40],
-    },
-
-    "&:checked::after": {
-      content: '""',
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: undetermined
-        ? "translate(-50%, -50%) rotate(90deg)"
-        : "translate(-50%, -50%) rotate(45deg)",
-      width: checkboxSize === "L" ? "4px" : "3px",
-      height: checkboxSize === "L" ? "8px" : "6px",
-      border: "solid white",
-      borderWidth: undetermined ? "0 1px 0px 0" : "0 1px 1px 0",
-      marginTop: "-1px",
-      borderRadius: "10%",
+      borderColor: primary[30] + "4D",
     },
 
     "&:not(:disabled):checked:hover": {
-      backgroundColor: primary[55],
+      backgroundColor: primary[50],
     },
 
     "&:disabled": {
@@ -67,9 +58,36 @@ const StyledInput = styled("input")(
       borderColor: neutral[90],
       cursor: "not-allowed",
     },
-    "&:checked:disabled::after": {
-      borderColor: neutral[80],
-    },
+  })
+);
+
+const IconContainer = styled("div")(
+  ({
+    checkboxSize,
+    undetermined,
+  }: {
+    checkboxSize: CheckBoxSize;
+    undetermined: boolean;
+  }) => ({
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    pointerEvents: "none",
+    color: "white",
+    fontSize: checkboxSize === "L" ? "12px" : "10px",
+    lineHeight: 1,
+    display: "flex",
+
+    "&::after": undetermined
+      ? {
+          content: '""',
+          display: "block",
+          width: checkboxSize === "L" ? "8px" : "6px",
+          height: "1px",
+          backgroundColor: "white",
+        }
+      : {},
   })
 );
 
@@ -124,16 +142,33 @@ const Checkbox = (props: CheckboxProps) => {
     size = "L",
     undetermined = false,
   } = props;
+
   return (
-    <StyledInput
-      type="checkbox"
-      checked={checked || undetermined}
-      onChange={(e) => onChange(e)}
-      name={name}
-      disabled={disabled}
-      checkboxSize={size}
-      undetermined={undetermined}
-    />
+    <CheckboxContainer>
+      <StyledInput
+        type="checkbox"
+        checked={checked || undetermined}
+        onChange={(e) => onChange(e)}
+        name={name}
+        disabled={disabled}
+        checkboxSize={size}
+        undetermined={undetermined}
+      />
+      {(checked || undetermined) && !disabled && (
+        <IconContainer checkboxSize={size} undetermined={undetermined}>
+          {undetermined ? null : <Icon size={12}>tick-01</Icon>}
+        </IconContainer>
+      )}
+      {(checked || undetermined) && disabled && (
+        <IconContainer
+          checkboxSize={size}
+          undetermined={undetermined}
+          style={{ color: neutral[80] }}
+        >
+          {undetermined ? null : <Icon size={12}>tick-01</Icon>}
+        </IconContainer>
+      )}
+    </CheckboxContainer>
   );
 };
 
