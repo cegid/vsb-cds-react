@@ -7,7 +7,6 @@ import { Box, OverridableComponent, SvgIconTypeMap } from "@cegid/cds-react";
 import colorPalettes, { PaletteNames, white } from "../../theme/colors";
 import spacing from "../../theme/spacing";
 import Typography from "../Typography/Typography";
-import { RADIUS } from "../../theme";
 
 export interface StatusProps {
   /**
