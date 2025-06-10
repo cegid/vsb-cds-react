@@ -38,3 +38,5 @@ export { default as Icon } from './Icon';
 export * from './Icon';
 export { default as Badge } from './Badge';
 export * from './Badge';
+export { default as Dialog } from './Dialog';
+export * from './Dialog';
