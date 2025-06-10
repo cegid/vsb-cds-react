@@ -112,7 +112,7 @@ const MobileCallout: React.FC<CalloutProps> = ({
       p={isMediumSize ? 6 : 4}
       width="100%"
       backgroundColor={config.background}
-      borderRadius={2}
+      borderRadius={4}
       border={getBorderStyle()}
       gap={5}
     >

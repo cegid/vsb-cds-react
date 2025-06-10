@@ -6,6 +6,7 @@ import Typography from "../Typography";
 import Row from "../Row";
 import Box, { BorderProps } from "../Box";
 import { ChevronRight } from "@cegid/icons-react";
+import Icon from "../Icon";
 
 const DesktopCallout: React.FC<CalloutProps> = ({
   title,
@@ -30,9 +31,9 @@ const DesktopCallout: React.FC<CalloutProps> = ({
 
   const renderImage = (image: CalloutImage) => {
     const imageProps = {
-      width: 50,
-      height: 50,
-      style: { width: "50px", height: "50px" },
+      width: 40,
+      height: 40,
+      style: { width: "40px", height: "40px" },
     };
 
     if (typeof image === "string") {
@@ -72,10 +73,18 @@ const DesktopCallout: React.FC<CalloutProps> = ({
 
   const renderMediumSizeButtons = () => (
     <>
-      <Button variant="tonal" onClick={buttonActionClick} color={variant}>
+      <Button
+        variant="contained"
+        onClick={buttonActionClick}
+        color={variant === "warning" ? "neutral" : variant}
+      >
         {buttonLabel}
       </Button>
-      <Button variant="outlined" onClick={onClose} color={variant}>
+      <Button
+        variant="outlined"
+        onClick={onClose}
+        color={variant === "warning" ? "neutral" : variant}
+      >
         Fermer
       </Button>
     </>
@@ -88,7 +97,7 @@ const DesktopCallout: React.FC<CalloutProps> = ({
       display="flex"
       alignItems="center"
     >
-      <ChevronRight sx={{ fontSize: "16px" }} />
+      <Icon size={16}>arrow-right-01</Icon>
     </Box>
   );
 
@@ -109,7 +118,7 @@ const DesktopCallout: React.FC<CalloutProps> = ({
       p={6}
       width="100%"
       backgroundColor={config.background}
-      borderRadius={2}
+      borderRadius={4}
       border={borderStyle}
       gap={5}
       alignItems="center"
