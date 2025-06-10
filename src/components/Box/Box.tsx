@@ -1,23 +1,27 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
-import { Box as CegidBox } from '@cegid/cds-react';
+import { Box as CegidBox } from "@cegid/cds-react";
 
-import colorPalettes, { CustomColorString, IColorPalettes } from '../../theme/colors';
+import colorPalettes, {
+  CustomColorString,
+  IColorPalettes,
+  opacityToHex,
+} from "../../theme/colors";
 
 type CegidBoxProps = React.ComponentProps<typeof CegidBox>;
 
 export interface CustomBoxProps
   extends Omit<
     CegidBoxProps,
-    | 'bgcolor'
-    | 'backgroundColor'
-    | 'border'
-    | 'borderTop'
-    | 'borderLeft'
-    | 'borderBottom'
-    | 'borderRight'
+    | "bgcolor"
+    | "backgroundColor"
+    | "border"
+    | "borderTop"
+    | "borderLeft"
+    | "borderBottom"
+    | "borderRight"
   > {
   /**
    * Sets the background color of the component.
@@ -78,6 +82,11 @@ export type BorderProps = {
    * Determines how the border line is rendered.
    */
   style: BorderStyleProps;
+  /**
+   * The opacity of the border color as a percentage (0-100).
+   * 100 means fully opaque, 0 means fully transparent.
+   */
+  opacity?: number;
 };
 
 /**
@@ -85,19 +94,19 @@ export type BorderProps = {
  * These values correspond to standard CSS border style properties.
  */
 export type BorderStyleProps =
-  | 'dotted'
-  | 'dashed'
-  | 'solid'
-  | 'double'
-  | 'groove'
-  | 'ridge'
-  | 'inset'
-  | 'outset';
+  | "dotted"
+  | "dashed"
+  | "solid"
+  | "double"
+  | "groove"
+  | "ridge"
+  | "inset"
+  | "outset";
 
 type ShadeKey = keyof IColorPalettes;
 
 const parseCustomColor = (colorValue: string): string | undefined => {
-  if (!colorValue || typeof colorValue !== 'string') {
+  if (!colorValue || typeof colorValue !== "string") {
     return undefined;
   }
 
@@ -137,7 +146,7 @@ const Box = React.forwardRef<HTMLDivElement, CustomBoxProps>((props, ref) => {
 
   let customStyle = { ...style };
 
-  if (typeof backgroundColor === 'string') {
+  if (typeof backgroundColor === "string") {
     const customColor = parseCustomColor(backgroundColor);
 
     if (customColor) {
@@ -152,27 +161,17 @@ const Box = React.forwardRef<HTMLDivElement, CustomBoxProps>((props, ref) => {
 
   const formatBorder = (border?: BorderProps) => {
     return border
-      ? `${border?.style} ${border?.width}px ${parseCustomColor(border?.color ?? '')}`
-      : undefined
-  }
+      ? `${border?.style} ${border?.width}px ${parseCustomColor(border?.color ?? "")}${opacityToHex(border?.opacity ?? 100)}`
+      : undefined;
+  };
 
   return (
     <CegidBox
-      border={
-        formatBorder(border)
-      }
-      borderTop={
-        formatBorder(borderTop)
-      }
-      borderBottom={
-        formatBorder(borderBottom)
-      }
-      borderRight={
-        formatBorder(borderRight)
-      }
-      borderLeft={
-        formatBorder(borderLeft)
-      }
+      border={formatBorder(border)}
+      borderTop={formatBorder(borderTop)}
+      borderBottom={formatBorder(borderBottom)}
+      borderRight={formatBorder(borderRight)}
+      borderLeft={formatBorder(borderLeft)}
       ref={ref}
       style={customStyle}
       {...otherProps}
@@ -180,6 +179,6 @@ const Box = React.forwardRef<HTMLDivElement, CustomBoxProps>((props, ref) => {
   );
 });
 
-Box.displayName = 'Box';
+Box.displayName = "Box";
 
 export default Box;

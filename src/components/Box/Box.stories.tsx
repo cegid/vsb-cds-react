@@ -234,7 +234,7 @@ export const FlexBox: Story = {
 export const NestedBoxes: Story = {
   render: (args) => (
     <Box {...args} backgroundColor="neutral/90" p={3} width="350px" borderRadius={2}>
-      <Typography variant="titleMSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold" gutterBottom>
         Boîtes imbriquées
       </Typography>
       <Stack spacing={2}>
