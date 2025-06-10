@@ -20,7 +20,7 @@ const meta = {
   argTypes: {
     size: {
       control: "select",
-      options: ["small", "medium", "large"],
+      options: ["extraSmall", "small", "medium", "large"],
       description: "Size of the avatar",
       table: {
         type: { summary: "CustomAvatarSize" },
@@ -233,7 +233,11 @@ export const UseCases: Story = {
         </Box>
         <Box display="flex" gap={12} alignItems="center">
           <Avatar size="small" icon={<Icon>add-01</Icon>} color="primary" />
-          <Avatar size="medium" icon={<Icon>settings-01</Icon>} color="yellow" />
+          <Avatar
+            size="medium"
+            icon={<Icon>settings-01</Icon>}
+            color="yellow"
+          />
           <Avatar size="large" icon={<Icon>contact</Icon>} color="info" />
         </Box>
       </Box>

@@ -5,7 +5,7 @@ import Box, { BorderProps } from "../Box";
 import Typography, { ExtendedVariant } from "../Typography";
 import { CustomColorString, PaletteNames, RADIUS } from "../../theme";
 
-export type CustomAvatarSize = "small" | "medium" | "large";
+export type CustomAvatarSize = "extraSmall" | "small" | "medium" | "large";
 
 export interface CustomAvatarProps {
   /** Avatar size */
@@ -46,6 +46,8 @@ const Avatar: React.FC<CustomAvatarProps> = ({
 
   const getSize = (): number => {
     switch (size) {
+      case "extraSmall":
+        return 16;
       case "small":
         return 24;
       case "medium":
@@ -59,6 +61,8 @@ const Avatar: React.FC<CustomAvatarProps> = ({
 
   const getIconSize = (): number => {
     switch (size) {
+      case "extraSmall":
+        return 10;
       case "small":
         return 12;
       case "medium":
@@ -104,7 +108,11 @@ const Avatar: React.FC<CustomAvatarProps> = ({
 
     if (trigram) {
       return (
-        <Typography variant={getFontSize()} color={getCustomColor()}>
+        <Typography
+          variant={getFontSize()}
+          color={getCustomColor()}
+          sx={{ fontSize: size === "extraSmall" ? "8px" : "", lineHeight: size === "extraSmall" ? "8px" : "" }}
+        >
           {trigram}
         </Typography>
       );
