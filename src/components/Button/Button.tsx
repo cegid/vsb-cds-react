@@ -165,9 +165,7 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
   "&.MuiButton-containedNeutral": {
     color: neutral[10],
     backgroundColor: white,
-    outlineWidth: "2px",
-    outlineStyle: "solid",
-    outlineColor: neutral[99],
+    boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
     border: "none",
     "&:hover": {
       backgroundColor: neutral[99],
@@ -317,6 +315,7 @@ const Button = React.forwardRef<HTMLButtonElement, CegidButtonProps>(
     if (props.variant === "contained") {
       return (
         <Box
+          maxWidth="fit-content"
           p={1}
           backgroundColor={getContainedBackgroundColor() as CustomColorString}
           borderRadius={3}
