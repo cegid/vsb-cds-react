@@ -1,45 +1,52 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import { Add, Delete, Edit, Favorite, Search, Settings } from '@cegid/icons-react';
-
-import Button from './Button';
-import Stack from '../Stack';
+import Button from "./Button";
+import Stack from "../Stack";
+import Icon from "../Icon";
 
 const meta = {
-  title: 'Components/Buttons/Button',
+  title: "Components/Buttons/Button",
   component: Button,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     color: {
-      control: 'select',
-      options: ['primary', 'secondary', 'success', 'error', 'warning', 'info', 'neutral'],
-      description: 'The color of the component',
+      control: "select",
+      options: [
+        "primary",
+        "secondary",
+        "success",
+        "error",
+        "warning",
+        "info",
+        "neutral",
+      ],
+      description: "The color of the component",
     },
     variant: {
-      control: 'select',
-      options: ['text', 'contained', 'outlined', 'tonal'],
-      description: 'The variant to use',
+      control: "select",
+      options: ["text", "contained", "outlined", "tonal"],
+      description: "The variant to use",
     },
     disabled: {
-      control: 'boolean',
-      description: 'If true, the component is disabled',
+      control: "boolean",
+      description: "If true, the component is disabled",
     },
     startIcon: {
-      control: 'boolean',
-      description: 'Element placed before the children',
+      control: "boolean",
+      description: "Element placed before the children",
     },
     endIcon: {
-      control: 'boolean',
-      description: 'Element placed after the children',
+      control: "boolean",
+      description: "Element placed after the children",
     },
-    onClick: { action: 'clicked' },
+    onClick: { action: "clicked" },
   },
   args: {
-    color: 'primary',
-    variant: 'contained',
+    color: "primary",
+    variant: "contained",
     disabled: false,
     startIcon: false,
     endIcon: false,
@@ -56,7 +63,7 @@ export const Default: Story = {
 
 export const Text: Story = {
   args: {
-    variant: 'text',
+    variant: "text",
   },
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -85,7 +92,7 @@ export const Text: Story = {
 
 export const Contained: Story = {
   args: {
-    variant: 'contained',
+    variant: "contained",
   },
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -114,7 +121,7 @@ export const Contained: Story = {
 
 export const Outlined: Story = {
   args: {
-    variant: 'outlined',
+    variant: "outlined",
   },
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -143,7 +150,7 @@ export const Outlined: Story = {
 
 export const Tonal: Story = {
   args: {
-    variant: 'tonal',
+    variant: "tonal",
   },
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -174,24 +181,41 @@ export const WithIcons: Story = {
   render: (args) => (
     <Stack direction="column" spacing={2}>
       <Stack direction="row" spacing={2} flexWrap="wrap">
-        <Button {...args} startIcon={<Add />}>
+        <Button {...args} startIcon={<Icon size={16}>add-01</Icon>}>
           Start Icon
         </Button>
-        <Button {...args} endIcon={<Edit />}>
+        <Button {...args} endIcon={<Icon size={16}>edit-01</Icon>}>
           End Icon
         </Button>
-        <Button {...args} startIcon={<Favorite />} endIcon={<Delete />}>
+        <Button
+          {...args}
+          startIcon={<Icon size={16}>favourite</Icon>}
+          endIcon={<Icon size={16}>delete-01</Icon>}
+        >
           Both Icons
         </Button>
       </Stack>
       <Stack direction="row" spacing={2} flexWrap="wrap">
-        <Button {...args} variant="outlined" startIcon={<Settings />}>
+        <Button
+          {...args}
+          variant="outlined"
+          startIcon={<Icon size={16}>settings-01</Icon>}
+        >
           Start Icon
         </Button>
-        <Button {...args} variant="outlined" endIcon={<Search />}>
+        <Button
+          {...args}
+          variant="outlined"
+          endIcon={<Icon size={16}>search-01</Icon>}
+        >
           End Icon
         </Button>
-        <Button {...args} variant="outlined" startIcon={<Add />} endIcon={<Edit />}>
+        <Button
+          {...args}
+          variant="outlined"
+          startIcon={<Icon size={16}>add-01</Icon>}
+          endIcon={<Icon size={16}>edit-01</Icon>}
+        >
           Both Icons
         </Button>
       </Stack>
