@@ -4,10 +4,11 @@ import React from "react";
 
 import { Box as CegidBox } from "@cegid/cds-react";
 
-import colorPalettes, {
+import {
   CustomColorString,
   IColorPalettes,
   opacityToHex,
+  parseCustomColor,
 } from "../../theme/colors";
 
 type CegidBoxProps = React.ComponentProps<typeof CegidBox>;
@@ -104,33 +105,6 @@ export type BorderStyleProps =
   | "outset";
 
 type ShadeKey = keyof IColorPalettes;
-
-const parseCustomColor = (colorValue: string): string | undefined => {
-  if (!colorValue || typeof colorValue !== "string") {
-    return undefined;
-  }
-
-  const matches = colorValue.match(/^([a-z]+)\/(\d+)$/);
-
-  if (!matches) {
-    return undefined;
-  }
-
-  const [, paletteName, shade] = matches;
-
-  if (!colorPalettes[paletteName as keyof typeof colorPalettes]) {
-    return undefined;
-  }
-
-  const palette = colorPalettes[paletteName as keyof typeof colorPalettes];
-  const shadeKey = shade as unknown as ShadeKey;
-
-  if (!palette[shadeKey]) {
-    return undefined;
-  }
-
-  return palette[shadeKey];
-};
 
 const Box = React.forwardRef<HTMLDivElement, CustomBoxProps>((props, ref) => {
   const {
