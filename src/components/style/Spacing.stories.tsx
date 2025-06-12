@@ -60,7 +60,7 @@ const SpacingVisualization = () => {
 
   return (
     <Box maxWidth={800}>
-      <Typography variant="titleMSemiBold" mb={3}>
+      <Typography variant="titleLSemiBold" mb={3}>
         Spacing System
       </Typography>
 
@@ -107,7 +107,7 @@ const SpacingVisualization = () => {
 const SpacingUsage = () => {
   return (
     <Stack spacing={2}>
-      <Typography variant="titleSRegular">Usage Examples in sx</Typography>
+      <Typography variant="titleLRegular">Usage Examples in sx</Typography>
 
       <Box>
         <Typography variant="bodyMRegular" mb={1}>
