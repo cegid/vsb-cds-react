@@ -278,7 +278,7 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
 const Button = React.forwardRef<HTMLButtonElement, CegidButtonProps>(
   (props, ref) => {
     const getContainedBackgroundColor = () => {
-      if (props.variant === "contained" && !props.disabled) {
+      if (!props.disabled) {
         switch (props.color) {
           case "primary":
             return "#236BF0";
@@ -314,18 +314,27 @@ const Button = React.forwardRef<HTMLButtonElement, CegidButtonProps>(
       }
     };
 
-    return (
-      <Box
-        p={1}
-        backgroundColor={getContainedBackgroundColor() as CustomColorString}
-        borderRadius={3}
-      >
+    if (props.variant === "contained") {
+      return (
+        <Box
+          p={1}
+          backgroundColor={getContainedBackgroundColor() as CustomColorString}
+          borderRadius={3}
+        >
+          <StyledButton
+            {...{ disableRipple: true, disableElevation: true, ...props }}
+            ref={ref}
+          />
+        </Box>
+      );
+    } else {
+      return (
         <StyledButton
           {...{ disableRipple: true, disableElevation: true, ...props }}
           ref={ref}
         />
-      </Box>
-    );
+      );
+    }
   }
 );
 
