@@ -1,15 +1,60 @@
 import { CustomColorString, PaletteNames } from "../../theme";
 import Box, { BorderProps } from "../Box";
 
+/**
+ * Visual style variants for the Badge component.
+ * - "tonal": Filled background with low opacity color
+ * - "outlined": Transparent background with colored border
+ */
 export type BadgeVariant = "tonal" | "outlined";
+
+/**
+ * Size variants for the Badge component.
+ * - "small": 8x8px circular indicator (no content displayed)
+ * - "medium": Rectangular badge with padding (displays content)
+ */
 export type BadgeSize = "small" | "medium";
 
 export interface BadgeProps {
+  /**
+   * The content to be displayed inside the badge.
+   * Note: Content is only rendered for medium-sized badges, not small ones.
+   */
   children?: React.ReactNode;
+
+  /**
+   * The visual style variant of the badge.
+   * - "tonal": Badge with a colored background using the specified color with low opacity
+   * - "outlined": Badge with a transparent background and colored border
+   * @default "outlined"
+   */
   variant?: BadgeVariant;
+
+  /**
+   * The size of the badge.
+   * - "small": 8x8px circular badge, typically used as a status indicator
+   * - "medium": Rectangular badge with padding, used to display content
+   * @default "medium"
+   */
   size?: BadgeSize;
+
+  /**
+   * The color theme to apply to the badge.
+   * This affects the border color and background color based on the variant.
+   * @default "primary"
+   */
   color?: PaletteNames;
+
+  /**
+   * Custom background color that overrides the default color theme.
+   * When provided, this takes precedence over the variant and color props.
+   */
   backgroundColor?: CustomColorString;
+
+  /**
+   * Custom border configuration that overrides the default border styles.
+   * When provided, this takes precedence over the default border based on size and color.
+   */
   border?: BorderProps;
 }
 
