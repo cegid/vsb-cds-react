@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { InfoOutlined } from "@cegid/icons-react";
-
 import colorPalettes, { PaletteNames } from "../../theme/colors";
 import Status from "./Status";
 import Box from "../Box";
