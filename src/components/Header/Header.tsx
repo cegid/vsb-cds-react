@@ -1,9 +1,9 @@
 import Typography from "../Typography";
 import Button from "../Button";
 import IconButton from "../IconButton";
-import { MoreVert, Settings } from "@cegid/icons-react";
 import Row from "../Row";
 import { useTheme, useMediaQuery } from "@mui/material";
+import Icon from "../Icon";
 
 export interface HeaderProps {
   /**
@@ -59,16 +59,29 @@ const Header: React.FC<HeaderProps> = (props) => {
     settingsAction,
     moreAction,
     secondaryButtonText,
-    secondaryAction
+    secondaryAction,
   } = props;
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <Row py={5} px={6} gap={4} alignItems="center" width="100%">
       <Row justifyContent="flex-start">
-        <Typography variant="titleLSemiBold" color="primary/10">
+        <Typography
+          variant="titleLSemiBold"
+          color="primary/10"
+          component="p"
+          sx={{
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            wordBreak: "break-word",
+            hyphens: "auto",
+            display: "-webkit-box",
+          }}
+        >
           {title}
         </Typography>
       </Row>
@@ -78,22 +91,36 @@ const Header: React.FC<HeaderProps> = (props) => {
           {isMobile ? (
             <>
               {primaryAction && (
-                <Button variant="tonal" onClick={primaryAction}>
+                <Button
+                  variant="contained"
+                  color="neutral"
+                  onClick={primaryAction}
+                >
                   {primaryButtonText}
                 </Button>
               )}
               {settingsAction && (
                 <IconButton
-                  variant="iconOnly"
+                  variant="tonal"
                   color="neutral"
                   onClick={settingsAction}
+                  square
                 >
-                  <Settings />
+                  <Icon size={16} color="neutral/10">
+                    setting-07
+                  </Icon>
                 </IconButton>
               )}
               {moreAction && (
-                <IconButton variant="iconOnly" color="neutral" onClick={moreAction}>
-                  <MoreVert />
+                <IconButton
+                  variant="tonal"
+                  color="neutral"
+                  onClick={moreAction}
+                  square
+                >
+                  <Icon size={16} color="neutral/10">
+                    more-horizontal
+                  </Icon>
                 </IconButton>
               )}
             </>
@@ -104,22 +131,36 @@ const Header: React.FC<HeaderProps> = (props) => {
                   variant="tonal"
                   color="neutral"
                   onClick={settingsAction}
+                  square
                 >
-                  <Settings />
+                  <Icon size={16} color="neutral/10">
+                    setting-07
+                  </Icon>
                 </IconButton>
               )}
               {moreAction && (
-                <IconButton variant="tonal" color="neutral" onClick={moreAction}>
-                  <MoreVert />
+                <IconButton
+                  variant="tonal"
+                  color="neutral"
+                  onClick={moreAction}
+                  square
+                >
+                  <Icon size={16} color="neutral/10">
+                    more-horizontal
+                  </Icon>
                 </IconButton>
               )}
               {secondaryAction && (
-                <Button variant="tonal" onClick={secondaryAction}>
+                <Button
+                  variant="contained"
+                  color="neutral"
+                  onClick={secondaryAction}
+                >
                   {secondaryButtonText}
                 </Button>
               )}
               {primaryAction && (
-                <Button variant="tonal" onClick={primaryAction}>
+                <Button variant="contained" onClick={primaryAction}>
                   {primaryButtonText}
                 </Button>
               )}
