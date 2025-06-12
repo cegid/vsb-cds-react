@@ -1,7 +1,7 @@
 import { CustomColorString, PaletteNames } from "../../theme";
 import Box, { BorderProps } from "../Box";
 
-export type BadgeVariant = "filled" | "outlined";
+export type BadgeVariant = "tonal" | "outlined";
 export type BadgeSize = "small" | "medium";
 
 export interface BadgeProps {
@@ -26,11 +26,18 @@ const Badge: React.FC<BadgeProps> = ({
       return backgroundColor;
     }
 
+    if (size === "small") {
+      if (color === "neutral") {
+        return `${color}/99`;
+      }
+      return `${color}/60`;
+    }
+
     if (variant === "outlined") {
       return "transparent";
     }
 
-    if (variant === "filled") {
+    if (variant === "tonal") {
       return `${color}/99`;
     }
 
@@ -41,7 +48,13 @@ const Badge: React.FC<BadgeProps> = ({
     if (border) {
       return border;
     }
-    return { width: 1, color: `${color}/80`, style: "solid" };
+    if (size === "small") {
+      if (color === "neutral") {
+        return { width: 1, color: "neutral/95", style: "solid" };
+      }
+      return { width: 1, color: "white", style: "solid" };
+    }
+    return { width: 1, color: `${color}/60`, style: "solid", opacity: 30 };
   };
 
   const getSizeProps = () => {
