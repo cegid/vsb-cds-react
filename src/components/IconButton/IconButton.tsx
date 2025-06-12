@@ -1,31 +1,37 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 import {
   IconButton as CegidIconButton,
   IconButtonProps as CegidIconButtonProps,
   shouldForwardProp,
   styled,
-} from '@cegid/cds-react';
+} from "@cegid/cds-react";
 
-import colorPalettes from '../../theme/colors';
-import { RADIUS } from '../../theme/radius';
+import colorPalettes, { info, white } from "../../theme/colors";
+import { RADIUS } from "../../theme/radius";
 
-const { primary, secondary, success, critical, yellow, plum, neutral } = colorPalettes;
+const { primary, secondary, success, critical, yellow, plum, neutral } =
+  colorPalettes;
 
-type CustomVariant = 'default' | 'contained' | 'outlined' | 'tonal' | 'iconOnly';
+type CustomVariant =
+  | "default"
+  | "contained"
+  | "outlined"
+  | "tonal"
+  | "iconOnly";
 type CustomColor =
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'error'
-  | 'info'
-  | 'warning'
-  | 'default'
-  | 'neutral';
-type CustomBrightness = 'default' | 'contrast';
-type CustomSize = 'small' | 'medium' | 'large';
+  | "primary"
+  | "secondary"
+  | "success"
+  | "error"
+  | "info"
+  | "warning"
+  | "default"
+  | "neutral";
+type CustomBrightness = "default" | "contrast";
+type CustomSize = "small" | "medium" | "large";
 
 interface IconButtonOwnProps {
   variant?: CustomVariant;
@@ -35,42 +41,49 @@ interface IconButtonOwnProps {
   size?: CustomSize;
 }
 
-type IconButtonProps = Omit<CegidIconButtonProps, 'variant' | 'color' | 'brightness'> &
+type IconButtonProps = Omit<
+  CegidIconButtonProps,
+  "variant" | "color" | "brightness"
+> &
   IconButtonOwnProps & { ref?: React.Ref<HTMLButtonElement> };
 
-const createIconOnlyButtonStyle = (color: any, colorIndex = 50, hoverIndex = 95) => ({
+const createIconOnlyButtonStyle = (
+  color: any,
+  colorIndex = 60,
+  hoverIndex = 95
+) => ({
   color: color[colorIndex],
-  '&:hover': {
+  "&:hover": {
     backgroundColor: color[hoverIndex],
-    '&:before': {
-      backgroundColor: 'transparent',
+    "&:before": {
+      backgroundColor: "transparent",
     },
   },
-  '&:active': {
+  "&:active": {
     backgroundColor: neutral[99],
   },
-  '&.Mui-disabled': {
-    color: neutral[80],
+  "&.Mui-disabled": {
+    color: neutral[99],
   },
 });
 
 const createTonalIconButtonStyle = (
   color: any,
-  colorIndex = 50,
-  bgIndex = 95,
-  hoverIndex = 90
+  colorIndex = 60,
+  bgIndex = 99,
+  hoverIndex = 95
 ) => ({
   color: color[colorIndex],
   backgroundColor: color[bgIndex],
-  '&:hover': {
+  "&:hover": {
     backgroundColor: color[hoverIndex],
   },
-  '&:active': {
-    backgroundColor: color[80],
+  "&:active": {
+    backgroundColor: color[bgIndex],
   },
-  '&.Mui-disabled': {
+  "&.Mui-disabled": {
     color: neutral[80],
-    backgroundColor: neutral[95],
+    backgroundColor: neutral[99],
   },
 });
 
@@ -78,79 +91,79 @@ const createContainedIconButtonStyle = (
   color: any,
   backgroundIndex = 60,
   hoverIndex = 50,
-  activeIndex = 40
+  activeIndex = 60
 ) => ({
   backgroundColor: color[backgroundIndex],
-  color: '#FFFFFF',
-  '&:hover': {
+  color: white,
+  "&:hover": {
     backgroundColor: color[hoverIndex],
-    '&:before': {
-      backgroundColor: 'transparent',
+    "&:before": {
+      backgroundColor: "transparent",
     },
   },
-  '&:active': {
+  "&:active": {
     backgroundColor: color[activeIndex],
   },
-  '&.Mui-disabled': {
+  "&.Mui-disabled": {
     backgroundColor: neutral[99],
     color: neutral[90],
-    border: '1px solid',
+    border: "1px solid",
     borderColor: neutral[90],
   },
 });
 
 const createOutlinedIconButtonStyle = (color: any, colorIndex = 50) => ({
-  borderWidth: '1px',
-  borderStyle: 'solid',
-  borderColor: color[90],
-  backgroundColor: '#ffffff',
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: neutral[90],
+  backgroundColor: "transparent",
   color: color[colorIndex],
-  '&:hover': {
+  "&:hover": {
     backgroundColor: color[95],
   },
-  '&:active': {
+  "&:active": {
     backgroundColor: color[95],
   },
-  '&.Mui-disabled': {
-    border: 'none',
+  "&.Mui-disabled": {
+    border: "none",
     color: neutral[80],
-    backgroundColor: neutral[95],
+    backgroundColor: neutral[99],
   },
 });
 
 const getSizeStyles = (size: CustomSize) => {
   switch (size) {
-    case 'small':
+    case "small":
       return {
-        width: '30px',
-        height: '30px',
-        padding: '7px', 
-        '& .MuiSvgIcon-root': {
-          width: '16px',
-          height: '16px',
-          fontSize: '16px',
+        width: "30px",
+        height: "30px",
+        padding: "7px",
+        "& .MuiSvgIcon-root": {
+          width: "16px",
+          height: "16px",
+          fontSize: "16px",
         },
       };
-    case 'medium':
+    case "medium":
       return {
-        width: '40px',
-        height: '40px',
-        padding: '12px',
-        '& .MuiSvgIcon-root': {
-          width: '16px',
-          height: '16px',
-          fontSize: '16px',
+        width: "40px",
+        height: "40px",
+        padding: "12px",
+        "& .MuiSvgIcon-root": {
+          width: "16px",
+          height: "16px",
+          fontSize: "16px",
         },
       };
-    case 'large':
+    case "large":
       return {
-        width: '48px',
-        height: '48px',
-        padding: '16px',
-        '& .MuiSvgIcon-root': {
-          width: '16px',
-          height: '16px',
-          fontSize: '16px',
+        width: "48px",
+        height: "48px",
+        padding: "16px",
+        "& .MuiSvgIcon-root": {
+          width: "16px",
+          height: "16px",
+          fontSize: "16px",
         },
       };
     default:
@@ -159,53 +172,56 @@ const getSizeStyles = (size: CustomSize) => {
 };
 
 const IconButtonRoot = styled(CegidIconButton, {
-  name: 'CdsIconButton',
-  slot: 'root',
+  name: "CdsIconButton",
+  slot: "root",
   shouldForwardProp: (prop) =>
-    shouldForwardProp(prop) && prop !== 'square' && prop !== 'variant' && prop !== 'brightness',
+    shouldForwardProp(prop) &&
+    prop !== "square" &&
+    prop !== "variant" &&
+    prop !== "brightness",
 })<{ ownerState: IconButtonProps }>(({ theme, ownerState }) => {
   const baseStyles = {
     borderRadius: ownerState.square ? RADIUS.M : RADIUS.FULL,
-    boxShadow: 'none',
-    padding: '8px',
-    transition: 'background-color 0.2s',
-    '& .MuiSvgIcon-root': {
-      width: '16px',
-      height: '16px',
-      fontSize: '16px',
+    boxShadow: "none",
+    padding: "8px",
+    transition: "background-color 0.2s",
+    "& .MuiSvgIcon-root": {
+      width: "16px",
+      height: "16px",
+      fontSize: "16px",
     },
     [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
-      padding: ownerState.size === 'small' ? '8px' : '12px',
+      padding: ownerState.size === "small" ? "8px" : "12px",
     },
     ...(ownerState.size ? getSizeStyles(ownerState.size) : {}),
   };
 
   let colorPalette;
-  const colorProp = ownerState.color ?? 'primary';
+  const colorProp = ownerState.color ?? "primary";
 
-  const isErrorColor = colorProp === 'error';
-  const isNeutralColor = colorProp === 'neutral';
+  const isErrorColor = colorProp === "error";
+  const isNeutralColor = colorProp === "neutral";
 
   switch (colorProp) {
-    case 'primary':
+    case "primary":
       colorPalette = primary;
       break;
-    case 'secondary':
+    case "secondary":
       colorPalette = secondary;
       break;
-    case 'success':
+    case "success":
       colorPalette = success;
       break;
-    case 'error':
+    case "error":
       colorPalette = critical;
       break;
-    case 'warning':
+    case "warning":
       colorPalette = yellow;
       break;
-    case 'info':
-      colorPalette = plum;
+    case "info":
+      colorPalette = info;
       break;
-    case 'neutral':
+    case "neutral":
       colorPalette = neutral;
       break;
     default:
@@ -213,137 +229,80 @@ const IconButtonRoot = styled(CegidIconButton, {
   }
 
   let variantStyles = {};
-  const variantProp = ownerState.variant ?? 'default';
+  const variantProp = ownerState.variant ?? "default";
 
-  if (variantProp === 'default') {
+  if (variantProp === "default") {
     if (isErrorColor) {
-      variantStyles = createContainedIconButtonStyle(colorPalette, 45, 40, 40);
+      variantStyles = createContainedIconButtonStyle(colorPalette);
     } else if (isNeutralColor) {
       variantStyles = {
-        border: '1px solid',
+        border: "1px solid",
         borderColor: neutral[90],
-        backgroundColor: '#ffffff',
+        backgroundColor: "#ffffff",
         color: neutral[50],
-        '&:hover': {
+        "&:hover": {
           backgroundColor: neutral[99],
         },
-        '&:active': {
+        "&:active": {
           backgroundColor: neutral[95],
         },
-        '&.Mui-disabled': {
+        "&.Mui-disabled": {
           backgroundColor: neutral[99],
           color: neutral[90],
-          border: '1px solid',
+          border: "1px solid",
           borderColor: neutral[90],
         },
       };
     } else {
       variantStyles = createContainedIconButtonStyle(colorPalette);
     }
-  } else if (variantProp === 'iconOnly') {
-    const colorIndex = isErrorColor ? 40 : isNeutralColor ? 40 : 50;
+  } else if (variantProp === "iconOnly") {
+    const colorIndex = isErrorColor ? 50 : isNeutralColor ? 10 : 60;
     variantStyles = createIconOnlyButtonStyle(colorPalette, colorIndex, 95);
-  } else if (variantProp === 'contained') {
+  } else if (variantProp === "contained") {
     if (isErrorColor) {
       variantStyles = createContainedIconButtonStyle(colorPalette, 45, 40, 40);
     } else if (isNeutralColor) {
       variantStyles = {
         backgroundColor: neutral[50],
-        color: '#FFFFFF',
-        '&:hover': {
+        color: white,
+        "&:hover": {
           backgroundColor: neutral[40],
         },
-        '&:active': {
+        "&:active": {
           backgroundColor: neutral[30],
         },
-        '&.Mui-disabled': {
+        "&.Mui-disabled": {
           backgroundColor: neutral[99],
           color: neutral[90],
-          border: '1px solid',
-          borderColor: neutral[90],
+          border: "1px solid",
+          borderColor: neutral[99],
         },
       };
     } else {
       variantStyles = createContainedIconButtonStyle(colorPalette);
     }
-  } else if (variantProp === 'outlined') {
-    if (isErrorColor) {
-      variantStyles = {
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: critical[80],
-        color: critical[40],
-        backgroundColor: critical[95],
-        '&:hover': {
-          backgroundColor: critical[90],
-          borderColor: critical[70],
-        },
-        '&.Mui-disabled': {
-          borderColor: neutral[90],
-          color: neutral[80],
-          backgroundColor: 'transparent',
-        },
-      };
-    } else if (colorProp === 'default') {
-      variantStyles = {
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: neutral[90],
-        color: neutral[50],
-        backgroundColor: '#ffffff',
-        '&:hover': {
-          backgroundColor: neutral[99],
-        },
-        '&:active': {
-          backgroundColor: neutral[99],
-        },
-        '&.Mui-disabled': {
-          borderColor: neutral[90],
-          color: neutral[80],
-          backgroundColor: 'transparent',
-        },
-      };
-    } else if (isNeutralColor) {
-      variantStyles = {
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: neutral[90],
-        color: neutral[50],
-        backgroundColor: '#ffffff',
-        '&:hover': {
-          backgroundColor: neutral[95],
-        },
-        '&:active': {
-          backgroundColor: neutral[90],
-        },
-        '&.Mui-disabled': {
-          border: 'none',
-          color: neutral[80],
-          backgroundColor: neutral[99],
-        },
-      };
-    } else {
-      const colorIndex = isErrorColor ? 40 : 50;
-      variantStyles = createOutlinedIconButtonStyle(colorPalette, colorIndex);
-    }
-  } else if (variantProp === 'tonal') {
+  } else if (variantProp === "outlined") {
+    const colorIndex = isErrorColor ? 40 : 50;
+    variantStyles = createOutlinedIconButtonStyle(colorPalette, colorIndex);
+  } else if (variantProp === "tonal") {
     const colorIndex = isErrorColor ? 40 : isNeutralColor ? 40 : 50;
 
     if (isNeutralColor) {
       variantStyles = {
-        border: 'none',
-        color: neutral[40],
-        backgroundColor: neutral[95],
-        '&:hover': {
-          backgroundColor: neutral[90],
-        },
-        '&:active': {
-          backgroundColor: neutral[99],
-        },
-        '&.Mui-disabled': {
-          color: neutral[80],
+        border: "none",
+        color: neutral[10],
+        backgroundColor: neutral[99],
+        "&:hover": {
           backgroundColor: neutral[95],
         },
+        "&:active": {
+          backgroundColor: neutral[99],
+        },
+        "&.Mui-disabled": {
+          color: neutral[80],
+          backgroundColor: neutral[99],
+        }
       };
     } else {
       variantStyles = createTonalIconButtonStyle(colorPalette, colorIndex);
@@ -361,12 +320,12 @@ const IconButton = React.forwardRef(function IconButton(
   ref: React.Ref<HTMLButtonElement>
 ) {
   const {
-    variant = 'default',
-    color = 'primary',
+    variant = "default",
+    color = "primary",
     className,
     square = false,
-    brightness = 'default',
-    size = 'medium',
+    brightness = "default",
+    size = "medium",
     ...props
   } = inProps;
 
@@ -380,8 +339,12 @@ const IconButton = React.forwardRef(function IconButton(
   };
 
   const mapColor = (customColor: CustomColor) => {
-    if (customColor === 'error' || customColor === 'default' || customColor === 'neutral')
-      return 'inherit';
+    if (
+      customColor === "error" ||
+      customColor === "default" ||
+      customColor === "neutral"
+    )
+      return "inherit";
     return customColor;
   };
 
