@@ -16,6 +16,7 @@ import colorPalettes, {
 } from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
+import { DisplaySettings } from "@cegid/icons-react";
 
 const { primary, secondary, success, critical, yellow, plum, neutral, info } =
   colorPalettes;
@@ -77,6 +78,10 @@ const createTonalButtonStyle = (
 });
 
 const containedButtonBase = {
+  height: "28px",
+  "@media (max-width: 600px)": {
+    height: "36px",
+  },
   borderRadius: "10px",
   color: white,
   border: "none",
@@ -119,6 +124,7 @@ const buttonBaseStyles = {
   height: "32px",
   padding: "0px 16px",
   transition: "background-color 0.2s",
+  display: "flex",
   "@media (max-width: 600px)": {
     height: "40px",
     padding: "1px 16px",

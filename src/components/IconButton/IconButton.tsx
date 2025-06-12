@@ -5,17 +5,13 @@ import React from "react";
 import {
   IconButton as CegidIconButton,
   IconButtonProps as CegidIconButtonProps,
-  pink,
   shouldForwardProp,
   styled,
 } from "@cegid/cds-react";
 
 import colorPalettes, {
-  banana,
-  beige,
   CustomColorString,
   info,
-  purple,
   white,
 } from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
@@ -139,12 +135,12 @@ const createOutlinedIconButtonStyle = (color: any, colorIndex = 50) => ({
   },
 });
 
-const getSizeStyles = (size: CustomSize) => {
+const getSizeStyles = (size: CustomSize, isContained = false) => {
   switch (size) {
     case "small":
       return {
-        width: "30px",
-        height: "30px",
+        width: isContained ? "26px" : "30px",
+        height: isContained ? "26px" : "30px",
         padding: "7px",
         "& .MuiSvgIcon-root": {
           width: "16px",
@@ -154,8 +150,8 @@ const getSizeStyles = (size: CustomSize) => {
       };
     case "medium":
       return {
-        width: "40px",
-        height: "40px",
+        width: isContained ? "36px" : "40px",
+        height: isContained ? "36px" : "40px",
         padding: "12px",
         "& .MuiSvgIcon-root": {
           width: "16px",
@@ -165,8 +161,8 @@ const getSizeStyles = (size: CustomSize) => {
       };
     case "large":
       return {
-        width: "48px",
-        height: "48px",
+        width: isContained ? "44px" : "48px",
+        height: isContained ? "44px" : "48px",
         padding: "16px",
         "& .MuiSvgIcon-root": {
           width: "16px",
@@ -188,11 +184,12 @@ const IconButtonRoot = styled(CegidIconButton, {
     prop !== "variant" &&
     prop !== "brightness",
 })<{ ownerState: IconButtonProps }>(({ theme, ownerState }) => {
+  const isContained = ownerState.variant === "contained";
   const baseStyles = {
     borderRadius: ownerState.square ? "10px" : RADIUS.FULL,
     boxShadow: "none",
     padding: "8px",
-    transition: "background-color 0.2s",
+    display: "flex",
     "& .MuiSvgIcon-root": {
       width: "16px",
       height: "16px",
@@ -201,7 +198,7 @@ const IconButtonRoot = styled(CegidIconButton, {
     [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
       padding: ownerState.size === "small" ? "8px" : "12px",
     },
-    ...(ownerState.size ? getSizeStyles(ownerState.size) : {}),
+    ...(ownerState.size ? getSizeStyles(ownerState.size, isContained) : {}),
   };
 
   let colorPalette;
