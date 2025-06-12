@@ -189,7 +189,7 @@ const IconButtonRoot = styled(CegidIconButton, {
     prop !== "brightness",
 })<{ ownerState: IconButtonProps }>(({ theme, ownerState }) => {
   const baseStyles = {
-    borderRadius: ownerState.square ? RADIUS.M : RADIUS.FULL,
+    borderRadius: ownerState.square ? "10px" : RADIUS.FULL,
     boxShadow: "none",
     padding: "8px",
     transition: "background-color 0.2s",
@@ -246,8 +246,9 @@ const IconButtonRoot = styled(CegidIconButton, {
       variantStyles = {
         border: "1px solid",
         borderColor: neutral[90],
-        backgroundColor: "#ffffff",
+        backgroundColor: white,
         color: neutral[50],
+        boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
         "&:hover": {
           backgroundColor: neutral[99],
         },
@@ -380,7 +381,8 @@ const IconButton = React.forwardRef(function IconButton(
   if (variant === "contained") {
     return (
       <Box
-        p="1px"
+        maxWidth="fit-content"
+        p={1}
         backgroundColor={getContainedBackgroundColor() as CustomColorString}
         borderRadius={square ? 3 : RADIUS.FULL}
       >

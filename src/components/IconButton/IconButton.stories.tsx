@@ -1,46 +1,61 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react";
 
-import IconButton from './IconButton';
-import { Add, Delete, Edit, Favorite, Search, Settings } from '@cegid/icons-react';
-import Stack from '../Stack';
+import IconButton from "./IconButton";
+import {
+  Add,
+  Delete,
+  Edit,
+  Favorite,
+  Search,
+  Settings,
+} from "@cegid/icons-react";
+import Stack from "../Stack";
 
 const meta = {
-  title: 'Components/Buttons/IconButton',
+  title: "Components/Buttons/IconButton",
   component: IconButton,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     color: {
-      control: 'select',
-      options: ['primary', 'secondary', 'success', 'error', 'warning', 'info'],
-      description: 'The color of the component',
+      control: "select",
+      options: [
+        "primary",
+        "secondary",
+        "success",
+        "error",
+        "warning",
+        "info",
+        "neutral",
+      ],
+      description: "The color of the component",
     },
     variant: {
-      control: 'select',
-      options: ['text', 'contained', 'outlined', 'tonal', 'iconOnly'],
-      description: 'The variant to use',
+      control: "select",
+      options: ["text", "contained", "outlined", "tonal", "iconOnly"],
+      description: "The variant to use",
     },
     size: {
-      control: 'select',
-      options: ['small', 'medium', 'large'],
-      description: 'The size of the component',
+      control: "select",
+      options: ["small", "medium", "large"],
+      description: "The size of the component",
     },
     disabled: {
-      control: 'boolean',
-      description: 'If true, the component is disabled',
+      control: "boolean",
+      description: "If true, the component is disabled",
     },
     square: {
-      control: 'boolean',
-      description: 'If true, rounded corners are disabled',
+      control: "boolean",
+      description: "If true, rounded corners are disabled",
     },
-    onClick: { action: 'clicked' },
+    onClick: { action: "clicked" },
   },
   args: {
-    color: 'primary',
-    variant: 'contained',
-    size: 'medium',
+    color: "primary",
+    variant: "contained",
+    size: "medium",
     disabled: false,
     square: false,
   },
@@ -60,7 +75,7 @@ export const Default: Story = {
 
 export const IconOnly: Story = {
   args: {
-    variant: 'iconOnly',
+    variant: "iconOnly",
   },
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -88,7 +103,7 @@ export const IconOnly: Story = {
 
 export const Contained: Story = {
   args: {
-    variant: 'contained',
+    variant: "contained",
   },
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -116,7 +131,7 @@ export const Contained: Story = {
 
 export const Outlined: Story = {
   args: {
-    variant: 'outlined',
+    variant: "outlined",
   },
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -144,7 +159,7 @@ export const Outlined: Story = {
 
 export const Tonal: Story = {
   args: {
-    variant: 'tonal',
+    variant: "tonal",
   },
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
