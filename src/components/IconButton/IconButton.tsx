@@ -5,12 +5,21 @@ import React from "react";
 import {
   IconButton as CegidIconButton,
   IconButtonProps as CegidIconButtonProps,
+  pink,
   shouldForwardProp,
   styled,
 } from "@cegid/cds-react";
 
-import colorPalettes, { info, white } from "../../theme/colors";
+import colorPalettes, {
+  banana,
+  beige,
+  CustomColorString,
+  info,
+  purple,
+  white,
+} from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
+import Box from "../Box";
 
 const { primary, secondary, success, critical, yellow, plum, neutral } =
   colorPalettes;
@@ -30,14 +39,12 @@ type CustomColor =
   | "warning"
   | "default"
   | "neutral";
-type CustomBrightness = "default" | "contrast";
 type CustomSize = "small" | "medium" | "large";
 
 interface IconButtonOwnProps {
   variant?: CustomVariant;
   color?: CustomColor;
   square?: boolean;
-  brightness?: CustomBrightness;
   size?: CustomSize;
 }
 
@@ -94,6 +101,7 @@ const createContainedIconButtonStyle = (
   activeIndex = 60
 ) => ({
   backgroundColor: color[backgroundIndex],
+  boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
   color: white,
   "&:hover": {
     backgroundColor: color[hoverIndex],
@@ -261,7 +269,7 @@ const IconButtonRoot = styled(CegidIconButton, {
     variantStyles = createIconOnlyButtonStyle(colorPalette, colorIndex, 95);
   } else if (variantProp === "contained") {
     if (isErrorColor) {
-      variantStyles = createContainedIconButtonStyle(colorPalette, 45, 40, 40);
+      variantStyles = createContainedIconButtonStyle(colorPalette);
     } else if (isNeutralColor) {
       variantStyles = {
         backgroundColor: neutral[50],
@@ -302,7 +310,7 @@ const IconButtonRoot = styled(CegidIconButton, {
         "&.Mui-disabled": {
           color: neutral[80],
           backgroundColor: neutral[99],
-        }
+        },
       };
     } else {
       variantStyles = createTonalIconButtonStyle(colorPalette, colorIndex);
@@ -324,7 +332,6 @@ const IconButton = React.forwardRef(function IconButton(
     color = "primary",
     className,
     square = false,
-    brightness = "default",
     size = "medium",
     ...props
   } = inProps;
@@ -333,7 +340,6 @@ const IconButton = React.forwardRef(function IconButton(
     variant,
     color,
     square,
-    brightness,
     size,
     ...props,
   };
@@ -347,6 +353,48 @@ const IconButton = React.forwardRef(function IconButton(
       return "inherit";
     return customColor;
   };
+
+  const getContainedBackgroundColor = () => {
+    if (!props.disabled) {
+      switch (color) {
+        case "primary":
+          return "#236BF0";
+        case "secondary":
+          return secondary[50];
+        case "neutral":
+          return neutral[99];
+        case "success":
+          return success[50];
+        case "warning":
+          return yellow[50];
+        case "info":
+          return info[50];
+        case "error":
+          return critical[50];
+        default:
+          return "#236BF0";
+      }
+    }
+  };
+
+  if (variant === "contained") {
+    return (
+      <Box
+        p="1px"
+        backgroundColor={getContainedBackgroundColor() as CustomColorString}
+        borderRadius={square ? 3 : RADIUS.FULL}
+      >
+        <IconButtonRoot
+          ownerState={ownerState}
+          {...props}
+          color={mapColor(color)}
+          size={size}
+          ref={ref}
+          disableRipple={true}
+        />
+      </Box>
+    );
+  }
 
   return (
     <IconButtonRoot
