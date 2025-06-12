@@ -82,7 +82,7 @@ export const SizeComparison: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
       <Box>
-        <Typography variant="titleLSemiBold" gutterBottom>
+        <Typography variant="titleLSemiBold">
           Taille Medium
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -90,7 +90,7 @@ export const SizeComparison: Story = {
         </Box>
       </Box>
       <Box>
-        <Typography variant="titleLSemiBold" gutterBottom>
+        <Typography variant="titleLSemiBold">
           Taille Small
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -104,7 +104,7 @@ export const SizeComparison: Story = {
 export const IconsAndNoIcons: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleLSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold">
         Chips avec et sans icônes
       </Typography>
       <Stack spacing={2}>
@@ -124,7 +124,7 @@ export const IconsAndNoIcons: Story = {
 export const WithDeleteIcon: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleLSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold">
         Chips avec icône de suppression
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -137,7 +137,7 @@ export const WithDeleteIcon: Story = {
 export const Clickable: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleLSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold">
         Chips cliquables
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -157,7 +157,7 @@ export const Clickable: Story = {
 export const Disabled: Story = {
   render: (args) => (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleLSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold">
         Chips désactivés
       </Typography>
       <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>

@@ -237,12 +237,12 @@ const SpacingUsage = () => {
 const DetailedSpacingUsage = () => {
   return (
     <Box maxWidth={800}>
-      <Typography variant="titleMSemiBold" gutterBottom>
+      <Typography variant="titleLSemiBold">
         Spacing Usage Guide in sx
       </Typography>
 
       <Paper sx={{ p: 4, mb: 6 }}>
-        <Typography variant="titleLSemiBold" gutterBottom>
+        <Typography variant="titleLSemiBold">
           Basic Syntax
         </Typography>
 
@@ -258,7 +258,7 @@ const DetailedSpacingUsage = () => {
 
         <Stack spacing={3}>
           <Box>
-            <Typography variant="bodyMSemiBold" gutterBottom>
+            <Typography variant="bodyMSemiBold">
               Available Properties:
             </Typography>
 
@@ -408,7 +408,7 @@ const DetailedSpacingUsage = () => {
           </Box>
 
           <Box>
-            <Typography variant="bodyMSemiBold" gutterBottom>
+            <Typography variant="bodyMSemiBold">
               Advanced Properties:
             </Typography>
 
@@ -428,13 +428,13 @@ const DetailedSpacingUsage = () => {
       </Paper>
 
       <Paper sx={{ p: 4 }}>
-        <Typography variant="titleLSemiBold" gutterBottom mb={3}>
+        <Typography variant="titleLSemiBold" mb={3}>
           Best Practices
         </Typography>
 
         <Stack spacing={2}>
           <Box>
-            <Typography variant="bodyMSemiBold" gutterBottom>
+            <Typography variant="bodyMSemiBold">
               1. Prefer System Values
             </Typography>
             <Typography variant="bodyMRegular">
@@ -462,7 +462,7 @@ const DetailedSpacingUsage = () => {
           </Box>
 
           <Box>
-            <Typography variant="bodyMSemiBold" gutterBottom>
+            <Typography variant="bodyMSemiBold">
               2. Use Shortcuts
             </Typography>
             <Typography variant="bodyMRegular">
@@ -490,7 +490,7 @@ const DetailedSpacingUsage = () => {
           </Box>
 
           <Box>
-            <Typography variant="bodyMSemiBold" gutterBottom>
+            <Typography variant="bodyMSemiBold">
               3. Use Flexbox and Grid with Spacing
             </Typography>
             <Typography variant="bodyMRegular">
