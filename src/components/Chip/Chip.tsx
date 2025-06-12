@@ -72,7 +72,7 @@ const StyledChip = styled(CegidChip)<ChipProps>(({ size }) => ({
   "&.Mui-focused, &:focus:not(:active)": {
     borderRadius: "14px",
     outlineOffset: "1px",
-    outline: `solid 2px ${primary[65]}`,
+    outline: `solid 2px ${primary[60]}`,
   },
   "&.Mui-disabled": {
     opacity: 1,
