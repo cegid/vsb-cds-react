@@ -1,3 +1,4 @@
+import { neutral, white } from '../src/theme/colors';
 import { VSBThemeProvider } from '../src/theme/theme';
 
 const preview = {
@@ -9,16 +10,11 @@ const preview = {
       },
     },
     backgrounds: {
-      default: 'light',
+      default: 'white',
       values: [
-        {
-          name: 'light',
-          value: '#f5f5f5',
-        },
-        {
-          name: 'dark',
-          value: '#333333',
-        },
+        { name: "white", value: white },
+        { name: "light", value: neutral[99] },
+        { name: "dark", value: neutral[10] },
       ],
     },
   },
