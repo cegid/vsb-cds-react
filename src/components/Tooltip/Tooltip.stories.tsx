@@ -31,5 +31,5 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {},
-  render: (args) => <Tooltip {...args} open={true}></Tooltip>,
+  render: (args) => <Tooltip {...args}></Tooltip>,
 };
