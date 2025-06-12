@@ -278,7 +278,7 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
 const Button = React.forwardRef<HTMLButtonElement, CegidButtonProps>(
   (props, ref) => {
     const getContainedBackgroundColor = () => {
-      if (props.variant === "contained") {
+      if (props.variant === "contained" && !props.disabled) {
         switch (props.color) {
           case "primary":
             return "#236BF0";
