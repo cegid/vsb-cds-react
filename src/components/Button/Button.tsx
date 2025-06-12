@@ -6,76 +6,86 @@ import React from "react";
 import { Button as CegidButton } from "@cegid/cds-react";
 import type { ButtonProps as CegidButtonProps } from "@cegid/cds-react";
 
-import colorPalettes from "../../theme/colors";
+import colorPalettes, {
+  banana,
+  beige,
+  CustomColorString,
+  pink,
+  purple,
+  white,
+} from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
+import Box from "../Box";
 
 const { primary, secondary, success, critical, yellow, plum, neutral, info } =
   colorPalettes;
 
 const createTextButtonStyle = (
   color: any,
-  colorIndex = 50,
-  hoverIndex = 60,
-  activeIndex = 60
+  colorIndex = 60,
+  hoverIndex = 95,
+  activeIndex = 99
 ) => ({
   color: color[colorIndex],
   "&:hover": {
-    backgroundColor: `${color[hoverIndex]}14`,
+    backgroundColor: color[hoverIndex],
     "&:before": {
       backgroundColor: "transparent",
     },
   },
   "&:active": {
-    backgroundColor: `${color[activeIndex]}1F`,
+    backgroundColor: color[activeIndex],
   },
 });
 
 const createOutlinedButtonStyle = (
   color: any,
-  colorIndex = 50,
-  hoverIndex = 60,
-  activeIndex = 60
+  colorIndex = 60,
+  hoverIndex = 95,
+  activeIndex = 99
 ) => ({
   color: color[colorIndex],
   background: "transparent",
   borderWidth: "1px",
   borderStyle: "solid",
   "&:hover": {
-    backgroundColor: `${color[hoverIndex]}14`,
+    backgroundColor: color[hoverIndex],
     "&:before": {
       backgroundColor: "transparent",
     },
   },
   "&:active": {
-    backgroundColor: `${color[activeIndex]}1F`,
+    backgroundColor: color[activeIndex],
   },
 });
 
 const createTonalButtonStyle = (
   color: any,
-  colorIndex = 50,
-  bgIndex = 60,
-  hoverIndex = 60,
-  activeIndex = 60
+  colorIndex = 60,
+  bgIndex = 95,
+  hoverIndex = 90,
+  activeIndex = 95
 ) => ({
   color: color[colorIndex],
-  backgroundColor: `${color[bgIndex]}14`,
+  backgroundColor: color[bgIndex],
   "&:hover": {
-    backgroundColor: `${color[hoverIndex]}1F`,
+    backgroundColor: color[hoverIndex],
   },
   "&:active": {
-    backgroundColor: `${color[activeIndex]}1F`,
+    backgroundColor: color[activeIndex],
   },
 });
 
 const containedButtonBase = {
-  borderRadius: RADIUS.M,
-  color: "#FFFFFF",
-  border: "2px solid",
+  borderRadius: "10px",
+  color: white,
+  border: "none",
+  boxShadow: "none",
   "&.Mui-disabled": {
     backgroundColor: neutral[90],
     color: neutral[60],
     border: "none",
+    outline: "none",
   },
   "&.Mui-focused, &:focus:not(:active)": {
     boxShadow: "none",
@@ -89,7 +99,7 @@ const createContainedButtonStyle = (
   activeIndex = 60
 ) => ({
   backgroundColor: color[backgroundIndex],
-  borderColor: color[hoverIndex],
+  boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
   "&:hover": {
     backgroundColor: color[hoverIndex],
     "&:before": {
@@ -147,17 +157,18 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
     ...createContainedButtonStyle(yellow),
   },
   "&.MuiButton-containedInfo": {
-    ...createContainedButtonStyle(plum),
+    ...createContainedButtonStyle(info),
     "&.Mui-focused, &:focus:not(:active)": {
       boxShadow: "none",
     },
   },
   "&.MuiButton-containedNeutral": {
-    color: neutral[50],
-    backgroundColor: "#ffffff",
-    borderWidth: "1px",
-    borderStyle: "solid",
-    borderColor: neutral[90],
+    color: neutral[10],
+    backgroundColor: white,
+    outlineWidth: "2px",
+    outlineStyle: "solid",
+    outlineColor: neutral[99],
+    border: "none",
     "&:hover": {
       backgroundColor: neutral[99],
       "&:before": {
@@ -181,14 +192,14 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
   },
   "&.MuiButton-outlinedNeutral": {
     borderColor: neutral[90],
-    ...createOutlinedButtonStyle(neutral),
+    ...createOutlinedButtonStyle(neutral, 10),
   },
   "&.MuiButton-outlinedSecondary": {
     ...createOutlinedButtonStyle(secondary),
     borderColor: neutral[90],
   },
   "&.MuiButton-outlinedError": {
-    ...createOutlinedButtonStyle(critical, 40, 40, 40),
+    ...createOutlinedButtonStyle(critical, 50),
     borderColor: critical[80],
   },
   "&.MuiButton-outlinedWarning": {
@@ -215,22 +226,22 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
     },
   },
   "&.MuiButton-textError": {
-    ...createTextButtonStyle(critical, 40, 40, 40),
+    ...createTextButtonStyle(critical, 50),
   },
   "&.MuiButton-textWarning": {
-    ...createTextButtonStyle(yellow, 40),
+    ...createTextButtonStyle(yellow, 50),
   },
   "&.MuiButton-textSuccess": {
-    ...createTextButtonStyle(success, 40),
+    ...createTextButtonStyle(success, 50),
   },
   "&.MuiButton-textInfo": {
-    ...createTextButtonStyle(plum, 40),
+    ...createTextButtonStyle(plum, 50),
   },
   "&.MuiButton-textSecondary": {
-    ...createTextButtonStyle(secondary, 40),
+    ...createTextButtonStyle(secondary, 50),
   },
   "&.MuiButton-textNeutral": {
-    ...createTextButtonStyle(neutral),
+    ...createTextButtonStyle(neutral, 10),
   },
 
   "&.MuiButton-tonal": {
@@ -245,7 +256,7 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
     },
   },
   "&.MuiButton-tonalError": {
-    ...createTonalButtonStyle(critical, 40, 40, 40),
+    ...createTonalButtonStyle(critical),
   },
   "&.MuiButton-tonalWarning": {
     ...createTonalButtonStyle(yellow),
@@ -260,20 +271,62 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
     ...createTonalButtonStyle(secondary),
   },
   "&.MuiButton-tonalNeutral": {
-    ...createTonalButtonStyle(neutral),
+    ...createTonalButtonStyle(neutral, 10),
   },
 }));
 
 const Button = React.forwardRef<HTMLButtonElement, CegidButtonProps>(
   (props, ref) => {
+    const getContainedBackgroundColor = () => {
+      if (props.variant === "contained") {
+        switch (props.color) {
+          case "primary":
+            return "#236BF0";
+          case "secondary":
+            return secondary[50];
+          case "neutral":
+            return neutral[99];
+          case "success":
+            return success[50];
+          case "yellow":
+            return yellow[50];
+          case "warning":
+            return yellow[50];
+          case "banana":
+            return banana[50];
+          case "critical":
+            return critical[50];
+          case "pink":
+            return pink[50];
+          case "purple":
+            return purple[50];
+          case "plum":
+            return plum[50];
+          case "beige":
+            return beige[50];
+          case "info":
+            return info[50];
+          case "error":
+            return critical[50];
+          default:
+            return "#236BF0";
+        }
+      }
+    };
+
     return (
-      <StyledButton
-        {...{ disableRipple: true, disableElevation: true, ...props }}
-        ref={ref}
-      />
+      <Box
+        p={1}
+        backgroundColor={getContainedBackgroundColor() as CustomColorString}
+        borderRadius={3}
+      >
+        <StyledButton
+          {...{ disableRipple: true, disableElevation: true, ...props }}
+          ref={ref}
+        />
+      </Box>
     );
   }
 );
 
 export default Button;
-export * from "@mui/material/Button";
