@@ -6,17 +6,9 @@ import React from "react";
 import { Button as CegidButton } from "@cegid/cds-react";
 import type { ButtonProps as CegidButtonProps } from "@cegid/cds-react";
 
-import colorPalettes, {
-  banana,
-  beige,
-  CustomColorString,
-  pink,
-  purple,
-  white,
-} from "../../theme/colors";
+import colorPalettes, { CustomColorString, white } from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
-import { DisplaySettings } from "@cegid/icons-react";
 
 const { primary, secondary, success, critical, yellow, plum, neutral, info } =
   colorPalettes;
@@ -292,22 +284,8 @@ const Button = React.forwardRef<HTMLButtonElement, CegidButtonProps>(
             return neutral[99];
           case "success":
             return success[50];
-          case "yellow":
-            return yellow[50];
           case "warning":
             return yellow[50];
-          case "banana":
-            return banana[50];
-          case "critical":
-            return critical[50];
-          case "pink":
-            return pink[50];
-          case "purple":
-            return purple[50];
-          case "plum":
-            return plum[50];
-          case "beige":
-            return beige[50];
           case "info":
             return info[50];
           case "error":
