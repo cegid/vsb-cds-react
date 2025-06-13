@@ -47,7 +47,7 @@ export interface CalloutProps {
    * Optional callback function executed when the action button is clicked.
    * Only relevant when buttonLabel is also provided.
    */
-  buttonActionClick?: () => void;
+  onActionClick?: () => void;
 
   /**
    * Optional callback function executed when the callout is dismissed/closed.

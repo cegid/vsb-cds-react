@@ -11,7 +11,7 @@ const MobileCallout: React.FC<CalloutProps> = ({
   title,
   description,
   buttonLabel,
-  buttonActionClick,
+  onActionClick,
   variant = "info",
   image,
   onClose,
@@ -76,7 +76,7 @@ const MobileCallout: React.FC<CalloutProps> = ({
   const renderChevronButton = () => (
     <Box
       sx={{ cursor: "pointer" }}
-      onClick={buttonActionClick}
+      onClick={onActionClick}
       display="flex"
       alignItems="center"
     >
@@ -102,7 +102,7 @@ const MobileCallout: React.FC<CalloutProps> = ({
 
   const renderActionButton = () =>
     isMediumSize && (
-      <Button variant="contained" onClick={buttonActionClick} color={variant}>
+      <Button variant="contained" onClick={onActionClick} color={variant} fullWidth>
         {buttonLabel}
       </Button>
     );

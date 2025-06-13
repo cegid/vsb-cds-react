@@ -321,7 +321,7 @@ const Button = React.forwardRef<HTMLButtonElement, CegidButtonProps>(
     if (props.variant === "contained") {
       return (
         <Box
-          maxWidth="fit-content"
+          maxWidth={props.fullWidth ? "auto" : "fit-content"}
           p={1}
           backgroundColor={getContainedBackgroundColor() as CustomColorString}
           borderRadius={3}

@@ -11,7 +11,7 @@ const DesktopCallout: React.FC<CalloutProps> = ({
   title,
   description,
   buttonLabel,
-  buttonActionClick,
+  onActionClick,
   variant = "info",
   image,
   onClose,
@@ -74,7 +74,7 @@ const DesktopCallout: React.FC<CalloutProps> = ({
     <>
       <Button
         variant="contained"
-        onClick={buttonActionClick}
+        onClick={onActionClick}
         color={variant === "warning" ? "neutral" : variant}
       >
         {buttonLabel}
@@ -92,7 +92,7 @@ const DesktopCallout: React.FC<CalloutProps> = ({
   const renderChevronButton = () => (
     <Box
       sx={{ cursor: "pointer" }}
-      onClick={buttonActionClick}
+      onClick={onActionClick}
       display="flex"
       alignItems="center"
     >
