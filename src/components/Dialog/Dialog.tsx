@@ -94,6 +94,12 @@ const Dialog: React.FC<DialogProps> = (props) => {
     </Row>
   );
 
+  const getStyleForSoloAction = () => {
+    if (actions?.length === 1) {
+      return { display: "flex", justifyContent: "center" };
+    }
+  };
+
   const renderActions = () => {
     if (!hasActions) return null;
 
@@ -122,6 +128,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
               <Box
                 key={`desktop-action-${index}-${action.key ?? "button"}`}
                 flex={isInfoVariant ? 1 : "inherit"}
+                {...getStyleForSoloAction()}
               >
                 {action}
               </Box>

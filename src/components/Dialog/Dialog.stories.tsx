@@ -55,10 +55,10 @@ export const Default: Story = {
       </Typography>
     ),
     actions: [
-      <Button key="cancel" color="neutral" fullWidth>
+      <Button key="cancel" variant="outlined" color="neutral" fullWidth>
         Cancel
       </Button>,
-      <Button key="confirm" fullWidth>
+      <Button key="confirm" variant="contained" fullWidth>
         Confirm
       </Button>,
     ],
@@ -76,10 +76,10 @@ export const Alert: Story = {
       </Typography>
     ),
     actions: [
-      <Button key="cancel" color="neutral">
+      <Button key="cancel" variant="outlined" color="neutral">
         Cancel
       </Button>,
-      <Button key="delete" color="error">
+      <Button key="delete" variant="contained" color="error">
         Delete
       </Button>,
     ],
@@ -97,10 +97,10 @@ export const Info: Story = {
       </Typography>
     ),
     actions: [
-      <Button key="skip" color="neutral" fullWidth>
+      <Button key="skip" color="neutral" variant="outlined" fullWidth>
         Skip
       </Button>,
-      <Button key="get-started" fullWidth>
+      <Button key="get-started" variant="contained" fullWidth>
         Get Started
       </Button>,
     ],
@@ -374,30 +374,6 @@ export const Info: Story = {
   },
 };
 
-export const WithoutActions: Story = {
-  args: {
-    title: "Information",
-    variant: "info",
-    content: (
-      <Typography component="p" variant="bodySRegular" color="neutral/60">
-        This is a simple informational dialog without any action buttons.
-      </Typography>
-    ),
-  },
-};
-
-export const WithoutContent: Story = {
-  args: {
-    title: "Simple Title Only",
-    variant: "alert",
-    actions: [
-      <Button key="ok" fullWidth>
-        OK
-      </Button>,
-    ],
-  },
-};
-
 export const SingleAction: Story = {
   args: {
     title: "Task Completed",
@@ -408,7 +384,7 @@ export const SingleAction: Story = {
       </Typography>
     ),
     actions: [
-      <Button key="close" fullWidth>
+      <Button key="close" variant="contained" fullWidth>
         Close
       </Button>,
     ],
@@ -425,13 +401,13 @@ export const MultipleActions: Story = {
       </Typography>
     ),
     actions: [
-      <Button key="option1" color="neutral" fullWidth>
+      <Button key="option1" variant="outlined" color="neutral" fullWidth>
         Option 1
       </Button>,
-      <Button key="option2" color="neutral" fullWidth>
+      <Button key="option2" variant="outlined" color="neutral" fullWidth>
         Option 2
       </Button>,
-      <Button key="option3" fullWidth>
+      <Button key="option3" variant="contained" fullWidth>
         Option 3
       </Button>,
     ],
@@ -474,10 +450,10 @@ export const LongContent: Story = {
       </div>
     ),
     actions: [
-      <Button key="decline" color="neutral" fullWidth>
+      <Button key="decline" color="neutral" variant="outlined" fullWidth>
         Decline
       </Button>,
-      <Button key="accept" fullWidth>
+      <Button key="accept" variant="contained" fullWidth>
         Accept
       </Button>,
     ],
@@ -495,10 +471,10 @@ export const ErrorDialog: Story = {
       </Typography>
     ),
     actions: [
-      <Button key="contact" color="neutral" fullWidth>
+      <Button key="contact" color="neutral" variant="outlined" fullWidth>
         Contact Support
       </Button>,
-      <Button key="retry" fullWidth>
+      <Button key="retry" variant="contained" color="error" fullWidth>
         Try Again
       </Button>,
     ],
@@ -516,7 +492,11 @@ export const SuccessDialog: Story = {
       </Typography>
     ),
     actions: [
-      <Button key="continue" fullWidth>
+      <Button
+        key="continue"
+        variant="contained"
+        color="success"
+      >
         Continue
       </Button>,
     ],
