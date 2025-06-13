@@ -5,7 +5,7 @@ import typography from "../../theme/typography";
 
 export interface SegmentedControlAction {
   icon: React.ReactNode;
-  label: string;
+  label?: string;
   onClick: () => void;
 }
 
@@ -22,6 +22,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   const [sliderStyle, setSliderStyle] = useState({});
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const isIconOnly = actions.every((action) => !action.label);
 
   useEffect(() => {
     updateSliderPosition();
@@ -60,6 +62,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     padding: "2px",
     gap: "4px",
     width: "fit-content",
+    height: "40px",
     ...typography.bodySSemiBold,
   };
 
@@ -80,8 +83,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     zIndex: 2,
     display: "flex",
     alignItems: "center",
-    gap: "8px",
-    padding: "8px 16px",
+    gap: isIconOnly ? "0" : "8px",
+    padding: isIconOnly ? "0 8px" : "0 16px",
     cursor: "pointer",
     borderRadius: "8px",
     transition: "color 0.3s ease",
@@ -90,6 +93,9 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     border: "none",
     background: "none",
     fontSize: "14px",
+    height: "36px",
+    minWidth: isIconOnly ? "36px" : "auto",
+    justifyContent: isIconOnly ? "center" : "flex-start",
   });
 
   const iconStyle: React.CSSProperties = {
@@ -119,7 +125,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
           }}
         >
           <div style={iconStyle}>{action.icon}</div>
-          <span>{action.label}</span>
+          {action.label && <span>{action.label}</span>}
         </Box>
       ))}
     </div>

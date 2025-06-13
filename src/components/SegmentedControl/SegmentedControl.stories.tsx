@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react";
-
 import SegmentedControl from "./SegmentedControl";
 import Icon from "../Icon";
 
@@ -16,17 +15,17 @@ const meta = {
       {
         icon: <Icon size={16}>add-01</Icon>,
         label: "Button",
-        onClick: () => console.log("Button 1 clicked"),
+        onClick: () => {},
       },
       {
         icon: <Icon size={16}>add-01</Icon>,
         label: "Button",
-        onClick: () => console.log("Button 2 clicked"),
+        onClick: () => {},
       },
       {
         icon: <Icon size={16}>add-01</Icon>,
         label: "Button",
-        onClick: () => console.log("Button 3 clicked"),
+        onClick: () => {},
       },
     ],
   },
@@ -37,4 +36,23 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {},
+};
+
+export const IconOnly: Story = {
+  args: {
+    actions: [
+      {
+        icon: <Icon size={16}>add-01</Icon>,
+        onClick: () => {},
+      },
+      {
+        icon: <Icon size={16}>add-01</Icon>,
+        onClick: () => {},
+      },
+      {
+        icon: <Icon size={16}>add-01</Icon>,
+        onClick: () => {},
+      },
+    ],
+  },
 };
