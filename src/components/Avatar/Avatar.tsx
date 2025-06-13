@@ -31,7 +31,6 @@ const Avatar: React.FC<CustomAvatarProps> = ({
   trigram,
   color,
 }) => {
-
   const getFontSize = (): ExtendedVariant => {
     switch (size) {
       case "small":
@@ -107,15 +106,21 @@ const Avatar: React.FC<CustomAvatarProps> = ({
       );
     }
 
+    const getExtraSmallFont = () => {
+      if (size === "extraSmall") {
+        return {
+          fontSize: "8px",
+          lineHeight: "8px",
+        };
+      }
+    };
+
     if (trigram) {
       return (
         <Typography
           variant={getFontSize()}
           color={getCustomColor()}
-          sx={{
-            fontSize: size === "extraSmall" ? "8px" : "",
-            lineHeight: size === "extraSmall" ? "8px" : "",
-          }}
+          sx={{ ...getExtraSmallFont() }}
         >
           {trigram}
         </Typography>
