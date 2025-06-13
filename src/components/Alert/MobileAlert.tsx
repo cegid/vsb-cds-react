@@ -5,9 +5,9 @@ import Typography from "../Typography";
 import Button from "../Button";
 import { ChevronRight, Close } from "@cegid/icons-react";
 import Box, { BorderProps } from "../Box";
-import { CalloutImage, CalloutProps, VARIANT_CONFIG } from "./Callout";
+import { AlertImage, AlertProps, VARIANT_CONFIG } from "./Alert";
 
-const MobileCallout: React.FC<CalloutProps> = ({
+const MobileAlert: React.FC<AlertProps> = ({
   title,
   description,
   buttonLabel,
@@ -37,7 +37,7 @@ const MobileCallout: React.FC<CalloutProps> = ({
     },
   });
 
-  const renderImage = (image: CalloutImage) => {
+  const renderImage = (image: AlertImage) => {
     const imageProps = getImageDimensions();
 
     if (typeof image === "string") {
@@ -133,4 +133,4 @@ const MobileCallout: React.FC<CalloutProps> = ({
   );
 };
 
-export default MobileCallout;
+export default MobileAlert;

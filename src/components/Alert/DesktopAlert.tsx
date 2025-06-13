@@ -1,5 +1,5 @@
 import React from "react";
-import { CalloutImage, CalloutProps, VARIANT_CONFIG } from "./Callout";
+import { AlertImage, AlertProps, VARIANT_CONFIG } from "./Alert";
 import Button from "../Button";
 import Column from "../Column";
 import Typography from "../Typography";
@@ -7,7 +7,7 @@ import Row from "../Row";
 import Box, { BorderProps } from "../Box";
 import Icon from "../Icon";
 
-const DesktopCallout: React.FC<CalloutProps> = ({
+const DesktopAlert: React.FC<AlertProps> = ({
   title,
   description,
   buttonLabel,
@@ -28,7 +28,7 @@ const DesktopCallout: React.FC<CalloutProps> = ({
     opacity: 30,
   };
 
-  const renderImage = (image: CalloutImage) => {
+  const renderImage = (image: AlertImage) => {
     const imageProps = {
       width: 40,
       height: 40,
@@ -131,4 +131,4 @@ const DesktopCallout: React.FC<CalloutProps> = ({
   );
 };
 
-export default DesktopCallout;
+export default DesktopAlert;

@@ -1,14 +1,14 @@
 import React from "react";
 import { useMediaQuery } from "@mui/material";
-import MobileCallout from "./MobileCallout";
+import MobileAlert from "./MobileAlert";
 import { useTheme } from '@mui/material/styles';
-import DesktopCallout from "./DesktopCallout";
+import DesktopAlert from "./DesktopAlert";
 
-export type CalloutVariants = "warning" | "error" | "info" | "success";
-export type CalloutImage = React.ReactElement | string;
-export type CalloutSize = "M" | "XS";
+export type AlertVariants = "warning" | "error" | "info" | "success";
+export type AlertImage = React.ReactElement | string;
+export type AlertSize = "M" | "XS";
 
-export interface CalloutProps {
+export interface AlertProps {
   /**
    * The semantic variant that determines the color scheme and visual style.
    * Each variant has predefined background and border colors for consistent messaging.
@@ -16,10 +16,10 @@ export interface CalloutProps {
    * 'info' uses info palette, 'success' uses success palette.
    * @default undefined
    */
-  variant?: CalloutVariants;
+  variant?: AlertVariants;
 
   /**
-   * The main heading text displayed prominently at the top of the callout.
+   * The main heading text displayed prominently at the top of the alert.
    * Should be concise and clearly communicate the purpose or message.
    */
   title: string;
@@ -37,11 +37,11 @@ export interface CalloutProps {
   buttonLabel?: string;
 
   /**
-   * Optional visual element to enhance the callout message.
+   * Optional visual element to enhance the alert message.
    * Can be either a React component/element or a string (typically image URL).
    * Positioning and styling may vary between mobile and desktop versions.
    */
-  image?: CalloutImage;
+  image?: AlertImage;
 
   /**
    * Optional callback function executed when the action button is clicked.
@@ -50,18 +50,18 @@ export interface CalloutProps {
   onActionClick?: () => void;
 
   /**
-   * Optional callback function executed when the callout is dismissed/closed.
-   * Typically used to remove the callout from the UI or update application state.
+   * Optional callback function executed when the alert is dismissed/closed.
+   * Typically used to remove the alert from the UI or update application state.
    */
   onClose?: () => void;
 
   /**
-   * Controls the overall size and spacing of the callout component.
-   * 'M' renders a medium-sized callout with standard spacing.
-   * 'XS' renders a compact callout with reduced padding and spacing.
+   * Controls the overall size and spacing of the alert component.
+   * 'M' renders a medium-sized alert with standard spacing.
+   * 'XS' renders a compact alert with reduced padding and spacing.
    * @default M
    */
-  size?: CalloutSize;
+  size?: AlertSize;
 }
 
 export const VARIANT_CONFIG = {
@@ -83,17 +83,17 @@ export const VARIANT_CONFIG = {
   }
 } as const;
 
-const Callout: React.FC<CalloutProps> = (props) => {
+const Alert: React.FC<AlertProps> = (props) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   if (!isMobile) {
-    return <DesktopCallout {...props} />
+    return <DesktopAlert {...props} />
   }
 
   return (
-    <MobileCallout {...props} />
+    <MobileAlert {...props} />
   );
 };
 
-export default Callout;
+export default Alert;
