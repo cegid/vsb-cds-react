@@ -42,3 +42,5 @@ export { default as Dialog } from './Dialog';
 export * from './Dialog';
 export { default as ToggleButton } from './ToggleButton';
 export * from './ToggleButton';
+export { default as Radio } from './Radio';
+export * from './Radio';
