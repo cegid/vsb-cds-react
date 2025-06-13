@@ -5,7 +5,12 @@ import Typography from "../Typography";
 import Button from "../Button";
 import { ChevronRight, Close } from "@cegid/icons-react";
 import Box, { BorderProps } from "../Box";
-import { AlertImage, AlertProps, VARIANT_CONFIG } from "./Alert";
+import {
+  AlertImage,
+  AlertProps,
+  getButtonColor,
+  VARIANT_CONFIG,
+} from "./Alert";
 
 const MobileAlert: React.FC<AlertProps> = ({
   title,
@@ -102,7 +107,12 @@ const MobileAlert: React.FC<AlertProps> = ({
 
   const renderActionButton = () =>
     isMediumSize && (
-      <Button variant="contained" onClick={onActionClick} color={variant} fullWidth>
+      <Button
+        variant="contained"
+        onClick={onActionClick}
+        color={getButtonColor(variant)}
+        fullWidth
+      >
         {buttonLabel}
       </Button>
     );

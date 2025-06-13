@@ -1,7 +1,7 @@
 import React from "react";
 import { useMediaQuery } from "@mui/material";
 import MobileAlert from "./MobileAlert";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 import DesktopAlert from "./DesktopAlert";
 
 export type AlertVariants = "warning" | "error" | "info" | "success";
@@ -12,7 +12,7 @@ export interface AlertProps {
   /**
    * The semantic variant that determines the color scheme and visual style.
    * Each variant has predefined background and border colors for consistent messaging.
-   * 'warning' uses yellow palette, 'error' uses critical palette, 
+   * 'warning' uses yellow palette, 'error' uses critical palette,
    * 'info' uses info palette, 'success' uses success palette.
    * @default undefined
    */
@@ -67,33 +67,42 @@ export interface AlertProps {
 export const VARIANT_CONFIG = {
   warning: {
     background: "yellow/99",
-    border: "yellow/30"
+    border: "yellow/30",
   },
   error: {
     background: "critical/99",
-    border: "critical/30"
+    border: "critical/30",
   },
   info: {
-    background: "info/99",
-    border: "info/30"
+    background: "primary/99",
+    border: "info/30",
   },
   success: {
     background: "success/99",
-    border: "success/30"
-  }
+    border: "success/30",
+  },
 } as const;
+
+export const getButtonColor = (variant: AlertVariants) => {
+  switch (variant) {
+    case "warning":
+      return "neutral";
+    case "info":
+      return "primary";
+    default:
+      return variant;
+  }
+};
 
 const Alert: React.FC<AlertProps> = (props) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (!isMobile) {
-    return <DesktopAlert {...props} />
+    return <DesktopAlert {...props} />;
   }
 
-  return (
-    <MobileAlert {...props} />
-  );
+  return <MobileAlert {...props} />;
 };
 
 export default Alert;

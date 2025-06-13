@@ -1,5 +1,10 @@
 import React from "react";
-import { AlertImage, AlertProps, VARIANT_CONFIG } from "./Alert";
+import {
+  AlertImage,
+  AlertProps,
+  getButtonColor,
+  VARIANT_CONFIG,
+} from "./Alert";
 import Button from "../Button";
 import Column from "../Column";
 import Typography from "../Typography";
@@ -75,14 +80,14 @@ const DesktopAlert: React.FC<AlertProps> = ({
       <Button
         variant="contained"
         onClick={onActionClick}
-        color={variant === "warning" ? "neutral" : variant}
+        color={getButtonColor(variant)}
       >
         {buttonLabel}
       </Button>
       <Button
         variant="outlined"
         onClick={onClose}
-        color={variant === "warning" ? "neutral" : variant}
+        color={getButtonColor(variant)}
       >
         Fermer
       </Button>
