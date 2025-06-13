@@ -9,6 +9,7 @@ import type { ButtonProps as CegidButtonProps } from "@cegid/cds-react";
 import colorPalettes, { CustomColorString, white } from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
+import typography from "../../theme/typography";
 
 const { primary, secondary, success, critical, yellow, plum, neutral, info } =
   colorPalettes;
@@ -117,6 +118,7 @@ const buttonBaseStyles = {
   padding: "0px 16px",
   transition: "background-color 0.2s",
   display: "flex",
+  ...typography.bodySSemiBold,
   "@media (max-width: 600px)": {
     height: "40px",
     padding: "1px 16px",

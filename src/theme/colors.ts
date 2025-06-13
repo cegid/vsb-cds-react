@@ -214,7 +214,8 @@ type ShadeKey = keyof IColorPalettes;
 export type CustomColorString =
   | `${PaletteNames}/${ShadeKey}`
   | "white"
-  | "transparent";
+  | "transparent"
+  | "inherit";
 
 export default colorPalettes;
 
@@ -224,7 +225,7 @@ export const parseCustomColor = (colorValue: string): string | undefined => {
   }
 
   if (colorValue === "white") {
-    return "#FFFFFF";
+    return white;
   }
   const matches = colorValue.match(/^([a-z]+)\/(\d+)$/);
 
