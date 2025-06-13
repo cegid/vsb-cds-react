@@ -7,7 +7,7 @@ import { primary } from "../../theme";
 const StyledTabs = styled(CegidTabs)({
     height: '40px',
     '& .MuiTabs-indicator': {
-        backgroundColor: primary[55]
+        backgroundColor: primary[50]
     }
 });
 

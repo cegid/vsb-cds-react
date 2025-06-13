@@ -10,12 +10,12 @@ const StyledCegidTab = styled(CegidTab)({
   minHeight: 'unset',
   padding: '4px 8px',
   '&.Mui-selected': {
-    color: primary[55],
+    color: primary[50],
   },
 });
 
 const Tab = React.forwardRef<HTMLDivElement, CegidTabProps>((props, ref) => {
-  return <StyledCegidTab ref={ref} {...props} />;
+  return <StyledCegidTab ref={ref} {...props} disableRipple />;
 });
 
 export default Tab;

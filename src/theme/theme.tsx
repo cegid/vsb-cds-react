@@ -94,7 +94,6 @@ export const VSBTheme = createTheme({
           color: ${neutral[50]} !important;
         }`,
     },
-    ...tabStyles(defaultTheme, typography),
     ...snackbarStyles(typography),
   },
   mixins: defaultTheme.mixins,
