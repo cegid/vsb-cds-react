@@ -271,54 +271,50 @@ const StyledButton = styled(CegidButton)(({ theme }) => ({
   },
 }));
 
-const Button = React.forwardRef<HTMLButtonElement, CegidButtonProps>(
-  (props, ref) => {
-    const getContainedBackgroundColor = () => {
-      if (!props.disabled) {
-        switch (props.color) {
-          case "primary":
-            return "#236BF0";
-          case "secondary":
-            return secondary[50];
-          case "neutral":
-            return neutral[99];
-          case "success":
-            return success[50];
-          case "warning":
-            return yellow[50];
-          case "info":
-            return info[50];
-          case "error":
-            return critical[50];
-          default:
-            return "#236BF0";
-        }
+const Button: React.FC<CegidButtonProps> = (props) => {
+  const getContainedBackgroundColor = () => {
+    if (!props.disabled) {
+      switch (props.color) {
+        case "primary":
+          return "#236BF0";
+        case "secondary":
+          return secondary[50];
+        case "neutral":
+          return neutral[99];
+        case "success":
+          return success[50];
+        case "warning":
+          return yellow[50];
+        case "info":
+          return info[50];
+        case "error":
+          return critical[50];
+        default:
+          return "#236BF0";
       }
-    };
+    }
+  };
 
-    if (props.variant === "contained") {
-      return (
-        <Box
-          maxWidth={props.fullWidth ? "auto" : "fit-content"}
-          p={1}
-          backgroundColor={getContainedBackgroundColor() as CustomColorString}
-          borderRadius={3}
-        >
-          <StyledButton
-            {...{ disableRipple: true, disableElevation: true, ...props }}
-            ref={ref}
-          />
-        </Box>
-      );
-    } else {
-      return (
+  if (props.variant === "contained") {
+    return (
+      <Box
+        maxWidth={props.fullWidth ? "auto" : "fit-content"}
+        p={1}
+        backgroundColor={getContainedBackgroundColor() as CustomColorString}
+        borderRadius={3}
+      >
         <StyledButton
           {...{ disableRipple: true, disableElevation: true, ...props }}
-          ref={ref}
         />
-      );
-    }
+      </Box>
+    );
+  } else {
+    return (
+      <StyledButton
+        {...{ disableRipple: true, disableElevation: true, ...props }}
+      />
+    );
   }
-);
+};
 
 export default Button;
