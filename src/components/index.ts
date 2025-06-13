@@ -40,8 +40,6 @@ export { default as Badge } from "./Badge";
 export * from "./Badge";
 export { default as Dialog } from "./Dialog";
 export * from "./Dialog";
-export { default as ToggleButton } from "./ToggleButton";
-export * from "./ToggleButton";
 export { default as Radio } from "./Radio";
 export * from "./Radio";
 export { default as SegmentedControl } from "./SegmentedControl";
