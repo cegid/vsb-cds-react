@@ -1,6 +1,6 @@
 {
   "name": "@cegid/vsb-cds-react",
-  "version": "1.2.4",
+  "version": "1.4.1",
   "description": "The BIM! by Cegid theme for the Cegid Design System",
   "main": "dist/index.js",
   "module": "dist/bimp-ds.esm.js",
@@ -15,7 +15,9 @@
       "import": "./dist/components/*/index.es.js",
       "require": "./dist/components/*/index.cjs.js",
       "types": "./dist/components/*/index.d.ts"
-    }
+    },
+    "./fonts.css": "./dist/fonts/fonts.css",
+    "./icons.css": "./dist/icons/hugeicons-font.css"
   },
   "files": [
     "dist"

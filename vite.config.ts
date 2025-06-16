@@ -41,9 +41,12 @@ export default defineConfig({
         this.emitFile({
           type: "asset",
           fileName: "fonts/fonts.css",
-          source: require("fs").readFileSync("src/theme/fonts/fonts.css", "utf8"),
+          source: require("fs").readFileSync(
+            "src/theme/fonts/fonts.css",
+            "utf8"
+          ),
         });
-        const fontFiles = glob.sync("src/fonts/*.{woff2,woff,ttf}");
+        const fontFiles = glob.sync("src/theme/fonts/*.{woff2,woff,ttf}");
         fontFiles.forEach((file) => {
           const fileName = path.basename(file);
           this.emitFile({
@@ -60,7 +63,7 @@ export default defineConfig({
             "utf8"
           ),
         });
-        const iconFiles = glob.sync("src/icons/*.{woff2,woff,ttf}");
+        const iconFiles = glob.sync("src/theme/icons/*.{woff2,woff,ttf}");
         iconFiles.forEach((file) => {
           const fileName = path.basename(file);
           this.emitFile({
