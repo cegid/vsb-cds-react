@@ -63,7 +63,7 @@ export default defineConfig({
             "utf8"
           ),
         });
-        const iconFiles = glob.sync("src/theme/icons/*.{woff2,woff,ttf}");
+        const iconFiles = glob.sync("src/theme/icons/*.{eot,woff2,woff,ttf,svg}");
         iconFiles.forEach((file) => {
           const fileName = path.basename(file);
           this.emitFile({
