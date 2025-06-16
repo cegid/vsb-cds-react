@@ -80,7 +80,6 @@ export default defineConfig({
       },
     },
     sourcemap: true,
-    minify: "terser",
     assetsInlineLimit: 0,
     copyPublicDir: false,
   },
