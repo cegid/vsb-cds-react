@@ -24,6 +24,25 @@ export default defineConfig({
       outDir: "dist",
       rollupTypes: true,
     }),
+    // ✅ Plugin custom pour copier les assets d'icônes
+    {
+      name: "copy-icon-assets",
+      generateBundle() {
+        // Copie des fichiers d'icônes
+        const iconFiles = glob.sync("src/theme/icons/**/*");
+        iconFiles.forEach((file) => {
+          if (file.match(/\.(eot|svg|ttf|woff2?|css)$/)) {
+            const fileName = path.basename(file);
+            const relativePath = path.relative("src/theme/icons", file);
+            this.emitFile({
+              type: "asset",
+              fileName: `icons/${relativePath}`,
+              source: require("fs").readFileSync(file),
+            });
+          }
+        });
+      },
+    },
   ],
   build: {
     lib: {
@@ -52,10 +71,25 @@ export default defineConfig({
           entryFileNames: (chunkInfo) => `${chunkInfo.name}.es.js`,
           assetFileNames: (assetInfo) => {
             if (assetInfo.name?.endsWith(".css")) {
+              if (
+                assetInfo.name.includes("hugeicons") ||
+                assetInfo.name.includes("icons")
+              ) {
+                return "icons/[name][extname]";
+              }
               return "styles/[name][extname]";
             }
             if (assetInfo.name?.match(/\.(woff2?|eot|ttf|otf)$/)) {
+              if (
+                assetInfo.name.includes("hgr-") ||
+                assetInfo.name.includes("hugeicons")
+              ) {
+                return "icons/[name][extname]";
+              }
               return "fonts/[name][extname]";
+            }
+            if (assetInfo.name?.endsWith(".svg")) {
+              return "icons/[name][extname]";
             }
             return "assets/[name][extname]";
           },
@@ -66,10 +100,25 @@ export default defineConfig({
           entryFileNames: (chunkInfo) => `${chunkInfo.name}.cjs.js`,
           assetFileNames: (assetInfo) => {
             if (assetInfo.name?.endsWith(".css")) {
+              if (
+                assetInfo.name.includes("hugeicons") ||
+                assetInfo.name.includes("icons")
+              ) {
+                return "icons/[name][extname]";
+              }
               return "styles/[name][extname]";
             }
             if (assetInfo.name?.match(/\.(woff2?|eot|ttf|otf)$/)) {
+              if (
+                assetInfo.name.includes("hgr-") ||
+                assetInfo.name.includes("hugeicons")
+              ) {
+                return "icons/[name][extname]";
+              }
               return "fonts/[name][extname]";
+            }
+            if (assetInfo.name?.endsWith(".svg")) {
+              return "icons/[name][extname]";
             }
             return "assets/[name][extname]";
           },
@@ -83,5 +132,13 @@ export default defineConfig({
     assetsInlineLimit: 0,
     copyPublicDir: false,
   },
-  assetsInclude: ["**/*.woff2", "**/*.woff", "**/*.ttf", "**/*.eot"],
+  assetsInclude: [
+    "**/*.woff2",
+    "**/*.woff",
+    "**/*.ttf",
+    "**/*.eot",
+    "**/*.svg",
+    "**/hugeicons-font.css",
+    "src/theme/icons/**/*",
+  ],
 });
