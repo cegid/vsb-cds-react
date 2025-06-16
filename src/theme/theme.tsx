@@ -3,7 +3,6 @@
 import type { SxProps } from "@mui/material/styles";
 import { ReactNode } from "react";
 import colorPalettes, { IColorPalettes } from "./colors";
-import { tabStyles } from "./components/tabs";
 import { RADIUS } from "./radius";
 import shadows from "./shadows";
 import spacing from "./spacing";

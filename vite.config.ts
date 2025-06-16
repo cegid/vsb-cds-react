@@ -8,14 +8,9 @@ const componentEntries = glob
   .sync("src/components/*/index.ts")
   .reduce((acc, file) => {
     const name = path.basename(path.dirname(file));
-    acc[`components/${name}`] = file;
+    acc[`components/${name}/index`] = file;
     return acc;
   }, {});
-
-componentEntries["components"] = path.resolve(
-  __dirname,
-  "src/components/index.ts"
-);
 
 export default defineConfig({
   plugins: [
@@ -27,55 +22,14 @@ export default defineConfig({
       insertTypesEntry: true,
       include: ["src/**/*"],
       outDir: "dist",
-      rollupTypes: false,
-      beforeWriteFile: (filePath, content) => {
-        return {
-          filePath,
-          content,
-        };
-      },
+      rollupTypes: true,
     }),
-    {
-      name: "copy-assets",
-      generateBundle() {
-        this.emitFile({
-          type: "asset",
-          fileName: "fonts/fonts.css",
-          source: require("fs").readFileSync("src/theme/fonts/fonts.css", "utf8"),
-        });
-        const fontFiles = glob.sync("src/fonts/*.{woff2,woff,ttf}");
-        fontFiles.forEach((file) => {
-          const fileName = path.basename(file);
-          this.emitFile({
-            type: "asset",
-            fileName: `fonts/${fileName}`,
-            source: require("fs").readFileSync(file),
-          });
-        });
-        this.emitFile({
-          type: "asset",
-          fileName: "icons/hugeicons-font.css",
-          source: require("fs").readFileSync(
-            "src/theme/icons/hugeicons-font.css",
-            "utf8"
-          ),
-        });
-        const iconFiles = glob.sync("src/icons/*.{woff2,woff,ttf}");
-        iconFiles.forEach((file) => {
-          const fileName = path.basename(file);
-          this.emitFile({
-            type: "asset",
-            fileName: `icons/${fileName}`,
-            source: require("fs").readFileSync(file),
-          });
-        });
-      },
-    },
   ],
   build: {
     lib: {
       entry: {
         index: path.resolve(__dirname, "src/index.ts"),
+        "components/index": path.resolve(__dirname, "src/components/index.ts"),
         ...componentEntries,
       },
       formats: ["es", "cjs"],
@@ -91,28 +45,44 @@ export default defineConfig({
         "@cegid/cds-react",
         "@cegid/icons-react",
       ],
-      output: {
-        entryFileNames: (chunkInfo) => {
-          if (chunkInfo.name.startsWith("components/")) {
-            const parts = chunkInfo.name.split("/");
-            const component = parts[1];
-            if (component === "index") {
-              return `components/index.[format].js`;
+      output: [
+        {
+          format: "es",
+          dir: "dist",
+          entryFileNames: (chunkInfo) => `${chunkInfo.name}.es.js`,
+          assetFileNames: (assetInfo) => {
+            if (assetInfo.name?.endsWith(".css")) {
+              return "styles/[name][extname]";
             }
-            return `components/${component}/index.[format].js`;
-          }
-          return "[name].[format].js";
+            if (assetInfo.name?.match(/\.(woff2?|eot|ttf|otf)$/)) {
+              return "fonts/[name][extname]";
+            }
+            return "assets/[name][extname]";
+          },
         },
-        globals: {
-          react: "React",
-          "react-dom": "ReactDOM",
-          "@mui/material": "MuiMaterial",
-          "@emotion/react": "EmotionReact",
-          "@emotion/styled": "EmotionStyled",
-          "@cegid/cds-react": "CegidCdsReact",
-          "@cegid/icons-react": "CegidIconsReact",
+        {
+          format: "cjs",
+          dir: "dist",
+          entryFileNames: (chunkInfo) => `${chunkInfo.name}.cjs.js`,
+          assetFileNames: (assetInfo) => {
+            if (assetInfo.name?.endsWith(".css")) {
+              return "styles/[name][extname]";
+            }
+            if (assetInfo.name?.match(/\.(woff2?|eot|ttf|otf)$/)) {
+              return "fonts/[name][extname]";
+            }
+            return "assets/[name][extname]";
+          },
         },
+      ],
+      treeshake: {
+        moduleSideEffects: false,
       },
     },
+    sourcemap: true,
+    minify: "terser",
+    assetsInlineLimit: 0,
+    copyPublicDir: false,
   },
+  assetsInclude: ["**/*.woff2", "**/*.woff", "**/*.ttf", "**/*.eot"],
 });
