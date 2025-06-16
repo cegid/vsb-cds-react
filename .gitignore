@@ -45,3 +45,4 @@ certificates
 # public
 public/invoice_data.json
 *storybook.log
+/.vscode

@@ -21,6 +21,7 @@ const MobileAlert: React.FC<AlertProps> = ({
   image,
   onClose,
   size = "M",
+  actionDisabled = false,
 }) => {
   const config = VARIANT_CONFIG[variant];
   const isMediumSize = size === "M";
@@ -111,6 +112,7 @@ const MobileAlert: React.FC<AlertProps> = ({
         variant="contained"
         onClick={onActionClick}
         color={getButtonColor(variant)}
+        disabled={actionDisabled}
         fullWidth
       >
         {buttonLabel}
@@ -131,7 +133,7 @@ const MobileAlert: React.FC<AlertProps> = ({
 
         <Column>
           {renderTitle()}
-          {renderDescription()}
+          {description && renderDescription()}
         </Column>
 
         {isMediumSize && renderCloseButton()}

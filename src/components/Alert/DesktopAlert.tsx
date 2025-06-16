@@ -21,6 +21,8 @@ const DesktopAlert: React.FC<AlertProps> = ({
   image,
   onClose,
   size = "M",
+  actionDisabled = false,
+  onCloseLabel = "Fermer",
 }) => {
   const config = VARIANT_CONFIG[variant];
   const isMediumSize = size === "M";
@@ -81,6 +83,7 @@ const DesktopAlert: React.FC<AlertProps> = ({
         variant="contained"
         onClick={onActionClick}
         color={getButtonColor(variant)}
+        disabled={actionDisabled}
       >
         {buttonLabel}
       </Button>
@@ -89,7 +92,7 @@ const DesktopAlert: React.FC<AlertProps> = ({
         onClick={onClose}
         color={getButtonColor(variant)}
       >
-        Fermer
+        {onCloseLabel}
       </Button>
     </>
   );

@@ -25,10 +25,10 @@ export interface AlertProps {
   title: string;
 
   /**
-   * The detailed description text that provides additional context or information.
+   * Optional description text that provides additional context or information.
    * Appears below the title with smaller typography.
    */
-  description: string;
+  description?: string;
 
   /**
    * Optional text label for the action button.
@@ -50,10 +50,26 @@ export interface AlertProps {
   onActionClick?: () => void;
 
   /**
+   * Controls whether the action button is disabled and non-interactive.
+   * When true, the button appears visually disabled and cannot be clicked.
+   * Only applies when buttonLabel is provided.
+   * @default false
+   */
+  actionDisabled?: boolean;
+
+  /**
    * Optional callback function executed when the alert is dismissed/closed.
    * Typically used to remove the alert from the UI or update application state.
    */
   onClose?: () => void;
+
+  /**
+   * Optional accessible label for the close/dismiss button.
+   * Provides screen reader users with descriptive text for the close action.
+   * If not provided, a default accessibility label will be used.
+   * @default "Fermer"
+   */
+  onCloseLabel?: string;
 
   /**
    * Controls the overall size and spacing of the alert component.
