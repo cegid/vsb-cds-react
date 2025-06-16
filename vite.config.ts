@@ -12,6 +12,14 @@ const componentEntries = glob
     return acc;
   }, {});
 
+const themeEntries = glob.sync("src/theme/*.ts").reduce((acc, file) => {
+  const name = path.basename(file, ".ts");
+  if (name !== "index") {
+    acc[`theme/${name}`] = file;
+  }
+  return acc;
+}, {});
+
 export default defineConfig({
   plugins: [
     react({
@@ -24,11 +32,9 @@ export default defineConfig({
       outDir: "dist",
       rollupTypes: true,
     }),
-    // ✅ Plugin custom pour copier les assets d'icônes
     {
       name: "copy-icon-assets",
       generateBundle() {
-        // Copie des fichiers d'icônes
         const iconFiles = glob.sync("src/theme/icons/**/*");
         iconFiles.forEach((file) => {
           if (file.match(/\.(eot|svg|ttf|woff2?|css)$/)) {
@@ -49,6 +55,8 @@ export default defineConfig({
       entry: {
         index: path.resolve(__dirname, "src/index.ts"),
         "components/index": path.resolve(__dirname, "src/components/index.ts"),
+        "theme/index": path.resolve(__dirname, "src/theme/index.ts"),
+        ...themeEntries,
         ...componentEntries,
       },
       formats: ["es", "cjs"],

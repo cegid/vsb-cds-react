@@ -7,7 +7,6 @@ import { RADIUS } from "./radius";
 import shadows from "./shadows";
 import spacing from "./spacing";
 import typography from "./typography";
-import { snackbarStyles } from "./components/snackbar";
 import {
   createTheme,
   CssBaseline,
@@ -75,12 +74,6 @@ export const VSBTheme = createTheme({
   },
   components: {
     ...defaultTheme.components,
-    fontFamily: [
-      "DMSansRegular",
-      "DMSansSemiBold",
-      "DMSansMedium",
-      "sans-serif",
-    ].join(","),
     MuiCssBaseline: {
       styleOverrides: `
         body {
@@ -93,7 +86,6 @@ export const VSBTheme = createTheme({
           color: ${neutral[50]} !important;
         }`,
     },
-    ...snackbarStyles(typography),
   },
   mixins: defaultTheme.mixins,
 });

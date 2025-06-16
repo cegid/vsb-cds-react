@@ -21,8 +21,19 @@
       "require": "./dist/components/*/index.cjs.js",
       "types": "./dist/components/*/index.d.ts"
     },
+    "./theme": {
+      "import": "./dist/theme/index.es.js",
+      "require": "./dist/theme/index.cjs.js",
+      "types": "./dist/theme/index.d.ts"
+    },
+    "./theme/*": {
+      "import": "./dist/theme/*.es.js",
+      "require": "./dist/theme/*.cjs.js",
+      "types": "./dist/theme/*.d.ts"
+    },
     "./styles/*": "./dist/styles/*",
     "./fonts/*": "./dist/fonts/*",
+    "./icons/*": "./dist/icons/*",
     "./dist/*": "./dist/*"
   },
   "files": [
@@ -32,7 +43,9 @@
     "**/*.css",
     "**/fonts.css",
     "**/icons.css",
-    "dist/styles/**/*.css"
+    "**/hugeicons-font.css",
+    "dist/styles/**/*.css",
+    "dist/icons/**/*.css"
   ],
   "scripts": {
     "build": "NODE_OPTIONS='--max-old-space-size=8192' tsc && NODE_OPTIONS='--max-old-space-size=8192' vite build",
