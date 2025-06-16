@@ -47,9 +47,9 @@ const {
   beige,
 } = colorPalettes;
 
-export type SxPropsTheme = SxProps<Theme>;
+type SxPropsTheme = SxProps<Theme>;
 
-export const VSBTheme = createTheme({
+const VSBTheme = createTheme({
   palette: {
     primary: createCompletePalette(primary),
     secondary: createCompletePalette(secondary),
@@ -94,7 +94,7 @@ interface VSBThemeProviderProps {
   children: ReactNode;
 }
 
-export const VSBThemeProvider: React.FC<VSBThemeProviderProps> = ({
+const VSBThemeProvider: React.FC<VSBThemeProviderProps> = ({
   children,
 }) => {
   return (
@@ -104,3 +104,5 @@ export const VSBThemeProvider: React.FC<VSBThemeProviderProps> = ({
     </ThemeProvider>
   );
 };
+
+export default VSBThemeProvider;
