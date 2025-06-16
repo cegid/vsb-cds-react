@@ -104,8 +104,6 @@ export type BorderStyleProps =
   | "inset"
   | "outset";
 
-type ShadeKey = keyof IColorPalettes;
-
 const Box = React.forwardRef<HTMLDivElement, CustomBoxProps>((props, ref) => {
   const {
     backgroundColor,

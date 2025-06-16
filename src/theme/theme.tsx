@@ -1,23 +1,17 @@
 "use client";
 
-import type { SxProps } from "@mui/material/styles";
 import { ReactNode } from "react";
 import colorPalettes, { IColorPalettes } from "./colors";
-import { tabStyles } from "./components/tabs";
 import { RADIUS } from "./radius";
 import shadows from "./shadows";
 import spacing from "./spacing";
 import typography from "./typography";
-import { snackbarStyles } from "./components/snackbar";
 import {
   createTheme,
   CssBaseline,
-  Theme,
   ThemeOptions,
   ThemeProvider,
 } from "@cegid/cds-react";
-import "./fonts/fonts.css";
-import "./icons/hugeicons-font.css";
 
 const createCompletePalette = (colorObj: IColorPalettes) => ({
   50: colorObj[95],
@@ -49,8 +43,6 @@ const {
   beige,
 } = colorPalettes;
 
-export type SxPropsTheme = SxProps<Theme>;
-
 export const VSBTheme = createTheme({
   palette: {
     primary: createCompletePalette(primary),
@@ -76,12 +68,6 @@ export const VSBTheme = createTheme({
   },
   components: {
     ...defaultTheme.components,
-    fontFamily: [
-      "DMSansRegular",
-      "DMSansSemiBold",
-      "DMSansMedium",
-      "sans-serif",
-    ].join(","),
     MuiCssBaseline: {
       styleOverrides: `
         body {
@@ -94,7 +80,6 @@ export const VSBTheme = createTheme({
           color: ${neutral[50]} !important;
         }`,
     },
-    ...snackbarStyles(typography),
   },
   mixins: defaultTheme.mixins,
 });
@@ -113,3 +98,5 @@ export const VSBThemeProvider: React.FC<VSBThemeProviderProps> = ({
     </ThemeProvider>
   );
 };
+
+export default VSBThemeProvider;
