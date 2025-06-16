@@ -1,6 +1,5 @@
 "use client";
 
-import type { SxProps } from "@mui/material/styles";
 import { ReactNode } from "react";
 import colorPalettes, { IColorPalettes } from "./colors";
 import { RADIUS } from "./radius";
@@ -10,12 +9,9 @@ import typography from "./typography";
 import {
   createTheme,
   CssBaseline,
-  Theme,
   ThemeOptions,
   ThemeProvider,
 } from "@cegid/cds-react";
-import "./fonts/fonts.css";
-import "./icons/hugeicons-font.css";
 
 const createCompletePalette = (colorObj: IColorPalettes) => ({
   50: colorObj[95],
@@ -47,9 +43,7 @@ const {
   beige,
 } = colorPalettes;
 
-type SxPropsTheme = SxProps<Theme>;
-
-const VSBTheme = createTheme({
+export const VSBTheme = createTheme({
   palette: {
     primary: createCompletePalette(primary),
     secondary: createCompletePalette(secondary),
@@ -94,7 +88,7 @@ interface VSBThemeProviderProps {
   children: ReactNode;
 }
 
-const VSBThemeProvider: React.FC<VSBThemeProviderProps> = ({
+export const VSBThemeProvider: React.FC<VSBThemeProviderProps> = ({
   children,
 }) => {
   return (

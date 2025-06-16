@@ -26,11 +26,30 @@ export default defineConfig({
       jsxRuntime: "automatic",
       jsxImportSource: "react",
     }),
+    // ✅ Configuration DTS corrigée
     dts({
       insertTypesEntry: true,
       include: ["src/**/*"],
+      exclude: [
+        "src/**/*.stories.*",
+        "src/**/*.test.*",
+        "src/**/*.spec.*",
+        "**/*.css",
+      ],
       outDir: "dist",
-      rollupTypes: true,
+      rollupTypes: false,
+      copyDtsFiles: true,
+      staticImport: true,
+      entryRoot: "src",
+      compilerOptions: {
+        baseUrl: ".",
+        paths: {
+          "@/*": ["src/*"],
+        },
+        skipLibCheck: true,
+        allowSyntheticDefaultImports: true,
+        esModuleInterop: true,
+      },
     }),
     {
       name: "copy-icon-assets",
@@ -38,7 +57,6 @@ export default defineConfig({
         const iconFiles = glob.sync("src/theme/icons/**/*");
         iconFiles.forEach((file) => {
           if (file.match(/\.(eot|svg|ttf|woff2?|css)$/)) {
-            const fileName = path.basename(file);
             const relativePath = path.relative("src/theme/icons", file);
             this.emitFile({
               type: "asset",
