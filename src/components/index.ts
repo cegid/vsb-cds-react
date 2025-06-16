@@ -50,3 +50,5 @@ export { default as Switch } from "./Switch";
 export * from "./Switch";
 export { default as FormGroup } from "./FormGroup";
 export * from "./FormGroup";
+export { default as FormControlLabel } from "./FormControlLabel";
+export * from "./FormControlLabel";
