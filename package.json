@@ -21,20 +21,8 @@
       "require": "./dist/components/*/index.cjs.js",
       "types": "./dist/components/*/index.d.ts"
     },
-    "./theme": {
-      "import": "./dist/theme/index.es.js",
-      "require": "./dist/theme/index.cjs.js",
-      "types": "./dist/theme/index.d.ts"
-    },
-    "./theme/*": {
-      "import": "./dist/theme/*.es.js",
-      "require": "./dist/theme/*.cjs.js",
-      "types": "./dist/theme/*.d.ts"
-    },
-    "./styles/*": "./dist/styles/*",
-    "./fonts/*": "./dist/fonts/*",
-    "./icons/*": "./dist/icons/*",
-    "./dist/*": "./dist/*"
+    "./fonts.css": "./dist/fonts/fonts.css",
+    "./icons.css": "./dist/icons/hugeicons-font.css"
   },
   "files": [
     "dist/**/*"

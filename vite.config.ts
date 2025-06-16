@@ -8,17 +8,14 @@ const componentEntries = glob
   .sync("src/components/*/index.ts")
   .reduce((acc, file) => {
     const name = path.basename(path.dirname(file));
-    acc[`components/${name}/index`] = file;
+    acc[`components/${name}`] = file;
     return acc;
   }, {});
 
-const themeEntries = glob.sync("src/theme/*.ts").reduce((acc, file) => {
-  const name = path.basename(file, ".ts");
-  if (name !== "index") {
-    acc[`theme/${name}`] = file;
-  }
-  return acc;
-}, {});
+componentEntries["components"] = path.resolve(
+  __dirname,
+  "src/components/index.ts"
+);
 
 export default defineConfig({
   plugins: [
@@ -26,44 +23,54 @@ export default defineConfig({
       jsxRuntime: "automatic",
       jsxImportSource: "react",
     }),
-    // ✅ Configuration DTS corrigée
     dts({
       insertTypesEntry: true,
       include: ["src/**/*"],
-      exclude: [
-        "src/**/*.stories.*",
-        "src/**/*.test.*",
-        "src/**/*.spec.*",
-        "**/*.css",
-      ],
       outDir: "dist",
       rollupTypes: false,
-      copyDtsFiles: true,
-      staticImport: true,
-      entryRoot: "src",
-      compilerOptions: {
-        baseUrl: ".",
-        paths: {
-          "@/*": ["src/*"],
-        },
-        skipLibCheck: true,
-        allowSyntheticDefaultImports: true,
-        esModuleInterop: true,
+      beforeWriteFile: (filePath, content) => {
+        return {
+          filePath,
+          content,
+        };
       },
     }),
     {
-      name: "copy-icon-assets",
+      name: "copy-assets",
       generateBundle() {
-        const iconFiles = glob.sync("src/theme/icons/**/*");
+        this.emitFile({
+          type: "asset",
+          fileName: "fonts/fonts.css",
+          source: require("fs").readFileSync(
+            "src/theme/fonts/fonts.css",
+            "utf8"
+          ),
+        });
+        const fontFiles = glob.sync("src/theme/fonts/*.{woff2,woff,ttf}");
+        fontFiles.forEach((file) => {
+          const fileName = path.basename(file);
+          this.emitFile({
+            type: "asset",
+            fileName: `fonts/${fileName}`,
+            source: require("fs").readFileSync(file),
+          });
+        });
+        this.emitFile({
+          type: "asset",
+          fileName: "icons/hugeicons-font.css",
+          source: require("fs").readFileSync(
+            "src/theme/icons/hugeicons-font.css",
+            "utf8"
+          ),
+        });
+        const iconFiles = glob.sync("src/theme/icons/*.{woff2,woff,ttf}");
         iconFiles.forEach((file) => {
-          if (file.match(/\.(eot|svg|ttf|woff2?|css)$/)) {
-            const relativePath = path.relative("src/theme/icons", file);
-            this.emitFile({
-              type: "asset",
-              fileName: `icons/${relativePath}`,
-              source: require("fs").readFileSync(file),
-            });
-          }
+          const fileName = path.basename(file);
+          this.emitFile({
+            type: "asset",
+            fileName: `icons/${fileName}`,
+            source: require("fs").readFileSync(file),
+          });
         });
       },
     },
@@ -72,9 +79,6 @@ export default defineConfig({
     lib: {
       entry: {
         index: path.resolve(__dirname, "src/index.ts"),
-        "components/index": path.resolve(__dirname, "src/components/index.ts"),
-        "theme/index": path.resolve(__dirname, "src/theme/index.ts"),
-        ...themeEntries,
         ...componentEntries,
       },
       formats: ["es", "cjs"],
@@ -90,81 +94,28 @@ export default defineConfig({
         "@cegid/cds-react",
         "@cegid/icons-react",
       ],
-      output: [
-        {
-          format: "es",
-          dir: "dist",
-          entryFileNames: (chunkInfo) => `${chunkInfo.name}.es.js`,
-          assetFileNames: (assetInfo) => {
-            if (assetInfo.name?.endsWith(".css")) {
-              if (
-                assetInfo.name.includes("hugeicons") ||
-                assetInfo.name.includes("icons")
-              ) {
-                return "icons/[name][extname]";
-              }
-              return "styles/[name][extname]";
+      output: {
+        entryFileNames: (chunkInfo) => {
+          if (chunkInfo.name.startsWith("components/")) {
+            const parts = chunkInfo.name.split("/");
+            const component = parts[1];
+            if (component === "index") {
+              return `components/index.[format].js`;
             }
-            if (assetInfo.name?.match(/\.(woff2?|eot|ttf|otf)$/)) {
-              if (
-                assetInfo.name.includes("hgr-") ||
-                assetInfo.name.includes("hugeicons")
-              ) {
-                return "icons/[name][extname]";
-              }
-              return "fonts/[name][extname]";
-            }
-            if (assetInfo.name?.endsWith(".svg")) {
-              return "icons/[name][extname]";
-            }
-            return "assets/[name][extname]";
-          },
+            return `components/${component}/index.[format].js`;
+          }
+          return "[name].[format].js";
         },
-        {
-          format: "cjs",
-          dir: "dist",
-          entryFileNames: (chunkInfo) => `${chunkInfo.name}.cjs.js`,
-          assetFileNames: (assetInfo) => {
-            if (assetInfo.name?.endsWith(".css")) {
-              if (
-                assetInfo.name.includes("hugeicons") ||
-                assetInfo.name.includes("icons")
-              ) {
-                return "icons/[name][extname]";
-              }
-              return "styles/[name][extname]";
-            }
-            if (assetInfo.name?.match(/\.(woff2?|eot|ttf|otf)$/)) {
-              if (
-                assetInfo.name.includes("hgr-") ||
-                assetInfo.name.includes("hugeicons")
-              ) {
-                return "icons/[name][extname]";
-              }
-              return "fonts/[name][extname]";
-            }
-            if (assetInfo.name?.endsWith(".svg")) {
-              return "icons/[name][extname]";
-            }
-            return "assets/[name][extname]";
-          },
+        globals: {
+          react: "React",
+          "react-dom": "ReactDOM",
+          "@mui/material": "MuiMaterial",
+          "@emotion/react": "EmotionReact",
+          "@emotion/styled": "EmotionStyled",
+          "@cegid/cds-react": "CegidCdsReact",
+          "@cegid/icons-react": "CegidIconsReact",
         },
-      ],
-      treeshake: {
-        moduleSideEffects: false,
       },
     },
-    sourcemap: true,
-    assetsInlineLimit: 0,
-    copyPublicDir: false,
   },
-  assetsInclude: [
-    "**/*.woff2",
-    "**/*.woff",
-    "**/*.ttf",
-    "**/*.eot",
-    "**/*.svg",
-    "**/hugeicons-font.css",
-    "src/theme/icons/**/*",
-  ],
 });
