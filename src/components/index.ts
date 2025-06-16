@@ -46,3 +46,5 @@ export { default as SegmentedControl } from "./SegmentedControl";
 export * from "./SegmentedControl";
 export { default as Avatar } from "./Avatar";
 export * from "./Avatar";
+export { default as Switch } from "./Switch";
+export * from "./Switch";
