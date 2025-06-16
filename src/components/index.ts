@@ -52,3 +52,5 @@ export { default as FormGroup } from "./FormGroup";
 export * from "./FormGroup";
 export { default as FormControlLabel } from "./FormControlLabel";
 export * from "./FormControlLabel";
+export { default as FormControl } from "./FormControl";
+export * from "./FormControl";
