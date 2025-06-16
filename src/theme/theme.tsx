@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+import type { SxProps } from "@mui/material/styles";
 import colorPalettes, { IColorPalettes } from "./colors";
 import { RADIUS } from "./radius";
 import shadows from "./shadows";
@@ -11,6 +12,7 @@ import {
   CssBaseline,
   ThemeOptions,
   ThemeProvider,
+  Theme
 } from "@cegid/cds-react";
 
 const createCompletePalette = (colorObj: IColorPalettes) => ({
@@ -83,7 +85,7 @@ export const VSBTheme = createTheme({
   },
   mixins: defaultTheme.mixins,
 });
-
+export type SxPropsTheme = SxProps<Theme>;
 interface VSBThemeProviderProps {
   children: ReactNode;
 }
