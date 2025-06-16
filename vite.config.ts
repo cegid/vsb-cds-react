@@ -35,6 +35,42 @@ export default defineConfig({
         };
       },
     }),
+    {
+      name: "copy-assets",
+      generateBundle() {
+        this.emitFile({
+          type: "asset",
+          fileName: "fonts/fonts.css",
+          source: require("fs").readFileSync("src/theme/fonts/fonts.css", "utf8"),
+        });
+        const fontFiles = glob.sync("src/fonts/*.{woff2,woff,ttf}");
+        fontFiles.forEach((file) => {
+          const fileName = path.basename(file);
+          this.emitFile({
+            type: "asset",
+            fileName: `fonts/${fileName}`,
+            source: require("fs").readFileSync(file),
+          });
+        });
+        this.emitFile({
+          type: "asset",
+          fileName: "icons/hugeicons-font.css",
+          source: require("fs").readFileSync(
+            "src/theme/icons/hugeicons-font.css",
+            "utf8"
+          ),
+        });
+        const iconFiles = glob.sync("src/icons/*.{woff2,woff,ttf}");
+        iconFiles.forEach((file) => {
+          const fileName = path.basename(file);
+          this.emitFile({
+            type: "asset",
+            fileName: `icons/${fileName}`,
+            source: require("fs").readFileSync(file),
+          });
+        });
+      },
+    },
   ],
   build: {
     lib: {

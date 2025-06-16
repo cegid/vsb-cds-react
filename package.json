@@ -1,6 +1,6 @@
 {
   "name": "@cegid/vsb-cds-react",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "The BIM! by Cegid theme for the Cegid Design System",
   "main": "dist/index.js",
   "module": "dist/bimp-ds.esm.js",
@@ -22,6 +22,7 @@
   ],
   "scripts": {
     "build": "NODE_OPTIONS='--max-old-space-size=8192' tsc && NODE_OPTIONS='--max-old-space-size=8192' vite build",
+    "build:dev": "vite build",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
