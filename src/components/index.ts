@@ -44,3 +44,5 @@ export { default as Radio } from "./Radio";
 export * from "./Radio";
 export { default as SegmentedControl } from "./SegmentedControl";
 export * from "./SegmentedControl";
+export { default as Avatar } from "./Avatar";
+export * from "./Avatar";
