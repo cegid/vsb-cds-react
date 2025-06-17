@@ -7,7 +7,7 @@ import { neutral, RADIUS, white } from "../../theme";
 import typography from "../../theme/typography";
 import { ELEVATION } from "../../theme/shadows";
 
-interface CustomTooltipProps extends TooltipProps {
+export interface CustomTooltipProps extends TooltipProps {
   /**
    * Controls the visual style of the tooltip badge.
    * @default 'light'
