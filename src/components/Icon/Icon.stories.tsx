@@ -5,7 +5,7 @@ import Box from "../Box";
 import Typography from "../Typography";
 import { CustomColorString } from "../../theme/colors";
 
-// Import de la liste des icônes pré-générée
+// Import de la liste des icônes pré-générée utilisez "npm run extract-icons" pour la mettre à jour
 import iconsList from "../../theme/icons/icons-list.json";
 
 const meta = {

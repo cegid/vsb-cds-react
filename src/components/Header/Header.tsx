@@ -22,6 +22,8 @@ interface BaseHeaderProps {
   settingsAction?: () => void;
   /** Callback function triggered when the more options icon is clicked */
   moreAction?: () => void;
+  /** Callback function triggered when the arrow back options icon is clicked */
+  backAction?: () => void;
 }
 
 type SegmentedHeaderProps = BaseHeaderProps & {
@@ -104,6 +106,7 @@ const MobileActions: React.FC<{
   primaryButtonText: string;
   settingsAction?: () => void;
   moreAction?: () => void;
+  backAction?: () => void;
 }> = ({ primaryAction, primaryButtonText, settingsAction, moreAction }) => (
   <>
     {primaryAction && (
@@ -159,6 +162,7 @@ const RegularActionsSection: React.FC<{
   secondaryButtonText: string;
   settingsAction?: () => void;
   moreAction?: () => void;
+  backAction?: () => void;
 }> = ({ isMobile, ...actions }) => {
   const hasAnyAction =
     actions.primaryAction ||
@@ -189,6 +193,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     secondaryButtonText,
     secondaryAction,
     segmentedControlRight,
+    backAction
   } = props;
 
   const theme = useTheme();
@@ -196,6 +201,11 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   return (
     <Row py={5} px={6} gap={4} alignItems="center" width="100%">
+      {backAction && isMobile && (
+        <IconButton variant="tonal" square onClick={backAction} color="neutral">
+          <Icon>arrow-left-02</Icon>
+        </IconButton>
+      )}
       {!segmentedControlRight && <HeaderTitle title={title} />}
 
       {segmentedControlRight ? (

@@ -22,26 +22,6 @@ const meta = {
       control: "text",
       description: "The text for the secondary action button",
     },
-    primaryAction: {
-      control: "boolean",
-      description: "has a primary action",
-      defaultValue: true,
-    },
-    secondaryAction: {
-      control: "boolean",
-      description: "has a secondary action",
-      defaultValue: true,
-    },
-    settingsAction: {
-      control: "boolean",
-      description: "has a settings action",
-      defaultValue: true,
-    },
-    moreAction: {
-      control: "boolean",
-      description: "has a more action",
-      defaultValue: true,
-    },
   },
   args: {
     title: "Page Title",
@@ -51,6 +31,7 @@ const meta = {
     secondaryAction: () => {},
     settingsAction: () => {},
     moreAction: () => {},
+    backAction: () => {},
     segmentedControlRight: false,
   },
 } satisfies Meta<typeof Header>;
@@ -67,6 +48,7 @@ export const Default: Story = {
       secondaryAction={args.secondaryAction ? args.secondaryAction : undefined}
       settingsAction={args.settingsAction ? args.settingsAction : undefined}
       moreAction={args.moreAction ? args.moreAction : undefined}
+      backAction={args.backAction ? args.backAction : undefined}
     />
   ),
 };
