@@ -106,7 +106,6 @@ const MobileActions: React.FC<{
   primaryButtonText: string;
   settingsAction?: () => void;
   moreAction?: () => void;
-  backAction?: () => void;
 }> = ({ primaryAction, primaryButtonText, settingsAction, moreAction }) => (
   <>
     {primaryAction && (
