@@ -99,7 +99,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     fontSize: "14px",
     height: "36px",
     minWidth: isIconOnly ? "36px" : "auto",
-    justifyContent: isIconOnly ? "center" : "flex-start",
+    justifyContent: "center",
   });
 
   const iconStyle: React.CSSProperties = {
@@ -114,6 +114,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
 
       {actions.map((action, index) => (
         <Box
+          {...(fullwidth && { flex: 1 })}
           key={index}
           ref={(el) => (buttonRefs.current[index] = el)}
           onClick={() => handleActionClick(index)}
