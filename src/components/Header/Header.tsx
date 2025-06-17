@@ -8,6 +8,7 @@ import Icon from "../Icon";
 import SegmentedControl, { SegmentedControlProps } from "../SegmentedControl";
 
 interface CustomButtonProps {
+  id: string;
   disabled?: boolean;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
@@ -127,6 +128,7 @@ const PrimaryButton: React.FC<{
     variant="contained"
     onClick={onClick}
     disabled={customProps.disabled}
+    id={customProps.id}
     startIcon={customProps.startIcon}
     endIcon={customProps.endIcon}
   >
@@ -144,6 +146,7 @@ const SecondaryButton: React.FC<{
     color="neutral"
     onClick={onClick}
     disabled={customProps.disabled}
+    id={customProps.id}
     startIcon={customProps.startIcon}
     endIcon={customProps.endIcon}
   >
@@ -270,7 +273,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     secondaryButtonProps,
     segmentedControlRight,
     backAction,
-    id
+    id,
   } = props;
 
   const theme = useTheme();
