@@ -107,7 +107,8 @@ const MobileAlert: React.FC<AlertProps> = ({
   );
 
   const renderActionButton = () =>
-    isMediumSize && (
+    isMediumSize &&
+    onActionClick && (
       <Button
         variant="contained"
         onClick={onActionClick}

@@ -54,60 +54,109 @@ export const Default: Story = {
   args: {},
 };
 
-export const Warning: Story = {
-  args: {
-    variant: "warning",
-    title: "Warning message",
-    description: "This is a warning alert with important information",
-  },
+export const AllVariants: Story = {
+  render: () => (
+    <>
+      <Alert
+        variant="info"
+        title="Information"
+        description="This is an informational alert with helpful details"
+        image={TestIcon}
+        buttonLabel="Learn more"
+      />
+      <Alert
+        variant="success"
+        title="Success!"
+        description="Your action was completed successfully"
+        image={TestIcon}
+        buttonLabel="Continue"
+      />
+      <Alert
+        variant="warning"
+        title="Warning message"
+        description="This is a warning alert with important information"
+        image={TestIcon}
+        buttonLabel="Review"
+      />
+      <Alert
+        variant="error"
+        title="Error occurred"
+        description="Something went wrong, please try again"
+        image={TestIcon}
+        buttonLabel="Retry"
+      />
+    </>
+  ),
 };
 
-export const Error: Story = {
-  args: {
-    variant: "error",
-    title: "Error occurred",
-    description: "Something went wrong, please try again",
-  },
+export const AllSizes: Story = {
+  render: () => (
+    <>
+      <Alert
+        variant="info"
+        size="M"
+        title="Medium size alert"
+        description="This is the default medium size with full description"
+        image={TestIcon}
+        buttonLabel="Action"
+      />
+      <Alert
+        variant="warning"
+        size="XS"
+        title="Extra small alert"
+        description="Compact version for less space"
+        image={TestIcon}
+        buttonLabel="OK"
+      />
+    </>
+  ),
 };
 
-export const Success: Story = {
-  args: {
-    variant: "success",
-    title: "Success!",
-    description: "Your action was completed successfully",
-  },
-};
-
-export const ExtraSmall: Story = {
-  args: {
-    size: "XS",
-    title: "Compact alert",
-    description: "This is a compact version of the alert",
-  },
-};
-
-export const WithoutImage: Story = {
-  args: {
-    title: "No image alert",
-    description: "This alert doesn't have an image",
-    image: undefined,
-  },
-};
-
-export const WithStringImage: Story = {
-  args: {
-    title: "Image from URL",
-    description: "This alert uses a string URL for the image",
-    image: "https://via.placeholder.com/50x50",
-  },
+export const WithoutElements: Story = {
+  render: () => (
+    <>
+      <Alert
+        variant="info"
+        title="No image alert"
+        description="This alert doesn't have an image"
+        buttonLabel="Action"
+      />
+      <Alert
+        variant="success"
+        title="No button alert"
+        description="This alert doesn't have an action button"
+        image={TestIcon}
+      />
+      <Alert
+        variant="warning"
+        title="Title only"
+        image={TestIcon}
+        buttonLabel="Action"
+      />
+    </>
+  ),
 };
 
 export const WithActions: Story = {
-  args: {
-    title: "Alert with actions",
-    description: "This alert has both action and close buttons",
-    buttonLabel: "Take action",
-    onActionClick: () => alert("Action clicked!"),
-    onClose: () => alert("Close clicked!"),
-  },
+  render: () => (
+    <>
+      <Alert
+        variant="error"
+        title="Alert with actions"
+        description="This alert has both action and close buttons"
+        image={TestIcon}
+        buttonLabel="Take action"
+        onActionClick={() => alert("Action clicked!")}
+        onClose={() => alert("Close clicked!")}
+      />
+      <Alert
+        variant="info"
+        title="With string image URL"
+        description="This alert uses a string URL for the image"
+        image="https://via.placeholder.com/50x50"
+        buttonLabel="View"
+        onActionClick={() => alert("View clicked!")}
+      />
+    </>
+  ),
 };
