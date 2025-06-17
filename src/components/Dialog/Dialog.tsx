@@ -5,6 +5,8 @@ import Icon from "../Icon";
 import Typography from "../Typography";
 import Button from "../Button";
 
+import { Dialog as CegidDialog } from "@cegid/cds-react";
+
 import { useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { white } from "../../theme";
@@ -47,18 +49,41 @@ export interface DialogProps {
   actions?: Array<React.ReactElement<typeof Button>>;
 
   /**
+   * dialog open state
+   */
+  isOpen: boolean;
+
+  /**
+   * dialog open state management
+   */
+  onClose: () => void;
+
+  /**
    * Optional image to display in the dialog (only shown for "info" variant)
    */
   image?: DialogImage;
+
+  /**
+   * Optional children to display custom dialog (
+   */
+  children?: React.ReactNode;
 }
 
 const Dialog: React.FC<DialogProps> = (props) => {
-  const { title, content, actions, variant = "alert", image } = props;
+  const {
+    title,
+    content,
+    actions,
+    variant = "alert",
+    image,
+    isOpen,
+    children,
+    onClose,
+  } = props;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // Responsive styles
   const containerStyles = {
     width: isMobile ? "343px" : "720px",
     ...(isMobile && { background: white }),
@@ -142,20 +167,40 @@ const Dialog: React.FC<DialogProps> = (props) => {
   };
 
   return (
-    <Box {...containerStyles} p={2} backgroundColor="white" borderRadius={6}>
-      <Column
-        border={{ color: "neutral/95", style: "solid", width: 1 }}
-        backgroundColor="white"
-        p={6}
-        borderRadius={5}
-        alignItems={isInfoVariant ? "center" : ""}
-      >
-        {isInfoVariant && image}
-        {renderHeader()}
-        {content && <Box p={4}>{content}</Box>}
-        {renderActions()}
-      </Column>
-    </Box>
+    <CegidDialog
+      open={isOpen}
+      onClose={onClose}
+      maxWidth="lg"
+      PaperProps={{
+        sx: {
+          backgroundColor: "transparent",
+          boxShadow: "none",
+        },
+      }}
+    >
+      {children}
+      {!children && (
+        <Box
+          {...containerStyles}
+          p={2}
+          backgroundColor="white"
+          borderRadius={6}
+        >
+          <Column
+            border={{ color: "neutral/95", style: "solid", width: 1 }}
+            backgroundColor="white"
+            p={6}
+            borderRadius={5}
+            alignItems={isInfoVariant ? "center" : ""}
+          >
+            {isInfoVariant && image}
+            {renderHeader()}
+            {content && <Box p={4}>{content}</Box>}
+            {renderActions()}
+          </Column>
+        </Box>
+      )}
+    </CegidDialog>
   );
 };
 
