@@ -98,7 +98,7 @@ const HeaderTitle: React.FC<{ title: string }> = ({ title }) => (
   <Row justifyContent="flex-start">
     <Typography
       variant="titleLSemiBold"
-      color="primary/10"
+      color="neutral/10"
       component="p"
       sx={TITLE_STYLES}
     >

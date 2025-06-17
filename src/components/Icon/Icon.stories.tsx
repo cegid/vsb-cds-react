@@ -85,10 +85,8 @@ const useHugeIconsList = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulation d'un petit délai pour l'interface utilisateur
     const timer = setTimeout(() => {
       try {
-        // Utiliser la liste pré-générée ou le fallback
         if (iconsList && Array.isArray(iconsList) && iconsList.length > 0) {
           setIcons(iconsList);
           console.log(
