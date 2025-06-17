@@ -3,15 +3,17 @@
 import React from "react";
 import { useTheme, useMediaQuery } from "@mui/material";
 import Typography from "../Typography";
-import Button from "../Button";
+import Button, { ButtonColor, ButtonVariant } from "../Button";
 import IconButton from "../IconButton";
 import Row from "../Row";
 import Icon from "../Icon";
 import SegmentedControl, { SegmentedControlProps } from "../SegmentedControl";
 
 interface CustomButtonProps {
-  id: string;
+  id?: string;
   disabled?: boolean;
+  color?: ButtonColor;
+  variant?: ButtonVariant;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
 }
@@ -127,10 +129,11 @@ const PrimaryButton: React.FC<{
   customProps?: CustomButtonProps;
 }> = ({ text, onClick, customProps = {} }) => (
   <Button
-    variant="contained"
     onClick={onClick}
     disabled={customProps.disabled}
     id={customProps.id}
+    color={customProps.color}
+    variant={customProps?.variant ?? "contained"}
     startIcon={customProps.startIcon}
     endIcon={customProps.endIcon}
   >
@@ -144,11 +147,11 @@ const SecondaryButton: React.FC<{
   customProps?: CustomButtonProps;
 }> = ({ text, onClick, customProps = {} }) => (
   <Button
-    variant="contained"
-    color="neutral"
     onClick={onClick}
     disabled={customProps.disabled}
     id={customProps.id}
+    color={customProps?.color ?? "neutral"}
+    variant={customProps?.variant ?? "contained"}
     startIcon={customProps.startIcon}
     endIcon={customProps.endIcon}
   >

@@ -11,6 +11,9 @@ import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
 import typography from "../../theme/typography";
 
+export type ButtonVariant = NonNullable<CegidButtonProps['variant']>;
+export type ButtonColor = NonNullable<CegidButtonProps['color']>;
+
 const { primary, secondary, success, critical, yellow, plum, neutral, info } =
   colorPalettes;
 
