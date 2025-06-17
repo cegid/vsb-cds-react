@@ -1,4 +1,5 @@
 import path from 'path';
+import { version } from '../package.json';
 
 const config = {
   stories: [
@@ -16,6 +17,9 @@ const config = {
   },
   docs: {
     autodocs: 'tag',
+  },
+  parameters: {
+    version: version
   },
   viteFinal: async (config, { configType }) => {
     config.resolve = config.resolve || {};

@@ -1,7 +1,8 @@
 import { neutral, white } from "../src/theme/colors";
 import { VSBThemeProvider } from "../src/theme/theme";
-import '../src/theme/fonts/fonts.css';
-import '../src/theme/icons/hugeicons-font.css';
+import { version } from "../package.json";
+import "../src/theme/fonts/fonts.css";
+import "../src/theme/icons/hugeicons-font.css";
 
 const preview = {
   parameters: {
@@ -19,6 +20,10 @@ const preview = {
         { name: "dark", value: neutral[10] },
       ],
     },
+    docs: {
+      subtitle: `Version ${version}`,
+    },
+    version: version,
   },
   decorators: [
     (Story) => (
