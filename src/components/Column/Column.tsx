@@ -12,12 +12,18 @@ export interface ColumnProps
   children?: React.ReactNode;
 }
 
-const Column: React.FC<ColumnProps> = (props) => {
+const Column = React.forwardRef<HTMLDivElement, ColumnProps>((props, ref) => {
   const { children } = props;
   return (
-    <Box width="100%" display="flex" flexDirection="column" {...props}>
+    <Box
+      width="100%"
+      display="flex"
+      flexDirection="column"
+      {...props}
+      ref={ref}
+    >
       {children}
     </Box>
   );
-};
+});
 export default Column;

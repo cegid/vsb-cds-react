@@ -6,7 +6,6 @@ import { Box as CegidBox } from "@cegid/cds-react";
 
 import {
   CustomColorString,
-  IColorPalettes,
   opacityToHex,
   parseCustomColor,
 } from "../../theme/colors";

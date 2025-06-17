@@ -12,12 +12,12 @@ export interface RowProps
   children?: React.ReactNode;
 }
 
-const Row: React.FC<RowProps> = (props) => {
+const Row = React.forwardRef<HTMLDivElement, RowProps>((props, ref) => {
   const { children } = props;
   return (
-    <Box width="100%" display="flex" flexDirection="row" {...props}>
+    <Box width="100%" display="flex" flexDirection="row" {...props} ref={ref}>
       {children}
     </Box>
   );
-};
+});
 export default Row;
