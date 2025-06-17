@@ -5,6 +5,9 @@ import Box from "../Box";
 import Typography from "../Typography";
 import { CustomColorString } from "../../theme/colors";
 
+// Import de la liste des icônes pré-générée
+import iconsList from "../../theme/icons/icons-list.json";
+
 const meta = {
   title: "Components/Icons/Icon",
   component: Icon,
@@ -77,53 +80,35 @@ const meta = {
   },
 } satisfies Meta<typeof Icon>;
 
-const extractIconNamesFromCSS = async (): Promise<string[]> => {
-  try {
-    const response = await fetch('src/theme/icons/hugeicons-font.css');
-    
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP: ${response.status}`);
-    }
-    
-    const cssText = await response.text();
-    
-    const iconMatches = cssText.match(/\.hgi-([a-z0-9-]+):before/gi);
-    
-    if (!iconMatches) {
-      console.warn('Aucune icône trouvée dans le CSS');
-      return [];
-    }
-    
-    const iconNames = iconMatches
-      .map(match => match.replace(/^\.hgi-/, '').replace(/:before$/, ''))
-      .filter((name, index, arr) => arr.indexOf(name) === index) 
-      .sort();
-    
-    console.log(`${iconNames.length} icônes extraites depuis hugeicons-font.css`);
-    return iconNames;
-    
-  } catch (error) {
-    console.error('Erreur lors du chargement du CSS local:', error);
-    return [];
-  }
-};
-
 const useHugeIconsList = () => {
   const [icons, setIcons] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(async () => {
-      const extractedIcons = await extractIconNamesFromCSS();
-
-      if (extractedIcons.length === 0) {
+    // Simulation d'un petit délai pour l'interface utilisateur
+    const timer = setTimeout(() => {
+      try {
+        // Utiliser la liste pré-générée ou le fallback
+        if (iconsList && Array.isArray(iconsList) && iconsList.length > 0) {
+          setIcons(iconsList);
+          console.log(
+            `${iconsList.length} icônes chargées depuis icons-list.json`
+          );
+        } else {
+          console.warn(
+            "Liste des icônes JSON vide ou invalide, utilisation du fallback"
+          );
+          setIcons(getFallbackIconsList());
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors du chargement de la liste des icônes:",
+          error
+        );
         setIcons(getFallbackIconsList());
-      } else {
-        setIcons(extractedIcons);
       }
-
       setLoading(false);
-    }, 1000);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, []);
@@ -182,6 +167,21 @@ export const IconExplorer: Story = {
       icon.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    if (loading) {
+      return (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height={400}
+        >
+          <Typography variant="bodyMRegular">
+            Chargement des icônes...
+          </Typography>
+        </Box>
+      );
+    }
+
     return (
       <Box
         display="flex"
@@ -191,7 +191,9 @@ export const IconExplorer: Story = {
         maxWidth={900}
       >
         <Box display="flex" flexDirection="column" gap={16}>
-          <Typography variant="bodySSemiBold">Icon Explorer</Typography>
+          <Typography variant="bodySSemiBold">
+            Icon Explorer ({icons.length} icônes disponibles)
+          </Typography>
 
           <Box>
             <input
@@ -281,6 +283,7 @@ export const IconExplorer: Story = {
             </Box>
           </Box>
         </Box>
+
         <Box
           display="flex"
           flexDirection="column"
@@ -324,9 +327,19 @@ export const IconExplorer: Story = {
             </Typography>
           </Box>
         </Box>
+
         <Box>
           <Typography variant="bodySSemiBold" marginBottom={12}>
             Available Icons ({filteredIcons.length})
+            {searchTerm && (
+              <Typography
+                variant="captionRegular"
+                component="span"
+                marginLeft={8}
+              >
+                - Filtered by "{searchTerm}"
+              </Typography>
+            )}
           </Typography>
           <Box
             display="flex"
@@ -341,59 +354,74 @@ export const IconExplorer: Story = {
             borderRadius="8px"
             backgroundColor="white"
           >
-            {filteredIcons.map((iconName) => (
+            {filteredIcons.length === 0 ? (
               <Box
-                key={iconName}
                 display="flex"
-                flexDirection="column"
-                alignItems="center"
                 justifyContent="center"
-                position="relative"
-                gap={8}
-                width={120}
-                height={120}
-                borderRadius="6px"
-                border={
-                  selectedIcon === iconName
-                    ? { width: 2, style: "solid", color: "primary/10" }
-                    : { width: 1, style: "solid", color: "neutral/40" }
-                }
-                backgroundColor={
-                  selectedIcon === iconName ? "neutral/90" : "white"
-                }
-                sx={{
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    backgroundColor:
-                      selectedIcon === iconName ? "#f3f8ff" : "#f5f5f5",
-                    borderColor: selectedIcon === iconName ? "#1976d2" : "#ccc",
-                  },
-                }}
-                onClick={() => setSelectedIcon(iconName)}
+                alignItems="center"
+                height={200}
+                width="100%"
               >
-                <Icon
-                  variant={selectedVariant}
-                  style={selectedStyle}
-                  size={24}
-                  color="neutral/40"
-                >
-                  {iconName}
-                </Icon>
-                <Typography
-                  variant="captionRegular"
-                  textAlign="center"
-                  position="absolute"
-                  bottom="8px"
-                  component="p"
-                  color={
-                    selectedIcon === iconName ? "primary/50" : "neutral/50"
-                  }
-                >
-                  {iconName}
+                <Typography variant="bodyMRegular" color="neutral/50">
+                  Aucune icône trouvée pour "{searchTerm}"
                 </Typography>
               </Box>
-            ))}
+            ) : (
+              filteredIcons.map((iconName) => (
+                <Box
+                  key={iconName}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  position="relative"
+                  gap={8}
+                  width={120}
+                  height={120}
+                  borderRadius="6px"
+                  border={
+                    selectedIcon === iconName
+                      ? { width: 2, style: "solid", color: "primary/10" }
+                      : { width: 1, style: "solid", color: "neutral/40" }
+                  }
+                  backgroundColor={
+                    selectedIcon === iconName ? "neutral/90" : "white"
+                  }
+                  sx={{
+                    cursor: "pointer",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      backgroundColor:
+                        selectedIcon === iconName ? "#f3f8ff" : "#f5f5f5",
+                      borderColor:
+                        selectedIcon === iconName ? "#1976d2" : "#ccc",
+                    },
+                  }}
+                  onClick={() => setSelectedIcon(iconName)}
+                >
+                  <Icon
+                    variant={selectedVariant}
+                    style={selectedStyle}
+                    size={24}
+                    color="neutral/40"
+                  >
+                    {iconName}
+                  </Icon>
+                  <Typography
+                    variant="captionRegular"
+                    textAlign="center"
+                    position="absolute"
+                    bottom="8px"
+                    component="p"
+                    color={
+                      selectedIcon === iconName ? "primary/50" : "neutral/50"
+                    }
+                  >
+                    {iconName}
+                  </Typography>
+                </Box>
+              ))
+            )}
           </Box>
         </Box>
       </Box>

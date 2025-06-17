@@ -40,7 +40,8 @@
     "build": "NODE_OPTIONS='--max-old-space-size=8192' tsc && NODE_OPTIONS='--max-old-space-size=8192' vite build",
     "build:dev": "vite build",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "extract-icons": "node scripts/extract-icons.js",
+    "build-storybook": "npm run extract-icons && storybook build"
   },
   "keywords": [
     "design-system",
