@@ -47,10 +47,11 @@ const meta = {
     title: "Page Title",
     primaryButtonText: "Button",
     secondaryButtonText: "Button",
-    primaryAction: () => { },
-    secondaryAction: () => { },
-    settingsAction: () => { },
-    moreAction: () => { },
+    primaryAction: () => {},
+    secondaryAction: () => {},
+    settingsAction: () => {},
+    moreAction: () => {},
+    segmentedControlRight: false,
   },
 } satisfies Meta<typeof Header>;
 
@@ -66,6 +67,32 @@ export const Default: Story = {
       secondaryAction={args.secondaryAction ? args.secondaryAction : undefined}
       settingsAction={args.settingsAction ? args.settingsAction : undefined}
       moreAction={args.moreAction ? args.moreAction : undefined}
-    ></Header>
+    />
+  ),
+};
+
+export const WithSegmentedControl: Story = {
+  args: {
+    title: "Dashboard",
+    primaryButtonText: "Create",
+    secondaryButtonText: "Export",
+    segmentedControlRight: true,
+    segmentedControlProps: {
+      actions: [
+        { label: "Day", onClick: () => console.log("Day selected") },
+        { label: "Week", onClick: () => console.log("Week selected") },
+        { label: "Month", onClick: () => console.log("Month selected") },
+      ],
+      defaultSelected: 1,
+    },
+  },
+  render: (args) => (
+    <Header
+      {...args}
+      primaryAction={args.primaryAction ? args.primaryAction : undefined}
+      secondaryAction={args.secondaryAction ? args.secondaryAction : undefined}
+      settingsAction={args.settingsAction ? args.settingsAction : undefined}
+      moreAction={args.moreAction ? args.moreAction : undefined}
+    />
   ),
 };

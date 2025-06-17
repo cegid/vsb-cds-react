@@ -1,55 +1,183 @@
+import React from "react";
+import { useTheme, useMediaQuery } from "@mui/material";
 import Typography from "../Typography";
 import Button from "../Button";
 import IconButton from "../IconButton";
 import Row from "../Row";
-import { useTheme, useMediaQuery } from "@mui/material";
 import Icon from "../Icon";
+import SegmentedControl, { SegmentedControlProps } from "../SegmentedControl";
 
-export interface HeaderProps {
-  /**
-   * The main title text displayed in the header.
-   * Uses the titleLSemiBold variant with primary/10 color.
-   */
+interface BaseHeaderProps {
+  /** The main title text displayed in the header */
   title: string;
-
-  /**
-   * The text content displayed inside the primary action button.
-   * Only visible when primaryAction is provided.
-   */
+  /** The text content displayed inside the primary action button */
   primaryButtonText: string;
-
-  /**
-   * The text content displayed inside the secondary action button.
-   * Only visible when secondaryAction is provided.
-   * Only available on desktop
-   */
+  /** The text content displayed inside the secondary action button (desktop only) */
   secondaryButtonText: string;
-
-  /**
-   * Optional callback function triggered when the primary button is clicked.
-   * When provided, displays a tonal variant button with the buttonText.
-   */
+  /** Callback function triggered when the primary button is clicked */
   primaryAction?: () => void;
-
-  /**
-   * Optional callback function triggered when the secondary button is clicked.
-   * When provided, displays a tonal variant button with the secondaryButtonText.
-   * Only available on desktop
-   */
+  /** Callback function triggered when the secondary button is clicked (desktop only) */
   secondaryAction?: () => void;
-
-  /**
-   * Optional callback function triggered when the settings icon is clicked.
-   * When provided, displays a neutral-colored settings icon button.
-   */
+  /** Callback function triggered when the settings icon is clicked */
   settingsAction?: () => void;
-
-  /**
-   * Optional callback function triggered when the more options icon is clicked.
-   * When provided, displays a neutral-colored vertical dots icon button.
-   */
+  /** Callback function triggered when the more options icon is clicked */
   moreAction?: () => void;
 }
+
+type SegmentedHeaderProps = BaseHeaderProps & {
+  segmentedControlRight: true;
+  segmentedControlProps: SegmentedControlProps;
+};
+
+type RegularHeaderProps = BaseHeaderProps & {
+  segmentedControlRight?: false;
+  segmentedControlProps?: never;
+};
+
+export type HeaderProps = SegmentedHeaderProps | RegularHeaderProps;
+
+const TITLE_STYLES = {
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: "vertical" as const,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  wordBreak: "break-word" as const,
+  hyphens: "auto" as const,
+  display: "-webkit-box",
+};
+
+const ICON_BUTTON_PROPS = {
+  variant: "tonal" as const,
+  color: "neutral" as const,
+  square: true,
+};
+
+const HeaderTitle: React.FC<{ title: string }> = ({ title }) => (
+  <Row justifyContent="flex-start">
+    <Typography
+      variant="titleLSemiBold"
+      color="primary/10"
+      component="p"
+      sx={TITLE_STYLES}
+    >
+      {title}
+    </Typography>
+  </Row>
+);
+
+const SettingsButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+  <IconButton {...ICON_BUTTON_PROPS} onClick={onClick}>
+    <Icon size={16} color="neutral/10">
+      setting-07
+    </Icon>
+  </IconButton>
+);
+
+const MoreButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
+  <IconButton {...ICON_BUTTON_PROPS} onClick={onClick}>
+    <Icon size={16} color="neutral/10">
+      more-horizontal
+    </Icon>
+  </IconButton>
+);
+
+const PrimaryButton: React.FC<{ text: string; onClick: () => void }> = ({
+  text,
+  onClick,
+}) => (
+  <Button variant="contained" onClick={onClick}>
+    {text}
+  </Button>
+);
+
+const SecondaryButton: React.FC<{ text: string; onClick: () => void }> = ({
+  text,
+  onClick,
+}) => (
+  <Button variant="contained" color="neutral" onClick={onClick}>
+    {text}
+  </Button>
+);
+
+const MobileActions: React.FC<{
+  primaryAction?: () => void;
+  primaryButtonText: string;
+  settingsAction?: () => void;
+  moreAction?: () => void;
+}> = ({ primaryAction, primaryButtonText, settingsAction, moreAction }) => (
+  <>
+    {primaryAction && (
+      <SecondaryButton text={primaryButtonText} onClick={primaryAction} />
+    )}
+    {settingsAction && <SettingsButton onClick={settingsAction} />}
+    {moreAction && <MoreButton onClick={moreAction} />}
+  </>
+);
+
+const DesktopActions: React.FC<{
+  primaryAction?: () => void;
+  primaryButtonText: string;
+  secondaryAction?: () => void;
+  secondaryButtonText: string;
+  settingsAction?: () => void;
+  moreAction?: () => void;
+}> = ({
+  primaryAction,
+  primaryButtonText,
+  secondaryAction,
+  secondaryButtonText,
+  settingsAction,
+  moreAction,
+}) => (
+  <>
+    {settingsAction && <SettingsButton onClick={settingsAction} />}
+    {moreAction && <MoreButton onClick={moreAction} />}
+    {secondaryAction && (
+      <SecondaryButton text={secondaryButtonText} onClick={secondaryAction} />
+    )}
+    {primaryAction && (
+      <PrimaryButton text={primaryButtonText} onClick={primaryAction} />
+    )}
+  </>
+);
+
+const SegmentedSection: React.FC<{
+  segmentedControlProps: SegmentedControlProps;
+  settingsAction?: () => void;
+}> = ({ segmentedControlProps, settingsAction }) => (
+  <Row gap={4}>
+    <SegmentedControl {...segmentedControlProps} />
+    {settingsAction && <SettingsButton onClick={settingsAction} />}
+  </Row>
+);
+
+const RegularActionsSection: React.FC<{
+  isMobile: boolean;
+  primaryAction?: () => void;
+  primaryButtonText: string;
+  secondaryAction?: () => void;
+  secondaryButtonText: string;
+  settingsAction?: () => void;
+  moreAction?: () => void;
+}> = ({ isMobile, ...actions }) => {
+  const hasAnyAction =
+    actions.primaryAction ||
+    actions.settingsAction ||
+    actions.moreAction ||
+    actions.secondaryAction;
+
+  if (!hasAnyAction) return null;
+
+  return (
+    <Row alignItems="center" justifyContent="flex-end" flex={1} gap={2}>
+      {isMobile ? (
+        <MobileActions {...actions} />
+      ) : (
+        <DesktopActions {...actions} />
+      )}
+    </Row>
+  );
+};
 
 const Header: React.FC<HeaderProps> = (props) => {
   const {
@@ -60,6 +188,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     moreAction,
     secondaryButtonText,
     secondaryAction,
+    segmentedControlRight,
   } = props;
 
   const theme = useTheme();
@@ -67,106 +196,23 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   return (
     <Row py={5} px={6} gap={4} alignItems="center" width="100%">
-      <Row justifyContent="flex-start">
-        <Typography
-          variant="titleLSemiBold"
-          color="primary/10"
-          component="p"
-          sx={{
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            wordBreak: "break-word",
-            hyphens: "auto",
-            display: "-webkit-box",
-          }}
-        >
-          {title}
-        </Typography>
-      </Row>
+      {!segmentedControlRight && <HeaderTitle title={title} />}
 
-      {(primaryAction || settingsAction || moreAction || secondaryAction) && (
-        <Row alignItems="center" justifyContent="flex-end" flex={1} gap={2}>
-          {isMobile ? (
-            <>
-              {primaryAction && (
-                <Button
-                  variant="contained"
-                  color="neutral"
-                  onClick={primaryAction}
-                >
-                  {primaryButtonText}
-                </Button>
-              )}
-              {settingsAction && (
-                <IconButton
-                  variant="tonal"
-                  color="neutral"
-                  onClick={settingsAction}
-                  square
-                >
-                  <Icon size={16} color="neutral/10">
-                    setting-07
-                  </Icon>
-                </IconButton>
-              )}
-              {moreAction && (
-                <IconButton
-                  variant="tonal"
-                  color="neutral"
-                  onClick={moreAction}
-                  square
-                >
-                  <Icon size={16} color="neutral/10">
-                    more-horizontal
-                  </Icon>
-                </IconButton>
-              )}
-            </>
-          ) : (
-            <>
-              {settingsAction && (
-                <IconButton
-                  variant="tonal"
-                  color="neutral"
-                  onClick={settingsAction}
-                  square
-                >
-                  <Icon size={16} color="neutral/10">
-                    setting-07
-                  </Icon>
-                </IconButton>
-              )}
-              {moreAction && (
-                <IconButton
-                  variant="tonal"
-                  color="neutral"
-                  onClick={moreAction}
-                  square
-                >
-                  <Icon size={16} color="neutral/10">
-                    more-horizontal
-                  </Icon>
-                </IconButton>
-              )}
-              {secondaryAction && (
-                <Button
-                  variant="contained"
-                  color="neutral"
-                  onClick={secondaryAction}
-                >
-                  {secondaryButtonText}
-                </Button>
-              )}
-              {primaryAction && (
-                <Button variant="contained" onClick={primaryAction}>
-                  {primaryButtonText}
-                </Button>
-              )}
-            </>
-          )}
-        </Row>
+      {segmentedControlRight ? (
+        <SegmentedSection
+          segmentedControlProps={props.segmentedControlProps}
+          settingsAction={settingsAction}
+        />
+      ) : (
+        <RegularActionsSection
+          isMobile={isMobile}
+          primaryAction={primaryAction}
+          primaryButtonText={primaryButtonText}
+          secondaryAction={secondaryAction}
+          secondaryButtonText={secondaryButtonText}
+          settingsAction={settingsAction}
+          moreAction={moreAction}
+        />
       )}
     </Row>
   );

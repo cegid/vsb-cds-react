@@ -4,7 +4,7 @@ import { neutral } from "../../theme";
 import typography from "../../theme/typography";
 
 export interface SegmentedControlAction {
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   label?: string;
   onClick: () => void;
 }
@@ -105,8 +105,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   };
 
   return (
-    <div ref={containerRef} style={containerStyle}>
-      <div style={sliderBaseStyle} />
+    <Box ref={containerRef} style={containerStyle}>
+      <Box style={sliderBaseStyle} />
 
       {actions.map((action, index) => (
         <Box
@@ -121,14 +121,14 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.color =
-              selectedIndex === index ? neutral[10] ?? "" : "#666";
+              selectedIndex === index ? (neutral[10] ?? "") : "#666";
           }}
         >
-          <div style={iconStyle}>{action.icon}</div>
+          {action.icon && <Box style={iconStyle}>{action.icon}</Box>}
           {action.label && <span>{action.label}</span>}
         </Box>
       ))}
-    </div>
+    </Box>
   );
 };
 
