@@ -7,17 +7,19 @@ import Row from "../Row";
 import Icon from "../Icon";
 import SegmentedControl, { SegmentedControlProps } from "../SegmentedControl";
 
+interface CustomButtonProps {
+  disabled?: boolean;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
+}
+
 interface BaseHeaderProps {
   /** The main title text displayed in the header */
   title: string;
   /** The text content displayed inside the primary action button */
-  primaryButtonText: string;
+  primaryButtonText?: string;
   /** The text content displayed inside the secondary action button (desktop only) */
-  secondaryButtonText: string;
-  /** Callback function triggered when the primary button is clicked */
-  primaryAction?: () => void;
-  /** Callback function triggered when the secondary button is clicked (desktop only) */
-  secondaryAction?: () => void;
+  secondaryButtonText?: string;
   /** Callback function triggered when the settings icon is clicked */
   settingsAction?: () => void;
   /** Callback function triggered when the more options icon is clicked */
@@ -26,12 +28,44 @@ interface BaseHeaderProps {
   backAction?: () => void;
 }
 
-type SegmentedHeaderProps = BaseHeaderProps & {
+type WithPrimaryAction = {
+  primaryAction: () => void;
+  primaryButtonText: string;
+  primaryButtonProps?: CustomButtonProps;
+};
+
+type WithoutPrimaryAction = {
+  primaryAction?: never;
+  primaryButtonText?: never;
+  primaryButtonProps?: never;
+};
+
+type WithSecondaryAction = {
+  secondaryAction: () => void;
+  secondaryButtonText: string;
+  secondaryButtonProps?: CustomButtonProps;
+};
+
+type WithoutSecondaryAction = {
+  secondaryAction?: never;
+  secondaryButtonText?: never;
+  secondaryButtonProps?: never;
+};
+
+type ActionProps =
+  | (WithPrimaryAction & WithSecondaryAction)
+  | (WithPrimaryAction & WithoutSecondaryAction)
+  | (WithoutPrimaryAction & WithSecondaryAction)
+  | (WithoutPrimaryAction & WithoutSecondaryAction);
+
+type CoreHeaderProps = BaseHeaderProps & ActionProps;
+
+type SegmentedHeaderProps = CoreHeaderProps & {
   segmentedControlRight: true;
   segmentedControlProps: SegmentedControlProps;
 };
 
-type RegularHeaderProps = BaseHeaderProps & {
+type RegularHeaderProps = CoreHeaderProps & {
   segmentedControlRight?: false;
   segmentedControlProps?: never;
 };
@@ -83,33 +117,59 @@ const MoreButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
   </IconButton>
 );
 
-const PrimaryButton: React.FC<{ text: string; onClick: () => void }> = ({
-  text,
-  onClick,
-}) => (
-  <Button variant="contained" onClick={onClick}>
+const PrimaryButton: React.FC<{
+  text: string;
+  onClick: () => void;
+  customProps?: CustomButtonProps;
+}> = ({ text, onClick, customProps = {} }) => (
+  <Button
+    variant="contained"
+    onClick={onClick}
+    disabled={customProps.disabled}
+    startIcon={customProps.startIcon}
+    endIcon={customProps.endIcon}
+  >
     {text}
   </Button>
 );
 
-const SecondaryButton: React.FC<{ text: string; onClick: () => void }> = ({
-  text,
-  onClick,
-}) => (
-  <Button variant="contained" color="neutral" onClick={onClick}>
+const SecondaryButton: React.FC<{
+  text: string;
+  onClick: () => void;
+  customProps?: CustomButtonProps;
+}> = ({ text, onClick, customProps = {} }) => (
+  <Button
+    variant="contained"
+    color="neutral"
+    onClick={onClick}
+    disabled={customProps.disabled}
+    startIcon={customProps.startIcon}
+    endIcon={customProps.endIcon}
+  >
     {text}
   </Button>
 );
 
 const MobileActions: React.FC<{
   primaryAction?: () => void;
-  primaryButtonText: string;
+  primaryButtonText?: string;
+  primaryButtonProps?: CustomButtonProps;
   settingsAction?: () => void;
   moreAction?: () => void;
-}> = ({ primaryAction, primaryButtonText, settingsAction, moreAction }) => (
+}> = ({
+  primaryAction,
+  primaryButtonText,
+  primaryButtonProps,
+  settingsAction,
+  moreAction,
+}) => (
   <>
-    {primaryAction && (
-      <SecondaryButton text={primaryButtonText} onClick={primaryAction} />
+    {primaryAction && primaryButtonText && (
+      <SecondaryButton
+        text={primaryButtonText}
+        onClick={primaryAction}
+        customProps={primaryButtonProps}
+      />
     )}
     {settingsAction && <SettingsButton onClick={settingsAction} />}
     {moreAction && <MoreButton onClick={moreAction} />}
@@ -118,27 +178,39 @@ const MobileActions: React.FC<{
 
 const DesktopActions: React.FC<{
   primaryAction?: () => void;
-  primaryButtonText: string;
+  primaryButtonText?: string;
+  primaryButtonProps?: CustomButtonProps;
   secondaryAction?: () => void;
-  secondaryButtonText: string;
+  secondaryButtonText?: string;
+  secondaryButtonProps?: CustomButtonProps;
   settingsAction?: () => void;
   moreAction?: () => void;
 }> = ({
   primaryAction,
   primaryButtonText,
+  primaryButtonProps,
   secondaryAction,
   secondaryButtonText,
+  secondaryButtonProps,
   settingsAction,
   moreAction,
 }) => (
   <>
     {settingsAction && <SettingsButton onClick={settingsAction} />}
     {moreAction && <MoreButton onClick={moreAction} />}
-    {secondaryAction && (
-      <SecondaryButton text={secondaryButtonText} onClick={secondaryAction} />
+    {secondaryAction && secondaryButtonText && (
+      <SecondaryButton
+        text={secondaryButtonText}
+        onClick={secondaryAction}
+        customProps={secondaryButtonProps}
+      />
     )}
-    {primaryAction && (
-      <PrimaryButton text={primaryButtonText} onClick={primaryAction} />
+    {primaryAction && primaryButtonText && (
+      <PrimaryButton
+        text={primaryButtonText}
+        onClick={primaryAction}
+        customProps={primaryButtonProps}
+      />
     )}
   </>
 );
@@ -156,9 +228,11 @@ const SegmentedSection: React.FC<{
 const RegularActionsSection: React.FC<{
   isMobile: boolean;
   primaryAction?: () => void;
-  primaryButtonText: string;
+  primaryButtonText?: string;
+  primaryButtonProps?: CustomButtonProps;
   secondaryAction?: () => void;
-  secondaryButtonText: string;
+  secondaryButtonText?: string;
+  secondaryButtonProps?: CustomButtonProps;
   settingsAction?: () => void;
   moreAction?: () => void;
   backAction?: () => void;
@@ -187,12 +261,14 @@ const Header: React.FC<HeaderProps> = (props) => {
     title,
     primaryButtonText,
     primaryAction,
+    primaryButtonProps,
     settingsAction,
     moreAction,
     secondaryButtonText,
     secondaryAction,
+    secondaryButtonProps,
     segmentedControlRight,
-    backAction
+    backAction,
   } = props;
 
   const theme = useTheme();
@@ -217,8 +293,10 @@ const Header: React.FC<HeaderProps> = (props) => {
           isMobile={isMobile}
           primaryAction={primaryAction}
           primaryButtonText={primaryButtonText}
+          primaryButtonProps={primaryButtonProps}
           secondaryAction={secondaryAction}
           secondaryButtonText={secondaryButtonText}
+          secondaryButtonProps={secondaryButtonProps}
           settingsAction={settingsAction}
           moreAction={moreAction}
         />
