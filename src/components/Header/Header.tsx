@@ -284,8 +284,15 @@ const Header: React.FC<HeaderProps> = (props) => {
   return (
     <Row py={5} px={6} gap={4} alignItems="center" width="100%" id={id}>
       {backAction && isMobile && (
-        <IconButton variant="tonal" square onClick={backAction} color="neutral">
-          <Icon size={16}>arrow-left-02</Icon>
+        <IconButton
+          variant="iconOnly"
+          square
+          onClick={backAction}
+          color="neutral"
+        >
+          <Icon variant="stroke" style="rounded" size={16}>
+            arrow-left-02
+          </Icon>
         </IconButton>
       )}
       {!segmentedControlRight && <HeaderTitle title={title} />}
