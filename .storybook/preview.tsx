@@ -1,5 +1,7 @@
 import { neutral, white } from "../src/theme/colors";
 import { VSBThemeProvider } from "../src/theme/theme";
+import '../src/theme/fonts/fonts.css';
+import '../src/theme/icons/hugeicons-font.css';
 
 const preview = {
   parameters: {
