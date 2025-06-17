@@ -124,6 +124,9 @@ const Badge: React.FC<BadgeProps> = ({
       border={getBorderProps()}
       backgroundColor={getBackgroundColor()}
       borderRadius={2}
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
     >
       {size !== "small" && children}
     </Box>
