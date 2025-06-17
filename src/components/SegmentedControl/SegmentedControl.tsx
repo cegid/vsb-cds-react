@@ -14,11 +14,13 @@ export interface SegmentedControlAction {
 export interface SegmentedControlProps {
   actions: SegmentedControlAction[];
   defaultSelected?: number;
+  fullwidth?: boolean;
 }
 
 const SegmentedControl: React.FC<SegmentedControlProps> = ({
   actions,
   defaultSelected = 0,
+  fullwidth = false,
 }) => {
   const [selectedIndex, setSelectedIndex] = useState(defaultSelected);
   const [sliderStyle, setSliderStyle] = useState({});
@@ -63,7 +65,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     borderRadius: "12px",
     padding: "2px",
     gap: "4px",
-    width: "fit-content",
+    width: fullwidth ? "100%" : "fit-content",
     height: "40px",
     ...typography.bodySSemiBold,
   };
