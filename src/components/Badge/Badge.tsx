@@ -1,3 +1,5 @@
+"use client";
+
 import { CustomColorString, PaletteNames } from "../../theme";
 import Box, { BorderProps } from "../Box";
 

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from "react";
 import Box from "../Box";
 import { neutral } from "../../theme";
