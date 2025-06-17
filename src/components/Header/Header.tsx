@@ -14,6 +14,7 @@ interface CustomButtonProps {
 }
 
 interface BaseHeaderProps {
+  id: string;
   /** The main title text displayed in the header */
   title: string;
   /** The text content displayed inside the primary action button */
@@ -269,13 +270,14 @@ const Header: React.FC<HeaderProps> = (props) => {
     secondaryButtonProps,
     segmentedControlRight,
     backAction,
+    id
   } = props;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Row py={5} px={6} gap={4} alignItems="center" width="100%">
+    <Row py={5} px={6} gap={4} alignItems="center" width="100%" id={id}>
       {backAction && isMobile && (
         <IconButton variant="tonal" square onClick={backAction} color="neutral">
           <Icon size={16}>arrow-left-02</Icon>

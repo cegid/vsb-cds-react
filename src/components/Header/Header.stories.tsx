@@ -50,7 +50,6 @@ const meta = {
       control: "boolean",
       description: "Show segmented control instead of regular actions",
     },
-    // Props pour les boutons
     "primaryButtonProps.disabled": {
       control: "boolean",
       description: "Disable the primary button",
