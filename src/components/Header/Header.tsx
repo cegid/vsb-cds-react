@@ -14,7 +14,7 @@ interface CustomButtonProps {
 }
 
 interface BaseHeaderProps {
-  id: string;
+  id?: string;
   /** The main title text displayed in the header */
   title: string;
   /** The text content displayed inside the primary action button */
