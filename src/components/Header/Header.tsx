@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { useTheme, useMediaQuery } from "@mui/material";
 import Typography from "../Typography";
