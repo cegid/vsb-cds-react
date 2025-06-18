@@ -11,8 +11,21 @@ import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
 import typography from "../../theme/typography";
 
-export type ButtonVariant = NonNullable<CegidButtonProps['variant']>;
-export type ButtonColor = NonNullable<CegidButtonProps['color']>;
+export type ButtonVariant = NonNullable<CegidButtonProps["variant"]>;
+export type ButtonColor = NonNullable<CegidButtonProps["color"]>;
+export type ButtonSize = "small" | "medium" | "large" | "auto";
+
+export interface ExtendedButtonProps extends Omit<CegidButtonProps, "size"> {
+  /**
+   * The size of the button.
+   * @default "auto"
+   * - `small`: 24px height with captionSemiBold typography
+   * - `medium`: 32px height with bodySSemiBold typography
+   * - `large`: 40px height with bodySSemiBold typography
+   * - `auto`: Responsive size (32px on desktop, 40px on mobile)
+   */
+  size?: ButtonSize;
+}
 
 const { primary, secondary, success, critical, yellow, plum, neutral, info } =
   colorPalettes;
@@ -112,171 +125,234 @@ const createContainedButtonStyle = (
   },
 });
 
+const getSizeStyles = (size: ButtonSize) => {
+  switch (size) {
+    case "small":
+      return {
+        height: "24px",
+        padding: "0px 12px",
+        ...typography.captionSemiBold,
+        "& .MuiSvgIcon-root": {
+          fontSize: "16px",
+        },
+        "& .MuiButton-startIcon, & .MuiButton-endIcon": {
+          "& > *:first-of-type": {
+            fontSize: "16px",
+          },
+        },
+      };
+    case "medium":
+      return {
+        height: "32px",
+        padding: "0px 16px",
+        ...typography.bodySSemiBold,
+        "& .MuiSvgIcon-root": {
+          fontSize: "16px",
+        },
+        "& .MuiButton-startIcon, & .MuiButton-endIcon": {
+          "& > *:first-of-type": {
+            fontSize: "16px",
+          },
+        },
+      };
+    case "large":
+      return {
+        height: "40px",
+        padding: "0px 16px",
+        ...typography.bodySSemiBold,
+        "& .MuiSvgIcon-root": {
+          fontSize: "16px",
+        },
+        "& .MuiButton-startIcon, & .MuiButton-endIcon": {
+          "& > *:first-of-type": {
+            fontSize: "16px",
+          },
+        },
+      };
+    case "auto":
+    default:
+      return {
+        height: "32px",
+        padding: "0px 16px",
+        "@media (max-width: 600px)": {
+          height: "40px",
+          padding: "1px 16px",
+        },
+        ...typography.bodySSemiBold,
+        "& .MuiSvgIcon-root": {
+          fontSize: "16px",
+        },
+        "& .MuiButton-startIcon, & .MuiButton-endIcon": {
+          "& > *:first-of-type": {
+            fontSize: "16px",
+          },
+        },
+      };
+  }
+};
+
 const buttonBaseStyles = {
   letterSpacing: "0px",
   textTransform: "none" as const,
   gap: "4px",
   borderRadius: RADIUS.M,
-  height: "32px",
-  padding: "0px 16px",
   transition: "background-color 0.2s",
   display: "flex",
-  ...typography.bodySSemiBold,
-  "@media (max-width: 600px)": {
-    height: "40px",
-    padding: "1px 16px",
-  },
   "& .MuiTouchRipple-root": {
     display: "none",
   },
-  "& .MuiSvgIcon-root": {
-    fontSize: "16px",
-  },
-  "& .MuiButton-startIcon, & .MuiButton-endIcon": {
-    "& > *:first-of-type": {
-      fontSize: "16px",
-    },
-  },
 };
 
-const StyledButton = styled(CegidButton)(({ theme }) => ({
-  ...buttonBaseStyles,
-  "&.MuiButton-contained": {
-    ...containedButtonBase,
-  },
-  "&.MuiButton-containedPrimary": {
-    ...createContainedButtonStyle(primary),
-  },
-  "&.MuiButton-containedSecondary": {
-    ...createContainedButtonStyle(secondary),
-  },
-  "&.MuiButton-containedError": {
-    ...createContainedButtonStyle(critical),
-  },
-  "&.MuiButton-containedSuccess": {
-    ...createContainedButtonStyle(success),
-  },
-  "&.MuiButton-containedWarning": {
-    ...createContainedButtonStyle(yellow),
-  },
-  "&.MuiButton-containedInfo": {
-    ...createContainedButtonStyle(info),
-    "&.Mui-focused, &:focus:not(:active)": {
-      boxShadow: "none",
+const StyledButton = styled(CegidButton)<{ buttonSize?: ButtonSize }>(
+  ({ theme, buttonSize = "auto" }) => ({
+    ...buttonBaseStyles,
+    ...getSizeStyles(buttonSize),
+    "&.MuiButton-contained": {
+      ...containedButtonBase,
+      ...getSizeStyles(buttonSize),
+      ...(buttonSize === "auto" && {
+        "@media (max-width: 600px)": {
+          height: "40px",
+          padding: "1px 16px",
+        },
+      }),
     },
-  },
-  "&.MuiButton-containedNeutral": {
-    color: neutral[10],
-    backgroundColor: white,
-    boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
-    border: "none",
-    "&:hover": {
-      backgroundColor: neutral[99],
-      "&:before": {
-        backgroundColor: "transparent",
+    "&.MuiButton-containedPrimary": {
+      ...createContainedButtonStyle(primary),
+    },
+    "&.MuiButton-containedSecondary": {
+      ...createContainedButtonStyle(secondary),
+    },
+    "&.MuiButton-containedError": {
+      ...createContainedButtonStyle(critical),
+    },
+    "&.MuiButton-containedSuccess": {
+      ...createContainedButtonStyle(success),
+    },
+    "&.MuiButton-containedWarning": {
+      ...createContainedButtonStyle(yellow),
+    },
+    "&.MuiButton-containedInfo": {
+      ...createContainedButtonStyle(info),
+      "&.Mui-focused, &:focus:not(:active)": {
+        boxShadow: "none",
       },
     },
-    "&:active": {
-      backgroundColor: neutral[99],
+    "&.MuiButton-containedNeutral": {
+      color: neutral[10],
+      backgroundColor: white,
+      boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
+      border: "none",
+      "&:hover": {
+        backgroundColor: neutral[99],
+        "&:before": {
+          backgroundColor: "transparent",
+        },
+      },
+      "&:active": {
+        backgroundColor: neutral[99],
+      },
     },
-  },
 
-  "&.MuiButton-outlined": {
-    ...createOutlinedButtonStyle(primary),
-    "&.Mui-disabled": {
+    "&.MuiButton-outlined": {
+      ...createOutlinedButtonStyle(primary),
+      "&.Mui-disabled": {
+        borderColor: neutral[90],
+        color: neutral[90],
+      },
+      "&.Mui-focused, &:focus:not(:active)": {
+        boxShadow: "none",
+      },
+    },
+    "&.MuiButton-outlinedNeutral": {
       borderColor: neutral[90],
-      color: neutral[90],
+      ...createOutlinedButtonStyle(neutral, 10),
     },
-    "&.Mui-focused, &:focus:not(:active)": {
-      boxShadow: "none",
-    },
-  },
-  "&.MuiButton-outlinedNeutral": {
-    borderColor: neutral[90],
-    ...createOutlinedButtonStyle(neutral, 10),
-  },
-  "&.MuiButton-outlinedSecondary": {
-    ...createOutlinedButtonStyle(secondary),
-    borderColor: neutral[90],
-  },
-  "&.MuiButton-outlinedError": {
-    ...createOutlinedButtonStyle(critical, 50),
-    borderColor: critical[80],
-  },
-  "&.MuiButton-outlinedWarning": {
-    ...createOutlinedButtonStyle(yellow),
-    borderColor: yellow[80],
-  },
-  "&.MuiButton-outlinedSuccess": {
-    ...createOutlinedButtonStyle(success),
-    borderColor: success[80],
-  },
-  "&.MuiButton-outlinedInfo": {
-    ...createOutlinedButtonStyle(info),
-    borderColor: info[80],
-  },
-
-  "&.MuiButton-text": {
-    ...createTextButtonStyle(primary),
-    "&.Mui-disabled": {
+    "&.MuiButton-outlinedSecondary": {
+      ...createOutlinedButtonStyle(secondary),
       borderColor: neutral[90],
-      color: neutral[90],
     },
-    "&.Mui-focused, &:focus:not(:active)": {
-      boxShadow: "none",
+    "&.MuiButton-outlinedError": {
+      ...createOutlinedButtonStyle(critical, 50),
+      borderColor: critical[80],
     },
-  },
-  "&.MuiButton-textError": {
-    ...createTextButtonStyle(critical, 50),
-  },
-  "&.MuiButton-textWarning": {
-    ...createTextButtonStyle(yellow, 50),
-  },
-  "&.MuiButton-textSuccess": {
-    ...createTextButtonStyle(success, 50),
-  },
-  "&.MuiButton-textInfo": {
-    ...createTextButtonStyle(plum, 50),
-  },
-  "&.MuiButton-textSecondary": {
-    ...createTextButtonStyle(secondary, 50),
-  },
-  "&.MuiButton-textNeutral": {
-    ...createTextButtonStyle(neutral, 10),
-  },
+    "&.MuiButton-outlinedWarning": {
+      ...createOutlinedButtonStyle(yellow),
+      borderColor: yellow[80],
+    },
+    "&.MuiButton-outlinedSuccess": {
+      ...createOutlinedButtonStyle(success),
+      borderColor: success[80],
+    },
+    "&.MuiButton-outlinedInfo": {
+      ...createOutlinedButtonStyle(info),
+      borderColor: info[80],
+    },
 
-  "&.MuiButton-tonal": {
-    ...createTonalButtonStyle(primary),
-    "&.Mui-disabled": {
-      borderColor: neutral[90],
-      color: neutral[80],
-      backgroundColor: neutral[95],
+    "&.MuiButton-text": {
+      ...createTextButtonStyle(primary),
+      "&.Mui-disabled": {
+        borderColor: neutral[90],
+        color: neutral[90],
+      },
+      "&.Mui-focused, &:focus:not(:active)": {
+        boxShadow: "none",
+      },
     },
-    "&.Mui-focused, &:focus:not(:active)": {
-      boxShadow: "none",
+    "&.MuiButton-textError": {
+      ...createTextButtonStyle(critical, 50),
     },
-  },
-  "&.MuiButton-tonalError": {
-    ...createTonalButtonStyle(critical),
-  },
-  "&.MuiButton-tonalWarning": {
-    ...createTonalButtonStyle(yellow),
-  },
-  "&.MuiButton-tonalSuccess": {
-    ...createTonalButtonStyle(success),
-  },
-  "&.MuiButton-tonalInfo": {
-    ...createTonalButtonStyle(plum),
-  },
-  "&.MuiButton-tonalSecondary": {
-    ...createTonalButtonStyle(secondary),
-  },
-  "&.MuiButton-tonalNeutral": {
-    ...createTonalButtonStyle(neutral, 10),
-  },
-}));
+    "&.MuiButton-textWarning": {
+      ...createTextButtonStyle(yellow, 50),
+    },
+    "&.MuiButton-textSuccess": {
+      ...createTextButtonStyle(success, 50),
+    },
+    "&.MuiButton-textInfo": {
+      ...createTextButtonStyle(plum, 50),
+    },
+    "&.MuiButton-textSecondary": {
+      ...createTextButtonStyle(secondary, 50),
+    },
+    "&.MuiButton-textNeutral": {
+      ...createTextButtonStyle(neutral, 10),
+    },
 
-const Button: React.FC<CegidButtonProps> = (props) => {
+    "&.MuiButton-tonal": {
+      ...createTonalButtonStyle(primary),
+      "&.Mui-disabled": {
+        borderColor: neutral[90],
+        color: neutral[80],
+        backgroundColor: neutral[95],
+      },
+      "&.Mui-focused, &:focus:not(:active)": {
+        boxShadow: "none",
+      },
+    },
+    "&.MuiButton-tonalError": {
+      ...createTonalButtonStyle(critical),
+    },
+    "&.MuiButton-tonalWarning": {
+      ...createTonalButtonStyle(yellow),
+    },
+    "&.MuiButton-tonalSuccess": {
+      ...createTonalButtonStyle(success),
+    },
+    "&.MuiButton-tonalInfo": {
+      ...createTonalButtonStyle(plum),
+    },
+    "&.MuiButton-tonalSecondary": {
+      ...createTonalButtonStyle(secondary),
+    },
+    "&.MuiButton-tonalNeutral": {
+      ...createTonalButtonStyle(neutral, 10),
+    },
+  })
+);
+
+const Button: React.FC<ExtendedButtonProps> = (props) => {
+  const { size = "auto", ...restProps } = props;
+
   const getContainedBackgroundColor = () => {
     if (!props.disabled) {
       switch (props.color) {
@@ -309,14 +385,16 @@ const Button: React.FC<CegidButtonProps> = (props) => {
         borderRadius={3}
       >
         <StyledButton
-          {...{ disableRipple: true, disableElevation: true, ...props }}
+          {...{ disableRipple: true, disableElevation: true, ...restProps }}
+          buttonSize={size}
         />
       </Box>
     );
   } else {
     return (
       <StyledButton
-        {...{ disableRipple: true, disableElevation: true, ...props }}
+        {...{ disableRipple: true, disableElevation: true, ...restProps }}
+        buttonSize={size}
       />
     );
   }

@@ -30,6 +30,11 @@ const meta = {
       options: ["text", "contained", "outlined", "tonal"],
       description: "The variant to use",
     },
+    size: {
+      control: "select",
+      options: ["small", "medium", "large", "auto"],
+      description: "The size of the button",
+    },
     disabled: {
       control: "boolean",
       description: "If true, the component is disabled",
@@ -47,6 +52,7 @@ const meta = {
   args: {
     color: "primary",
     variant: "contained",
+    size: "auto",
     disabled: false,
     startIcon: false,
     endIcon: false,
