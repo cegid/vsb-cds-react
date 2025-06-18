@@ -31,7 +31,7 @@ const StyledTextField = styled(CegidTextField)(({ theme, label }) => ({
       backgroundColor: critical[99],
     },
     "&.Mui-focused": {
-      outline: `2px solid ${primary[60]}`,
+      outline: `2px solid ${primary[70]}`,
       outlineOffset: "1px",
     },
     "&.Mui-readOnly": {
@@ -111,7 +111,7 @@ const TextField = (props: CegidTextFieldProps) => {
     <>
       <StyledTextField {...props} />
       {props.errorText && (
-        <Row gap={2} pt={4}>
+        <Row gap={2} mt={4}>
           <Icon variant="bulk" size={16} color="critical/50">
             spam
           </Icon>
