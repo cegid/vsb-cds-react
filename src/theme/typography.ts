@@ -64,6 +64,11 @@ const typography: TypographyVariantsOptions = {
     fontSize: "16px",
     lineHeight: "24px",
   },
+  bodyMMedium: {
+    fontFamily: "DMSansMedium, sans-serif",
+    fontSize: "16px",
+    lineHeight: "24px",
+  },
   bodyMSemiBold: {
     fontFamily: "DMSansSemiBold, sans-serif",
     fontSize: "16px",
@@ -114,6 +119,7 @@ export type CustomVariant =
   | "titleLSemiBold"
   | "bodyMRegular"
   | "bodyMSemiBold"
+  | "bodyMMedium"
   | "bodySRegular"
   | "bodySMedium"
   | "bodySSemiBold"

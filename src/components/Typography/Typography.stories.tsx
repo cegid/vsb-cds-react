@@ -27,6 +27,7 @@ const meta = {
         "titleLSemiBold",
         "bodyMRegular",
         "bodyMSemiBold",
+        "bodyMMedium",
         "bodySRegular",
         "bodySMedium",
         "bodySSemiBold",
@@ -130,6 +131,9 @@ export const Variants: Story = {
       {/* Body variants */}
       <Typography {...args} variant="bodyMRegular">
         bodyMRegular - Size: 16px - Line Height: 24px - Regular
+      </Typography>
+      <Typography {...args} variant="bodyMMedium">
+        bodyMMedium - Size: 16px - Line Height: 24px - Medium
       </Typography>
       <Typography {...args} variant="bodyMSemiBold">
         bodyMSemiBold - Size: 16px - Line Height: 24px - SemiBold

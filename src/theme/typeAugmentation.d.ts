@@ -42,6 +42,7 @@ declare module "@mui/material/styles" {
     // Body styles
     bodyMRegular: React.CSSProperties;
     bodyMSemiBold: React.CSSProperties;
+    bodyMMedium: React.CSSProperties;
     bodySRegular: React.CSSProperties;
     bodySMedium: React.CSSProperties;
     bodySSemiBold: React.CSSProperties;
@@ -134,6 +135,7 @@ declare module "@mui/material/Typography" {
 
     // Body styles
     bodyMRegular: true;
+    bodyMMedium: true;
     bodyMSemiBold: true;
     bodySRegular: true;
     bodySMedium: true;
