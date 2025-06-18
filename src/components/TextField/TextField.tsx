@@ -13,6 +13,8 @@ import Row from "../Row";
 import Icon from "../Icon";
 import Typography from "../Typography";
 
+export interface TextFieldProps extends CegidTextFieldProps {}
+
 const { primary, neutral, critical } = colorPalettes;
 
 const StyledTextField = styled(CegidTextField)(({ theme, label }) => ({
