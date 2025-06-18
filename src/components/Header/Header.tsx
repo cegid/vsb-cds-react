@@ -97,7 +97,7 @@ const ICON_BUTTON_PROPS = {
 const HeaderTitle: React.FC<{ title: string }> = ({ title }) => (
   <Row justifyContent="flex-start">
     <Typography
-      variant="titleLSemiBold"
+      variant="bodyMSemiBold"
       color="neutral/10"
       component="p"
       sx={TITLE_STYLES}
