@@ -17,7 +17,7 @@ import colorPalettes, {
 import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
 
-const { primary, secondary, success, critical, yellow, plum, neutral } =
+const { primary, secondary, success, critical, yellow, neutral } =
   colorPalettes;
 
 type CustomVariant =
@@ -35,13 +35,11 @@ type CustomColor =
   | "warning"
   | "default"
   | "neutral";
-type CustomSize = "small" | "medium" | "large";
 
 interface IconButtonOwnProps {
   variant?: CustomVariant;
   color?: CustomColor;
   square?: boolean;
-  size?: CustomSize;
 }
 
 type IconButtonProps = Omit<
@@ -135,46 +133,6 @@ const createOutlinedIconButtonStyle = (color: any, colorIndex = 50) => ({
   },
 });
 
-const getSizeStyles = (size: CustomSize, isContained = false) => {
-  switch (size) {
-    case "small":
-      return {
-        width: isContained ? "26px" : "30px",
-        height: isContained ? "26px" : "30px",
-        padding: "7px",
-        "& .MuiSvgIcon-root": {
-          width: "16px",
-          height: "16px",
-          fontSize: "16px",
-        },
-      };
-    case "medium":
-      return {
-        width: isContained ? "36px" : "40px",
-        height: isContained ? "36px" : "40px",
-        padding: "12px",
-        "& .MuiSvgIcon-root": {
-          width: "16px",
-          height: "16px",
-          fontSize: "16px",
-        },
-      };
-    case "large":
-      return {
-        width: isContained ? "44px" : "48px",
-        height: isContained ? "44px" : "48px",
-        padding: "16px",
-        "& .MuiSvgIcon-root": {
-          width: "16px",
-          height: "16px",
-          fontSize: "16px",
-        },
-      };
-    default:
-      return {};
-  }
-};
-
 const IconButtonRoot = styled(CegidIconButton, {
   name: "CdsIconButton",
   slot: "root",
@@ -188,6 +146,8 @@ const IconButtonRoot = styled(CegidIconButton, {
   const baseStyles = {
     borderRadius: ownerState.square ? "10px" : RADIUS.FULL,
     boxShadow: "none",
+    width: isContained ? "28px" : "32px",
+    height: isContained ? "28px" : "32px",
     padding: "8px",
     display: "flex",
     "& .MuiSvgIcon-root": {
@@ -196,9 +156,10 @@ const IconButtonRoot = styled(CegidIconButton, {
       fontSize: "16px",
     },
     [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
-      padding: ownerState.size === "small" ? "8px" : "12px",
+      width: isContained ? "36px" : "40px",
+      height: isContained ? "36px" : "40px",
+      padding: "12px",
     },
-    ...(ownerState.size ? getSizeStyles(ownerState.size, isContained) : {}),
   };
 
   let colorPalette;
@@ -330,7 +291,6 @@ const IconButton = React.forwardRef(function IconButton(
     color = "primary",
     className,
     square = false,
-    size = "medium",
     ...props
   } = inProps;
 
@@ -338,7 +298,6 @@ const IconButton = React.forwardRef(function IconButton(
     variant,
     color,
     square,
-    size,
     ...props,
   };
 
@@ -387,7 +346,6 @@ const IconButton = React.forwardRef(function IconButton(
           ownerState={ownerState}
           {...props}
           color={mapColor(color)}
-          size={size}
           ref={ref}
           disableRipple={true}
         />
@@ -400,7 +358,6 @@ const IconButton = React.forwardRef(function IconButton(
       ownerState={ownerState}
       {...props}
       color={mapColor(color)}
-      size={size}
       ref={ref}
       disableRipple={true}
     />

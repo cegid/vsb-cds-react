@@ -45,6 +45,7 @@ export const Default: Story = {
           fullWidth
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          onFilterClick={() => {}}
         />
       </Box>
     );

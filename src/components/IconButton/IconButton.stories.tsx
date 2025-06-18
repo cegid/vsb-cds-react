@@ -37,11 +37,6 @@ const meta = {
       options: ["text", "contained", "outlined", "tonal", "iconOnly"],
       description: "The variant to use",
     },
-    size: {
-      control: "select",
-      options: ["small", "medium", "large"],
-      description: "The size of the component",
-    },
     disabled: {
       control: "boolean",
       description: "If true, the component is disabled",
@@ -180,22 +175,6 @@ export const Tonal: Story = {
       </IconButton>
       <IconButton {...args} color="info">
         <Search />
-      </IconButton>
-    </Stack>
-  ),
-};
-
-export const Sizes: Story = {
-  render: (args) => (
-    <Stack direction="row" spacing={2} alignItems="center">
-      <IconButton {...args} size="small">
-        <Add fontSize="small" />
-      </IconButton>
-      <IconButton {...args} size="medium">
-        <Add />
-      </IconButton>
-      <IconButton {...args} size="large">
-        <Add fontSize="large" />
       </IconButton>
     </Stack>
   ),

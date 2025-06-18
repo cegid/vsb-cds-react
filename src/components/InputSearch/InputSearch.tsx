@@ -7,8 +7,12 @@ import typography from "../../theme/typography";
 import Box from "../Box";
 import TextField, { TextFieldProps } from "../TextField";
 import { styled } from "@cegid/cds-react";
+import Row from "../Row";
+import IconButton from "../IconButton";
 
-export interface SearchInputProps extends Omit<TextFieldProps, "InputProps"> {}
+export interface SearchInputProps extends Omit<TextFieldProps, "InputProps"> {
+  onFilterClick?: () => void;
+}
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
   "& .MuiInputBase-root": {
@@ -58,6 +62,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   placeholder = "Cherchez par nom, tél, type...",
   value,
   onChange,
+  onFilterClick,
   ...props
 }) => {
   const [hasValue, setHasValue] = useState(false);
@@ -90,7 +95,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   };
 
   return (
-    <Box>
+    <Row gap={4}>
       <CustomTextField
         placeholder={placeholder}
         value={value}
@@ -116,7 +121,14 @@ const SearchInput: React.FC<SearchInputProps> = ({
         }}
         {...props}
       />
-    </Box>
+      {onFilterClick && (
+        <IconButton variant="tonal" color="neutral" square>
+          <Icon size={16} color="primary/10">
+            filter
+          </Icon>
+        </IconButton>
+      )}
+    </Row>
   );
 };
 
