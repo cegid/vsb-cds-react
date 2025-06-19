@@ -36,7 +36,7 @@ interface BaseHeaderProps {
 
 type WithPrimaryAction = {
   primaryAction: () => void;
-  primaryButtonText: string;
+  primaryButtonText?: string;
   primaryButtonProps?: CustomButtonProps;
 };
 
@@ -48,7 +48,7 @@ type WithoutPrimaryAction = {
 
 type WithSecondaryAction = {
   secondaryAction: () => void;
-  secondaryButtonText: string;
+  secondaryButtonText?: string;
   secondaryButtonProps?: CustomButtonProps;
 };
 
