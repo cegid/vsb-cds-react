@@ -377,7 +377,7 @@ const Button: React.FC<ExtendedButtonProps> = (props) => {
   if (props.variant === "contained") {
     return (
       <Box
-        maxWidth={props.fullWidth ? "auto" : "fit-content"}
+        width={props.fullWidth ? "100%" : "fit-content"}
         p={1}
         backgroundColor={getContainedBackgroundColor() as CustomColorString}
         borderRadius={3}
