@@ -9,6 +9,7 @@ import React from "react";
 import { neutral } from "../../theme";
 import typography from "../../theme/typography";
 import Badge, { BadgeProps } from "../Badge";
+import Box from "../Box";
 
 export interface TabProps extends CegidTabProps {
   /**
@@ -27,6 +28,7 @@ const StyledTab = styled(CegidTab)({
   minHeight: "auto",
   position: "relative",
   overflow: "visible",
+  flex: 1,
   "&::after": {
     content: '""',
     position: "absolute",
@@ -55,7 +57,7 @@ const StyledTab = styled(CegidTab)({
   },
 });
 
-const TabContent = styled("div")({
+const TabContent = styled(Box)({
   display: "flex",
   alignItems: "center",
   gap: "8px",
