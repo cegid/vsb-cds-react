@@ -56,3 +56,5 @@ export { default as FormControl } from "./FormControl";
 export * from "./FormControl";
 export { default as InputSearch } from "./InputSearch";
 export * from "./InputSearch";
+export { default as IAChip } from "./IAChip";
+export * from "./IAChip";
