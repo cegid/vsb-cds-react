@@ -7,7 +7,7 @@ import typography from "../../theme/typography";
 
 export interface SegmentedControlAction {
   icon?: React.ReactNode;
-  label?: string;
+  label?: React.ReactNode;
   onClick: () => void;
 }
 
