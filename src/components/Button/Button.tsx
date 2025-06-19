@@ -87,10 +87,6 @@ const createTonalButtonStyle = (
 });
 
 const containedButtonBase = {
-  height: "28px",
-  "@media (max-width: 600px)": {
-    height: "36px",
-  },
   borderRadius: "10px",
   color: white,
   border: "none",
@@ -125,11 +121,13 @@ const createContainedButtonStyle = (
   },
 });
 
-const getSizeStyles = (size: ButtonSize) => {
+const getSizeStyles = (size: ButtonSize, isContained = false) => {
+  const heightReduction = isContained ? 4 : 0;
+
   switch (size) {
     case "small":
       return {
-        height: "24px",
+        height: `${24 - heightReduction}px`,
         padding: "0px 12px",
         ...typography.captionSemiBold,
         "& .MuiSvgIcon-root": {
@@ -143,7 +141,7 @@ const getSizeStyles = (size: ButtonSize) => {
       };
     case "medium":
       return {
-        height: "32px",
+        height: `${32 - heightReduction}px`,
         padding: "0px 16px",
         ...typography.bodySSemiBold,
         "& .MuiSvgIcon-root": {
@@ -157,7 +155,7 @@ const getSizeStyles = (size: ButtonSize) => {
       };
     case "large":
       return {
-        height: "40px",
+        height: `${40 - heightReduction}px`,
         padding: "0px 16px",
         ...typography.bodySSemiBold,
         "& .MuiSvgIcon-root": {
@@ -172,10 +170,10 @@ const getSizeStyles = (size: ButtonSize) => {
     case "auto":
     default:
       return {
-        height: "32px",
+        height: `${32 - heightReduction}px`,
         padding: "0px 16px",
         "@media (max-width: 600px)": {
-          height: "40px",
+          height: `${40 - heightReduction}px`,
           padding: "1px 16px",
         },
         ...typography.bodySSemiBold,
@@ -209,7 +207,7 @@ const StyledButton = styled(CegidButton)<{ buttonSize?: ButtonSize }>(
     ...getSizeStyles(buttonSize),
     "&.MuiButton-contained": {
       ...containedButtonBase,
-      ...getSizeStyles(buttonSize),
+      ...getSizeStyles(buttonSize, true),
       ...(buttonSize === "auto" && {
         "@media (max-width: 600px)": {
           height: "40px",
