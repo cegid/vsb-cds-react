@@ -58,3 +58,5 @@ export { default as InputSearch } from "./InputSearch";
 export * from "./InputSearch";
 export { default as IAChip } from "./IAChip";
 export * from "./IAChip";
+export { default as NavigationBar } from "./NavigationBar";
+export * from "./NavigationBar";
