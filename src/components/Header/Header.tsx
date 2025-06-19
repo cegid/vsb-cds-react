@@ -4,7 +4,7 @@ import React from "react";
 import { useTheme, useMediaQuery } from "@mui/material";
 import Typography from "../Typography";
 import Button, { ButtonColor, ButtonVariant } from "../Button";
-import IconButton from "../IconButton";
+import IconButton, { CustomColor } from "../IconButton";
 import Row from "../Row";
 import Icon from "../Icon";
 import SegmentedControl, { SegmentedControlProps } from "../SegmentedControl";
@@ -108,7 +108,7 @@ const HeaderTitle: React.FC<{ title: string }> = ({ title }) => (
 );
 
 const SettingsButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
-  <IconButton {...ICON_BUTTON_PROPS} onClick={onClick}>
+  <IconButton {...ICON_BUTTON_PROPS} onClick={onClick} >
     <Icon size={16} color="neutral/10">
       setting-07
     </Icon>
@@ -124,40 +124,72 @@ const MoreButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
 );
 
 const PrimaryButton: React.FC<{
-  text: string;
+  text?: string;
   onClick: () => void;
   customProps?: CustomButtonProps;
-}> = ({ text, onClick, customProps = {} }) => (
-  <Button
-    onClick={onClick}
-    disabled={customProps.disabled}
-    id={customProps.id}
-    color={customProps.color}
-    variant={customProps?.variant ?? "contained"}
-    startIcon={customProps.startIcon}
-    endIcon={customProps.endIcon}
-  >
-    {text}
-  </Button>
-);
+}> = ({ text, onClick, customProps = {} }) => {
+  if (customProps.startIcon && !text) {
+    return (
+      <IconButton
+        {...ICON_BUTTON_PROPS}
+        onClick={onClick}
+        disabled={customProps.disabled}
+        id={customProps.id}
+        color={customProps.color as CustomColor  ?? "primary"}
+      >
+        {customProps.startIcon}
+      </IconButton>
+    );
+  }
+
+  return (
+    <Button
+      onClick={onClick}
+      disabled={customProps.disabled}
+      id={customProps.id}
+      color={customProps.color}
+      variant={customProps?.variant ?? "contained"}
+      startIcon={customProps.startIcon}
+      endIcon={customProps.endIcon}
+    >
+      {text}
+    </Button>
+  );
+};
 
 const SecondaryButton: React.FC<{
-  text: string;
+  text?: string;
   onClick: () => void;
   customProps?: CustomButtonProps;
-}> = ({ text, onClick, customProps = {} }) => (
-  <Button
-    onClick={onClick}
-    disabled={customProps.disabled}
-    id={customProps.id}
-    color={customProps?.color ?? "neutral"}
-    variant={customProps?.variant ?? "contained"}
-    startIcon={customProps.startIcon}
-    endIcon={customProps.endIcon}
-  >
-    {text}
-  </Button>
-);
+}> = ({ text, onClick, customProps = {} }) => {
+  if (customProps.startIcon && !text) {
+    return (
+      <IconButton
+        {...ICON_BUTTON_PROPS}
+        onClick={onClick}
+        disabled={customProps.disabled}
+        id={customProps.id}
+        color={customProps.color as CustomColor ?? "neutral"}
+      >
+        {customProps.startIcon}
+      </IconButton>
+    );
+  }
+
+  return (
+    <Button
+      onClick={onClick}
+      disabled={customProps.disabled}
+      id={customProps.id}
+      color={customProps?.color ?? "neutral"}
+      variant={customProps?.variant ?? "contained"}
+      startIcon={customProps.startIcon}
+      endIcon={customProps.endIcon}
+    >
+      {text}
+    </Button>
+  );
+};
 
 const MobileActions: React.FC<{
   primaryAction?: () => void;
@@ -173,7 +205,7 @@ const MobileActions: React.FC<{
   moreAction,
 }) => (
   <>
-    {primaryAction && primaryButtonText && (
+    {primaryAction && (
       <SecondaryButton
         text={primaryButtonText}
         onClick={primaryAction}
@@ -207,14 +239,14 @@ const DesktopActions: React.FC<{
   <>
     {settingsAction && <SettingsButton onClick={settingsAction} />}
     {moreAction && <MoreButton onClick={moreAction} />}
-    {secondaryAction && secondaryButtonText && (
+    {secondaryAction && (
       <SecondaryButton
         text={secondaryButtonText}
         onClick={secondaryAction}
         customProps={secondaryButtonProps}
       />
     )}
-    {primaryAction && primaryButtonText && (
+    {primaryAction && (
       <PrimaryButton
         text={primaryButtonText}
         onClick={primaryAction}

@@ -26,7 +26,7 @@ type CustomVariant =
   | "outlined"
   | "tonal"
   | "iconOnly";
-type CustomColor =
+export type CustomColor =
   | "primary"
   | "secondary"
   | "success"
