@@ -108,7 +108,7 @@ const HeaderTitle: React.FC<{ title: string }> = ({ title }) => (
 );
 
 const SettingsButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
-  <IconButton {...ICON_BUTTON_PROPS} onClick={onClick} >
+  <IconButton {...ICON_BUTTON_PROPS} onClick={onClick}>
     <Icon size={16} color="neutral/10">
       setting-07
     </Icon>
@@ -135,7 +135,7 @@ const PrimaryButton: React.FC<{
         onClick={onClick}
         disabled={customProps.disabled}
         id={customProps.id}
-        color={customProps.color as CustomColor  ?? "primary"}
+        color={(customProps.color as CustomColor) ?? "primary"}
       >
         {customProps.startIcon}
       </IconButton>
@@ -169,7 +169,7 @@ const SecondaryButton: React.FC<{
         onClick={onClick}
         disabled={customProps.disabled}
         id={customProps.id}
-        color={customProps.color as CustomColor ?? "neutral"}
+        color={(customProps.color as CustomColor) ?? "neutral"}
       >
         {customProps.startIcon}
       </IconButton>
@@ -260,7 +260,7 @@ const SegmentedSection: React.FC<{
   segmentedControlProps: SegmentedControlProps;
   settingsAction?: () => void;
 }> = ({ segmentedControlProps, settingsAction }) => (
-  <Row gap={4}>
+  <Row gap={4} justifyContent="flex-end">
     <SegmentedControl {...segmentedControlProps} />
     {settingsAction && <SettingsButton onClick={settingsAction} />}
   </Row>
