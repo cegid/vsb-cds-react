@@ -5,14 +5,12 @@ import Icon from "../Icon";
 import Box from "../Box";
 import Typography from "../Typography";
 import { primary } from "../../theme";
-import theme from "@cegid/cds-react/styles/defaultTheme";
-
+// import { ReactComponent as LogoLarge } from './Logo_large.svg';
 
 export interface SubNavItem {
   key: string;
   label: string;
   iconLabel?: string;
-  isActive: boolean;
 }
 
 export interface NavItem {
@@ -20,29 +18,29 @@ export interface NavItem {
   label: string;
   iconLabel?: string;
   subItems?: SubNavItem[];
-  badge?: React.ReactNode;
+}
+
+export interface ExtendedSubNavItem extends SubNavItem {
   isActive: boolean;
+}
+
+interface ExtendedNavItem extends NavItem {
+  type: MenuItemType;
+  isActive: boolean;
+  subItems?: ExtendedSubNavItem[];
 }
 
 
 const HEADER_ITEMS: NavItem[] = [
   {
-    key: 'recherche',
-    label: 'Recherche',
-    iconLabel: "search-01",
-    isActive: false
-  },
-  {
     key: 'accueil',
     label: 'Accueil',
     iconLabel: "home-01",
-    isActive: false
   },
   {
     key: 'ia',
     label: 'IA de Cegid',
     iconLabel: "ai-brain-03",
-    isActive: false
   },
 ];
 
@@ -58,16 +56,13 @@ const NAV_ITEMS: NavItem[] = [
         key: 'dépense',
         label: 'Dépenses',
         iconLabel: "estimate-02",
-        isActive: false
       },
       {
         key: 'fournisseurs',
         label: 'Fournisseurs',
         iconLabel: "invoice-01",
-        isActive: false
       },
     ],
-    isActive: false
   },
   {
     key: 'ventes',
@@ -78,53 +73,44 @@ const NAV_ITEMS: NavItem[] = [
         key: 'devis',
         label: 'Devis',
         iconLabel: "estimate-02",
-        isActive: false
       },
       {
         key: 'factures',
         label: 'Factures',
         iconLabel: "invoice-01",
-        isActive: false
       },
       {
         key: 'clients',
         label: 'Clients',
         iconLabel: "location-user-01",
-        isActive: false
       },
       {
         key: 'catalogues',
         label: 'Catalogues',
         iconLabel: "library",
-        isActive: false
       },
       {
         key: 'reglements',
         label: 'Règlements',
         iconLabel: "payment-01",
-        isActive: false
       },
     ],
-    isActive: false
   },
   
   {
-    key: 'bank',
-    label: 'Banque',
+    key: 'pro_account',
+    label: 'Compte Pro',
     iconLabel: "bank",
-    isActive: false
   },
   {
     key: 'documents',
     label: 'Documents',
     iconLabel: "file-01",
-    isActive: false
   },
   {
     key: 'contact',
     label: 'Contacts',
     iconLabel: "contact-01",
-    isActive: false
   },
 ];
 
@@ -133,15 +119,21 @@ const FOOTER_ITEMS: NavItem[] = [
     key: 'support',
     label: 'Support',
     iconLabel: "customer-support",
-    isActive: false
   },
   {
     key: 'parametres',
     label: 'Paramètres',
     iconLabel: "setting-07",
-    isActive: false
   },
 ];
+
+enum MenuItemType {
+  Header = 'header',
+  Nav    = 'nav',
+  Footer = 'footer',
+}
+
+
 
 const NavContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -219,9 +211,9 @@ const SidebarPanel = styled(Paper, {
 
 interface SidebarProps {
   anchorWidth: number;
-  navItems: NonNullable<NavItem['subItems']>;
+  navItems: NonNullable<ExtendedNavItem['subItems']>;
   open: boolean;
-  parent: NavItem;
+  parent: ExtendedNavItem;
   onMouseLeave?: () => void;
   onNavItemClick: (navItem: NavItem) => void;
 }
@@ -299,10 +291,42 @@ const Sidebar = ({
 
 const NavigationBar: React.FC = () => {
 
-  const [navItems, setNavItems] = useState<NavItem[]>([]);
+  const [navItems, setNavItems] = useState<ExtendedNavItem[]>([
+    ...HEADER_ITEMS.map(item => ({
+      ...item,
+      type: MenuItemType.Header,
+      isActive: false,
+      subItems: item.subItems?.map(subItem => ({
+        ...subItem,
+        isActive: false,
+      })) ?? [],
+    })),
+    ...NAV_ITEMS.map(item => ({
+      ...item,
+      type: MenuItemType.Nav,
+      isActive: false,
+      subItems: item.subItems?.map(subItem => ({
+        ...subItem,
+        isActive: false,
+      })) ?? [],
+    })),
+    ...FOOTER_ITEMS.map(item => ({
+      ...item,
+      type: MenuItemType.Footer,
+      isActive: false,
+      subItems: item.subItems?.map(subItem => ({
+        ...subItem,
+        isActive: false,
+      })) ?? [],
+    })),
+  ]);
+
+  const headerNavItems = navItems.filter(item => item.type === MenuItemType.Header);
+  const bodyNavItems = navItems.filter(item => item.type === MenuItemType.Nav);
+  const footerNavItems = navItems.filter(item => item.type === MenuItemType.Footer);
 
   const [expanded, setExpanded] = useState<boolean>(true);
-  const [hoveredNavItem, setHoveredNavItem] = useState<NavItem | null>(null);
+  const [hoveredNavItem, setHoveredNavItem] = useState<ExtendedNavItem | null>(null);
 
   const navRef = useRef<HTMLDivElement>(null);
   const navWidth = expanded ? 204 : 48;
@@ -363,13 +387,14 @@ const NavigationBar: React.FC = () => {
           justifyContent="space-between"
           padding="8px 0"
         >
-          <img src='./Bim_logo.svg' alt="Bim Logo" width="32" height="32" />
+          {/* <LogoLarge width={32} height={32} /> */}
+          {/* <img src='' alt="Bim Logo" width="32" height="32" /> */}
           <Icon variant="stroke" color="primary/10" size="16px">
             arrow-left-05
           </Icon>
         </Box>
 
-        {/* Header */}
+        {/* ------------- Header ----------*/}
         <Box
           display="flex"
           flexDirection="column"
@@ -378,7 +403,7 @@ const NavigationBar: React.FC = () => {
           alignSelf="stretch"
         >
           <NavList>
-            { HEADER_ITEMS.map((navItem) => {
+            { headerNavItems.map((navItem) => {
               const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
 
               return (
@@ -407,6 +432,29 @@ const NavigationBar: React.FC = () => {
                 </ListItem>
               );
             })}
+              <ListItem
+                  key="recherche"
+                  disablePadding
+                  // onMouseEnter={() => setHoveredNavItem(null)}
+                  // onClick={() => handleItemClick(navItem)}
+                >
+                  <NavListItemButton>
+                    <ListItemIcon><MenuIcon variant="stroke" color="primary/10" size="24px">search-01</MenuIcon></ListItemIcon>
+                    {expanded && (
+                      <ListItemText 
+                        disableTypography
+                        primary={
+                          <Typography
+                            variant="bodySMedium"
+                            color="primary/10"
+                          >
+                          Recherche
+                        </Typography>
+                        } 
+                      />
+                    )}
+                  </NavListItemButton>
+                </ListItem>
           </NavList>
 
         </Box>
@@ -422,7 +470,7 @@ const NavigationBar: React.FC = () => {
           gap={2}
         >
           <NavList>
-            { NAV_ITEMS.map((navItem) => {
+            { bodyNavItems.map((navItem) => {
               const hasSubitems = Boolean(navItem.subItems);
 
               const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
@@ -465,7 +513,7 @@ const NavigationBar: React.FC = () => {
           gap={2}
         >
           <NavList>
-            { FOOTER_ITEMS.map((navItem) => {
+            { footerNavItems.map((navItem) => {
               const hasSubitems = Boolean(navItem.subItems);
 
               const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
