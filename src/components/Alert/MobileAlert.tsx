@@ -11,6 +11,7 @@ import {
   getButtonColor,
   VARIANT_CONFIG,
 } from "./Alert";
+import Icon from "../Icon";
 
 const MobileAlert: React.FC<AlertProps> = ({
   title,
@@ -43,6 +44,14 @@ const MobileAlert: React.FC<AlertProps> = ({
     },
   });
 
+  const getDescriptionColor = () => {
+    if (isMediumSize) {
+      return 'neutral/50';
+    }
+    else {
+      return variant === "error" ? "critical/50" : "neutral/10"
+    }
+  }
   const renderImage = (image: AlertImage) => {
     const imageProps = getImageDimensions();
 
@@ -86,7 +95,12 @@ const MobileAlert: React.FC<AlertProps> = ({
       display="flex"
       alignItems="center"
     >
-      <ChevronRight sx={{ fontSize: "16px" }} />
+      <Icon
+        size={14}
+        color={variant === "error" ? "critical/50" : "neutral/10"}
+      >
+        greater-than
+      </Icon>
     </Box>
   );
 
@@ -100,7 +114,7 @@ const MobileAlert: React.FC<AlertProps> = ({
   const renderDescription = () => (
     <Typography
       variant={isMediumSize ? "captionRegular" : "bodySRegular"}
-      color={isMediumSize ? "neutral/50" : "neutral/10"}
+      color={getDescriptionColor()}
     >
       {description}
     </Typography>
