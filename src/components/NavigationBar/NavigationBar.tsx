@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { List, ListItem, ListItemButton, ListItemIcon, Paper, styled } from "@cegid/cds-react";
+import { List, ListItem, ListItemButton, ListItemIcon, Paper, Fade, styled } from "@cegid/cds-react";
 import ListItemText from '@mui/material/ListItemText';
 import Icon from "../Icon";
 import Box from "../Box";
@@ -246,9 +246,17 @@ const Sidebar = ({
       width="100%"
     >
       <Box display="flex" alignItems="center" gap={4}>
-        <Typography variant="bodyMMedium" color="primary/10">
-          {parent?.label || ''}
-        </Typography>
+        <Fade
+          key={parent?.label || ''}
+          in
+          timeout={800}
+          mountOnEnter
+          unmountOnExit
+        >
+          <Typography variant="bodyMMedium" color="primary/10">
+            {parent?.label || ''}
+          </Typography>
+        </Fade>
       </Box>
       <Icon variant="stroke" color="primary/10" size="16px">
         arrow-left-05
@@ -263,33 +271,43 @@ const Sidebar = ({
       padding="8px 0 16px"
       width="100%"
     >
-      <NavList dense>
-        {navItems.map((navItem) => {
-          const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
-          return (
-            <ListItem
-              key={navItem.key}
-              onClick={() => onNavItemClick(navItem)}
-              disablePadding
-              >
-              <NavListItemButton onClick={() => console.log('navigate to', navItem.key)}>
-                {navItem.iconLabel && <ListItemIcon><MenuIcon variant="stroke" color={ navItemColor } size="24px">{navItem.iconLabel}</MenuIcon></ListItemIcon> }
-                <ListItemText 
-                  disableTypography
-                  primary={
-                    <Typography
-                      variant="bodySMedium"
-                      color={ navItemColor }
-                    >
-                    {navItem.label}
-                  </Typography>
-                  } 
-                />
-              </NavListItemButton>
-            </ListItem>
-          )
-        })}
-      </NavList>
+      <Fade
+        key={parent?.label || ''}
+        in
+        timeout={800}
+        mountOnEnter
+        unmountOnExit
+      >
+        <Box>
+          <NavList dense>
+            {navItems.map((navItem) => {
+              const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
+              return (
+                <ListItem
+                  key={navItem.key}
+                  onClick={() => onNavItemClick(navItem)}
+                  disablePadding
+                  >
+                  <NavListItemButton onClick={() => console.log('navigate to', navItem.key)}>
+                    {navItem.iconLabel && <ListItemIcon><MenuIcon variant="stroke" color={ navItemColor } size="24px">{navItem.iconLabel}</MenuIcon></ListItemIcon> }
+                    <ListItemText 
+                      disableTypography
+                      primary={
+                        <Typography
+                          variant="bodySMedium"
+                          color={ navItemColor }
+                        >
+                        {navItem.label}
+                      </Typography>
+                      } 
+                    />
+                  </NavListItemButton>
+                </ListItem>
+              )
+            })}
+          </NavList>
+        </Box>
+      </Fade>
     </Box>
   </SidebarPanel>
 );
