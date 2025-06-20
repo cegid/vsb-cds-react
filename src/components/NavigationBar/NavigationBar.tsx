@@ -358,21 +358,25 @@ const NavigationBar: React.FC = () => {
   const navWidth = expanded ? 204 : 48;
 
   const handleItemClick = (navItem: NavItem) => {
-    const newNavItems = navItems.map((item) => {
-      if (item.key === navItem.key) {
-        return { ...item, isActive: true };
-      }
-      if (item.subItems?.some((subItem) => subItem.key === navItem.key)) {
-        const newSubItems = item.subItems.map((subItem) => {
-          if (subItem.key === navItem.key) {
-            return { ...subItem, isActive: true };
-          }
-          return { ...subItem, isActive: false };
-        });
-        return { ...item, subItems: newSubItems, isActive: true };
-      }
-      return { ...item, isActive: false };
-    });
+    const newNavItems = navItems.map(item => {
+      // Est-ce que j’ai cliqué sur ce parent ?
+      const isParentClicked = item.key === navItem.key && 'subItems' in navItem;
+      // Est-ce que j’ai cliqué sur un de ses sous-items ?
+      const isSubClicked = item.subItems?.some(sub => sub.key === navItem.key) ?? false;
+
+      // On reconstruit toujours les subItems en resetant tout, sauf celui cliqué
+      const newSubItems = item.subItems?.map(sub => ({
+        ...sub,
+        isActive: sub.key === navItem.key,
+      })) ?? [];
+
+      return {
+        ...item,
+        // Le parent est actif si on a cliqué dessus ou sur un de ses subItems
+        isActive: isParentClicked || isSubClicked,
+        subItems: newSubItems,
+      };
+    })
 
     setNavItems(newNavItems);
     setHoveredNavItem(null);
