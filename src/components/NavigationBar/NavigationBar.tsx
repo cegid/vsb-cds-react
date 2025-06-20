@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { List, styled } from "@cegid/cds-react";
 import Box from "../Box";
 import { primary } from "../../theme";
@@ -7,13 +7,14 @@ import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS } from "./constants";
 import NavHeader from "./NavigationHeader";
 import NavSection from "./NavigationSection";
 import NavigationSideBar from "./NavigationSideBar";
+import { useExtendedNavItems } from "./useExtendedNavItems";
+import { useSidebarState } from "./useNavigationSideBarState";
 
 export interface SubNavItem {
   key: string;
   label: string;
   iconLabel?: string;
 }
-
 export interface NavItem {
   key: string;
   label: string;
@@ -31,7 +32,6 @@ export interface ExtendedNavItem extends NavItem {
   subItems?: ExtendedSubNavItem[];
 }
 
-
 export enum MenuItemType {
   Header = 'header',
   Nav    = 'nav',
@@ -44,9 +44,6 @@ const NavContainer = styled(Box)(({ theme }) => ({
   height: '100vh',
 }));
 
-interface NavPanelProps {
-  expanded: boolean;
-}
 
 export const NavList = styled(List)(({ theme }) => ({
   display: 'flex',
@@ -55,6 +52,10 @@ export const NavList = styled(List)(({ theme }) => ({
   padding: 0,
   width: '100%',
 }));
+
+interface NavPanelProps {
+  expanded: boolean;
+}
 
 const NavPanel = styled(Box, {
   shouldForwardProp: prop => prop !== 'expanded',
@@ -77,43 +78,16 @@ const NavPanel = styled(Box, {
 
 const NavigationBar: React.FC = () => {
 
-  const [navItems, setNavItems] = useState<ExtendedNavItem[]>([
-    ...HEADER_ITEMS.map(item => ({
-      ...item,
-      type: MenuItemType.Header,
-      isActive: false,
-      subItems: item.subItems?.map(subItem => ({
-        ...subItem,
-        isActive: false,
-      })) ?? [],
-    })),
-    ...NAV_ITEMS.map(item => ({
-      ...item,
-      type: MenuItemType.Nav,
-      isActive: false,
-      subItems: item.subItems?.map(subItem => ({
-        ...subItem,
-        isActive: false,
-      })) ?? [],
-    })),
-    ...FOOTER_ITEMS.map(item => ({
-      ...item,
-      type: MenuItemType.Footer,
-      isActive: false,
-      subItems: item.subItems?.map(subItem => ({
-        ...subItem,
-        isActive: false,
-      })) ?? [],
-    })),
-  ]);
+  const [navItems, setNavItems] = useExtendedNavItems(HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS);
 
-  const headerNavItems = navItems.filter(item => item.type === MenuItemType.Header);
-  const bodyNavItems = navItems.filter(item => item.type === MenuItemType.Nav);
-  const footerNavItems = navItems.filter(item => item.type === MenuItemType.Footer);
+  const headerNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Header), [navItems]);
+  const bodyNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Nav), [navItems]);
+  const footerNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Footer), [navItems]);
 
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [hoveredNavItem, setHoveredNavItem] = useState<ExtendedNavItem | null>(null);
 
+  const { sidebarNavItems, isSideBarOpen, activeNavItem } = useSidebarState(navItems, hoveredNavItem, isExpanded);
 
   // Hover timer to delay a little the opening of the sidebar
   const hoverTimer = useRef<number>();  
@@ -132,6 +106,9 @@ const NavigationBar: React.FC = () => {
     window.clearTimeout(hoverTimer.current);
   };
 
+  /**
+   * Cleanup function to clear the hover timer when the component unmounts.
+   */
   useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
   const handleItemClick = (navItem: NavItem) => {
@@ -158,28 +135,6 @@ const NavigationBar: React.FC = () => {
     setNavItems(newNavItems);
     setHoveredNavItem(null);
   };
-
-  
-  /**
-   * Conditions to maintain the sidebar open:
-   * 1. If the hoveredNavItem has subItems, the sidebar should remain open
-   * 2. If the activeNavItem has subItems, the sidebar should remain open
-   * 3. If the activeNavItem is a subItem of a navItem with subItems, the sidebar should remain open
-   */
-  const activeNavItem = navItems.find((navItem) => navItem.isActive);
-
-  const parentOfActiveChild = navItems.find((navItem) => navItem.subItems?.some((child) => child.isActive)) ?? null;
-  
-  const sidebarNavItems =
-  // priority on Hover
-  hoveredNavItem?.subItems
-  // if no hover, check active item
-  ?? activeNavItem?.subItems
-  // if it's a subItem, check its parent
-  ?? parentOfActiveChild?.subItems
-  ?? [];
-
-  const isSideBarOpen = isExpanded && sidebarNavItems.length > 0;
 
   return (
     <NavContainer>
