@@ -5,7 +5,8 @@ import Icon from "../Icon";
 import Box from "../Box";
 import Typography from "../Typography";
 import { primary } from "../../theme";
-// import { ReactComponent as LogoLarge } from './Logo_large.svg';
+import logo from './logo.svg';
+import IconButton from "../IconButton";
 
 export interface SubNavItem {
   key: string;
@@ -160,6 +161,7 @@ const NavList = styled(List)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
+  padding: 0,
   width: '100%',
 }));
 
@@ -405,29 +407,80 @@ const NavigationBar: React.FC = () => {
         expanded={expanded}
         onMouseEnter={() => setExpanded(true)}
       >
-        {/* Titre */}
-        <Box
-          alignItems="center"
-          alignSelf="stretch"
-          display="flex"
-          justifyContent="space-between"
-          padding="8px 0"
-        >
-          {/* <LogoLarge width={32} height={32} /> */}
-          {/* <img src='' alt="Bim Logo" width="32" height="32" /> */}
-          <Icon variant="stroke" color="primary/10" size="16px">
-            arrow-left-05
-          </Icon>
-        </Box>
-
         {/* ------------- Header ----------*/}
         <Box
           display="flex"
           flexDirection="column"
           alignItems="flex-start"
-          gap={2}
+          gap={4}
           alignSelf="stretch"
         >
+
+          <Box
+            display="flex"
+            width="100%"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="flex-start"
+            gap={4}
+          >
+            {/* Icon reduce menu */}
+            <Box
+              display="flex"
+              width="100%"
+              padding="0 4px"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="flex-start"
+            >
+              <Box
+                display="flex"
+                height="34px"
+                padding="8px 0px"
+                alignItems="center"
+                alignSelf="stretch"
+              >
+                <IconButton variant="iconOnly"><Icon color="neutral/10">sidebar-left-01</Icon></IconButton>
+              </Box>
+
+            </Box>
+
+            {/* Profile */}
+            <Box
+              display="flex"
+              width="100%"
+              padding="0 8px"
+              flexDirection="column"
+              alignItems="flex-start"
+            >
+              <Box
+                display="flex"
+                padding="8px 8px 8px 0"
+                alignItems="center"
+                gap={4}
+                alignSelf="stretch"
+              >
+                <img
+                  src={logo}
+                  alt="Logo Cegid"
+                  width={24}
+                  height={24}
+                />
+                <Box
+                  display="flex"
+                  alignItems="center"
+                  gap={2}
+                >
+                  <Typography variant="bodySSemiBold" color="primary/10">
+                    Bonjour John
+                  </Typography>
+                  <Icon variant="stroke" color="primary/10" size="16px">arrow-down-01</Icon>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+
+          {/* Header Navigation Items */}
           <NavList>
             { headerNavItems.map((navItem) => {
               const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
@@ -486,7 +539,7 @@ const NavigationBar: React.FC = () => {
         </Box>
 
 
-        {/* Listing des navItems */}
+        {/* navItems */}
         <Box
           alignItems="flex-start"
           alignSelf="stretch"
