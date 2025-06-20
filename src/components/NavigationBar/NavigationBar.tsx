@@ -176,6 +176,8 @@ const NavPanel = styled(Box, {
   padding: theme.spacing(4),
   transition: theme.transitions.create('width', { duration: 200 }),
   width: '204px',
+  zIndex: theme.zIndex.drawer + 2,
+  overflow: 'hidden',
   // width: expanded ? 204 : 48,
 }));
 
@@ -183,30 +185,34 @@ interface SidebarPanelProps {
   open: boolean;
   anchorWidth: number;
 }
+
 const SidebarPanel = styled(Paper, {
   shouldForwardProp: prop => prop !== 'open' && prop !== 'anchorWidth',
 })<SidebarPanelProps>(({ theme, open, anchorWidth }) => ({
-  position: 'absolute',
-  top: 0,
-  left: anchorWidth,
-  width: 225,
-  height: '100%',
-  padding: 16,
+  alignItems: 'flex-start',
+  backgroundColor: primary[99],
+  borderRadius: '0px 16px 16px 0px', 
+  boxShadow: "2px 0px 6.857px rgba(47,38,50,0.08), 2px 0px 6.857px rgba(47,38,50,0.08)",
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'flex-start',
   gap: 8,
-  borderRadius: '0px 16px 16px 0px', 
-  backgroundColor: primary[99],
-  boxShadow: `
-    2px 0px 6.857px rgba(47,38,50,0.08),
-    2px 0px 6.857px rgba(47,38,50,0.08)
-  `,
-  transition: theme.transitions.create(['opacity','transform'],{ duration:200 }),
-  opacity: open ? 1 : 0,
-  transform: open ? 'translateX(0)' : 'translateX(-8px)',
-  pointerEvents: open ? 'auto' : 'none',
+  height: '100%',
+  left: anchorWidth,
+  padding: 16,
+  pointerEvents: open ? 'auto'  : 'none',
+  position: 'absolute',
+  top: 0,
+  width: 225,
   zIndex: theme.zIndex.drawer + 1,
+  
+  // ----- Animation ------
+  transform: open ? 'translateX(0)' : 'translateX(-100%)',
+  opacity:   open ? 1 : 0,
+  transition: open
+    // ouverture du SidePanel
+    ? 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 50ms ease-out'
+    // fermeture du SidePanel
+    : 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease-out',
 }));
 
 interface SidebarProps {
@@ -241,7 +247,7 @@ const Sidebar = ({
     >
       <Box display="flex" alignItems="center" gap={4}>
         <Typography variant="bodyMMedium" color="primary/10">
-          {parent.label}
+          {parent?.label || ''}
         </Typography>
       </Box>
       <Icon variant="stroke" color="primary/10" size="16px">
@@ -372,6 +378,8 @@ const NavigationBar: React.FC = () => {
   ?? parentOfActiveChild?.subItems
   ?? [];
 
+  const isSideBarOpen = expanded && sidebarNavItems.length > 0;
+
   return (
     <NavContainer>
       <NavPanel
@@ -435,7 +443,7 @@ const NavigationBar: React.FC = () => {
               <ListItem
                   key="recherche"
                   disablePadding
-                  // onMouseEnter={() => setHoveredNavItem(null)}
+                  onMouseEnter={() => setHoveredNavItem(null)}
                   // onClick={() => handleItemClick(navItem)}
                 >
                   <NavListItemButton>
@@ -548,11 +556,11 @@ const NavigationBar: React.FC = () => {
         </Box>
       </NavPanel>
 
-      {expanded && sidebarNavItems.length > 0 && (
+      {expanded && (
         <Sidebar
           parent={hoveredNavItem ?? activeNavItem!}
           navItems={sidebarNavItems}
-          open
+          open={isSideBarOpen}
           anchorWidth={navWidth}
           onMouseLeave={() => setHoveredNavItem(null)}
           onNavItemClick={handleItemClick}
