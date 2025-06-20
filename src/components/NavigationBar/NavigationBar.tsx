@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { List, ListItem, ListItemButton, ListItemIcon, Paper, Fade, styled } from "@cegid/cds-react";
-import ListItemText from '@mui/material/ListItemText';
-import Icon from "../Icon";
+import { List, styled } from "@cegid/cds-react";
 import Box from "../Box";
-import Typography from "../Typography";
 import { primary } from "../../theme";
 import logo from './logo.svg';
-import IconButton from "../IconButton";
+import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS } from "./constants";
+import NavHeader from "./NavigationHeader";
+import NavSection from "./NavigationSection";
+import NavigationSideBar from "./NavigationSideBar";
 
 export interface SubNavItem {
   key: string;
@@ -25,116 +25,18 @@ export interface ExtendedSubNavItem extends SubNavItem {
   isActive: boolean;
 }
 
-interface ExtendedNavItem extends NavItem {
+export interface ExtendedNavItem extends NavItem {
   type: MenuItemType;
   isActive: boolean;
   subItems?: ExtendedSubNavItem[];
 }
 
 
-const HEADER_ITEMS: NavItem[] = [
-  {
-    key: 'accueil',
-    label: 'Accueil',
-    iconLabel: "home-01",
-  },
-  {
-    key: 'ia',
-    label: 'IA de Cegid',
-    iconLabel: "ai-brain-03",
-  },
-];
-
-
-const NAV_ITEMS: NavItem[] = [
-
-  {
-    key: 'depense',
-    label: 'Dépenses',
-    iconLabel: "shopping-bag-02",
-    subItems: [
-      {
-        key: 'dépense',
-        label: 'Dépenses',
-        iconLabel: "estimate-02",
-      },
-      {
-        key: 'fournisseurs',
-        label: 'Fournisseurs',
-        iconLabel: "invoice-01",
-      },
-    ],
-  },
-  {
-    key: 'ventes',
-    label: 'Ventes',
-    iconLabel: "cashier-02",
-    subItems: [
-      {
-        key: 'devis',
-        label: 'Devis',
-        iconLabel: "estimate-02",
-      },
-      {
-        key: 'factures',
-        label: 'Factures',
-        iconLabel: "invoice-01",
-      },
-      {
-        key: 'clients',
-        label: 'Clients',
-        iconLabel: "location-user-01",
-      },
-      {
-        key: 'catalogues',
-        label: 'Catalogues',
-        iconLabel: "library",
-      },
-      {
-        key: 'reglements',
-        label: 'Règlements',
-        iconLabel: "payment-01",
-      },
-    ],
-  },
-  
-  {
-    key: 'pro_account',
-    label: 'Compte Pro',
-    iconLabel: "bank",
-  },
-  {
-    key: 'documents',
-    label: 'Documents',
-    iconLabel: "file-01",
-  },
-  {
-    key: 'contact',
-    label: 'Contacts',
-    iconLabel: "contact-01",
-  },
-];
-
-const FOOTER_ITEMS: NavItem[] = [
-  {
-    key: 'support',
-    label: 'Support',
-    iconLabel: "customer-support",
-  },
-  {
-    key: 'parametres',
-    label: 'Paramètres',
-    iconLabel: "setting-07",
-  },
-];
-
-enum MenuItemType {
+export enum MenuItemType {
   Header = 'header',
   Nav    = 'nav',
   Footer = 'footer',
 }
-
-
 
 const NavContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -146,18 +48,7 @@ interface NavPanelProps {
   expanded: boolean;
 }
 
-const MenuIcon = styled(Icon)(({ theme }) => ({
-  display: 'flex',
-  padding: theme.spacing(2),
-  alignItems: 'center',
-  gap: '10px',
-}));
-
-const NavListItemButton = styled(ListItemButton)(() => ({
-  padding: 0,
-}));
-
-const NavList = styled(List)(({ theme }) => ({
+export const NavList = styled(List)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
@@ -182,137 +73,6 @@ const NavPanel = styled(Box, {
   overflow: 'hidden',
   // width: expanded ? 204 : 48,
 }));
-
-interface SidebarPanelProps {
-  open: boolean;
-  anchorWidth: number;
-}
-
-const SidebarPanel = styled(Paper, {
-  shouldForwardProp: prop => prop !== 'open' && prop !== 'anchorWidth',
-})<SidebarPanelProps>(({ theme, open, anchorWidth }) => ({
-  alignItems: 'flex-start',
-  backgroundColor: primary[99],
-  borderRadius: '0px 16px 16px 0px', 
-  boxShadow: "2px 0px 6.857px rgba(47,38,50,0.08), 2px 0px 6.857px rgba(47,38,50,0.08)",
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 8,
-  height: '100%',
-  left: anchorWidth,
-  padding: 16,
-  pointerEvents: open ? 'auto'  : 'none',
-  position: 'absolute',
-  top: 0,
-  width: 225,
-  zIndex: theme.zIndex.drawer + 1,
-  
-  // ----- Animation ------
-  transform: open ? 'translateX(0)' : 'translateX(-100%)',
-  opacity:   open ? 1 : 0,
-  transition: open
-    // ouverture du SidePanel
-    ? 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 50ms ease-out'
-    // fermeture du SidePanel
-    : 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease-out',
-}));
-
-interface SidebarProps {
-  anchorWidth: number;
-  navItems: NonNullable<ExtendedNavItem['subItems']>;
-  open: boolean;
-  parent: ExtendedNavItem;
-  onMouseEnter: () => void;
-  onMouseLeave: () => void;
-  onNavItemClick: (navItem: NavItem) => void;
-}
-const Sidebar = ({ 
-  anchorWidth,
-  navItems,
-  open,
-  parent,
-  onMouseEnter,
-  onMouseLeave,
-  onNavItemClick
-}: SidebarProps) => (
-  <SidebarPanel 
-    anchorWidth={anchorWidth}
-    onMouseEnter={onMouseEnter}
-    onMouseLeave={onMouseLeave}
-    open={open} 
-    square  
-  >
-    {/* TITRE */}
-    <Box
-      alignItems="center"
-      display="flex"
-      height="40px"
-      justifyContent="space-between"
-      width="100%"
-    >
-      <Box display="flex" alignItems="center" gap={4}>
-        <Fade
-          key={parent?.label || ''}
-          in
-          timeout={800}
-          mountOnEnter
-          unmountOnExit
-        >
-          <Typography variant="bodyMMedium" color="primary/10">
-            {parent?.label || ''}
-          </Typography>
-        </Fade>
-      </Box>
-    </Box>
-
-    {/* LISTE */}
-    <Box
-      display="flex"
-      flexDirection="column"
-      gap={2}
-      padding="8px 0 16px"
-      width="100%"
-    >
-      <Fade
-        key={parent?.label || ''}
-        in
-        timeout={800}
-        mountOnEnter
-        unmountOnExit
-      >
-        <Box>
-          <NavList dense>
-            {navItems.map((navItem) => {
-              const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
-              return (
-                <ListItem
-                  key={navItem.key}
-                  onClick={() => onNavItemClick(navItem)}
-                  disablePadding
-                  >
-                  <NavListItemButton onClick={() => console.log('navigate to', navItem.key)}>
-                    {navItem.iconLabel && <ListItemIcon><MenuIcon variant="stroke" color={ navItemColor } size="24px">{navItem.iconLabel}</MenuIcon></ListItemIcon> }
-                    <ListItemText 
-                      disableTypography
-                      primary={
-                        <Typography
-                          variant="bodySMedium"
-                          color={ navItemColor }
-                        >
-                        {navItem.label}
-                      </Typography>
-                      } 
-                    />
-                  </NavListItemButton>
-                </ListItem>
-              )
-            })}
-          </NavList>
-        </Box>
-      </Fade>
-    </Box>
-  </SidebarPanel>
-);
 
 
 const NavigationBar: React.FC = () => {
@@ -351,7 +111,7 @@ const NavigationBar: React.FC = () => {
   const bodyNavItems = navItems.filter(item => item.type === MenuItemType.Nav);
   const footerNavItems = navItems.filter(item => item.type === MenuItemType.Footer);
 
-  const [expanded, setExpanded] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
   const [hoveredNavItem, setHoveredNavItem] = useState<ExtendedNavItem | null>(null);
 
 
@@ -359,7 +119,7 @@ const NavigationBar: React.FC = () => {
   const hoverTimer = useRef<number>();  
   
   const navRef = useRef<HTMLDivElement>(null);
-  const navWidth = expanded ? 204 : 48;
+  const navWidth = isExpanded ? 204 : 48;
 
   const handleNavMouseEnter = (item: ExtendedNavItem | null) => {
     window.clearTimeout(hoverTimer.current);
@@ -419,244 +179,46 @@ const NavigationBar: React.FC = () => {
   ?? parentOfActiveChild?.subItems
   ?? [];
 
-  const isSideBarOpen = expanded && sidebarNavItems.length > 0;
+  const isSideBarOpen = isExpanded && sidebarNavItems.length > 0;
 
   return (
     <NavContainer>
       <NavPanel
         ref={navRef}
-        expanded={expanded}
-        onMouseEnter={() => setExpanded(true)}
+        expanded={isExpanded}
+        onMouseEnter={() => setIsExpanded(true)}
       >
-        {/* ------------- Header ----------*/}
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="flex-start"
-          gap={4}
-          alignSelf="stretch"
-        >
+        <NavHeader
+          headerNavItems={headerNavItems}
+          isExpanded={isExpanded}
+          logoSrc={logo} 
+          userName={"John"} 
+          onItemClick={handleItemClick}
+          onMouseEnter={() => setHoveredNavItem(null)}
+          onToggle={() => console.log('toggleNavBar')}
+        />
 
-          <Box
-            display="flex"
-            width="100%"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="flex-start"
-            gap={4}
-          >
-            {/* Icon reduce menu */}
-            <Box
-              display="flex"
-              width="100%"
-              padding="0 4px"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="flex-start"
-            >
-              <Box
-                display="flex"
-                height="34px"
-                padding="8px 0px"
-                alignItems="center"
-                alignSelf="stretch"
-              >
-                <IconButton variant="iconOnly"><Icon color="neutral/10">sidebar-left-01</Icon></IconButton>
-              </Box>
+        <NavSection
+          type={MenuItemType.Nav}
+          navItems={bodyNavItems}
+          isExpanded={isExpanded}
+          onItemClick={handleItemClick}
+          onNavMouseEnter={handleNavMouseEnter}
+          onNavMouseLeave={handleNavMouseLeave}
+        />
 
-            </Box>
-
-            {/* Profile */}
-            <Box
-              display="flex"
-              width="100%"
-              padding="0 8px"
-              flexDirection="column"
-              alignItems="flex-start"
-            >
-              <Box
-                display="flex"
-                padding="8px 8px 8px 0"
-                alignItems="center"
-                gap={4}
-                alignSelf="stretch"
-              >
-                <img
-                  src={logo}
-                  alt="Logo Cegid"
-                  width={24}
-                  height={24}
-                />
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  gap={2}
-                >
-                  <Typography variant="bodySSemiBold" color="primary/10">
-                    Bonjour John
-                  </Typography>
-                  <Icon variant="stroke" color="primary/10" size="16px">arrow-down-01</Icon>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-
-          {/* Header Navigation Items */}
-          <NavList>
-            { headerNavItems.map((navItem) => {
-              const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
-
-              return (
-                <ListItem
-                  key={navItem.key}
-                  disablePadding
-                  onMouseEnter={() => setHoveredNavItem(null)}
-                  onClick={() => handleItemClick(navItem)}
-                >
-                  <NavListItemButton>
-                    {navItem.iconLabel && <ListItemIcon><MenuIcon variant="stroke" color={ navItemColor } size="24px">{navItem.iconLabel}</MenuIcon></ListItemIcon> }
-                    {expanded && (
-                      <ListItemText 
-                        disableTypography
-                        primary={
-                          <Typography
-                            variant="bodySMedium"
-                            color={ navItemColor }
-                          >
-                          {navItem.label}
-                        </Typography>
-                        } 
-                      />
-                    )}
-                  </NavListItemButton>
-                </ListItem>
-              );
-            })}
-              {/* <ListItem
-                  key="recherche"
-                  disablePadding
-                  onMouseEnter={() => setHoveredNavItem(null)}
-                  // onClick={() => handleItemClick(navItem)}
-                >
-                  <NavListItemButton>
-                    <ListItemIcon><MenuIcon variant="stroke" color="primary/10" size="24px">search-01</MenuIcon></ListItemIcon>
-                    {expanded && (
-                      <ListItemText 
-                        disableTypography
-                        primary={
-                          <Typography
-                            variant="bodySMedium"
-                            color="primary/10"
-                          >
-                          Recherche
-                        </Typography>
-                        } 
-                      />
-                    )}
-                  </NavListItemButton>
-                </ListItem> */}
-          </NavList>
-
-        </Box>
-
-
-        {/* navItems */}
-        <Box
-          alignItems="flex-start"
-          alignSelf="stretch"
-          display="flex"
-          flex={1}
-          flexDirection="column"
-          gap={2}
-        >
-          <NavList>
-            { bodyNavItems.map((navItem) => {
-              const hasSubitems = Boolean(navItem.subItems);
-
-              const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
-
-              return (
-                <ListItem
-                  key={navItem.key}
-                  disablePadding
-                  onMouseEnter={() => hasSubitems 
-                    ? handleNavMouseEnter(navItem) 
-                    : handleNavMouseEnter(null)
-                  }
-                  onClick={() => handleItemClick(navItem)}
-                >
-                  <NavListItemButton>
-                    {navItem.iconLabel && <ListItemIcon><MenuIcon variant="stroke" color={ navItemColor } size="24px">{navItem.iconLabel}</MenuIcon></ListItemIcon> }
-                    {expanded && (
-                      <ListItemText 
-                        disableTypography
-                        primary={
-                          <Typography
-                            variant="bodySMedium"
-                            color={ navItemColor }
-                          >
-                          {navItem.label}
-                        </Typography>
-                        } 
-                      />
-                    )}
-                  </NavListItemButton>
-                </ListItem>
-              );
-            })}
-          </NavList>
-        </Box>
-
-        {/* Footer Configuration */}
-        <Box
-          alignItems="flex-start"
-          alignSelf="stretch"
-          display="flex"
-          flexDirection="column"
-          gap={2}
-        >
-          <NavList>
-            { footerNavItems.map((navItem) => {
-              const hasSubitems = Boolean(navItem.subItems);
-
-              const navItemColor = navItem.isActive ? "primary/60" : "primary/10";
-
-              return (
-                <ListItem
-                  key={navItem.key}
-                  disablePadding
-                  onMouseEnter={() => hasSubitems 
-                    ? handleNavMouseEnter(navItem) 
-                    : handleNavMouseEnter(null)
-                  }
-                  onMouseLeave={handleNavMouseLeave}
-                  onClick={() => handleItemClick(navItem)}
-                >
-                  <NavListItemButton>
-                    {navItem.iconLabel && <ListItemIcon><MenuIcon variant="stroke" color={ navItemColor } size="24px">{navItem.iconLabel}</MenuIcon></ListItemIcon> }
-                    {expanded && (
-                      <ListItemText 
-                        disableTypography
-                        primary={
-                          <Typography
-                            variant="bodySMedium"
-                            color={ navItemColor }
-                          >
-                          {navItem.label}
-                        </Typography>
-                        } 
-                      />
-                    )}
-                  </NavListItemButton>
-                </ListItem>
-              );
-            })}
-          </NavList>
-        </Box>
+        <NavSection
+          type={MenuItemType.Footer}
+          navItems={footerNavItems}
+          isExpanded={isExpanded}
+          onItemClick={handleItemClick}
+          onNavMouseEnter={handleNavMouseEnter}
+          onNavMouseLeave={handleNavMouseLeave}
+        />
       </NavPanel>
 
-      {expanded && (
-        <Sidebar
+      {isExpanded && (
+        <NavigationSideBar
           parent={hoveredNavItem ?? activeNavItem!}
           navItems={sidebarNavItems}
           open={isSideBarOpen}
