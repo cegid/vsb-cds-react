@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { List, ListItem, ListItemButton, ListItemIcon, Paper, Fade, styled } from "@cegid/cds-react";
 import ListItemText from '@mui/material/ListItemText';
 import Icon from "../Icon";
@@ -222,7 +222,8 @@ interface SidebarProps {
   navItems: NonNullable<ExtendedNavItem['subItems']>;
   open: boolean;
   parent: ExtendedNavItem;
-  onMouseLeave?: () => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
   onNavItemClick: (navItem: NavItem) => void;
 }
 const Sidebar = ({ 
@@ -230,11 +231,13 @@ const Sidebar = ({
   navItems,
   open,
   parent,
+  onMouseEnter,
   onMouseLeave,
   onNavItemClick
 }: SidebarProps) => (
   <SidebarPanel 
     anchorWidth={anchorWidth}
+    onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}
     open={open} 
     square  
@@ -260,9 +263,6 @@ const Sidebar = ({
           </Typography>
         </Fade>
       </Box>
-      <Icon variant="stroke" color="primary/10" size="16px">
-        arrow-left-05
-      </Icon>
     </Box>
 
     {/* LISTE */}
@@ -354,8 +354,25 @@ const NavigationBar: React.FC = () => {
   const [expanded, setExpanded] = useState<boolean>(true);
   const [hoveredNavItem, setHoveredNavItem] = useState<ExtendedNavItem | null>(null);
 
+
+  // Hover timer to delay a little the opening of the sidebar
+  const hoverTimer = useRef<number>();  
+  
   const navRef = useRef<HTMLDivElement>(null);
   const navWidth = expanded ? 204 : 48;
+
+  const handleNavMouseEnter = (item: ExtendedNavItem | null) => {
+    window.clearTimeout(hoverTimer.current);
+    hoverTimer.current = window.setTimeout(() => {
+      setHoveredNavItem(item);
+    }, 400);
+  };
+
+  const handleNavMouseLeave = () => {
+    window.clearTimeout(hoverTimer.current);
+  };
+
+  useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
   const handleItemClick = (navItem: NavItem) => {
     const newNavItems = navItems.map(item => {
@@ -515,7 +532,7 @@ const NavigationBar: React.FC = () => {
                 </ListItem>
               );
             })}
-              <ListItem
+              {/* <ListItem
                   key="recherche"
                   disablePadding
                   onMouseEnter={() => setHoveredNavItem(null)}
@@ -537,7 +554,7 @@ const NavigationBar: React.FC = () => {
                       />
                     )}
                   </NavListItemButton>
-                </ListItem>
+                </ListItem> */}
           </NavList>
 
         </Box>
@@ -562,7 +579,10 @@ const NavigationBar: React.FC = () => {
                 <ListItem
                   key={navItem.key}
                   disablePadding
-                  onMouseEnter={() => hasSubitems ? setHoveredNavItem(navItem) : setHoveredNavItem(null)}
+                  onMouseEnter={() => hasSubitems 
+                    ? handleNavMouseEnter(navItem) 
+                    : handleNavMouseEnter(null)
+                  }
                   onClick={() => handleItemClick(navItem)}
                 >
                   <NavListItemButton>
@@ -605,7 +625,11 @@ const NavigationBar: React.FC = () => {
                 <ListItem
                   key={navItem.key}
                   disablePadding
-                  onMouseEnter={() => hasSubitems ? setHoveredNavItem(navItem) : setHoveredNavItem(null)}
+                  onMouseEnter={() => hasSubitems 
+                    ? handleNavMouseEnter(navItem) 
+                    : handleNavMouseEnter(null)
+                  }
+                  onMouseLeave={handleNavMouseLeave}
                   onClick={() => handleItemClick(navItem)}
                 >
                   <NavListItemButton>
@@ -637,6 +661,7 @@ const NavigationBar: React.FC = () => {
           navItems={sidebarNavItems}
           open={isSideBarOpen}
           anchorWidth={navWidth}
+          onMouseEnter={() => window.clearTimeout(hoverTimer.current)}
           onMouseLeave={() => setHoveredNavItem(null)}
           onNavItemClick={handleItemClick}
         />
