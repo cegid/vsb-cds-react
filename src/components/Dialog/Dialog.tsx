@@ -58,7 +58,7 @@ export interface DialogProps {
   /**
    * dialog open state management
    */
-  onClose: () => void;
+  onClose?: () => void;
 
   /**
    * Optional image to display in the dialog (only shown for "info" variant)
@@ -87,7 +87,6 @@ const Dialog: React.FC<DialogProps> = (props) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const containerStyles = {
-    width: isMobile ? "343px" : "720px",
     ...(isMobile && { background: white }),
   };
 
@@ -172,6 +171,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
     <CegidDialog
       open={isOpen}
       onClose={onClose}
+      disableCloseActions={!onClose}
       maxWidth="lg"
       PaperProps={{
         sx: {
@@ -196,7 +196,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
             alignItems={isInfoVariant ? "center" : ""}
           >
             {isInfoVariant && image}
-            {renderHeader()}
+            {title && renderHeader()}
             {content && <Box p={4}>{content}</Box>}
             {renderActions()}
           </Column>

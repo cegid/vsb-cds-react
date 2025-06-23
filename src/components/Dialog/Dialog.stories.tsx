@@ -124,25 +124,18 @@ export const WithImage: Story = {
     title: "Félicitations !",
     variant: "info",
     image: (
-      <Box
-        width={100}
-        height={100}
-        backgroundColor="white"
-        borderRadius={8}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        Image
-      </Box>
+      <img src="https://play-lh.googleusercontent.com/1-hPxafOxdYpYZEOKzNIkSP43HXCNftVJVttoo4ucl7rsMASXW3Xr6GlXURCubE1tA=w3840-h2160-rw" alt="" width={250}/>
     ),
     content: (
       <Typography variant="bodyMRegular">
         Vous avez terminé avec succès votre configuration.
+        Vous avez terminé avec succès votre configuration.
+        Vous avez terminé avec succès votre configuration.
+        Vous avez terminé avec succès votre configuration.
       </Typography>
     ),
     actions: [
-      <Button key="continue" variant="contained">
+      <Button key="continue" variant="contained" fullWidth>
         Continuer
       </Button>,
     ],
