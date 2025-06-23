@@ -38,41 +38,43 @@ export enum MenuItemType {
   Footer = 'footer',
 }
 
-const NavContainer = styled(Box)(({ theme }) => ({
+const NavContainer = styled(Box)({
   position: 'relative',
   display: 'flex',
   height: '100vh',
-}));
+});
 
-
-export const NavList = styled(List)(({ theme }) => ({
+export const NavList = styled(List, {
+  shouldForwardProp: prop => prop !== 'expanded',
+})<ComponentWithExpandedProp>(({ theme, expanded }) => ({
   display: 'flex',
   flexDirection: 'column',
+  alignItems: expanded ? undefined : 'flex-start',
   gap: theme.spacing(2),
   padding: 0,
   width: '100%',
 }));
 
-interface NavPanelProps {
+export interface ComponentWithExpandedProp {
   expanded: boolean;
 }
 
 const NavPanel = styled(Box, {
   shouldForwardProp: prop => prop !== 'expanded',
-})<NavPanelProps>(({ theme, expanded }) => ({
-  alignItems: 'flex-start',
-  alignSelf: 'stretch',
-  backgroundColor: primary[95],
+})<ComponentWithExpandedProp>(({ theme, expanded }) => ({
   display: 'flex',
-  flexDirection: 'column',
-  gap: theme.spacing(9),
-  justifyContent: 'center',
+  width: expanded ? '204px' : '48px' ,
   padding: theme.spacing(4),
+  flexDirection: 'column',
+  justifyContent: expanded ? 'center' : 'flex-end',
+  alignItems: expanded ? 'flex-start' : 'center',
+  alignSelf: 'stretch',
+  gap: theme.spacing(9),
+  flexShrink: expanded ? undefined : 0,
+  backgroundColor: primary[95],
   transition: theme.transitions.create('width', { duration: 200 }),
-  width: '204px',
   zIndex: theme.zIndex.drawer + 2,
   overflow: 'hidden',
-  // width: expanded ? 204 : 48,
 }));
 
 
@@ -84,7 +86,7 @@ const NavigationBar: React.FC = () => {
   const bodyNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Nav), [navItems]);
   const footerNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Footer), [navItems]);
 
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [hoveredNavItem, setHoveredNavItem] = useState<ExtendedNavItem | null>(null);
 
   const { sidebarNavItems, isSideBarOpen, activeNavItem } = useSidebarState(navItems, hoveredNavItem, isExpanded);
@@ -141,7 +143,7 @@ const NavigationBar: React.FC = () => {
       <NavPanel
         ref={navRef}
         expanded={isExpanded}
-        onMouseEnter={() => setIsExpanded(true)}
+        // onMouseEnter={() => setIsExpanded(true)}
       >
         <NavHeader
           headerNavItems={headerNavItems}

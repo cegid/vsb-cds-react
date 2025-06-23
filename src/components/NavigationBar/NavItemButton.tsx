@@ -1,6 +1,6 @@
 import { ListItem, ListItemButton, ListItemIcon, styled } from "@cegid/cds-react";
 import ListItemText from '@mui/material/ListItemText';
-import type { ExtendedSubNavItem, ExtendedNavItem } from "./NavigationBar";
+import type { ExtendedSubNavItem, ExtendedNavItem, ComponentWithExpandedProp } from "./NavigationBar";
 import Icon from "../Icon";
 import Typography from "../Typography";
 
@@ -16,9 +16,13 @@ const NavListItemButton = styled(ListItemButton)(() => ({
   padding: 0,
 }));
 
-const MenuIcon = styled(Icon)(({ theme }) => ({
+const MenuIcon = styled(Icon, {
+  shouldForwardProp: prop => prop !== 'expanded',
+})<ComponentWithExpandedProp>(({ theme, expanded }) => ({
   display: 'flex',
   padding: theme.spacing(2),
+  justifyContent: expanded ? undefined : 'center',
+  aspectRatio: '1 / 1',
   alignItems: 'center',
   gap: '10px',
 }));
@@ -33,7 +37,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
       <NavListItemButton onClick={onClick}>
         {navItem.iconLabel && (
           <ListItemIcon>
-            <MenuIcon variant="stroke" color={color} size="24px">
+            <MenuIcon variant="stroke" color={color} size="24px" expanded={isExpanded}>
               {navItem.iconLabel}
             </MenuIcon>
           </ListItemIcon>
