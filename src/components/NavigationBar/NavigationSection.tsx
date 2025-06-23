@@ -39,20 +39,22 @@ const NavSection: React.FC<NavSectionProps> = ({
   return (
     <NavSectionContainer expanded={isExpanded} sectiontype={type}>
       <NavList expanded={isExpanded}>
-        {navItems.map((navItem) => {
-          const hasSubitems = Boolean(navItem.subItems);
-          return (
-            <NavItemButton
-              key={navItem.key}
-              navItem={navItem}
-              isExpanded={isExpanded}
-              onClick={() => onNavItemClick(navItem)}
-              onMouseEnter={() => hasSubitems 
-                ? onNavMouseEnter(navItem) 
-                : onNavMouseEnter(null)
-              }
-              onMouseLeave={onNavMouseLeave}
-            />
+        {navItems
+          .filter(navItem => !navItem.isHidden)
+          .map((navItem) => {
+            const hasSubitems = Boolean(navItem.subItems);
+            return (
+              <NavItemButton
+                key={navItem.key}
+                navItem={navItem}
+                isExpanded={isExpanded}
+                onClick={() => onNavItemClick(navItem)}
+                onMouseEnter={() => hasSubitems 
+                  ? onNavMouseEnter(navItem) 
+                  : onNavMouseEnter(null)
+                }
+                onMouseLeave={onNavMouseLeave}
+              />
           )
         })}
       </NavList>

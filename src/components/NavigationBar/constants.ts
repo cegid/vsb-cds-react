@@ -4,12 +4,14 @@ export const HEADER_ITEMS: NavItem[] = [
   {
     key: 'accueil',
     label: 'Accueil',
-    iconLabel: "home-01",
+    icon: "home-01",
+    onClick: () => console.log('Accueil clicked'),
   },
   {
     key: 'ia',
     label: 'IA de Cegid',
-    iconLabel: "ai-brain-03",
+    icon: "ai-brain-03",
+    onClick: () => console.log('Ia clicked'),
   },
 ];
 
@@ -19,67 +21,81 @@ export const NAV_ITEMS: NavItem[] = [
   {
     key: 'depense',
     label: 'Dépenses',
-    iconLabel: "shopping-bag-02",
+    icon: "shopping-bag-02",
     subItems: [
       {
         key: 'dépense',
         label: 'Dépenses',
-        iconLabel: "estimate-02",
+        icon: "estimate-02",
+        onClick: () => console.log('dépense (sous item) clicked'),
       },
       {
         key: 'fournisseurs',
         label: 'Fournisseurs',
-        iconLabel: "invoice-01",
+        icon: "invoice-01",
+        onClick: () => console.log('fournisseurs clicked'),
       },
     ],
+    onClick: () => console.log('dépense (parent) clicked'),
   },
   {
     key: 'ventes',
     label: 'Ventes',
-    iconLabel: "cashier-02",
+    icon: "cashier-02",
     subItems: [
       {
         key: 'devis',
         label: 'Devis',
-        iconLabel: "estimate-02",
+        icon: "estimate-02",
+        onClick: () => console.log('devis clicked'),
       },
       {
         key: 'factures',
         label: 'Factures',
-        iconLabel: "invoice-01",
+        icon: "invoice-01",
+        onClick: () => console.log('facture clicked'),
       },
       {
         key: 'clients',
         label: 'Clients',
-        iconLabel: "location-user-01",
+        icon: "location-user-01",
+        onClick: () => console.log('client clicked'),
       },
       {
         key: 'catalogues',
         label: 'Catalogues',
-        iconLabel: "library",
+        icon: "library",
+        onClick: () => console.log('catalogues clicked'),
       },
       {
         key: 'reglements',
         label: 'Règlements',
-        iconLabel: "payment-01",
+        icon: "payment-01",
+        onClick: () => console.log('règlement clicked'),
       },
     ],
+    onClick: () => console.log('ventes clicked'),
   },
   
   {
     key: 'pro_account',
     label: 'Compte Pro',
-    iconLabel: "bank",
+    icon: "bank",
+    onClick: () => console.log('compte pro clicked'),
+    isDisabled: true, // Example of a disabled item
   },
   {
     key: 'documents',
     label: 'Documents',
-    iconLabel: "file-01",
+    icon: "file-01",
+    onClick: () => console.log('document clicked'),
+    isHidden: true, // Example of a hidden item
   },
   {
     key: 'contact',
     label: 'Contacts',
-    iconLabel: "contact-01",
+    icon: "contact-01",
+    onClick: () => console.log('contact clicked'),
   },
 ];
 
@@ -87,11 +103,13 @@ export const FOOTER_ITEMS: NavItem[] = [
   {
     key: 'support',
     label: 'Support',
-    iconLabel: "customer-support",
+    icon: "customer-support",
+    onClick: () => console.log('support clicked'),
   },
   {
     key: 'parametres',
     label: 'Paramètres',
-    iconLabel: "setting-07",
+    icon: "setting-07",
+    onClick: () => console.log('paramètre clicked'),
   },
 ];

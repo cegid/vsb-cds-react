@@ -60,11 +60,11 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
   const iconVariant = navItem.isActive ? 'solid' : 'stroke';
   return (
     <ListItem disablePadding onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      <NavListItemButton onClick={onClick} title={navItem.label} isActive={navItem.isActive} isSideBar={isSideBar}>
-        {navItem.iconLabel && (
+      <NavListItemButton onClick={onClick} title={navItem.label} isActive={navItem.isActive} isSideBar={isSideBar} disabled={navItem.isDisabled}>
+        {navItem.icon && (
           <NavListItemIcon>
             <MenuIcon variant={iconVariant} color="primary/10" size="16px" expanded={isExpanded}>
-              {navItem.iconLabel}
+              {navItem.icon}
             </MenuIcon>
           </NavListItemIcon>
         )}

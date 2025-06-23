@@ -9,17 +9,17 @@ import NavigationSideBar from "./NavigationSideBar";
 import { useExtendedNavItems } from "./useExtendedNavItems";
 import { useSidebarState } from "./useNavigationSideBarState";
 
-export interface SubNavItem {
-  key: string;
-  label: string;
-  iconLabel?: string;
-}
 export interface NavItem {
+  icon?: string;
+  isDisabled?: boolean;
+  isHidden?: boolean;
   key: string;
   label: string;
-  iconLabel?: string;
   subItems?: SubNavItem[];
+  onClick: () => void;
 }
+
+export type SubNavItem = Omit<NavItem, 'subItems'>;
 
 export interface ExtendedSubNavItem extends SubNavItem {
   isActive: boolean;
@@ -148,6 +148,7 @@ const NavigationBar = ({headerNavItems, bodyNavItems, footerNavItems, logoSrc = 
 
     setNavItems(newNavItems);
     setHoveredNavItem(null);
+    navItem.onClick();
   };
 
   const handleToggleExpandNavigation = () => {

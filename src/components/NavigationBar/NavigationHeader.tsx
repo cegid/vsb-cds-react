@@ -147,15 +147,17 @@ const NavHeader = ({
       </ProfileWrapper>
     </ProfileSection>
     <NavList expanded={isExpanded}>
-      { headerNavItems.map((navItem) => (
-          <NavItemButton
-            key={navItem.key}
-            navItem={navItem}
-            isExpanded={isExpanded}
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            onClick={() => onNavItemClick(navItem)}
-          />
+      { headerNavItems
+        .filter(navItem => !navItem.isHidden)
+        .map((navItem) => (
+            <NavItemButton
+              key={navItem.key}
+              navItem={navItem}
+              isExpanded={isExpanded}
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={onMouseLeave}
+              onClick={() => onNavItemClick(navItem)}
+            />
       ))}
       {/* <ListItem
           key="recherche"
