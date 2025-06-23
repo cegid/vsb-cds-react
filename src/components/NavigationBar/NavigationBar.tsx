@@ -76,12 +76,34 @@ const NavPanel = styled(Box, {
   overflow: 'hidden',
 }));
 
+
+/**
+ * Props for the Navigation bar component.
+ */
 interface NavigationBarProps {
+  /** 
+   * Array of navigation items displayed in the header section.
+   */
   headerNavItems: NavItem[];
+  /** 
+   * Array of navigation items displayed in the main body section.
+   */
   bodyNavItems: NavItem[];
+  /** 
+   * Array of navigation items displayed in the footer section.
+   */
   footerNavItems: NavItem[];
+  /**
+   *  The name of the current user, displayed in the profile greeting.
+   */
   userName: string;
+  /**
+   *  URL or import source for the logo image displayed in the profile area. By default BIM Logo
+   */
   logoSrc?: string;
+  /**
+   *  Callback invoked when the profile area is clicked (e.g. to open a user menu). 
+   */
   onProfileClick: () => void;
 }
 
