@@ -60,7 +60,7 @@ export interface IconProps {
 const Icon: React.FC<IconProps> = ({
   children,
   size = 24,
-  color,
+  color = "inherit",
   variant = "stroke",
   style = "rounded",
   className = "",
