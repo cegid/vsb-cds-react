@@ -1,6 +1,6 @@
 import { styled } from '@cegid/cds-react';
 import Box from '../Box';
-import type { ComponentWithExpandedProp, ExtendedNavItem } from './NavigationBar';
+import type { ComponentWithExpandedProp, ExtendedNavItem, ExtendedSubNavItem } from './NavigationBar';
 import { MenuItemType, NavList } from './NavigationBar';
 import NavItemButton from './NavItemButton';
 
@@ -8,19 +8,19 @@ interface NavSectionProps {
   type: MenuItemType;
   navItems: ExtendedNavItem[];
   isExpanded: boolean;
-  onItemClick: (item: ExtendedNavItem) => void;
+  onNavItemClick: (item: ExtendedNavItem | ExtendedSubNavItem) => void;
   onNavMouseEnter: (item: ExtendedNavItem | null) => void;
   onNavMouseLeave: () => void;
 }
 
 interface NavSectionContainerProps extends ComponentWithExpandedProp {
-  sectionType: MenuItemType;
+  sectiontype: MenuItemType;
 }
 
 const NavSectionContainer = styled(Box, {
   shouldForwardProp: prop => prop !== 'expanded',
-})<NavSectionContainerProps>(({ expanded, sectionType }) => ({
-  ...(sectionType === MenuItemType.Nav ? { flex: 1 } : {}),
+})<NavSectionContainerProps>(({ expanded, sectiontype }) => ({
+  ...(sectiontype === MenuItemType.Nav ? { flex: 1 } : {}),
   alignItems: expanded ? 'flex-start' : 'center',
   alignSelf: expanded ? 'stretch' : undefined,
   display: 'flex',
@@ -32,12 +32,12 @@ const NavSection: React.FC<NavSectionProps> = ({
   isExpanded,
   navItems,
   type,
-  onItemClick,
+  onNavItemClick,
   onNavMouseEnter,
   onNavMouseLeave,
 }) => {
   return (
-    <NavSectionContainer expanded={isExpanded} sectionType={type}>
+    <NavSectionContainer expanded={isExpanded} sectiontype={type}>
       <NavList expanded={isExpanded}>
         {navItems.map((navItem) => {
           const hasSubitems = Boolean(navItem.subItems);
@@ -46,7 +46,7 @@ const NavSection: React.FC<NavSectionProps> = ({
               key={navItem.key}
               navItem={navItem}
               isExpanded={isExpanded}
-              onClick={() => onItemClick(navItem)}
+              onClick={() => onNavItemClick(navItem)}
               onMouseEnter={() => hasSubitems 
                 ? onNavMouseEnter(navItem) 
                 : onNavMouseEnter(null)

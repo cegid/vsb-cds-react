@@ -3,7 +3,7 @@ import Icon from "../Icon";
 import Box from "../Box";
 import Typography from "../Typography";
 import IconButton from "../IconButton";
-import { ComponentWithExpandedProp, ExtendedNavItem, NavItem, NavList } from "./NavigationBar";
+import { ComponentWithExpandedProp, ExtendedNavItem, ExtendedSubNavItem, NavItem, NavList } from "./NavigationBar";
 import NavItemButton from "./NavItemButton";
 
 const HeaderContainer = styled(Box, {
@@ -98,7 +98,7 @@ interface NavHeaderProps {
   isExpanded: boolean;
   logoSrc: string;
   userName: string;
-  onItemClick: (navItem: NavItem) => void;
+  onNavItemClick: (navItem: ExtendedNavItem | ExtendedSubNavItem) => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
   onToggleExpandNavigation: () => void;
@@ -109,7 +109,7 @@ const NavHeader = ({
   isExpanded,
   logoSrc,
   userName,
-  onItemClick,
+  onNavItemClick,
   onMouseEnter,
   onMouseLeave,
   onToggleExpandNavigation,
@@ -150,7 +150,7 @@ const NavHeader = ({
             isExpanded={isExpanded}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
-            onClick={() => onItemClick(navItem)}
+            onClick={() => onNavItemClick(navItem)}
           />
       ))}
       {/* <ListItem

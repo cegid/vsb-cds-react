@@ -1,37 +1,51 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ExtendedNavItem } from './NavigationBar';
 
 /**
  * Hook to manage the state of the sidebar navigation items.
  *
- * Conditions to maintain the sidebar open:
- * 1. If the hoveredNavItem has subItems, the sidebar should remain open
+ * Conditions to open the sidebar open:
+ * 1. If the hoveredNavItem has subItems, the sidebar should open
  * 2. If the activeNavItem has subItems, the sidebar should remain open
  * 3. If the activeNavItem is a subItem of a navItem with subItems, the sidebar should remain open
  * @param navItems 
  * @param hoveredNavItem 
- * @param isExpanded 
  * @returns SideBarNavItems and isSideBarOpen
  */
-export const useSidebarState = (navItems: ExtendedNavItem[], hoveredNavItem: ExtendedNavItem | null, isExpanded: boolean) => (
-  useMemo(() => {
-    const activeNavItem = navItems.find(i => i.isActive) ?? null;
+export const useSidebarState = (navItems: ExtendedNavItem[], hoveredNavItem: ExtendedNavItem | null) => {
+
+  const [ isSideBarOpen, setIsSideBarOpen ] = useState<boolean>(false);
+
+  const activeNavItem = useMemo((): ExtendedNavItem | null => (
+    navItems.find(item => item.isActive) ?? null
+  ), [navItems]);
+  
+  const sidebarNavItems = useMemo(() => {
 
     const parentOfActiveChild = navItems.find(
       i => i.subItems?.some(sub => sub.isActive)
     ) ?? null;
 
-    const sidebarNavItems =
-      // priority on Hover
-      hoveredNavItem?.subItems
-      // if no hover, check active item
+    /**
+     * By order of priority:
+     * 1. If hoveredNavItem has subItems, return them
+     * 2. If activeNavItem has subItems, return them
+     * 3. If activeNavItem is a subItem, return its parent subItems
+     */
+
+    return hoveredNavItem?.subItems
       ?? activeNavItem?.subItems
-      // if it's a subItem, check its parent
       ?? parentOfActiveChild?.subItems
       ?? [];
+  }, [navItems, hoveredNavItem, activeNavItem]);
 
-    const isSideBarOpen = isExpanded && sidebarNavItems.length > 0;
+  useEffect(() => {
+    if (sidebarNavItems.length > 0) {
+      setIsSideBarOpen(true);
+    } else {
+      setIsSideBarOpen(false);
+    }
+  }, [sidebarNavItems]);
 
     return { sidebarNavItems, isSideBarOpen, activeNavItem };
-  }, [navItems, hoveredNavItem, isExpanded])
-);
+};

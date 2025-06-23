@@ -77,7 +77,6 @@ const NavPanel = styled(Box, {
   overflow: 'hidden',
 }));
 
-
 const NavigationBar: React.FC = () => {
 
   const [navItems, setNavItems] = useExtendedNavItems(HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS);
@@ -89,7 +88,7 @@ const NavigationBar: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [hoveredNavItem, setHoveredNavItem] = useState<ExtendedNavItem | null>(null);
 
-  const { sidebarNavItems, isSideBarOpen, activeNavItem } = useSidebarState(navItems, hoveredNavItem, isExpanded);
+  const { sidebarNavItems, isSideBarOpen, activeNavItem } = useSidebarState(navItems, hoveredNavItem);
 
   // Hover timer to delay a little the opening of the sidebar
   const hoverTimer = useRef<number>();  
@@ -113,14 +112,26 @@ const NavigationBar: React.FC = () => {
    */
   useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
-  const handleItemClick = (navItem: NavItem) => {
-    const newNavItems = navItems.map(item => {
-      // Est-ce que j’ai cliqué sur ce parent ?
-      const isParentClicked = item.key === navItem.key && 'subItems' in navItem;
-      // Est-ce que j’ai cliqué sur un de ses sous-items ?
-      const isSubClicked = item.subItems?.some(sub => sub.key === navItem.key) ?? false;
+  const handleNavItemClick = (navItem: ExtendedNavItem | ExtendedSubNavItem) => {
 
-      // On reconstruit toujours les subItems en resetant tout, sauf celui cliqué
+    // If the clicked item has subItems, we expand the sidebar
+    if ('type' in navItem && Array.isArray(navItem.subItems) && navItem.subItems.length > 0) {
+      setIsExpanded(true);
+    }
+
+
+    /**
+     * We re-build navItems on every click to ensure that the active state is correctly set.
+     */
+    const newNavItems = navItems.map(item => {
+      
+      // clicked item got subItems
+      const isClickedNavItemWithSubItems = item.key === navItem.key && 'subItems' in navItem;
+      
+      // clicked item is a subItem of a parent item
+      const isSubItem = item.subItems?.some(sub => sub.key === navItem.key) ?? false;
+
+      // we build the new subItems array with the active state
       const newSubItems = item.subItems?.map(sub => ({
         ...sub,
         isActive: sub.key === navItem.key,
@@ -128,8 +139,8 @@ const NavigationBar: React.FC = () => {
 
       return {
         ...item,
-        // Le parent est actif si on a cliqué dessus ou sur un de ses subItems
-        isActive: isParentClicked || isSubClicked,
+        // the parent is active if it is clicked or if it has an active subItem
+        isActive: isClickedNavItemWithSubItems || isSubItem,
         subItems: newSubItems,
       };
     })
@@ -154,7 +165,7 @@ const NavigationBar: React.FC = () => {
           isExpanded={isExpanded}
           logoSrc={logo} 
           userName={"John"} 
-          onItemClick={handleItemClick}
+          onNavItemClick={handleNavItemClick}
           onMouseEnter={() => setHoveredNavItem(null)}
           onToggleExpandNavigation={handleToggleExpandNavigation}
         />
@@ -163,7 +174,7 @@ const NavigationBar: React.FC = () => {
           type={MenuItemType.Nav}
           navItems={bodyNavItems}
           isExpanded={isExpanded}
-          onItemClick={handleItemClick}
+          onNavItemClick={handleNavItemClick}
           onNavMouseEnter={handleNavMouseEnter}
           onNavMouseLeave={handleNavMouseLeave}
         />
@@ -172,13 +183,13 @@ const NavigationBar: React.FC = () => {
           type={MenuItemType.Footer}
           navItems={footerNavItems}
           isExpanded={isExpanded}
-          onItemClick={handleItemClick}
+          onNavItemClick={handleNavItemClick}
           onNavMouseEnter={handleNavMouseEnter}
           onNavMouseLeave={handleNavMouseLeave}
         />
       </NavPanel>
 
-      {isExpanded && (
+      {isSideBarOpen && (
         <NavigationSideBar
           parent={hoveredNavItem ?? activeNavItem!}
           navItems={sidebarNavItems}
@@ -186,7 +197,7 @@ const NavigationBar: React.FC = () => {
           anchorWidth={navWidth}
           onMouseEnter={() => window.clearTimeout(hoverTimer.current)}
           onMouseLeave={() => setHoveredNavItem(null)}
-          onNavItemClick={handleItemClick}
+          onNavItemClick={handleNavItemClick}
         />
       )}
     </NavContainer>

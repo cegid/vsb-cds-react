@@ -3,7 +3,7 @@ import Box from "../Box";
 import Typography from "../Typography";
 import { primary } from "../../theme";
 import NavItemButton from "./NavItemButton";
-import { ExtendedNavItem, NavItem, NavList } from "./NavigationBar";
+import { ExtendedNavItem, ExtendedSubNavItem, NavList } from "./NavigationBar";
 
 interface SidebarPanelProps {
   open: boolean;
@@ -47,7 +47,7 @@ interface NavigationSideBarProps {
   parent: ExtendedNavItem;
   onMouseEnter: () => void;
   onMouseLeave: () => void;
-  onNavItemClick: (navItem: NavItem) => void;
+  onNavItemClick: (navItem: ExtendedNavItem | ExtendedSubNavItem) => void;
 }
 
 const NavigationSideBar = ({ 
