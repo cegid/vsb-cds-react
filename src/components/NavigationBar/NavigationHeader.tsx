@@ -102,6 +102,7 @@ interface NavHeaderProps {
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
   onToggleExpandNavigation: () => void;
+  onProfileClick: () => void;
 };
 
 const NavHeader = ({
@@ -113,13 +114,14 @@ const NavHeader = ({
   onMouseEnter,
   onMouseLeave,
   onToggleExpandNavigation,
+  onProfileClick,
 }: NavHeaderProps) => (
   <HeaderContainer expanded={isExpanded}>
     <MenuControlSection expanded={isExpanded}>
       <MenuToggleWrapper expanded={isExpanded}>
         <MenuToggleButtonContainer expanded={isExpanded}>
           <IconButton variant="iconOnly" onClick={onToggleExpandNavigation} title="Basculer la navigation">
-            <Icon size="14px" color="neutral/10">sidebar-left-01</Icon>
+            <Icon size="14px" color="primary/10">sidebar-left-01</Icon>
           </IconButton>
         </MenuToggleButtonContainer>
       </MenuToggleWrapper>
@@ -137,7 +139,9 @@ const NavHeader = ({
             <Typography variant="bodySSemiBold" color="primary/10">
               Bonjour {userName}
             </Typography>
-            <Icon variant="stroke" color="primary/10" size="16px">arrow-down-01</Icon>
+            <IconButton variant="iconOnly" onClick={onProfileClick} title="Accès au profil">
+              <Icon variant="stroke" size="16px" color="primary/10">arrow-down-01</Icon>
+            </IconButton>
           </ProfileContent>
         )}
       </ProfileWrapper>

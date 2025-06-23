@@ -29,7 +29,11 @@ const meta = {
     logoSrc: {
       control: "text",
       description: "Source URL for the logo image",
-    }
+    },
+    onProfileClick: {
+      action: "profileClicked",
+      description: "Function to call when the profile is clicked",
+    },
   },
   args: {
     headerNavItems: HEADER_ITEMS,
@@ -48,5 +52,6 @@ export const Default: Story = {
     bodyNavItems: NAV_ITEMS,
     footerNavItems: FOOTER_ITEMS,
     userName: "John",
+    onProfileClick: () => console.log("Profile clicked!"),
   },
 };

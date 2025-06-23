@@ -3,7 +3,6 @@ import { List, styled } from "@cegid/cds-react";
 import Box from "../Box";
 import { primary } from "../../theme";
 import logo from './logo.svg';
-import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS } from "./constants";
 import NavHeader from "./NavigationHeader";
 import NavSection from "./NavigationSection";
 import NavigationSideBar from "./NavigationSideBar";
@@ -83,9 +82,10 @@ interface NavigationBarProps {
   footerNavItems: NavItem[];
   userName: string;
   logoSrc?: string;
+  onProfileClick: () => void;
 }
 
-const NavigationBar = ({headerNavItems, bodyNavItems, footerNavItems, logoSrc = logo, userName}: NavigationBarProps) => {
+const NavigationBar = ({headerNavItems, bodyNavItems, footerNavItems, logoSrc = logo, userName, onProfileClick}: NavigationBarProps) => {
 
   const [navItems, setNavItems] = useExtendedNavItems(headerNavItems, bodyNavItems, footerNavItems);
 
@@ -169,6 +169,7 @@ const NavigationBar = ({headerNavItems, bodyNavItems, footerNavItems, logoSrc = 
           onNavItemClick={handleNavItemClick}
           onMouseEnter={() => setHoveredNavItem(null)}
           onToggleExpandNavigation={handleToggleExpandNavigation}
+          onProfileClick={onProfileClick}
         />
 
         <NavSection
