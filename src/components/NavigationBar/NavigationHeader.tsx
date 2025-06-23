@@ -101,7 +101,7 @@ interface NavHeaderProps {
   onItemClick: (navItem: NavItem) => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
-  onToggle: () => void;
+  onToggleExpandNavigation: () => void;
 };
 
 const NavHeader = ({
@@ -112,13 +112,13 @@ const NavHeader = ({
   onItemClick,
   onMouseEnter,
   onMouseLeave,
-  onToggle,
+  onToggleExpandNavigation,
 }: NavHeaderProps) => (
   <HeaderContainer expanded={isExpanded}>
     <MenuControlSection expanded={isExpanded}>
       <MenuToggleWrapper expanded={isExpanded}>
         <MenuToggleButtonContainer expanded={isExpanded}>
-          <IconButton variant="iconOnly" onClick={onToggle}>
+          <IconButton variant="iconOnly" onClick={onToggleExpandNavigation}>
             <Icon size={ isExpanded ? '24px' : '14px'} color="neutral/10">sidebar-left-01</Icon>
           </IconButton>
         </MenuToggleButtonContainer>

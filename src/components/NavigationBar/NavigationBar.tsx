@@ -138,12 +138,16 @@ const NavigationBar: React.FC = () => {
     setHoveredNavItem(null);
   };
 
+  const handleToggleExpandNavigation = () => {
+    setIsExpanded(!isExpanded);
+    setHoveredNavItem(null);
+  };
+
   return (
     <NavContainer>
       <NavPanel
         ref={navRef}
         expanded={isExpanded}
-        // onMouseEnter={() => setIsExpanded(true)}
       >
         <NavHeader
           headerNavItems={headerNavItems}
@@ -152,7 +156,7 @@ const NavigationBar: React.FC = () => {
           userName={"John"} 
           onItemClick={handleItemClick}
           onMouseEnter={() => setHoveredNavItem(null)}
-          onToggle={() => console.log('toggleNavBar')}
+          onToggleExpandNavigation={handleToggleExpandNavigation}
         />
 
         <NavSection
