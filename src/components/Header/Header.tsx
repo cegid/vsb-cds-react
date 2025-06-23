@@ -32,6 +32,8 @@ interface BaseHeaderProps {
   moreAction?: () => void;
   /** Callback function triggered when the arrow back options icon is clicked */
   backAction?: () => void;
+  /** back action icon customization */
+  backIcon?: React.ReactElement<typeof Icon>;
 }
 
 type WithPrimaryAction = {
@@ -310,6 +312,11 @@ const Header: React.FC<HeaderProps> = (props) => {
     secondaryButtonProps,
     segmentedControlRight,
     backAction,
+    backIcon = (
+      <Icon variant="stroke" style="rounded" size={16}>
+        arrow-left-02
+      </Icon>
+    ),
     id,
   } = props;
 
@@ -325,9 +332,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           onClick={backAction}
           color="neutral"
         >
-          <Icon variant="stroke" style="rounded" size={16}>
-            arrow-left-02
-          </Icon>
+          {backIcon}
         </IconButton>
       )}
       {!segmentedControlRight && <HeaderTitle title={title} />}
