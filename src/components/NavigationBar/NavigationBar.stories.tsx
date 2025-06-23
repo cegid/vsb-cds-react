@@ -10,10 +10,32 @@ const meta = {
   },
   tags: ["autodocs"],
   argTypes: {
-    // Define any specific controls for the NavigationBar component here
+    headerNavItems: {
+      control: "object",
+      description: "Items to display in the header navigation",
+    },
+    bodyNavItems: {
+      control: "object",
+      description: "Items to display in the body navigation",
+    },
+    footerNavItems: {
+      control: "object",
+      description: "Items to display in the footer navigation",
+    },
+    userName: {
+      control: "text",
+      description: "Name of the user to display in the header",
+    },
+    logoSrc: {
+      control: "text",
+      description: "Source URL for the logo image",
+    }
   },
   args: {
-    // Define default args for the NavigationBar component here
+    headerNavItems: HEADER_ITEMS,
+    bodyNavItems: NAV_ITEMS,
+    footerNavItems: FOOTER_ITEMS,
+    userName: "John",
   },
 } satisfies Meta<typeof NavigationBar>;
 

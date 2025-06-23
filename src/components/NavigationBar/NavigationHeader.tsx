@@ -118,7 +118,7 @@ const NavHeader = ({
     <MenuControlSection expanded={isExpanded}>
       <MenuToggleWrapper expanded={isExpanded}>
         <MenuToggleButtonContainer expanded={isExpanded}>
-          <IconButton variant="iconOnly" onClick={onToggleExpandNavigation}>
+          <IconButton variant="iconOnly" onClick={onToggleExpandNavigation} title="Basculer la navigation">
             <Icon size="14px" color="neutral/10">sidebar-left-01</Icon>
           </IconButton>
         </MenuToggleButtonContainer>
