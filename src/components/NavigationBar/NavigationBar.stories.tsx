@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import NavigationBar from "./NavigationBar";
+import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS } from "./constants";
 
 const meta = {
   title: "Components/Navigation/NavigationBar",
   component: NavigationBar,
   parameters: {
-    layout: "centered",
+    layout: "start",
   },
   tags: ["autodocs"],
   argTypes: {
@@ -20,5 +21,10 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {},
+  args: {
+    headerNavItems: HEADER_ITEMS,
+    bodyNavItems: NAV_ITEMS,
+    footerNavItems: FOOTER_ITEMS,
+    userName: "John",
+  },
 };

@@ -3,7 +3,7 @@ import Icon from "../Icon";
 import Box from "../Box";
 import Typography from "../Typography";
 import IconButton from "../IconButton";
-import { ComponentWithExpandedProp, ExtendedNavItem, ExtendedSubNavItem, NavItem, NavList } from "./NavigationBar";
+import { ComponentWithExpandedProp, ExtendedNavItem, ExtendedSubNavItem, NavList } from "./NavigationBar";
 import NavItemButton from "./NavItemButton";
 
 const HeaderContainer = styled(Box, {

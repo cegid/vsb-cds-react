@@ -77,13 +77,21 @@ const NavPanel = styled(Box, {
   overflow: 'hidden',
 }));
 
-const NavigationBar: React.FC = () => {
+interface NavigationBarProps {
+  headerNavItems: NavItem[];
+  bodyNavItems: NavItem[];
+  footerNavItems: NavItem[];
+  userName: string;
+  logoSrc?: string;
+}
 
-  const [navItems, setNavItems] = useExtendedNavItems(HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS);
+const NavigationBar = ({headerNavItems, bodyNavItems, footerNavItems, logoSrc = logo, userName}: NavigationBarProps) => {
 
-  const headerNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Header), [navItems]);
-  const bodyNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Nav), [navItems]);
-  const footerNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Footer), [navItems]);
+  const [navItems, setNavItems] = useExtendedNavItems(headerNavItems, bodyNavItems, footerNavItems);
+
+  const extandedHeaderNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Header), [navItems]);
+  const extandedBodyNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Nav), [navItems]);
+  const extandedFooterNavItems = useMemo(() => navItems.filter(item => item.type === MenuItemType.Footer), [navItems]);
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [hoveredNavItem, setHoveredNavItem] = useState<ExtendedNavItem | null>(null);
@@ -113,13 +121,6 @@ const NavigationBar: React.FC = () => {
   useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
   const handleNavItemClick = (navItem: ExtendedNavItem | ExtendedSubNavItem) => {
-
-    // If the clicked item has subItems, we expand the sidebar
-    if ('type' in navItem && Array.isArray(navItem.subItems) && navItem.subItems.length > 0) {
-      setIsExpanded(true);
-    }
-
-
     /**
      * We re-build navItems on every click to ensure that the active state is correctly set.
      */
@@ -161,10 +162,10 @@ const NavigationBar: React.FC = () => {
         expanded={isExpanded}
       >
         <NavHeader
-          headerNavItems={headerNavItems}
+          headerNavItems={extandedHeaderNavItems}
           isExpanded={isExpanded}
-          logoSrc={logo} 
-          userName={"John"} 
+          logoSrc={logoSrc} 
+          userName={userName} 
           onNavItemClick={handleNavItemClick}
           onMouseEnter={() => setHoveredNavItem(null)}
           onToggleExpandNavigation={handleToggleExpandNavigation}
@@ -172,7 +173,7 @@ const NavigationBar: React.FC = () => {
 
         <NavSection
           type={MenuItemType.Nav}
-          navItems={bodyNavItems}
+          navItems={extandedBodyNavItems}
           isExpanded={isExpanded}
           onNavItemClick={handleNavItemClick}
           onNavMouseEnter={handleNavMouseEnter}
@@ -181,7 +182,7 @@ const NavigationBar: React.FC = () => {
 
         <NavSection
           type={MenuItemType.Footer}
-          navItems={footerNavItems}
+          navItems={extandedFooterNavItems}
           isExpanded={isExpanded}
           onNavItemClick={handleNavItemClick}
           onNavMouseEnter={handleNavMouseEnter}

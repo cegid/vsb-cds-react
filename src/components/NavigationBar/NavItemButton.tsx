@@ -15,8 +15,11 @@ const NavListItemButton = styled(ListItemButton, {
     return !['isActive', 'isSideBar'].includes(key);
   },
 })<NavListItemButtonProp>(({ isActive, isSideBar }) => ({
-  padding: 0,
+  padding: '0 8px',
   borderRadius: '8px',
+  display: 'flex',
+  justifyContent: 'flex-start',
+  gap: '8px',
   backgroundColor: isActive ? primary[90] : 'transparent',
   '&:hover': {
     backgroundColor: isSideBar ? primary[95] : primary[90],
@@ -32,6 +35,14 @@ const MenuIcon = styled(Icon, {
   aspectRatio: '1 / 1',
   alignItems: 'center',
   gap: '10px',
+}));
+
+const NavListItemIcon = styled(ListItemIcon)(() => ({
+  alignItems: 'center',
+  display: 'flex',
+  gap: '10px',
+  minWidth: 0,
+  padding: 0,
 }));
 
 interface NavItemButtonProps {
@@ -51,11 +62,11 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
     <ListItem disablePadding onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <NavListItemButton onClick={onClick} title={navItem.label} isActive={navItem.isActive} isSideBar={isSideBar}>
         {navItem.iconLabel && (
-          <ListItemIcon>
-            <MenuIcon variant={iconVariant} color="primary/10" size="24px" expanded={isExpanded}>
+          <NavListItemIcon>
+            <MenuIcon variant={iconVariant} color="primary/10" size="16px" expanded={isExpanded}>
               {navItem.iconLabel}
             </MenuIcon>
-          </ListItemIcon>
+          </NavListItemIcon>
         )}
         {isExpanded && (
           <ListItemText
