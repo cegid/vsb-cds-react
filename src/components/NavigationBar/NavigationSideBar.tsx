@@ -105,12 +105,13 @@ const NavigationSideBar = ({
         unmountOnExit
       >
         <Box>
-          <NavList dense>
+          <NavList dense expanded={true}>
             {navItems.map((navItem) => (
               <NavItemButton
                 key={navItem.key}
                 navItem={navItem}
                 onClick={() => onNavItemClick(navItem)}
+                isSideBar
               />
             ))}
           </NavList>

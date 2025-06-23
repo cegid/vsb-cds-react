@@ -4,25 +4,23 @@ import type { ExtendedSubNavItem, ExtendedNavItem, ComponentWithExpandedProp } f
 import Icon from "../Icon";
 import Typography from "../Typography";
 import { primary } from "../../theme";
-
-interface NavItemButtonProps {
-  navItem: ExtendedNavItem | ExtendedSubNavItem;
-  isExpanded?: boolean;
-  onClick: () => void;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
+export interface NavListItemButtonProp {
+  isActive: boolean;
+  isSideBar: boolean;
 }
 
-const NavListItemButton = styled(ListItemButton)(() => ({
+const NavListItemButton = styled(ListItemButton, {
+  shouldForwardProp: prop => {
+    const key = String(prop);
+    return !['isActive', 'isSideBar'].includes(key);
+  },
+})<NavListItemButtonProp>(({ isActive, isSideBar }) => ({
   padding: 0,
   borderRadius: '8px',
-  border: 'none',
-  background: 'transparent',
+  backgroundColor: isActive ? primary[90] : 'transparent',
   '&:hover': {
-    border: '1px solid white',
-    background: `linear-gradient(0deg, ${primary[90]} 0%, #E7F6FF 118.75%)`,
+    backgroundColor: isSideBar ? primary[95] : primary[90],
   },
-
 }));
 
 const MenuIcon = styled(Icon, {
@@ -36,14 +34,22 @@ const MenuIcon = styled(Icon, {
   gap: '10px',
 }));
 
+interface NavItemButtonProps {
+  navItem: ExtendedNavItem | ExtendedSubNavItem;
+  isExpanded?: boolean;
+  isSideBar?: boolean;
+  onClick: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+}
 
 const NavItemButton: React.FC<NavItemButtonProps> = ({
-  navItem, isExpanded = true, onClick, onMouseEnter, onMouseLeave
+  navItem, isExpanded = true, isSideBar = false, onClick, onMouseEnter, onMouseLeave
 }) => {
   const iconVariant = navItem.isActive ? 'solid' : 'stroke';
   return (
     <ListItem disablePadding onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      <NavListItemButton onClick={onClick} title={navItem.label}>
+      <NavListItemButton onClick={onClick} title={navItem.label} isActive={navItem.isActive} isSideBar={isSideBar}>
         {navItem.iconLabel && (
           <ListItemIcon>
             <MenuIcon variant={iconVariant} color="primary/10" size="24px" expanded={isExpanded}>
