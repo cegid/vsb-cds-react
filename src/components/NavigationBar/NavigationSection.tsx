@@ -43,16 +43,16 @@ const NavSection: React.FC<NavSectionProps> = ({
           const hasSubitems = Boolean(navItem.subItems);
           return (
             <NavItemButton
-            key={navItem.key}
-            navItem={navItem}
-            isExpanded={isExpanded}
-            onClick={() => onItemClick(navItem)}
-            onMouseEnter={() => hasSubitems 
-              ? onNavMouseEnter(navItem) 
-              : onNavMouseEnter(null)
-            }
-            onMouseLeave={onNavMouseLeave}
-          />
+              key={navItem.key}
+              navItem={navItem}
+              isExpanded={isExpanded}
+              onClick={() => onItemClick(navItem)}
+              onMouseEnter={() => hasSubitems 
+                ? onNavMouseEnter(navItem) 
+                : onNavMouseEnter(null)
+              }
+              onMouseLeave={onNavMouseLeave}
+            />
           )
         })}
       </NavList>

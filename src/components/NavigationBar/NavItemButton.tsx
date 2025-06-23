@@ -3,6 +3,7 @@ import ListItemText from '@mui/material/ListItemText';
 import type { ExtendedSubNavItem, ExtendedNavItem, ComponentWithExpandedProp } from "./NavigationBar";
 import Icon from "../Icon";
 import Typography from "../Typography";
+import { primary } from "../../theme";
 
 interface NavItemButtonProps {
   navItem: ExtendedNavItem | ExtendedSubNavItem;
@@ -14,6 +15,14 @@ interface NavItemButtonProps {
 
 const NavListItemButton = styled(ListItemButton)(() => ({
   padding: 0,
+  borderRadius: '8px',
+  border: 'none',
+  background: 'transparent',
+  '&:hover': {
+    border: '1px solid white',
+    background: `linear-gradient(0deg, ${primary[90]} 0%, #E7F6FF 118.75%)`,
+  },
+
 }));
 
 const MenuIcon = styled(Icon, {
@@ -31,13 +40,13 @@ const MenuIcon = styled(Icon, {
 const NavItemButton: React.FC<NavItemButtonProps> = ({
   navItem, isExpanded = true, onClick, onMouseEnter, onMouseLeave
 }) => {
-  const color = navItem.isActive ? 'primary/60' : 'primary/10';
+  const iconVariant = navItem.isActive ? 'solid' : 'stroke';
   return (
     <ListItem disablePadding onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      <NavListItemButton onClick={onClick}>
+      <NavListItemButton onClick={onClick} title={navItem.label}>
         {navItem.iconLabel && (
           <ListItemIcon>
-            <MenuIcon variant="stroke" color={color} size="24px" expanded={isExpanded}>
+            <MenuIcon variant={iconVariant} color="primary/10" size="24px" expanded={isExpanded}>
               {navItem.iconLabel}
             </MenuIcon>
           </ListItemIcon>
@@ -46,7 +55,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
           <ListItemText
             disableTypography
             primary={
-              <Typography variant="bodySMedium" color={color}>
+              <Typography variant="bodySMedium" color="primary/10">
                 {navItem.label}
               </Typography>
             }
