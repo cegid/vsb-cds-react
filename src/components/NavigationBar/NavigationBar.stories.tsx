@@ -52,6 +52,7 @@ export const Default: Story = {
     bodyNavItems: NAV_ITEMS,
     footerNavItems: FOOTER_ITEMS,
     userName: "John",
+    activePath: "/ventes/devis",
     onProfileClick: () => console.log("Profile clicked!"),
   },
 };

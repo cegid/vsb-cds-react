@@ -15,6 +15,7 @@ export interface NavItem {
   isHidden?: boolean;
   key: string;
   label: string;
+  path: string;
   subItems?: SubNavItem[];
   onClick: () => void;
 }
@@ -81,6 +82,10 @@ const NavPanel = styled(Box, {
  * Props for the Navigation bar component.
  */
 interface NavigationBarProps {
+  /**
+   * The currently active path in the navigation bar, used to highlight the active item.
+   */
+  activePath: string;
   /** 
    * Array of navigation items displayed in the header section.
    */
@@ -107,7 +112,41 @@ interface NavigationBarProps {
   onProfileClick: () => void;
 }
 
-const NavigationBar = ({headerNavItems, bodyNavItems, footerNavItems, logoSrc = logo, userName, onProfileClick}: NavigationBarProps) => {
+const computeActiveNavItems = (
+  navItems: ExtendedNavItem[],
+  clicked: ExtendedNavItem | ExtendedSubNavItem
+): ExtendedNavItem[] => {
+  return navItems.map((navItem) => {
+
+    // clicked item got subItems
+    const isClickedNavItemWithSubItems = navItem.key === clicked.key && 'subItems' in clicked;
+
+    // clicked item is a subItem of a parent item
+    const isSubItem = navItem.subItems?.some((sub) => sub.key === clicked.key) ?? false;
+
+    // we build the new subItems array with the active state
+    const newSubItems = navItem.subItems?.map((sub) => ({
+      ...sub,
+      isActive: sub.key === clicked.key,
+    })) ?? [];
+
+    return {
+      ...navItem,
+      isActive: isClickedNavItemWithSubItems || isSubItem,
+      subItems: newSubItems,
+    };
+  });
+};
+
+const NavigationBar = ({
+  activePath, 
+  headerNavItems, 
+  bodyNavItems, 
+  footerNavItems, 
+  logoSrc = logo, 
+  userName, 
+  onProfileClick
+}: NavigationBarProps) => {
 
   const [navItems, setNavItems] = useExtendedNavItems(headerNavItems, bodyNavItems, footerNavItems);
 
@@ -142,31 +181,32 @@ const NavigationBar = ({headerNavItems, bodyNavItems, footerNavItems, logoSrc = 
    */
   useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
+  /**
+   * Effect to handle the initial active path when the component mounts.
+   */
+  useEffect(() => {
+    let activeItem: ExtendedNavItem | ExtendedSubNavItem | null = null;
+    for (const parentNavItem of navItems) {
+      if (parentNavItem.path === activePath) {
+        activeItem = parentNavItem;
+        break;
+      }
+      const subNavItem = parentNavItem.subItems?.find((subNavItem) => subNavItem.path === activePath);
+      if (subNavItem) {
+        activeItem = subNavItem;
+        break;
+      }
+    }
+    if (activeItem) {
+      const newNavItems = computeActiveNavItems(navItems, activeItem);
+
+      setNavItems(newNavItems);
+    }
+  }, []); 
+
+
   const handleNavItemClick = (navItem: ExtendedNavItem | ExtendedSubNavItem) => {
-    /**
-     * We re-build navItems on every click to ensure that the active state is correctly set.
-     */
-    const newNavItems = navItems.map(item => {
-      
-      // clicked item got subItems
-      const isClickedNavItemWithSubItems = item.key === navItem.key && 'subItems' in navItem;
-      
-      // clicked item is a subItem of a parent item
-      const isSubItem = item.subItems?.some(sub => sub.key === navItem.key) ?? false;
-
-      // we build the new subItems array with the active state
-      const newSubItems = item.subItems?.map(sub => ({
-        ...sub,
-        isActive: sub.key === navItem.key,
-      })) ?? [];
-
-      return {
-        ...item,
-        // the parent is active if it is clicked or if it has an active subItem
-        isActive: isClickedNavItemWithSubItems || isSubItem,
-        subItems: newSubItems,
-      };
-    })
+    const newNavItems = computeActiveNavItems(navItems, navItem);
 
     setNavItems(newNavItems);
     setHoveredNavItem(null);
