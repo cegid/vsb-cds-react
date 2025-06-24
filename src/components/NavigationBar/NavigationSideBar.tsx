@@ -16,16 +16,12 @@ const SidebarPanel = styled(Paper, {
   alignItems: 'flex-start',
   backgroundColor: primary[99],
   borderRadius: '0px 16px 16px 0px', 
-
   display: 'flex',
   flexDirection: 'column',
   gap: 8,
   height: '100%',
-  left: anchorWidth,
   padding: 16,
   pointerEvents: open ? 'auto'  : 'none',
-  position: 'absolute',
-  top: 0,
   width: 225,
   zIndex: theme.zIndex.drawer + 1,
   
@@ -38,11 +34,20 @@ const SidebarPanel = styled(Paper, {
     // closing
     : 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease-out',
 
-
-  // Case under 1535px
-  boxShadow: '2px 0px 6.857px 0px rgba(47, 38, 50, 0.08), 2px 0px 6.857px 0px rgba(47, 38, 50, 0.08)',              
+  /**
+   * Breakpoint handling:
+   * - Below 1535px: Sidebar is positioned absolutely to the right of the anchor with a shadow
+   * - At or above 1535px: Sidebar is positioned relative to the main content
+   */
+  boxShadow: '2px 0px 6.857px 0px rgba(47, 38, 50, 0.08), 2px 0px 6.857px 0px rgba(47, 38, 50, 0.08)',
+  position: 'absolute',
+  top: 0,
+  left: anchorWidth,
   [theme.breakpoints.up(1535)]: {
       boxShadow: 'none',
+      left: 'auto',
+      position: 'relative',
+      top: 'auto',
   },
 }));
 

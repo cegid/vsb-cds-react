@@ -1,3 +1,4 @@
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import NavigationBar from "./NavigationBar";
 import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS } from "./constants";
@@ -55,4 +56,26 @@ export const Default: Story = {
     activePath: "/ventes/devis",
     onProfileClick: () => console.log("Profile clicked!"),
   },
+  render: (args) => (
+    <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f0f0f0', }}>
+      <NavigationBar {...args} />
+
+      <div
+        style={{
+          flex: 1,
+          padding: 24,
+          overflow: 'auto',
+        }}
+      >
+        <h1>Main application content</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
+        </p>
+        <p>
+          Praesent vestibulum dapibus nibh. Etiam ultrices. Suspendisse in justo
+          eu magna luctus suscipit.
+        </p>
+      </div>
+    </div>
+  ),
 };

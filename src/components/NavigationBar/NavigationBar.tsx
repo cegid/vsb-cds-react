@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { List, styled } from "@cegid/cds-react";
+import { List, styled, useMediaQuery } from "@cegid/cds-react";
 import Box from "../Box";
 import { primary } from "../../theme";
 import logo from './logo.svg';
@@ -38,11 +38,21 @@ export enum MenuItemType {
   Footer = 'footer',
 }
 
-const NavContainer = styled(Box)({
+const NavContainer = styled(Box)(({ theme }) => ({
   position: 'relative',
-  display: 'flex',
+
+  // < 1535px → floating above the main content
+  display: 'inline-flex',
   height: '100vh',
-});
+  alignItems: 'center',
+  flexShrink: 0,
+
+  // ≥ 1535px → standard attached layout
+  [theme.breakpoints.up(1535)]: {
+    display: 'flex',
+    height: '100vh',
+  },
+}));
 
 export const NavList = styled(List, {
   shouldForwardProp: prop => prop !== 'expanded',
@@ -157,7 +167,17 @@ const NavigationBar = ({
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [hoveredNavItem, setHoveredNavItem] = useState<ExtendedNavItem | null>(null);
 
-  const { sidebarNavItems, isSideBarOpen, activeNavItem } = useSidebarState(navItems, hoveredNavItem);
+  /**
+   * Determine if SidePanel should be closed after a click on a nav item (< 1535px)
+   * If the screen is large enough, the sidebar will always be open.
+   */
+  const isLargeScreen = useMediaQuery("(min-width:1535px)");
+
+  const { sidebarNavItems, isSideBarOpen: baseIsSideBarOpen, activeNavItem } = useSidebarState(navItems, hoveredNavItem);
+
+  const isSideBarOpen = isLargeScreen
+   ? baseIsSideBarOpen
+   : Boolean(hoveredNavItem?.subItems?.length);
 
   // Hover timer to delay a little the opening of the sidebar
   const hoverTimer = useRef<number>();  
