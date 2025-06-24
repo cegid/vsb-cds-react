@@ -122,7 +122,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
         {...props}
       />
       {onFilterClick && (
-        <IconButton variant="tonal" color="neutral" square>
+        <IconButton
+          variant="tonal"
+          color="neutral"
+          square
+          onClick={onFilterClick}
+        >
           <Icon size={16} color="primary/10">
             filter
           </Icon>
