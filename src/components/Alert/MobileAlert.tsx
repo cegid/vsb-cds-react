@@ -3,7 +3,6 @@ import Column from "../Column";
 import Row from "../Row";
 import Typography from "../Typography";
 import Button from "../Button";
-import { ChevronRight, Close } from "@cegid/icons-react";
 import Box, { BorderProps } from "../Box";
 import {
   AlertImage,
@@ -46,12 +45,11 @@ const MobileAlert: React.FC<AlertProps> = ({
 
   const getDescriptionColor = () => {
     if (isMediumSize) {
-      return 'neutral/50';
+      return "neutral/50";
+    } else {
+      return variant === "error" ? "critical/50" : "neutral/10";
     }
-    else {
-      return variant === "error" ? "critical/50" : "neutral/10"
-    }
-  }
+  };
   const renderImage = (image: AlertImage) => {
     const imageProps = getImageDimensions();
 
@@ -83,7 +81,7 @@ const MobileAlert: React.FC<AlertProps> = ({
         sx={{ cursor: "pointer" }}
         onClick={onClose}
       >
-        <Close sx={{ fontSize: "16px" }} />
+        <Icon size={16}>close</Icon>
       </Box>
     </Box>
   );
@@ -151,7 +149,7 @@ const MobileAlert: React.FC<AlertProps> = ({
           {description && renderDescription()}
         </Column>
 
-        {isMediumSize && renderCloseButton()}
+        {isMediumSize && onClose && renderCloseButton()}
         {isExtraSmallSize && renderChevronButton()}
       </Row>
 
