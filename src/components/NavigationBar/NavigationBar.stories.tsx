@@ -1,7 +1,7 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import NavigationBar from "./NavigationBar";
-import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS } from "./constants";
+import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS, PROFILE_MENU_ITEMS } from "./constants";
 
 const meta = {
   title: "Components/Navigation/NavigationBar",
@@ -23,24 +23,40 @@ const meta = {
       control: "object",
       description: "Items to display in the footer navigation",
     },
-    userName: {
+    profileMenuItems: {
+      control: "object",
+      description: "Menu Items to display in the profile menu",
+    },
+    userFirstName: {
       control: "text",
-      description: "Name of the user to display in the header",
+      description: "FirstName of the user to display in the header",
+    },
+    userLastName: {
+      control: "text",
+      description: "LastName of the user to display in the Profile menu",
+    },
+    userTrigram: {
+      control: "text",
+      description: "Trigram of the user to display in the Profile menu",
     },
     logoSrc: {
       control: "text",
       description: "Source URL for the logo image",
     },
-    onProfileClick: {
-      action: "profileClicked",
-      description: "Function to call when the profile is clicked",
+    onLogOut: {
+      action: "logOutClicked !",
+      description: "Function called when the logout button is clicked",
     },
   },
   args: {
     headerNavItems: HEADER_ITEMS,
     bodyNavItems: NAV_ITEMS,
     footerNavItems: FOOTER_ITEMS,
-    userName: "John",
+    profileMenuItems: PROFILE_MENU_ITEMS,
+    userFirstName: "John",
+    userLastName: "Doe",
+    userTrigram: "JDD",
+    onLogOut: () => console.log("logOut clicked!"),
   },
 } satisfies Meta<typeof NavigationBar>;
 
@@ -52,9 +68,11 @@ export const Default: Story = {
     headerNavItems: HEADER_ITEMS,
     bodyNavItems: NAV_ITEMS,
     footerNavItems: FOOTER_ITEMS,
-    userName: "John",
+    userFirstName: "John",
+    userLastName: "Doe",
+    userTrigram: "JDD",
     activePath: "/ventes/devis",
-    onProfileClick: () => console.log("Profile clicked!"),
+    onLogOut: () => console.log("logOut clicked!"),
   },
   render: (args) => (
     <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f0f0f0', }}>

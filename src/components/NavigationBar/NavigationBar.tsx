@@ -20,6 +20,12 @@ export interface NavItem {
   onClick: () => void;
 }
 
+export interface ProfileMenuItem {
+  label: string,
+  icon: string;
+  onClick: () => void;
+}
+
 export type SubNavItem = Omit<NavItem, 'subItems'>;
 
 export interface ExtendedSubNavItem extends SubNavItem {
@@ -97,10 +103,6 @@ interface NavigationBarProps {
    */
   activePath: string;
   /** 
-   * Array of navigation items displayed in the header section.
-   */
-  headerNavItems: NavItem[];
-  /** 
    * Array of navigation items displayed in the main body section.
    */
   bodyNavItems: NavItem[];
@@ -108,18 +110,35 @@ interface NavigationBarProps {
    * Array of navigation items displayed in the footer section.
    */
   footerNavItems: NavItem[];
-  /**
-   *  The name of the current user, displayed in the profile greeting.
+  /** 
+   * Array of navigation items displayed in the header section.
    */
-  userName: string;
+  headerNavItems: NavItem[];
   /**
    *  URL or import source for the logo image displayed in the profile area. By default BIM Logo
    */
   logoSrc?: string;
   /**
-   *  Callback invoked when the profile area is clicked (e.g. to open a user menu). 
+   * Array of profile menu items displayed in the profile menu.
    */
-  onProfileClick: () => void;
+  profileMenuItems: ProfileMenuItem[];
+  /**
+   *  The firstname of the current user, displayed in the profile greeting.
+   */
+  userFirstName: string;
+  /**
+   *  The last of the current user, displayed in the profile menu with the firstName.
+   */
+  userLastName: string;
+  /**
+   *  Trigram of the current user.
+   */
+  userTrigram: string;
+  /**
+   * Callback function to handle logout action.
+   */
+  onLogOut: () => void;
+
 }
 
 const computeActiveNavItems = (
@@ -149,13 +168,16 @@ const computeActiveNavItems = (
 };
 
 const NavigationBar = ({
-  activePath, 
-  headerNavItems, 
-  bodyNavItems, 
-  footerNavItems, 
-  logoSrc = logo, 
-  userName, 
-  onProfileClick
+  activePath,
+  bodyNavItems,
+  footerNavItems,
+  headerNavItems,
+  logoSrc = logo,
+  profileMenuItems,
+  userFirstName,
+  userLastName,
+  userTrigram,
+  onLogOut,
 }: NavigationBarProps) => {
 
   const [navItems, setNavItems] = useExtendedNavItems(headerNavItems, bodyNavItems, footerNavItems);
@@ -247,12 +269,15 @@ const NavigationBar = ({
         <NavHeader
           headerNavItems={extandedHeaderNavItems}
           isExpanded={isExpanded}
-          logoSrc={logoSrc} 
-          userName={userName} 
+          logoSrc={logoSrc}
+          userFirstName={userFirstName}
+          userLastName={userLastName}
+          userTrigram={userTrigram}
+          profileMenuItems={profileMenuItems}
+          onLogOut={onLogOut}
           onNavItemClick={handleNavItemClick}
           onMouseEnter={() => setHoveredNavItem(null)}
           onToggleExpandNavigation={handleToggleExpandNavigation}
-          onProfileClick={onProfileClick}
         />
 
         <NavSection
