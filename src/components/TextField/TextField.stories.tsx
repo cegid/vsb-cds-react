@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { Grid } from '@cegid/cds-react';
+import { Grid, InputAdornment } from '@cegid/cds-react';
 import TextField from './TextField';
 
 const meta = {
