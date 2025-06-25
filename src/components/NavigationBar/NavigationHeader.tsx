@@ -51,14 +51,14 @@ const MenuToggleWrapper = styled(Box, {
 const MenuToggleButtonContainer = styled(Box, {
   shouldForwardProp: prop => prop !== 'expanded',
 })<ComponentWithExpandedProp>(({ expanded }) => ({
-  display: 'flex',
-  height: expanded ? '34px' : '56px',
-  padding: '8px 0',
-  flexDirection: expanded ? undefined : 'column',
-  justifyContent: expanded ? undefined : 'center',
   alignItems: 'center',
   alignSelf: expanded ? 'stretch' : undefined,
+  display: 'flex',
+  flexDirection: expanded ? undefined : 'column',
   gap : expanded ? undefined : '10px',
+  height: expanded ? '34px' : '56px',
+  justifyContent: expanded ? undefined : 'center',
+  padding: '8px 0',
 }));
 
 const ProfileSection = styled(Box, {
@@ -79,11 +79,11 @@ const ProfileWrapper = styled(Box, {
 })<ComponentWithExpandedProp>(({ theme, expanded }) => 
   expanded ?
   {
-    display: 'flex',
-    padding: '8px 8px 8px 0',
     alignItems: 'center',
-    gap: theme.spacing(4),
     alignSelf: 'stretch',
+    display: 'flex',
+    gap: theme.spacing(4),
+    padding: '8px 0',
   }
 : {});
 
@@ -91,6 +91,15 @@ const ProfileContent = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   gap: theme.spacing(2),
+  flex: 1,
+  justifyContent: 'space-between',
+}));
+
+const IconButtonProfile = styled(IconButton)(() => ({
+    borderRadius: 0,
+    height: 'auto',
+    padding: 0,
+    width:  'auto',
 }));
 
 interface NavHeaderProps {
@@ -139,16 +148,16 @@ const NavHeader = ({
             <Typography variant="bodySSemiBold" color="primary/10">
               Bonjour {userName}
             </Typography>
-            <IconButton variant="iconOnly" onClick={onProfileClick} title="Accès au profil">
+            <IconButtonProfile variant="iconOnly" onClick={onProfileClick} title="Accès au profil">
               <Icon variant="stroke" size="16px" color="primary/10">arrow-down-01</Icon>
-            </IconButton>
+            </IconButtonProfile>
           </ProfileContent>
         )}
       </ProfileWrapper>
     </ProfileSection>
     <NavList expanded={isExpanded}>
       { headerNavItems
-        .filter(navItem => !navItem.isHidden)
+        .filter(navItem => navItem.isVisible ?? true)
         .map((navItem) => (
             <NavItemButton
               key={navItem.key}

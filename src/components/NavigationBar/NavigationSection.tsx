@@ -40,7 +40,7 @@ const NavSection: React.FC<NavSectionProps> = ({
     <NavSectionContainer expanded={isExpanded} sectiontype={type}>
       <NavList expanded={isExpanded}>
         {navItems
-          .filter(navItem => !navItem.isHidden)
+          .filter(navItem => navItem.isVisible ?? true)
           .map((navItem) => {
             const hasSubitems = Boolean(navItem.subItems);
             return (
