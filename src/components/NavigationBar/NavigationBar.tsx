@@ -12,7 +12,7 @@ import { useSidebarState } from "./useNavigationSideBarState";
 export interface NavItem {
   icon?: string;
   isDisabled?: boolean;
-  isHidden?: boolean;
+  isVisible?: boolean;
   key: string;
   label: string;
   path: string;

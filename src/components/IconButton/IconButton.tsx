@@ -357,6 +357,7 @@ const IconButton = React.forwardRef(function IconButton(
     <IconButtonRoot
       ownerState={ownerState}
       {...props}
+      className={className}
       color={mapColor(color)}
       ref={ref}
       disableRipple={true}

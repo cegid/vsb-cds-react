@@ -4,6 +4,7 @@ import type { ExtendedSubNavItem, ExtendedNavItem, ComponentWithExpandedProp } f
 import Icon from "../Icon";
 import Typography from "../Typography";
 import { primary } from "../../theme";
+
 export interface NavListItemButtonProp {
   isActive: boolean;
   isSideBar: boolean;

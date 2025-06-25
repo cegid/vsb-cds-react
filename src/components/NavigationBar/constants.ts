@@ -102,7 +102,7 @@ export const NAV_ITEMS: NavItem[] = [
     icon: "file-01",
     path: '/files',
     onClick: () => console.log('document clicked'),
-    isHidden: true, // Example of a hidden item
+    isVisible: false, // Example of a hidden item
   },
   {
     key: 'contact',
