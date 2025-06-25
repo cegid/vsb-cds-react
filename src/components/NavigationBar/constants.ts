@@ -137,6 +137,12 @@ export const PROFILE_MENU_ITEMS: ProfileMenuItem[] = [
     onClick: () => console.log('Changer de dossier clicked'),
   },
   {
+    label: 'Changer de version',
+    icon: 'arrow-reload-horizontal',
+    isVisible: false, // Example of a hidden item
+    onClick: () => console.log('Changer de dossier clicked'),
+  },
+  {
     label: 'Aide en Ligne',
     icon: 'help-circle',
     onClick: () => console.log('Aide en Ligne clicked'),
