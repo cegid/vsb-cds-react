@@ -9,6 +9,7 @@ import Row from "../Row";
 import Icon from "../Icon";
 import SegmentedControl, { SegmentedControlProps } from "../SegmentedControl";
 import Box from "../Box";
+import { IconButtonProps } from "@cegid/cds-react";
 
 interface CustomButtonProps {
   id?: string;
@@ -29,6 +30,8 @@ interface BaseHeaderProps {
   secondaryButtonText?: string;
   /** Callback function triggered when the settings icon is clicked */
   settingsAction?: () => void;
+  /** Callback function props */
+  settingsActionProps?: IconButtonProps;
   /** Callback function triggered when the more options icon is clicked */
   moreAction?: () => void;
   /** Callback function triggered when the arrow back options icon is clicked */
@@ -122,16 +125,22 @@ const HeaderTitle: React.FC<{
   </Row>
 );
 
-const SettingsButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
-  <IconButton {...ICON_BUTTON_PROPS} onClick={onClick}>
+const SettingsButton: React.FC<{
+  props?: Partial<IconButtonProps>;
+  onClick: () => void;
+}> = ({ props = {}, onClick }) => (
+  <IconButton {...ICON_BUTTON_PROPS} {...(props as any)} onClick={onClick}>
     <Icon size={16} color="neutral/10">
       setting-07
     </Icon>
   </IconButton>
 );
 
-const MoreButton: React.FC<{ onClick: () => void }> = ({ onClick }) => (
-  <IconButton {...ICON_BUTTON_PROPS} onClick={onClick}>
+const MoreButton: React.FC<{
+  props?: Partial<IconButtonProps>;
+  onClick: () => void;
+}> = ({ props = {}, onClick }) => (
+  <IconButton {...ICON_BUTTON_PROPS} {...(props as any)} onClick={onClick}>
     <Icon size={16} color="neutral/10">
       more-horizontal
     </Icon>
@@ -211,12 +220,14 @@ const MobileActions: React.FC<{
   primaryButtonText?: string;
   primaryButtonProps?: CustomButtonProps;
   settingsAction?: () => void;
+  settingsActionProps?: IconButtonProps;
   moreAction?: () => void;
 }> = ({
   primaryAction,
   primaryButtonText,
   primaryButtonProps,
   settingsAction,
+  settingsActionProps,
   moreAction,
 }) => (
   <>
@@ -227,7 +238,9 @@ const MobileActions: React.FC<{
         customProps={primaryButtonProps}
       />
     )}
-    {settingsAction && <SettingsButton onClick={settingsAction} />}
+    {settingsAction && (
+      <SettingsButton props={settingsActionProps} onClick={settingsAction} />
+    )}
     {moreAction && <MoreButton onClick={moreAction} />}
   </>
 );
@@ -240,6 +253,7 @@ const DesktopActions: React.FC<{
   secondaryButtonText?: string;
   secondaryButtonProps?: CustomButtonProps;
   settingsAction?: () => void;
+  settingsActionProps?: IconButtonProps;
   moreAction?: () => void;
 }> = ({
   primaryAction,
@@ -249,10 +263,13 @@ const DesktopActions: React.FC<{
   secondaryButtonText,
   secondaryButtonProps,
   settingsAction,
+  settingsActionProps,
   moreAction,
 }) => (
   <>
-    {settingsAction && <SettingsButton onClick={settingsAction} />}
+    {settingsAction && (
+      <SettingsButton props={settingsActionProps} onClick={settingsAction} />
+    )}
     {moreAction && <MoreButton onClick={moreAction} />}
     {secondaryAction && (
       <SecondaryButton
@@ -290,6 +307,7 @@ const RegularActionsSection: React.FC<{
   secondaryButtonText?: string;
   secondaryButtonProps?: CustomButtonProps;
   settingsAction?: () => void;
+  settingsActionProps?: IconButtonProps;
   moreAction?: () => void;
   backAction?: () => void;
 }> = ({ isMobile, ...actions }) => {
@@ -319,6 +337,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     primaryAction,
     primaryButtonProps,
     settingsAction,
+    settingsActionProps,
     moreAction,
     secondaryButtonText,
     secondaryAction,
@@ -362,6 +381,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           secondaryButtonText={secondaryButtonText}
           secondaryButtonProps={secondaryButtonProps}
           settingsAction={settingsAction}
+          settingsActionProps={settingsActionProps}
           moreAction={moreAction}
         />
       )}

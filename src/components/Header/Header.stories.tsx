@@ -138,6 +138,7 @@ export const WithCustomButtonProps: Story = {
       disabled: false,
       endIcon: <Icon>x</Icon>,
     },
+    settingsActionProps: { variant: "tonal", color: "primary" },
     settingsAction: true,
   },
   render: (args) => (
