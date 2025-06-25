@@ -1,4 +1,4 @@
-import { NavItem } from "./NavigationBar";
+import { NavItem, ProfileMenuItem } from "./NavigationBar";
 
 export const HEADER_ITEMS: NavItem[] = [
   {
@@ -128,4 +128,17 @@ export const FOOTER_ITEMS: NavItem[] = [
     path: '/settings',
     onClick: () => console.log('paramètre clicked'),
   },
+];
+
+export const PROFILE_MENU_ITEMS: ProfileMenuItem[] = [
+  {
+    label: 'Changer de dossier',
+    icon: 'folder-transfer',
+    onClick: () => console.log('Changer de dossier clicked'),
+  },
+  {
+    label: 'Aide en Ligne',
+    icon: 'help-circle',
+    onClick: () => console.log('Aide en Ligne clicked'),
+  }
 ];
