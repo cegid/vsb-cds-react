@@ -8,6 +8,7 @@ import IconButton, { CustomColor } from "../IconButton";
 import Row from "../Row";
 import Icon from "../Icon";
 import SegmentedControl, { SegmentedControlProps } from "../SegmentedControl";
+import Box from "../Box";
 
 interface CustomButtonProps {
   id?: string;
@@ -88,6 +89,7 @@ const TITLE_STYLES = {
   wordBreak: "break-word" as const,
   hyphens: "auto" as const,
   display: "-webkit-box",
+  alignItems: "flex-start",
 };
 
 const ICON_BUTTON_PROPS = {
@@ -96,12 +98,23 @@ const ICON_BUTTON_PROPS = {
   square: true,
 };
 
-const HeaderTitle: React.FC<{ title: string }> = ({ title }) => (
-  <Row justifyContent="flex-start">
+const HeaderTitle: React.FC<{
+  title: string;
+  backAction?: () => void;
+  isMobile: boolean;
+  backIcon?: React.ReactElement<typeof Icon>;
+}> = ({ title, backAction, isMobile, backIcon }) => (
+  <Row justifyContent="flex-start" gap="20px">
+    {backAction && isMobile && (
+      <Box pt={1} display="flex" height="fit-content" onClick={backAction}>
+        {backIcon}
+      </Box>
+    )}
     <Typography
       variant="bodyMSemiBold"
       color="neutral/10"
       component="p"
+      display="flex"
       sx={TITLE_STYLES}
     >
       {title}
@@ -325,17 +338,14 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   return (
     <Row py={5} px={6} gap={4} alignItems="center" width="100%" id={id}>
-      {backAction && isMobile && (
-        <IconButton
-          variant="iconOnly"
-          square
-          onClick={backAction}
-          color="neutral"
-        >
-          {backIcon}
-        </IconButton>
+      {!segmentedControlRight && (
+        <HeaderTitle
+          title={title}
+          backAction={backAction}
+          backIcon={backIcon}
+          isMobile={isMobile}
+        />
       )}
-      {!segmentedControlRight && <HeaderTitle title={title} />}
 
       {segmentedControlRight ? (
         <SegmentedSection

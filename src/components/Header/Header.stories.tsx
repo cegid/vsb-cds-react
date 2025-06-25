@@ -238,7 +238,7 @@ export const WithSegmentedControl: Story = {
 
 export const MobileBehavior: Story = {
   args: {
-    title: "Mobile View",
+    title: "Mobile View un peu plus long que juste comme ça",
     primaryAction: true,
     primaryButtonText: "Save",
     primaryButtonProps: {
@@ -275,6 +275,7 @@ export const OnlyPrimaryAction: Story = {
   args: {
     title: "Simple Header",
     primaryAction: true,
+    backAction: true,
     primaryButtonText: "Action",
     primaryButtonProps: {
       startIcon: <Icon size={16}>add-01</Icon>,
@@ -287,11 +288,11 @@ export const OnlyPrimaryAction: Story = {
       secondaryAction={
         args.secondaryAction ? action("secondary-action") : undefined
       }
+      backAction={args.backAction ? action("back-action") : undefined}
       settingsAction={
         args.settingsAction ? action("settings-action") : undefined
       }
       moreAction={args.moreAction ? action("more-action") : undefined}
-      backAction={args.backAction ? action("back-action") : undefined}
     />
   ),
 };
