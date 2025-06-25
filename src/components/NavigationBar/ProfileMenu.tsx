@@ -111,13 +111,15 @@ const ProfileMenu = ({
             {userFirstName} {userLastName}
           </Typography>
         </NameContainer>
-        { profileMenuItems.map((profileMenuItem) => (
-          <ProfileMenuAction
-            key={profileMenuItem.label}
-            label={profileMenuItem.label}
-            icon={profileMenuItem.icon}
-            onClick={profileMenuItem.onClick}
-          />
+        { profileMenuItems
+          .filter(profileMenuItem => profileMenuItem.isVisible ?? true)
+          .map((profileMenuItem) => (
+            <ProfileMenuAction
+              key={profileMenuItem.label}
+              label={profileMenuItem.label}
+              icon={profileMenuItem.icon}
+              onClick={profileMenuItem.onClick}
+            />
         ))}
       </ActionContainer>
 

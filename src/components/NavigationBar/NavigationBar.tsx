@@ -23,6 +23,7 @@ export interface NavItem {
 export interface ProfileMenuItem {
   label: string,
   icon: string;
+  isVisible?: boolean;
   onClick: () => void;
 }
 
