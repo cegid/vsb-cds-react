@@ -130,7 +130,7 @@ function Select(props: CegidSelectProps) {
 
       {errorText && (
         <Row gap={2} mt={4}>
-          <Icon variant="bulk" size={16} color="critical/50">
+          <Icon variant="stroke" size={16} color="critical/50">
             spam
           </Icon>
           <Typography variant="captionRegular" color="critical/50">
