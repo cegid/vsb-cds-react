@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import Alert from "./Alert";
 import { TestIcon } from "./test";
+import React from "react";
 
 const meta = {
   title: "Components/Display/Alert",
