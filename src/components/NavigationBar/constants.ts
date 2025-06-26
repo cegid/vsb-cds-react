@@ -118,7 +118,6 @@ export const FOOTER_ITEMS: NavItem[] = [
     key: 'support',
     label: 'Support',
     icon: "customer-support",
-    path: '/help',
     onClick: () => console.log('support clicked'),
   },
   {

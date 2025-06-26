@@ -15,7 +15,7 @@ export interface NavItem {
   isVisible?: boolean;
   key: string;
   label: string;
-  path: string;
+  path?: string;
   subItems?: SubNavItem[];
   onClick: () => void;
 }
@@ -146,6 +146,9 @@ const computeActiveNavItems = (
   navItems: ExtendedNavItem[],
   clicked: ExtendedNavItem | ExtendedSubNavItem
 ): ExtendedNavItem[] => {
+
+  if (!clicked.path) return navItems;
+
   return navItems.map((navItem) => {
 
     // clicked item got subItems
