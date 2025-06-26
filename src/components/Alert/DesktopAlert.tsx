@@ -79,34 +79,43 @@ const DesktopAlert: React.FC<AlertProps> = ({
 
   const renderMediumSizeButtons = () => (
     <>
-      <Button
-        variant="contained"
-        onClick={onActionClick}
-        color={getButtonColor(variant)}
-        disabled={actionDisabled}
-      >
-        {buttonLabel}
-      </Button>
-      <Button
-        variant="outlined"
-        onClick={onClose}
-        color={getButtonColor(variant)}
-      >
-        {onCloseLabel}
-      </Button>
+      {onActionClick && (
+        <Button
+          variant="contained"
+          onClick={onActionClick}
+          color={getButtonColor(variant)}
+          disabled={actionDisabled}
+        >
+          {buttonLabel}
+        </Button>
+      )}
+      {onClose && (
+        <Button
+          variant="outlined"
+          onClick={onClose}
+          color={getButtonColor(variant)}
+        >
+          {onCloseLabel}
+        </Button>
+      )}
     </>
   );
 
   const renderChevronButton = () => (
-    <Box
-      sx={{ cursor: "pointer" }}
-      onClick={onActionClick}
-      display="flex"
-      alignItems="center"
-    >
-      <Icon size={16}>arrow-right-01</Icon>
-    </Box>
+    <>
+      {onActionClick && (
+            <Box
+            sx={{ cursor: "pointer" }}
+            onClick={onActionClick}
+            display="flex"
+            alignItems="center"
+          >
+            <Icon size={16}>arrow-right-01</Icon>
+          </Box>
+      )}
+    </>
   );
+
 
   const renderActions = () => {
     if (isMediumSize) {
