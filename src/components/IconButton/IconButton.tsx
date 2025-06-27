@@ -46,7 +46,7 @@ type IconButtonProps = Omit<
   CegidIconButtonProps,
   "variant" | "color" | "brightness"
 > &
-  IconButtonOwnProps & { ref?: React.Ref<HTMLButtonElement> };
+  IconButtonOwnProps;
 
 const createIconOnlyButtonStyle = (
   color: any,
@@ -282,87 +282,88 @@ const IconButtonRoot = styled(CegidIconButton, {
   };
 });
 
-const IconButton = React.forwardRef(function IconButton(
-  inProps: IconButtonProps,
-  ref: React.Ref<HTMLButtonElement>
-) {
-  const {
-    variant = "default",
-    color = "primary",
-    className,
-    square = false,
-    ...props
-  } = inProps;
+const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
+  (props, ref) => {
+    const {
+      variant = "default",
+      color = "primary",
+      className,
+      square = false,
+      ...restProps
+    } = props;
 
-  const ownerState = {
-    variant,
-    color,
-    square,
-    ...props,
-  };
+    const ownerState = {
+      variant,
+      color,
+      square,
+      ...restProps,
+    };
 
-  const mapColor = (customColor: CustomColor) => {
-    if (
-      customColor === "error" ||
-      customColor === "default" ||
-      customColor === "neutral"
-    )
-      return "inherit";
-    return customColor;
-  };
+    const mapColor = (customColor: CustomColor) => {
+      if (
+        customColor === "error" ||
+        customColor === "default" ||
+        customColor === "neutral"
+      )
+        return "inherit";
+      return customColor;
+    };
 
-  const getContainedBackgroundColor = () => {
-    if (!props.disabled) {
-      switch (color) {
-        case "primary":
-          return "#236BF0";
-        case "secondary":
-          return secondary[50];
-        case "neutral":
-          return neutral[99];
-        case "success":
-          return success[50];
-        case "warning":
-          return yellow[50];
-        case "info":
-          return info[50];
-        case "error":
-          return critical[50];
-        default:
-          return "#236BF0";
+    const getContainedBackgroundColor = () => {
+      if (!restProps.disabled) {
+        switch (color) {
+          case "primary":
+            return "#236BF0";
+          case "secondary":
+            return secondary[50];
+          case "neutral":
+            return neutral[99];
+          case "success":
+            return success[50];
+          case "warning":
+            return yellow[50];
+          case "info":
+            return info[50];
+          case "error":
+            return critical[50];
+          default:
+            return "#236BF0";
+        }
       }
-    }
-  };
+    };
 
-  if (variant === "contained") {
+    if (variant === "contained") {
+      return (
+        <Box
+          maxWidth="fit-content"
+          p={1}
+          backgroundColor={getContainedBackgroundColor() as CustomColorString}
+          borderRadius={square ? 3 : RADIUS.FULL}
+        >
+          <IconButtonRoot
+            ownerState={ownerState}
+            {...restProps}
+            color={mapColor(color)}
+            ref={ref}
+            disableRipple={true}
+          />
+        </Box>
+      );
+    }
+
     return (
-      <Box
-        maxWidth="fit-content"
-        p={1}
-        backgroundColor={getContainedBackgroundColor() as CustomColorString}
-        borderRadius={square ? 3 : RADIUS.FULL}
-      >
-        <IconButtonRoot
-          ownerState={ownerState}
-          {...props}
-          color={mapColor(color)}
-          ref={ref}
-          disableRipple={true}
-        />
-      </Box>
+      <IconButtonRoot
+        ownerState={ownerState}
+        {...restProps}
+        className={className}
+        color={mapColor(color)}
+        ref={ref}
+        disableRipple={true}
+      />
     );
   }
+);
 
-  return (
-    <IconButtonRoot
-      ownerState={ownerState}
-      {...props}
-      className={className}
-      color={mapColor(color)}
-      ref={ref}
-      disableRipple={true}
-    />
-  );
-});
+IconButton.displayName = "IconButton";
 
 export default IconButton;
