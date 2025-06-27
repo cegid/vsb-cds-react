@@ -23,7 +23,7 @@ interface CustomButtonProps {
 interface BaseHeaderProps {
   id?: string;
   /** The main title text displayed in the header */
-  title: string;
+  title?: string;
   /** The text content displayed inside the primary action button */
   primaryButtonText?: string;
   /** The text content displayed inside the secondary action button (desktop only) */
@@ -102,26 +102,28 @@ const ICON_BUTTON_PROPS = {
 };
 
 const HeaderTitle: React.FC<{
-  title: string;
+  title?: string;
   backAction?: () => void;
   isMobile: boolean;
   backIcon?: React.ReactElement<typeof Icon>;
 }> = ({ title, backAction, isMobile, backIcon }) => (
-  <Row justifyContent="flex-start" gap="20px">
+  <Row justifyContent="flex-start" gap="20px" width="auto">
     {backAction && isMobile && (
       <Box pt={1} display="flex" height="fit-content" onClick={backAction}>
         {backIcon}
       </Box>
     )}
-    <Typography
-      variant="bodyMSemiBold"
-      color="neutral/10"
-      component="p"
-      display="flex"
-      sx={TITLE_STYLES}
-    >
-      {title}
-    </Typography>
+    {title && (
+      <Typography
+        variant="bodyMSemiBold"
+        color="neutral/10"
+        component="p"
+        display="flex"
+        sx={TITLE_STYLES}
+      >
+        {title}
+      </Typography>
+    )}
   </Row>
 );
 
@@ -357,14 +359,12 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   return (
     <Row py={5} px={6} gap={4} alignItems="center" width="100%" id={id}>
-      {!segmentedControlRight && (
-        <HeaderTitle
-          title={title}
-          backAction={backAction}
-          backIcon={backIcon}
-          isMobile={isMobile}
-        />
-      )}
+      <HeaderTitle
+        title={title}
+        backAction={backAction}
+        backIcon={backIcon}
+        isMobile={isMobile}
+      />
 
       {segmentedControlRight ? (
         <SegmentedSection
