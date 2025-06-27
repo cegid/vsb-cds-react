@@ -224,6 +224,7 @@ const buttonBaseStyles = {
   borderRadius: RADIUS.M,
   transition: "background-color 0.2s",
   display: "flex",
+  whiteSpace: "nowrap",
   "& .MuiTouchRipple-root": {
     display: "none",
   },
