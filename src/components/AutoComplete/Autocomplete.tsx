@@ -34,7 +34,7 @@ const CustomAutocomplete = styled(CegidAutocomplete)<{ hasError?: boolean }>(
     },
     "& .MuiAutocomplete-input": {
       ...typography.bodyMRegular,
-      color: primary[10],
+      color: neutral[10],
       paddingLeft: "0 !important",
       [`@media (max-width: 600px)`]: {
         paddingTop: "8px !important",
@@ -122,7 +122,7 @@ const Autocomplete = (props: CegidAutocompleteProps<any, any, any, any>) => {
       {errorText && (
         <Row gap={2} mt={4}>
           <Icon variant="stroke" size={16} color="critical/50">
-            spam
+            information-circle
           </Icon>
           <Typography variant="captionRegular" color="critical/50">
             {errorText}

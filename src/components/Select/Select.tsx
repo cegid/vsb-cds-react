@@ -31,7 +31,7 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
   },
   "& .MuiSelect-select": {
     ...typography.bodyMRegular,
-    color: primary[10],
+    color: neutral[10],
     paddingLeft: "0 !important",
     [theme.breakpoints.down("sm")]: {
       paddingTop: "8px !important",
@@ -131,7 +131,7 @@ function Select(props: CegidSelectProps) {
       {errorText && (
         <Row gap={2} mt={4}>
           <Icon variant="stroke" size={16} color="critical/50">
-            spam
+            information-circle
           </Icon>
           <Typography variant="captionRegular" color="critical/50">
             {errorText}
