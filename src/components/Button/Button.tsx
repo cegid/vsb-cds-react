@@ -133,7 +133,14 @@ const getSizeStyles = (size: ButtonSize, isContained = false) => {
         "& .MuiSvgIcon-root": {
           fontSize: "16px",
         },
-        "& .MuiButton-startIcon, & .MuiButton-endIcon": {
+        "& .MuiButton-startIcon": {
+          marginRight: 0,
+          "& > *:first-of-type": {
+            fontSize: "16px",
+          },
+        },
+        "& .MuiButton-endIcon": {
+          marginLeft: 0,
           "& > *:first-of-type": {
             fontSize: "16px",
           },
@@ -147,7 +154,14 @@ const getSizeStyles = (size: ButtonSize, isContained = false) => {
         "& .MuiSvgIcon-root": {
           fontSize: "16px",
         },
-        "& .MuiButton-startIcon, & .MuiButton-endIcon": {
+        "& .MuiButton-startIcon": {
+          marginRight: 0,
+          "& > *:first-of-type": {
+            fontSize: "16px",
+          },
+        },
+        "& .MuiButton-endIcon": {
+          marginLeft: 0,
           "& > *:first-of-type": {
             fontSize: "16px",
           },
@@ -161,7 +175,14 @@ const getSizeStyles = (size: ButtonSize, isContained = false) => {
         "& .MuiSvgIcon-root": {
           fontSize: "16px",
         },
-        "& .MuiButton-startIcon, & .MuiButton-endIcon": {
+        "& .MuiButton-startIcon": {
+          marginRight: 0,
+          "& > *:first-of-type": {
+            fontSize: "16px",
+          },
+        },
+        "& .MuiButton-endIcon": {
+          marginLeft: 0,
           "& > *:first-of-type": {
             fontSize: "16px",
           },
@@ -180,7 +201,14 @@ const getSizeStyles = (size: ButtonSize, isContained = false) => {
         "& .MuiSvgIcon-root": {
           fontSize: "16px",
         },
-        "& .MuiButton-startIcon, & .MuiButton-endIcon": {
+        "& .MuiButton-startIcon": {
+          marginRight: 0,
+          "& > *:first-of-type": {
+            fontSize: "16px",
+          },
+        },
+        "& .MuiButton-endIcon": {
+          marginLeft: 0,
           "& > *:first-of-type": {
             fontSize: "16px",
           },
