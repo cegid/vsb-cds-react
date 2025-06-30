@@ -35,6 +35,9 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
         outlineOffset: "0",
       },
     },
+    "& .MuiSelect-icon": {
+      display: "none",
+    },
   },
   "& .MuiSelect-select": {
     ...typography.bodyMRegular,
@@ -133,7 +136,12 @@ function Select(props: CegidSelectProps) {
 
   return (
     <>
-      <StyledSelect {...otherProps} />
+      <StyledSelect
+        {...otherProps}
+        InputProps={{
+          endAdornment: <Icon size={16}>arrow-down-01</Icon>,
+        }}
+      />
 
       {errorText && (
         <Row gap={2} mt={4}>
