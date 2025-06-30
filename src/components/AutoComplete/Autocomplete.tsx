@@ -31,6 +31,13 @@ const CustomAutocomplete = styled(CegidAutocomplete)<{ hasError?: boolean }>(
         borderColor: `${hasError ? critical[80] : neutral[90]}`,
         outlineOffset: "1px",
       },
+      "&.Mui-readOnly": {
+        backgroundColor: neutral[99],
+        "&.Mui-focused": {
+          outline: "none",
+          outlineOffset: "0",
+        },
+      },
     },
     "& .MuiAutocomplete-input": {
       ...typography.bodyMRegular,

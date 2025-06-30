@@ -28,6 +28,13 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
       outline: `2px solid ${primary[70]}`,
       outlineOffset: "1px",
     },
+    "&.Mui-readOnly": {
+      backgroundColor: neutral[99],
+      "&.Mui-focused": {
+        outline: "none",
+        outlineOffset: "0",
+      },
+    },
   },
   "& .MuiSelect-select": {
     ...typography.bodyMRegular,

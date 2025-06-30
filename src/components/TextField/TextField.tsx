@@ -35,9 +35,13 @@ const StyledTextField = styled(CegidTextField)(({ theme, label }) => ({
     "&.Mui-focused": {
       outline: `2px solid ${primary[70]}`,
       outlineOffset: "1px",
-    },
+      },
     "&.Mui-readOnly": {
       backgroundColor: neutral[99],
+      "&.Mui-focused": {
+        outline: "none",
+        outlineOffset: "0",
+      },
     },
     "&.MuiInputBase-multiline": {
       paddingLeft: "12px",
