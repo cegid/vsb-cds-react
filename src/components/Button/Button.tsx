@@ -230,14 +230,14 @@ const buttonBaseStyles = {
   },
 };
 
-const StyledButton = styled(CegidButton)<{ buttonSize?: ButtonSize }>(
-  ({ theme, buttonSize = "auto" }) => ({
+const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
+  ({ theme, buttonsize = "auto" }) => ({
     ...buttonBaseStyles,
-    ...getSizeStyles(buttonSize),
+    ...getSizeStyles(buttonsize),
     "&.MuiButton-contained": {
       ...containedButtonBase,
-      ...getSizeStyles(buttonSize, true),
-      ...(buttonSize === "auto" && {
+      ...getSizeStyles(buttonsize, true),
+      ...(buttonsize === "auto" && {
         "@media (max-width: 600px)": {
           height: "40px",
           padding: "1px 16px",
@@ -414,7 +414,7 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
         >
           <StyledButton
             {...{ disableRipple: true, disableElevation: true, ...restProps }}
-            buttonSize={size}
+            buttonsize={size}
             ref={ref}
           />
         </Box>
@@ -423,7 +423,7 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
       return (
         <StyledButton
           {...{ disableRipple: true, disableElevation: true, ...restProps }}
-          buttonSize={size}
+          buttonsize={size}
           ref={ref}
         />
       );
