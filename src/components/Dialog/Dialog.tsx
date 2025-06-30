@@ -69,6 +69,11 @@ export interface DialogProps {
    * Optional children to display custom dialog (
    */
   children?: React.ReactNode;
+
+  /**
+   * Optional custom Icon element for alert variant
+   */
+  alertIcon?: React.ReactElement<typeof Icon>;
 }
 
 const Dialog: React.FC<DialogProps> = (props) => {
@@ -81,6 +86,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
     isOpen,
     children,
     onClose,
+    alertIcon,
   } = props;
 
   const theme = useTheme();
@@ -102,9 +108,11 @@ const Dialog: React.FC<DialogProps> = (props) => {
       display="flex"
       justifyContent="center"
     >
-      <Icon size={14} variant="solid">
-        add-01
-      </Icon>
+      {alertIcon || (
+        <Icon size={14} variant="solid">
+          add-01
+        </Icon>
+      )}
     </Box>
   );
 
