@@ -27,12 +27,12 @@ interface ProfileMenuActionProps {
 const ProfileMenuAction = ({label, icon, onClick}: ProfileMenuActionProps) => (
   <MenuItemStyled onClick={onClick}>
     <ListItemIcon>
-      <Icon>{icon}</Icon>
+      <Icon color='neutral/10'>{icon}</Icon>
     </ListItemIcon>
     <ListItemText
       disableTypography
       primary={
-        <Typography variant="bodySRegular" color="primary/10">
+        <Typography variant="bodySRegular" color="neutral/10">
           {label}
         </Typography>
       }

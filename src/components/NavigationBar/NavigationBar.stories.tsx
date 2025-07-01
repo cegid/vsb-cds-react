@@ -55,7 +55,7 @@ const meta = {
     profileMenuItems: PROFILE_MENU_ITEMS,
     userFirstName: "John",
     userLastName: "Doe",
-    userTrigram: "JDD",
+    userTrigram: "JD",
     onLogOut: () => console.log("logOut clicked!"),
   },
 } satisfies Meta<typeof NavigationBar>;
@@ -70,14 +70,13 @@ export const Default: Story = {
     footerNavItems: FOOTER_ITEMS,
     userFirstName: "John",
     userLastName: "Doe",
-    userTrigram: "JDD",
+    userTrigram: "JD",
     activePath: "/ventes/devis",
     onLogOut: () => console.log("logOut clicked!"),
   },
   render: (args) => (
     <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f0f0f0', }}>
       <NavigationBar {...args} />
-
       <div
         style={{
           flex: 1,

@@ -1,13 +1,13 @@
-import { ButtonBase, styled } from "@cegid/cds-react";
+import { ListItem, ListItemText, styled } from "@cegid/cds-react";
 import Icon from "../Icon";
 import Box from "../Box";
 import Typography from "../Typography";
 import IconButton from "../IconButton";
 import { ComponentWithExpandedProp, ExtendedNavItem, ExtendedSubNavItem, NavList, ProfileMenuItem } from "./NavigationBar";
-import NavItemButton from "./NavItemButton";
+import NavItemButton, { NavListItemButton, NavListItemIcon } from "./NavItemButton";
 import { useState } from "react";
 import ProfileMenu from "./ProfileMenu";
-import { primary } from "../../theme";
+import MenuToggleButton from "./MenuToggleButton";
 
 const HeaderContainer = styled(Box, {
   shouldForwardProp: prop => prop !== 'expanded',
@@ -44,7 +44,6 @@ const MenuToggleWrapper = styled(Box, {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    padding: '0 4px',
     width: '100%',
   }
   : 
@@ -58,53 +57,9 @@ const MenuToggleButtonContainer = styled(Box, {
   alignSelf: expanded ? 'stretch' : undefined,
   display: 'flex',
   flexDirection: expanded ? undefined : 'column',
-  gap : expanded ? undefined : '10px',
-  height: expanded ? '34px' : '56px',
+  height: '34px',
   justifyContent: expanded ? undefined : 'center',
   padding: '8px 0',
-}));
-
-const ProfileSection = styled(ButtonBase, {
-  shouldForwardProp: prop => prop !== 'expanded',
-})<ComponentWithExpandedProp>(({ expanded }) => 
-  expanded ?
-  {
-    alignItems: 'flex-start',
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '0 8px',
-    width: '100%',
-    borderRadius: "9999px",
-    '&:hover': {
-      backgroundColor: primary[99],
-    },
-  }
-: {
-  borderRadius: "9999px",
-  '&:hover': {
-    backgroundColor: primary[99],
-  },
-});
-
-const ProfileWrapper = styled(Box, {
-  shouldForwardProp: prop => prop !== 'expanded',
-})<ComponentWithExpandedProp>(({ theme, expanded }) => 
-  expanded ?
-  {
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    display: 'flex',
-    gap: theme.spacing(4),
-    padding: '8px 0',
-  }
-: {});
-
-const ProfileContent = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(2),
-  flex: 1,
-  justifyContent: 'space-between',
 }));
 
 const IconButtonProfile = styled(IconButton)(() => ({
@@ -160,32 +115,39 @@ const NavHeader = ({
       <MenuControlSection expanded={isExpanded}>
         <MenuToggleWrapper expanded={isExpanded}>
           <MenuToggleButtonContainer expanded={isExpanded}>
-            <IconButton variant="iconOnly" onClick={onToggleExpandNavigation} title="Basculer la navigation">
-              <Icon size="14px" color="primary/10">sidebar-left-01</Icon>
-            </IconButton>
+            <MenuToggleButton isExpanded={isExpanded} onToggle={onToggleExpandNavigation} />
           </MenuToggleButtonContainer>
         </MenuToggleWrapper>
       </MenuControlSection>
-      <ProfileSection expanded={isExpanded} onClick={handleProfileClick}>
-        <ProfileWrapper expanded={isExpanded}>
-          <img
-            src={logoSrc}
-            alt="Logo Cegid"
-            width={24}
-            height={24}
-          />
-          { isExpanded && (
-            <ProfileContent>
-              <Typography variant="bodySSemiBold" color="primary/10">
-                Bonjour {userFirstName}
-              </Typography>
-              <IconButtonProfile variant="iconOnly" title="Accès au profil">
-                <Icon variant="stroke" size="16px" color="primary/10">arrow-down-01</Icon>
-              </IconButtonProfile>
-            </ProfileContent>
-          )}
-        </ProfileWrapper>
-      </ProfileSection>
+      <NavList expanded={isExpanded}>
+        <ListItem disablePadding onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+          <NavListItemButton onClick={handleProfileClick} title="Accès au profil" active={open} profile={true} sidebar={false} expanded={isExpanded}>
+              <NavListItemIcon>
+                <img
+                  src={logoSrc}
+                  alt="Logo Cegid"
+                  width={24}
+                  height={24}
+                />
+              </NavListItemIcon>
+            {isExpanded && (
+              <>
+                <ListItemText
+                  disableTypography
+                  primary={
+                    <Typography variant="bodySMedium" color="primary/10" noWrap>
+                      Bonjour {userFirstName}
+                    </Typography>
+                  }
+                />
+                <IconButtonProfile variant="iconOnly" title="Accès au profil">
+                  <Icon variant="stroke" size="16px" color="primary/10">arrow-down-01</Icon>
+                </IconButtonProfile>
+              </>
+            )}
+          </NavListItemButton>
+      </ListItem>
+      </NavList>
       <ProfileMenu
         anchorEl={anchorEl}
         isOpen={open}

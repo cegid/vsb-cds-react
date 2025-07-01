@@ -2,12 +2,12 @@ import { Divider, ListItemIcon, ListItemText, Menu, MenuItem, styled } from "@ce
 import Avatar from "../Avatar";
 import Typography from "../Typography";
 import Icon from "../Icon";
-import { neutral } from "../../theme";
+import { critical, neutral } from "../../theme";
 import Box from "../Box";
 import { ProfileMenuItem } from "./NavigationBar";
 import ProfileMenuAction from "./ProfileMenuAction";
 
-const ProfileMenuContainer = styled(Menu)(({ theme }) => ({
+const ProfileMenuContainer = styled(Menu)(() => ({
   '& .MuiBackdrop-root': {
     backgroundColor: 'transparent',
   },
@@ -20,6 +20,9 @@ const ProfileMenuContainer = styled(Menu)(({ theme }) => ({
     maxWidth: '680px',
     padding: '8px 0',
     width: '232px',
+  },
+  '& .MuiList-root': {
+    padding: 0,
   }
 }));
 
@@ -46,26 +49,52 @@ const DividerStyled = styled(Divider)(() => ({
   justifyContent: 'center',
 }));
 
-const NameContainer = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  padding: '6px 4px',
-  alignItems: 'center',
-  gap: theme.spacing(4),
-  alignSelf: 'stretch',
-}));
-
-const MenuItemStyled = styled(MenuItem)(({ theme }) => ({
+const MenuItemAvatarStyled = styled(MenuItem)(({theme}) => ({
   alignItems: 'center',
   alignSelf: 'stretch',
   borderRadius: '8px',
+  cursor: 'default',
   display: 'flex',
   gap: theme.spacing(4),
   padding: theme.spacing(4),
+  pointerEvents: 'none',
+
+  '&:hover, &:focus': {
+    backgroundColor: 'transparent',
+  },
+
+  '& .MuiTouchRipple-root': {
+    display: 'none',
+  },
+}));
+
+const MenuItemLogOutStyled = styled(MenuItem)(({ theme }) => ({
+  alignItems: 'center',
+  alignSelf: 'stretch',
+  borderRadius: '8px',
+  color: neutral[10],
+  display: 'flex',
+  gap: theme.spacing(4),
+  padding: theme.spacing(4),
+  '& .MuiListItemIcon-root': {
+    color: neutral[10],
+  },
+
   '&:hover': {
-    backgroundColor: neutral[99],
+    backgroundColor: critical[99],
+    color: critical[50],
+
+    '& .MuiListItemIcon-root': {
+      color: critical[50],
+    },
   },
   '&:focus': {
     backgroundColor: neutral[99],
+    color: critical[50],
+
+    '& .MuiListItemIcon-root': {
+      color: critical[50],
+    },
   },
 }))
 
@@ -105,12 +134,19 @@ const ProfileMenu = ({
   >
     <MenuContentWrapper>
       <ActionContainer>
-        <NameContainer>
-          <Avatar size="medium" color="primary" trigram={userTrigram} />
-          <Typography variant="bodySRegular" color="primary/10">
-            {userFirstName} {userLastName}
-          </Typography>
-        </NameContainer>
+        <MenuItemAvatarStyled>
+          <ListItemIcon>
+            <Avatar size="medium" color="primary" trigram={userTrigram} />
+          </ListItemIcon>
+          <ListItemText
+            disableTypography
+            primary={
+              <Typography variant="bodySRegular" color="neutral/10">
+                {userFirstName} {userLastName}
+              </Typography>
+            }
+          />
+        </MenuItemAvatarStyled>
         { profileMenuItems
           .filter(profileMenuItem => profileMenuItem.isVisible ?? true)
           .map((profileMenuItem) => (
@@ -126,19 +162,19 @@ const ProfileMenu = ({
       <DividerStyled />
 
       <ActionContainer>
-        <MenuItemStyled onClick={onLogOut}>
+        <MenuItemLogOutStyled onClick={onLogOut}>
           <ListItemIcon>
             <Icon>logout-02</Icon>
           </ListItemIcon>
           <ListItemText
             disableTypography
             primary={
-              <Typography variant="bodySRegular" color="primary/10">
+              <Typography variant="bodySRegular">
                 Déconnexion
               </Typography>
             }
           />
-        </MenuItemStyled>
+        </MenuItemLogOutStyled>
       </ActionContainer>
     </MenuContentWrapper>
   </ProfileMenuContainer>
