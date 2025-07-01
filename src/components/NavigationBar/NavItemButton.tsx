@@ -6,42 +6,61 @@ import Typography from "../Typography";
 import { primary } from "../../theme";
 
 export interface NavListItemButtonProp {
-  isActive: boolean;
-  isSideBar: boolean;
+  active: boolean;
+  sidebar: boolean;
+  expanded: boolean;
+  profile?: boolean;
 }
 
-const NavListItemButton = styled(ListItemButton, {
+export const NavListItemButton = styled(ListItemButton, {
   shouldForwardProp: prop => {
     const key = String(prop);
-    return !['isActive', 'isSideBar'].includes(key);
+    return !['active', 'sidebar', 'expanded'].includes(key);
   },
-})<NavListItemButtonProp>(({ isActive, isSideBar }) => ({
-  padding: '0 8px',
-  borderRadius: '8px',
-  display: 'flex',
-  justifyContent: 'flex-start',
-  gap: '8px',
-  backgroundColor: isActive ? primary[90] : 'transparent',
-  '&:hover': {
-    backgroundColor: isSideBar ? primary[95] : primary[90],
-  },
-}));
+})<NavListItemButtonProp>(({ active, sidebar, expanded, profile = false }) => {
 
-const MenuIcon = styled(Icon, {
+  let backgroundColor: string;
+  if (!active) {
+    backgroundColor = 'transparent';
+  } else if (profile) {
+    backgroundColor = primary[99];
+  } else {
+    backgroundColor = primary[90];
+  }
+
+  return {
+    alignItems: 'center',
+    backgroundColor,
+    borderRadius: '8px',
+    display: 'flex',
+    gap: '8px',
+    height: '32px',
+    justifyContent: expanded ? 'flex-start' : 'center',
+    overflow: 'hidden',
+    padding: expanded ? '4px' : '4px 8px',
+    width: expanded ? undefined : '32px',
+    '&:hover': {
+      backgroundColor: sidebar ? primary[95] : primary[99],
+    },
+  }
+});
+
+export const MenuIcon = styled(Icon, {
   shouldForwardProp: prop => prop !== 'expanded',
 })<ComponentWithExpandedProp>(({ theme, expanded }) => ({
-  display: 'flex',
-  padding: theme.spacing(2),
-  justifyContent: expanded ? undefined : 'center',
-  aspectRatio: '1 / 1',
   alignItems: 'center',
+  aspectRatio: '1 / 1',
+  display: 'flex',
   gap: '10px',
+  justifyContent: expanded ? undefined : 'center',
+  padding: theme.spacing(2),
 }));
 
-const NavListItemIcon = styled(ListItemIcon)(() => ({
+export const NavListItemIcon = styled(ListItemIcon)(() => ({
   alignItems: 'center',
   display: 'flex',
   gap: '10px',
+  margin: 0,
   minWidth: 0,
   padding: 0,
 }));
@@ -61,7 +80,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
   const iconVariant = navItem.isActive ? 'solid' : 'stroke';
   return (
     <ListItem disablePadding onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      <NavListItemButton onClick={onClick} title={navItem.label} isActive={navItem.isActive} isSideBar={isSideBar} disabled={navItem.isDisabled}>
+      <NavListItemButton onClick={onClick} title={navItem.label} active={navItem.isActive} sidebar={isSideBar} disabled={navItem.isDisabled} expanded={isExpanded}>
         {navItem.icon && (
           <NavListItemIcon>
             <MenuIcon variant={iconVariant} color="primary/10" size="16px" expanded={isExpanded}>
@@ -73,7 +92,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
           <ListItemText
             disableTypography
             primary={
-              <Typography variant="bodySMedium" color="primary/10">
+              <Typography variant="bodySMedium" color="primary/10" noWrap>
                 {navItem.label}
               </Typography>
             }

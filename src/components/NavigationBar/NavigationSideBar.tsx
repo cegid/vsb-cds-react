@@ -23,16 +23,16 @@ const SidebarPanel = styled(Paper, {
   padding: 16,
   pointerEvents: open ? 'auto'  : 'none',
   width: 225,
-  zIndex: theme.zIndex.drawer + 1,
+  zIndex: 1190,
   
   // ----- Animation ------
   transform: open ? 'translateX(0)' : 'translateX(-100%)',
   opacity:   open ? 1 : 0,
   transition: open
     // opening
-    ? 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 50ms ease-out'
+    ? 'transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 50ms ease-out'
     // closing
-    : 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 300ms ease-out',
+    : 'transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 600ms ease-out',
 
   /**
    * Breakpoint handling:
