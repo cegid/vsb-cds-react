@@ -84,14 +84,16 @@ const NavPanel = styled(Box, {
   padding: theme.spacing(4),
   flexDirection: 'column',
   justifyContent: expanded ? 'center' : 'flex-end',
-  alignItems: expanded ? 'flex-start' : 'center',
+  alignItems: 'flex-start',
   alignSelf: 'stretch',
   gap: theme.spacing(9),
   flexShrink: expanded ? undefined : 0,
   backgroundColor: primary[95],
-  transition: theme.transitions.create('width', { duration: 200 }),
-  zIndex: theme.zIndex.drawer + 2,
   overflow: 'hidden',
+  zIndex: 1200,
+  
+  // Animation for expanding and collapsing the navigation panel
+  transition: theme.transitions.create('width', { duration: 200 }),
 }));
 
 
@@ -139,7 +141,6 @@ interface NavigationBarProps {
    * Callback function to handle logout action.
    */
   onLogOut: () => void;
-
 }
 
 const computeActiveNavItems = (
@@ -303,17 +304,15 @@ const NavigationBar = ({
         />
       </NavPanel>
 
-      {isSideBarOpen && (
-        <NavigationSideBar
-          parent={hoveredNavItem ?? activeNavItem!}
-          navItems={sidebarNavItems}
-          open={isSideBarOpen}
-          anchorWidth={navWidth}
-          onMouseEnter={() => window.clearTimeout(hoverTimer.current)}
-          onMouseLeave={() => setHoveredNavItem(null)}
-          onNavItemClick={handleNavItemClick}
-        />
-      )}
+      <NavigationSideBar
+        parent={hoveredNavItem ?? activeNavItem!}
+        navItems={sidebarNavItems}
+        open={isSideBarOpen}
+        anchorWidth={navWidth}
+        onMouseEnter={() => window.clearTimeout(hoverTimer.current)}
+        onMouseLeave={() => setHoveredNavItem(null)}
+        onNavItemClick={handleNavItemClick}
+      />
     </NavContainer>
   );
 };
