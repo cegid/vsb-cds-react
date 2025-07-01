@@ -43,11 +43,22 @@ const SidebarPanel = styled(Paper, {
   position: 'absolute',
   top: 0,
   left: anchorWidth,
+
   [theme.breakpoints.up(1535)]: {
-      boxShadow: 'none',
-      left: 'auto',
-      position: 'relative',
-      top: 'auto',
+    boxShadow: 'none',
+    position: 'relative',
+    left: 'auto',
+    top: 'auto',
+
+    // We switch from transform-based overlay to width-based inline collapse
+    // so the sidebar can animate closed without pushing adjacent content.
+    opacity: 1,
+    overflow: 'hidden',
+    padding: open ? 16  : 0,
+    pointerEvents: 'auto',
+    transform: 'none',
+    transition: 'width 200ms ease, padding 200ms ease',
+    width: open ? 225 : 0,
   },
 }));
 
