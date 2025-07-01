@@ -104,7 +104,6 @@ const Status: React.FC<StatusProps> = ({
   const iconSize = size === "small" ? 12 : 14;
 
   const darkStyle = {
-    ...typography.bodySMedium,
     backgroundColor: palette[50],
     color: white,
     border: "1px solid",
@@ -112,19 +111,43 @@ const Status: React.FC<StatusProps> = ({
   };
 
   const lightStyle = {
-    ...typography.bodySMedium,
     backgroundColor: palette[99],
-    color: palette[50],
+    color: color === "success" ? palette[50] : palette[30],
     border: "1px solid",
     borderColor: `${palette[30]}4D`,
   };
 
   const linkStyle = {
-    ...typography.bodySMedium,
     backgroundColor: white,
     color: palette[60],
     border: "1px solid",
     borderColor: `${palette[40]}4D`,
+  };
+
+  const getLightColor = (color: PaletteNames) => {
+    switch (color) {
+      case "success":
+        return {
+          backgroundColor: color[99],
+          color: color[50],
+          border: "1px solid",
+          borderColor: `${color[30]}4D`,
+        };
+      case "info":
+        return {
+          backgroundColor: color[99],
+          color: color[30],
+          border: "1px solid",
+          borderColor: color[80],
+        };
+      default:
+        return {
+          backgroundColor: color[99],
+          color: color[30],
+          border: "1px solid",
+          borderColor: `${color[30]}4D`,
+        };
+    }
   };
 
   const getStyle = () => {
@@ -137,6 +160,20 @@ const Status: React.FC<StatusProps> = ({
       default:
         return lightStyle;
     }
+  };
+
+  const getIcon = () => {
+    return icon ? (
+      <Box
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          marginRight: label ? spacing(2) : 0,
+        }}
+      >
+        <Icon size={iconSize}>{icon}</Icon>
+      </Box>
+    ) : undefined;
   };
 
   return (
@@ -164,20 +201,12 @@ const Status: React.FC<StatusProps> = ({
         >
           {avatar}
         </Box>
-      ) : icon ? (
-        <Box
-          sx={{
-            display: "inline-flex",
-            alignItems: "center",
-            marginRight: label ? spacing(2) : 0,
-          }}
-        >
-          <Icon size={iconSize}>{icon}</Icon>
-        </Box>
-      ) : null}
+      ) : (
+        getIcon()
+      )}
 
       <Typography
-        variant={size === "small" ? "captionRegular" : "bodySRegular"}
+        variant={size === "small" ? "captionRegular" : "bodySMedium"}
         sx={{
           whiteSpace: "nowrap",
           overflow: "hidden",
