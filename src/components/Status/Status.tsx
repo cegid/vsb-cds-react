@@ -7,7 +7,6 @@ import { OverridableComponent, SvgIconTypeMap } from "@cegid/cds-react";
 import colorPalettes, { PaletteNames, white } from "../../theme/colors";
 import spacing from "../../theme/spacing";
 import Typography from "../Typography/Typography";
-import typography from "../../theme/typography";
 import Box from "../Box";
 import Icon from "../Icon";
 import Avatar from "../Avatar";
@@ -43,13 +42,17 @@ export interface StatusProps {
   variant?: StatusVariant;
 
   /**
-   * Optional icon name to display before the label text.
+   * Optional icon to display before the label text.
+   * Can be either:
+   * - A string representing the icon name (will be wrapped in Icon component)
+   * - A React element of type Icon (will have its size prop overridden)
    * Icon size automatically adjusts based on the size prop (12px for small, 14px for medium).
    * Includes proper spacing between icon and text.
-   * @example "user"
-   * @example "check-circle"
+   * @example "user" // String icon name
+   * @example "check-circle" // String icon name
+   * @example <Icon>settings</Icon> // React element
    */
-  icon?: string;
+  icon?: string | React.ReactElement<typeof Icon>;
 
   /**
    * Optional avatar component to display before the label text.
@@ -110,13 +113,6 @@ const Status: React.FC<StatusProps> = ({
     borderColor: `${palette[30]}4D`,
   };
 
-  const lightStyle = {
-    backgroundColor: palette[99],
-    color: color === "success" ? palette[50] : palette[30],
-    border: "1px solid",
-    borderColor: `${palette[30]}4D`,
-  };
-
   const linkStyle = {
     backgroundColor: white,
     color: palette[60],
@@ -124,28 +120,28 @@ const Status: React.FC<StatusProps> = ({
     borderColor: `${palette[40]}4D`,
   };
 
-  const getLightColor = (color: PaletteNames) => {
+  const getLightStyle = () => {
     switch (color) {
       case "success":
         return {
-          backgroundColor: color[99],
-          color: color[50],
+          backgroundColor: palette[99],
+          color: palette[50],
           border: "1px solid",
-          borderColor: `${color[30]}4D`,
+          borderColor: `${palette[30]}4D`,
         };
       case "info":
         return {
-          backgroundColor: color[99],
-          color: color[30],
+          backgroundColor: palette[99],
+          color: palette[30],
           border: "1px solid",
-          borderColor: color[80],
+          borderColor: palette[80],
         };
       default:
         return {
-          backgroundColor: color[99],
-          color: color[30],
+          backgroundColor: palette[99],
+          color: palette[30],
           border: "1px solid",
-          borderColor: `${color[30]}4D`,
+          borderColor: `${palette[30]}4D`,
         };
     }
   };
@@ -157,13 +153,16 @@ const Status: React.FC<StatusProps> = ({
       case "link":
         return linkStyle;
       case "light":
+        return getLightStyle();
       default:
-        return lightStyle;
+        return darkStyle;
     }
   };
 
   const getIcon = () => {
-    return icon ? (
+    if (!icon) return undefined;
+
+    return (
       <Box
         sx={{
           display: "inline-flex",
@@ -171,11 +170,10 @@ const Status: React.FC<StatusProps> = ({
           marginRight: label ? spacing(2) : 0,
         }}
       >
-        <Icon size={iconSize}>{icon}</Icon>
+        {typeof icon === "string" ? <Icon size={iconSize}>{icon}</Icon> : icon}
       </Box>
-    ) : undefined;
+    );
   };
-
   return (
     <Box
       sx={{
