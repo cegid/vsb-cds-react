@@ -5,9 +5,10 @@ import { primary } from "../../theme";
 import logo from './logo.svg';
 import NavHeader from "./NavigationHeader";
 import NavSection from "./NavigationSection";
-import NavigationSideBar from "./NavigationSideBar";
+import NavigationSideBar, { SIDEBAR_WIDTH } from "./NavigationSideBar";
 import { useExtendedNavItems } from "./useExtendedNavItems";
 import { useSidebarState } from "./useNavigationSideBarState";
+import NavigationHelpers from "./NavigationHelpers";
 
 export interface NavItem {
   icon?: string;
@@ -16,8 +17,8 @@ export interface NavItem {
   key: string;
   label: string;
   path?: string;
-  subItems?: SubNavItem[];
-  onClick: () => void;
+  children?: NavItem[];
+  onClick?: () => void;
 }
 
 export interface ProfileMenuItem {
@@ -27,16 +28,10 @@ export interface ProfileMenuItem {
   onClick: () => void;
 }
 
-export type SubNavItem = Omit<NavItem, 'subItems'>;
-
-export interface ExtendedSubNavItem extends SubNavItem {
-  isActive: boolean;
-}
-
 export interface ExtendedNavItem extends NavItem {
   type: MenuItemType;
   isActive: boolean;
-  subItems?: ExtendedSubNavItem[];
+  children?: ExtendedNavItem[];
 }
 
 export enum MenuItemType {
@@ -76,9 +71,16 @@ export interface ComponentWithExpandedProp {
   expanded: boolean;
 }
 
+export interface NavPanelProps extends ComponentWithExpandedProp {
+  sidebaropen?: boolean;
+}
+
 const NavPanel = styled(Box, {
-  shouldForwardProp: prop => prop !== 'expanded',
-})<ComponentWithExpandedProp>(({ theme, expanded }) => ({
+  shouldForwardProp: prop => {
+    const key = String(prop);
+    return !['expanded', 'sidebaropen'].includes(key);
+  },
+})<NavPanelProps>(({ theme, expanded, sidebaropen = false })  => ({
   display: 'flex',
   width: expanded ? '204px' : '48px' ,
   padding: theme.spacing(4),
@@ -94,6 +96,14 @@ const NavPanel = styled(Box, {
   
   // Animation for expanding and collapsing the navigation panel
   transition: theme.transitions.create('width', { duration: 200 }),
+
+  [theme.breakpoints.up(1535)]: {
+    /**
+     * At or above 1535px we play on margin-right to simulate a relative position for the sidebar
+     */
+    marginRight: sidebaropen ? SIDEBAR_WIDTH : 0,
+  },
+
 }));
 
 
@@ -143,35 +153,6 @@ interface NavigationBarProps {
   onLogOut: () => void;
 }
 
-const computeActiveNavItems = (
-  navItems: ExtendedNavItem[],
-  clicked: ExtendedNavItem | ExtendedSubNavItem
-): ExtendedNavItem[] => {
-
-  if (!clicked.path) return navItems;
-
-  return navItems.map((navItem) => {
-
-    // clicked item got subItems
-    const isClickedNavItemWithSubItems = navItem.key === clicked.key && 'subItems' in clicked;
-
-    // clicked item is a subItem of a parent item
-    const isSubItem = navItem.subItems?.some((sub) => sub.key === clicked.key) ?? false;
-
-    // we build the new subItems array with the active state
-    const newSubItems = navItem.subItems?.map((sub) => ({
-      ...sub,
-      isActive: sub.key === clicked.key,
-    })) ?? [];
-
-    return {
-      ...navItem,
-      isActive: isClickedNavItemWithSubItems || isSubItem,
-      subItems: newSubItems,
-    };
-  });
-};
-
 const NavigationBar = ({
   activePath,
   bodyNavItems,
@@ -204,7 +185,7 @@ const NavigationBar = ({
 
   const isSideBarOpen = isLargeScreen
    ? baseIsSideBarOpen
-   : Boolean(hoveredNavItem?.subItems?.length);
+   : Boolean(hoveredNavItem?.children?.length);
 
   // Hover timer to delay a little the opening of the sidebar
   const hoverTimer = useRef<number>();  
@@ -232,32 +213,20 @@ const NavigationBar = ({
    * Effect to handle the initial active path when the component mounts.
    */
   useEffect(() => {
-    let activeItem: ExtendedNavItem | ExtendedSubNavItem | null = null;
-    for (const parentNavItem of navItems) {
-      if (parentNavItem.path === activePath) {
-        activeItem = parentNavItem;
-        break;
-      }
-      const subNavItem = parentNavItem.subItems?.find((subNavItem) => subNavItem.path === activePath);
-      if (subNavItem) {
-        activeItem = subNavItem;
-        break;
-      }
-    }
-    if (activeItem) {
-      const newNavItems = computeActiveNavItems(navItems, activeItem);
-
+    const activePathItem = NavigationHelpers.findNavItemByPath(navItems, activePath);
+    if (activePathItem) {
+      const newNavItems = NavigationHelpers.computeActiveNavItems(navItems, activePathItem);
       setNavItems(newNavItems);
     }
   }, []); 
 
 
-  const handleNavItemClick = (navItem: ExtendedNavItem | ExtendedSubNavItem) => {
-    const newNavItems = computeActiveNavItems(navItems, navItem);
+  const handleNavItemClick = (navItem: ExtendedNavItem) => {
+    const newNavItems = NavigationHelpers.computeActiveNavItems(navItems, navItem);
 
     setNavItems(newNavItems);
     setHoveredNavItem(null);
-    navItem.onClick();
+    navItem?.onClick?.();
   };
 
   const handleToggleExpandNavigation = () => {
@@ -270,6 +239,7 @@ const NavigationBar = ({
       <NavPanel
         ref={navRef}
         expanded={isExpanded}
+        sidebaropen={isSideBarOpen}
       >
         <NavHeader
           headerNavItems={extandedHeaderNavItems}
@@ -305,6 +275,7 @@ const NavigationBar = ({
       </NavPanel>
 
       <NavigationSideBar
+        key={activeNavItem?.key}
         parent={hoveredNavItem ?? activeNavItem!}
         navItems={sidebarNavItems}
         open={isSideBarOpen}
