@@ -162,22 +162,6 @@ const MessageContent = ({ message }: { message: SnackbarMessage }) => {
   return <>{message}</>;
 };
 
-/**
- * Snackbar component for displaying temporary messages with optional actions
- * 
- * @example
- * ```tsx
- * <Snackbar
- *   severity="success"
- *   message="Operation completed successfully"
- *   onClose={() => setShowSnackbar(false)}
- *   action={{
- *     label: "Undo",
- *     onClick: () => handleUndo()
- *   }}
- * />
- * ```
- */
 const Snackbar = ({
   severity = "success",
   size = "small",
