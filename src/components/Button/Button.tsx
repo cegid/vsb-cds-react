@@ -72,9 +72,9 @@ const createOutlinedButtonStyle = (
 const createTonalButtonStyle = (
   color: any,
   colorIndex = 60,
-  bgIndex = 95,
-  hoverIndex = 90,
-  activeIndex = 95
+  bgIndex = 99,
+  hoverIndex = 95,
+  activeIndex = 99
 ) => ({
   color: color[colorIndex],
   backgroundColor: color[bgIndex],
