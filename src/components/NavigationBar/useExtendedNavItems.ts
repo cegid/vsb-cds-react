@@ -1,25 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import { MenuItemType, NavItem, SubNavItem, ExtendedNavItem } from './NavigationBar';
-
-/**
- * Maps a list of NavItem into ExtendedNavItem with the given type,
- * initializing all isActive flags to false.
- */
-export function mapSection(
-  items: NavItem[],
-  type: MenuItemType
-): ExtendedNavItem[] {
-  return items.map((navItem) => ({
-    ...navItem,
-    type,
-    isActive: false,
-    subItems:
-      navItem.subItems?.map((sub: SubNavItem) => ({
-        ...sub,
-        isActive: false,
-      })) ?? [],
-  }));
-}
+import { MenuItemType, NavItem, ExtendedNavItem } from './NavigationBar';
+import NavigationHelpers from './NavigationHelpers';
 
 export type UseExtendedNavItemsReturn = [
   ExtendedNavItem[],
@@ -33,9 +14,9 @@ export const useExtendedNavItems = (headerNavItems: NavItem[], bodyNavItems: Nav
 
   const initialNavItems = useMemo<ExtendedNavItem[]>(() => {
     return [
-      ...mapSection(headerNavItems, MenuItemType.Header),
-      ...mapSection(bodyNavItems,   MenuItemType.Nav),
-      ...mapSection(footerNavItems, MenuItemType.Footer),
+      ...NavigationHelpers.buildExtendedNavItems(headerNavItems, MenuItemType.Header),
+      ...NavigationHelpers.buildExtendedNavItems(bodyNavItems,   MenuItemType.Nav),
+      ...NavigationHelpers.buildExtendedNavItems(footerNavItems, MenuItemType.Footer),
     ];
   }, [headerNavItems, bodyNavItems, footerNavItems]);
 

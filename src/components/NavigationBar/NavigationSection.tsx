@@ -1,6 +1,6 @@
 import { styled } from '@cegid/cds-react';
 import Box from '../Box';
-import type { ComponentWithExpandedProp, ExtendedNavItem, ExtendedSubNavItem } from './NavigationBar';
+import type { ComponentWithExpandedProp, ExtendedNavItem } from './NavigationBar';
 import { MenuItemType, NavList } from './NavigationBar';
 import NavItemButton from './NavItemButton';
 
@@ -8,7 +8,7 @@ interface NavSectionProps {
   type: MenuItemType;
   navItems: ExtendedNavItem[];
   isExpanded: boolean;
-  onNavItemClick: (item: ExtendedNavItem | ExtendedSubNavItem) => void;
+  onNavItemClick: (item: ExtendedNavItem) => void;
   onNavMouseEnter: (item: ExtendedNavItem | null) => void;
   onNavMouseLeave: () => void;
 }
@@ -42,14 +42,14 @@ const NavSection: React.FC<NavSectionProps> = ({
         {navItems
           .filter(navItem => navItem.isVisible ?? true)
           .map((navItem) => {
-            const hasSubitems = Boolean(navItem.subItems);
+            const hasChildren = Boolean(navItem.children);
             return (
               <NavItemButton
                 key={navItem.key}
                 navItem={navItem}
                 isExpanded={isExpanded}
                 onClick={() => onNavItemClick(navItem)}
-                onMouseEnter={() => hasSubitems 
+                onMouseEnter={() => hasChildren 
                   ? onNavMouseEnter(navItem) 
                   : onNavMouseEnter(null)
                 }

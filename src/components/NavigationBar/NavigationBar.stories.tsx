@@ -71,7 +71,7 @@ export const Default: Story = {
     userFirstName: "John",
     userLastName: "Doe",
     userTrigram: "JD",
-    activePath: "/ventes/devis",
+    activePath: "/ventes/reglements/incoming",
     onLogOut: () => console.log("logOut clicked!"),
   },
   render: (args) => (

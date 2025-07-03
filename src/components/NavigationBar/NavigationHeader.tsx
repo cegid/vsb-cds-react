@@ -3,7 +3,7 @@ import Icon from "../Icon";
 import Box from "../Box";
 import Typography from "../Typography";
 import IconButton from "../IconButton";
-import { ComponentWithExpandedProp, ExtendedNavItem, ExtendedSubNavItem, NavList, ProfileMenuItem } from "./NavigationBar";
+import { ComponentWithExpandedProp, ExtendedNavItem, NavList, ProfileMenuItem } from "./NavigationBar";
 import NavItemButton, { NavListItemButton, NavListItemIcon } from "./NavItemButton";
 import { useState } from "react";
 import ProfileMenu from "./ProfileMenu";
@@ -80,7 +80,7 @@ interface NavHeaderProps {
   onLogOut: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
-  onNavItemClick: (navItem: ExtendedNavItem | ExtendedSubNavItem) => void;
+  onNavItemClick: (navItem: ExtendedNavItem) => void;
   onToggleExpandNavigation: () => void;
 };
 

@@ -1,6 +1,6 @@
 import { ListItem, ListItemButton, ListItemIcon, styled } from "@cegid/cds-react";
 import ListItemText from '@mui/material/ListItemText';
-import type { ExtendedSubNavItem, ExtendedNavItem, ComponentWithExpandedProp } from "./NavigationBar";
+import type { ExtendedNavItem, ComponentWithExpandedProp } from "./NavigationBar";
 import Icon from "../Icon";
 import Typography from "../Typography";
 import { primary } from "../../theme";
@@ -10,20 +10,23 @@ export interface NavListItemButtonProp {
   sidebar: boolean;
   expanded: boolean;
   profile?: boolean;
+  haschildren?: boolean;
 }
 
 export const NavListItemButton = styled(ListItemButton, {
   shouldForwardProp: prop => {
     const key = String(prop);
-    return !['active', 'sidebar', 'expanded'].includes(key);
+    return !['active', 'sidebar', 'expanded', 'haschildren'].includes(key);
   },
-})<NavListItemButtonProp>(({ active, sidebar, expanded, profile = false }) => {
+})<NavListItemButtonProp>(({ active, sidebar, expanded, profile = false, haschildren = false }) => {
 
   let backgroundColor: string;
   if (!active) {
     backgroundColor = 'transparent';
   } else if (profile) {
     backgroundColor = primary[99];
+  } else if (sidebar && haschildren) {
+    backgroundColor = primary[95];
   } else {
     backgroundColor = primary[90];
   }
@@ -56,6 +59,17 @@ export const MenuIcon = styled(Icon, {
   padding: theme.spacing(2),
 }));
 
+interface CollapseIconProps {
+  expandednavitem?: boolean;
+}
+
+export const CollapseIcon = styled(Icon, {
+  shouldForwardProp: prop => prop !== 'expandednavitem',
+})<CollapseIconProps>(({ expandednavitem }) => ({
+  transform: expandednavitem ? 'rotate(180deg)' : undefined,
+  transition: 'transform 0.2s',
+}));
+
 export const NavListItemIcon = styled(ListItemIcon)(() => ({
   alignItems: 'center',
   display: 'flex',
@@ -66,8 +80,9 @@ export const NavListItemIcon = styled(ListItemIcon)(() => ({
 }));
 
 interface NavItemButtonProps {
-  navItem: ExtendedNavItem | ExtendedSubNavItem;
+  navItem: ExtendedNavItem;
   isExpanded?: boolean;
+  isExpandedNavItem?: boolean;
   isSideBar?: boolean;
   onClick: () => void;
   onMouseEnter?: () => void;
@@ -75,12 +90,21 @@ interface NavItemButtonProps {
 }
 
 const NavItemButton: React.FC<NavItemButtonProps> = ({
-  navItem, isExpanded = true, isSideBar = false, onClick, onMouseEnter, onMouseLeave
+  navItem, isExpanded = true, isSideBar = false, isExpandedNavItem = false, onClick, onMouseEnter, onMouseLeave
 }) => {
   const iconVariant = navItem.isActive ? 'solid' : 'stroke';
+  const hasChildren = Array.isArray(navItem.children) && navItem.children.length > 0;
   return (
     <ListItem disablePadding onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      <NavListItemButton onClick={onClick} title={navItem.label} active={navItem.isActive} sidebar={isSideBar} disabled={navItem.isDisabled} expanded={isExpanded}>
+      <NavListItemButton
+        onClick={onClick}
+        title={navItem.label}
+        active={navItem.isActive}
+        sidebar={isSideBar}
+        disabled={navItem.isDisabled}
+        expanded={isExpanded}
+        haschildren={hasChildren}
+      >
         {navItem.icon && (
           <NavListItemIcon>
             <MenuIcon variant={iconVariant} color="primary/10" size="16px" expanded={isExpanded}>
@@ -97,6 +121,16 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
               </Typography>
             }
           />
+        )}
+        {isSideBar && hasChildren && (
+          <CollapseIcon
+            variant="stroke"
+            color="primary/10"
+            size="12px"
+            expandednavitem={isExpandedNavItem}
+          >
+            arrow-down-01
+          </CollapseIcon>
         )}
       </NavListItemButton>
     </ListItem>
