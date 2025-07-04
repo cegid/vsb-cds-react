@@ -7,25 +7,6 @@ import Box from "../Box";
 import { ProfileMenuItem } from "./NavigationBar";
 import ProfileMenuAction from "./ProfileMenuAction";
 
-const ProfileMenuContainer = styled(Menu)(() => ({
-  '& .MuiBackdrop-root': {
-    backgroundColor: 'transparent',
-  },
-  '& .MuiPaper-root': {
-    alignItems: 'flex-start',
-    backgroundColor: '#FFF',
-    border: `1px solid ${neutral[95]}`,
-    borderRadius: '16px',
-    boxShadow: '0px 4px 8px 0px rgba(0, 0, 0, 0.04), 0px 2px 4px 0px rgba(0, 0, 0, 0.04)',
-    maxWidth: '680px',
-    padding: '8px 0',
-    width: '232px',
-  },
-  '& .MuiList-root': {
-    padding: 0,
-  }
-}));
-
 const MenuContentWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -38,7 +19,6 @@ const ActionContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   gap: theme.spacing(2),
-  padding: '0 8px',
 }));
 
 const DividerStyled = styled(Divider)(() => ({
@@ -49,33 +29,20 @@ const DividerStyled = styled(Divider)(() => ({
   justifyContent: 'center',
 }));
 
-const MenuItemAvatarStyled = styled(MenuItem)(({theme}) => ({
-  alignItems: 'center',
-  alignSelf: 'stretch',
-  borderRadius: '8px',
+const MenuItemAvatarStyled = styled(MenuItem)(() => ({
   cursor: 'default',
-  display: 'flex',
-  gap: theme.spacing(4),
-  padding: theme.spacing(4),
   pointerEvents: 'none',
-
   '&:hover, &:focus': {
     backgroundColor: 'transparent',
   },
-
   '& .MuiTouchRipple-root': {
     display: 'none',
   },
 }));
 
-const MenuItemLogOutStyled = styled(MenuItem)(({ theme }) => ({
-  alignItems: 'center',
-  alignSelf: 'stretch',
-  borderRadius: '8px',
+const MenuItemLogOutStyled = styled(MenuItem)(() => ({
   color: neutral[10],
-  display: 'flex',
-  gap: theme.spacing(4),
-  padding: theme.spacing(4),
+
   '& .MuiListItemIcon-root': {
     color: neutral[10],
   },
@@ -119,18 +86,10 @@ const ProfileMenu = ({
   onClose,
   onLogOut,
 }: ProfileMenuProps) => (
-  <ProfileMenuContainer
+  <Menu
     anchorEl={anchorEl}
     open={isOpen}
     onClose={onClose}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'left',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'left',
-    }}
   >
     <MenuContentWrapper>
       <ActionContainer>
@@ -177,7 +136,7 @@ const ProfileMenu = ({
         </MenuItemLogOutStyled>
       </ActionContainer>
     </MenuContentWrapper>
-  </ProfileMenuContainer>
+  </Menu>
 
 );
 

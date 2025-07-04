@@ -60,3 +60,5 @@ export { default as IAChip } from "./IAChip";
 export * from "./IAChip";
 export { default as NavigationBar } from "./NavigationBar";
 export * from "./NavigationBar";
+export { default as Breadcrumbs } from "./Breadcrumbs";
+export * from "./Breadcrumbs";
