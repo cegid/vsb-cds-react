@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Box from "../Box";
 import Icon from "../Icon";
 import Typography from "../Typography";
@@ -10,7 +10,7 @@ interface BreadcrumbSegmentItemProps {
   shouldDisplayLogo: boolean;
 }
 
-const LinkStyled = styled(Typography)(({ theme }) => ({
+const LinkStyled = styled(Typography)(() => ({
   cursor: "pointer",
   textDecoration: "none",
   "&:hover": { textDecoration: "underline" },
@@ -37,10 +37,23 @@ const MenuButton = styled(Box, {
   },
 }));
 
+interface CollapseIconProps {
+  expandedsibling: boolean;
+}
+
+export const CollapseIcon = styled(Icon, {
+  shouldForwardProp: prop => prop !== 'expandedsibling',
+})<CollapseIconProps>(({ expandedsibling }) => ({
+  marginLeft: 'auto',
+  transform: expandedsibling ? 'rotate(180deg)' : undefined,
+  transition: 'transform 0.2s',
+}));
+
 const BreadcrumbSegmentItem = ({segment, shouldDisplayLogo = false}: BreadcrumbSegmentItemProps) => {
   const { breadcrumbNode, isActive, siblings } = segment;
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [expandedSiblings, setExpandedSiblings] = useState<Set<string>>(new Set());
 
   const isOpen = Boolean(anchorEl);
 
@@ -92,29 +105,78 @@ const BreadcrumbSegmentItem = ({segment, shouldDisplayLogo = false}: BreadcrumbS
         open={isOpen}
         onClose={handleCloseSegmentMenu}
       >
-        {siblings.map((sibling) => (
-          <MenuItem
-            key={sibling.id}
-            onClick={() => {
+        {siblings.map((sibling) => {
+
+          const hasChildren = (sibling.children || []).length > 0;
+          const isExpanded = expandedSiblings.has(sibling.id);
+
+          const handleClick = () => {
+            if (hasChildren) {
+              setExpandedSiblings(prev => {
+                const newSet = new Set(prev);
+                if (isExpanded) {
+                  newSet.delete(sibling.id);
+                } else {
+                  newSet.add(sibling.id);
+                }
+                return newSet;
+              });
+            } else {
               handleCloseSegmentMenu();
               sibling.onClick?.();
-            }}
-          >
-          {sibling.icon && (
-            <Icon
-              variant="stroke"
-              color="primary/10"
-              size="16px"
-            >
-              arrow-down-01
-            </Icon>
-          )}
-          <Typography variant="bodySRegular" color="primary/10">
-            {sibling.label}
-          </Typography>
-        </MenuItem>
+            }
+          }
 
-        ))}
+          return (
+            <Fragment key={sibling.id}>
+              <MenuItem onClick={handleClick}>
+                {sibling.icon && (
+                  <Icon
+                    variant="stroke"
+                    color="primary/10"
+                    size="16px"
+                  >
+                    { sibling.icon }
+                  </Icon>
+                )}
+                <Typography variant="bodySRegular" color="primary/10">
+                  {sibling.label}
+                </Typography>
+                {hasChildren && (
+                  <CollapseIcon expandedsibling={isExpanded} color="primary/10" size="16px">
+                    arrow-down-01
+                  </CollapseIcon>
+                )}
+                </MenuItem>
+                {isExpanded && hasChildren && sibling.children && (
+                  <Box pl={4}>
+                    {sibling.children.map((child) => (
+                      <MenuItem
+                        key={child.id}
+                        onClick={() => {
+                          handleCloseSegmentMenu();
+                          child.onClick?.();
+                        }}
+                      >
+                          {child.icon && (
+                            <Icon
+                              variant="stroke"
+                              color="primary/10"
+                              size="16px"
+                            >
+                              { child.icon }
+                            </Icon>
+                          )}
+                        <Typography variant="bodySRegular" color="primary/10">
+                          {child.label}
+                        </Typography>
+                      </MenuItem>
+                    ))}
+                  </Box>
+                )}
+            </Fragment>
+          )
+        })}
       </Menu>
     </>
   );
