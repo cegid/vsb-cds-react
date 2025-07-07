@@ -2,17 +2,37 @@
 
 import React from "react";
 
-import {
-  Chip as CegidChip,
-  ChipProps as CegidChipProps,
-  styled,
-} from "@cegid/cds-react";
+import { ChipProps as CegidChipProps, pink, plum } from "@cegid/cds-react";
 
-import colorPalettes, { white } from "../../theme/colors";
-import typography from "../../theme/typography";
+import { Avatar, Badge, Box, Icon, Row, Typography } from "..";
+import {
+  neutral,
+  white,
+  primary,
+  secondary,
+  success,
+  yellow,
+  critical,
+  CustomColorString,
+  PaletteNames,
+  banana,
+  beige,
+  info,
+  purple,
+} from "../../theme";
 
 export interface ChipProps
-  extends Omit<CegidChipProps, "size" | "variant" | "color" | "avatar"> {
+  extends Omit<
+    CegidChipProps,
+    | "size"
+    | "variant"
+    | "color"
+    | "avatar"
+    | "icon"
+    | "elevated"
+    | "clickable"
+    | "label"
+  > {
   /**
    * Controls the size of the chip component.
    * 'small' renders a 24px height chip with compact padding and bodySSemiBold typography.
@@ -20,84 +40,146 @@ export interface ChipProps
    * Affects dimensions, padding, typography, and icon sizes throughout the component.
    * @default 'medium'
    */
-  size?: "small" | "medium";
+  size?: "small" | "large";
+  /**
+   * Icon component to display at the start of the chip
+   * @example <Icon>user</Icon>
+   */
+  startIcon?:
+    | React.ReactElement<typeof Icon>
+    | React.ReactElement<typeof Avatar>;
+  /**
+   * Icon component to display at the end of the chip
+   * @example <Icon>user</Icon>
+   */
+  endIcon?: React.ReactElement<typeof Icon>;
+  /**
+   * Badge component to display at the end of the chip
+   */
+  badge?: React.ReactElement<typeof Badge>;
+  /**
+   * Label component to display on the chip
+   */
+  label?: string | React.ReactElement<typeof Typography>;
+  /**
+   * Color theme for the clicked state. Affects background and border colors when chip is clicked.
+   * @default 'primary'
+   */
+  color?: PaletteNames;
 }
 
-const { primary, neutral } = colorPalettes;
-
-const StyledChip = styled(CegidChip)<ChipProps>(({ size }) => ({
-  backgroundColor: white,
-  border: `1px solid ${neutral[90]}`,
-  borderRadius: size === "small" ? "10px" : "12px",
-  height: size === "small" ? 24 : 32,
-  color: neutral[50],
-  paddingLeft: size === "small" ? "4px" : "8px",
-  paddingRight: size === "small" ? "4px" : "8px",
-  ...((size === "small"
-    ? typography.bodySSemiBold
-    : typography.bodyMSemiBold) || {}),
-  "& .MuiChip-label": {
-    color: "inherit",
-    paddingLeft: "4px",
-    paddingRight: "4px",
-  },
-  "& .MuiChip-icon": {
-    color: "inherit",
-  },
-  "& .MuiSvgIcon-root.MuiChip-deleteIcon": {
-    margin: 0,
-  },
-  "& .MuiChip-deleteIcon": {
-    color: "inherit",
-    width: size === "small" ? "10px" : "12px",
-    height: size === "small" ? "10px" : "12px",
-  },
-  "&:hover": {
-    backgroundColor: neutral[99],
-    color: primary[10],
-  },
-  "&:focus": {
-    backgroundColor: white,
-  },
-  "&:active": {
-    backgroundColor: neutral[90],
-  },
-  "& .MuiSvgIcon-root.MuiChip-icon": {
-    margin: 0,
-    width: size === "small" ? "16px" : "20px",
-    height: size === "small" ? "16px" : "20px",
-    backgroundColor: neutral[99],
-    borderRadius: "6px",
-  },
-  "&.Mui-focused, &:focus:not(:active)": {
-    borderRadius: "14px",
-    outlineOffset: "1px",
-    outline: `solid 2px ${primary[60]}`,
-  },
-  "&.Mui-disabled": {
-    opacity: 1,
-    backgroundColor: white,
-    border: `1px solid ${neutral[80]}`,
-    color: neutral[80],
-    "& .MuiChip-label": {
-      color: neutral[80],
-    },
-    "& .MuiChip-icon": {
-      color: neutral[80],
-    },
-    "& .MuiChip-deleteIcon": {
-      color: neutral[80],
-    },
-    "& .MuiSvgIcon-root.MuiChip-icon": {
-      backgroundColor: neutral[95],
-    },
-  },
-}));
-
 const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
-  const { size = "medium", ...otherProps } = props;
+  const {
+    onClick,
+    startIcon,
+    label,
+    endIcon,
+    badge,
+    size = "small",
+    disabled = false,
+    color = "primary",
+  } = props;
+  const [clicked, setClicked] = React.useState(false);
+  const clickable = onClick !== undefined;
 
-  return <StyledChip ref={ref} size={size} {...otherProps} />;
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (onClick) {
+      setClicked(!clicked);
+      onClick(event);
+    }
+  };
+
+  const getColorTheme = (): any => {
+    switch (color) {
+      case "secondary":
+        return secondary;
+      case "success":
+        return success;
+      case "yellow":
+        return yellow;
+      case "critical":
+        return critical;
+      case "banana":
+        return banana;
+      case "beige":
+        return beige;
+      case "info":
+        return info;
+      case "pink":
+        return pink;
+      case "plum":
+        return plum;
+      case "purple":
+        return purple;
+      default:
+        return primary;
+    }
+  };
+
+  const colorTheme = getColorTheme();
+
+  const getBackgroundColor = () => {
+    if (disabled) return `${neutral[99]} !important`;
+    if (clicked) return colorTheme[99];
+    return white;
+  };
+
+  const getBorderColor = () => {
+    if (disabled) return "neutral/80";
+    if (clicked) return `${color}/50`;
+    return "neutral/90";
+  };
+
+  const isStartIconAnIcon = startIcon && startIcon.type === Icon;
+
+  const renderLabel = () => {
+    if (typeof label === "string") {
+      return (
+        <Typography color="neutral/10" variant="bodySSemiBold">
+          {label}
+        </Typography>
+      );
+    }
+    return label;
+  };
+
+  return (
+    <Row
+      ref={ref}
+      gap={2}
+      px={size === "small" ? 2 : 4}
+      py={size === "small" ? 1 : 3}
+      borderRadius={2}
+      {...props}
+      onClick={handleClick}
+      border={{
+        color: getBorderColor() as CustomColorString,
+        width: 1,
+        style: "solid",
+      }}
+      width="fit-content"
+      alignItems="center"
+      sx={{
+        cursor: clickable ? "pointer" : "auto",
+        backgroundColor: getBackgroundColor(),
+        "&:hover": {
+          backgroundColor: clicked ? colorTheme[90] : neutral[99],
+        },
+        "&:active": {
+          backgroundColor: clicked ? colorTheme[80] : neutral[90],
+        },
+      }}
+    >
+      {startIcon && (
+        <Box pl={isStartIconAnIcon ? 2 : 0} display="flex">
+          {startIcon}
+        </Box>
+      )}
+      {renderLabel()}
+      {endIcon}
+      {badge}
+    </Row>
+  );
 });
 
 Chip.displayName = "Chip";
