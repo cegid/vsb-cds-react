@@ -23,6 +23,7 @@ const BREAD_CRUMS_TREE: BreadcrumbsItem[] = [
         icon: "estimate-02"
       },
     ],
+    path: "/devis",
   },
 ];
 
@@ -48,7 +49,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     breadcrumbsTree: BREAD_CRUMS_TREE,
-    currentPath: '/services',
+    currentPath: '/payment/received',
   },
   render: (args) => (
     <Breadcrumbs { ...args } />

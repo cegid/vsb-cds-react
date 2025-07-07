@@ -66,8 +66,8 @@ const BreadcrumbSegmentItem = ({segment, shouldDisplayLogo = false}: BreadcrumbS
     setAnchorEl(null);
   };
 
-  const color = isActive ? "primary/10" : "neutral/50";
-  const variant = isActive ? "captionSemiBold" : "captionRegular";
+  const color = (isActive && !shouldDisplayLogo) ? "primary/10" : "neutral/50";
+  const variant = (isActive && !shouldDisplayLogo) ? "captionSemiBold" : "captionRegular";
 
   const handleLinkClick = () => {
     breadcrumbNode.onClick?.();

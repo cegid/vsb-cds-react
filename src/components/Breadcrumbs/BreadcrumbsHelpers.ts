@@ -10,16 +10,17 @@ class BreadcrumbsHelpers {
    */
   static readonly findPathItems = (tree: BreadcrumbsItem[], currentPath: string): BreadcrumbsItem[] => {
     for (const item of tree) {
-      // if the item is the current path, return it
-      if (item.path === currentPath) {
-        return [item];
-      }
-      // Otherwise, check if the item has children
+      // if the item has children, recursively search in them
       if (item.children) {
         const sub = BreadcrumbsHelpers.findPathItems(item.children, currentPath);
         if (sub.length) {
           return [item, ...sub];
         }
+      }
+
+      // Otherwise, if the item is the current path, return it
+      if (item.path === currentPath) {
+        return [item];
       }
     }
     return [];
