@@ -3,22 +3,22 @@ import { ExtendedNavItem, MenuItemType, NavItem } from "./NavigationBar";
 class NavigationHelpers {
 
   /**
-   * Computes the active state of navigation items based on the clicked item.
+   * Computes the active state of navigation items based on the activePathItem item.
    * @param {ExtendedNavItem[]} navItems initial array of nav items
    * @param {ExtendedNavItem} clicked the nav item that was clicked
    * @returns {ExtendedNavItem[]} new array of nav items with updated active states
    */
-  static readonly computeActiveNavItems = (navItems: ExtendedNavItem[], clicked: ExtendedNavItem): ExtendedNavItem[] => {
+  static readonly computeActiveNavItems = (navItems: ExtendedNavItem[], activePathItem: ExtendedNavItem): ExtendedNavItem[] => {
   
-    if (!clicked.path) return navItems;
+    if (!activePathItem.path) return navItems;
 
 
     return navItems.map((navItem) => {
       const updatedChildren = navItem.children?.length
-        ? NavigationHelpers.computeActiveNavItems(navItem.children, clicked)
+        ? NavigationHelpers.computeActiveNavItems(navItem.children, activePathItem)
         : [];
 
-      const isActive = navItem.key === clicked.key || updatedChildren.some(child => child.isActive);
+      const isActive = navItem.key === activePathItem.key || updatedChildren.some(child => child.isActive);
 
       return {
         ...navItem,
@@ -63,9 +63,9 @@ class NavigationHelpers {
 
   static readonly findNavItemByPath = (navItems: ExtendedNavItem[], path: string): ExtendedNavItem | null => {
     for (const navItem of navItems) {
-      if (navItem.path === path) return navItem;
       const childMatch = navItem.children && NavigationHelpers.findNavItemByPath(navItem.children, path);
       if (childMatch) return childMatch;
+      if (navItem.path === path) return navItem;
     }
     return null;
   }
