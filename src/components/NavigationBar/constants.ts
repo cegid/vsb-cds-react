@@ -21,7 +21,7 @@ export const HEADER_ITEMS: NavItem[] = [
 export const NAV_ITEMS: NavItem[] = [
 
   {
-    key: 'depense',
+    key: 'depense_root',
     label: 'Dépenses',
     icon: "shopping-bag-02",
     path: '/depense',
@@ -30,7 +30,7 @@ export const NAV_ITEMS: NavItem[] = [
         key: 'dépense',
         label: 'Dépenses',
         icon: "estimate-02",
-        path: '/depense/estimate',
+        path: '/depense',
         onClick: () => console.log('dépense (sous item) clicked'),
       },
       {
