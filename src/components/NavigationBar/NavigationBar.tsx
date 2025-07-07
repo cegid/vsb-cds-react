@@ -210,7 +210,7 @@ const NavigationBar = ({
   useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
 
   /**
-   * Effect to handle the initial active path when the component mounts.
+   * Effect to handle the active path based on the current activePath.
    */
   useEffect(() => {
     const activePathItem = NavigationHelpers.findNavItemByPath(navItems, activePath);
@@ -218,13 +218,10 @@ const NavigationBar = ({
       const newNavItems = NavigationHelpers.computeActiveNavItems(navItems, activePathItem);
       setNavItems(newNavItems);
     }
-  }, []); 
+  }, [activePath]); 
 
 
   const handleNavItemClick = (navItem: ExtendedNavItem) => {
-    const newNavItems = NavigationHelpers.computeActiveNavItems(navItems, navItem);
-
-    setNavItems(newNavItems);
     setHoveredNavItem(null);
     navItem?.onClick?.();
   };
