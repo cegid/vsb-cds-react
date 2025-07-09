@@ -43,6 +43,12 @@ export interface ChipProps
   size?: "small" | "medium";
   /**
    * Icon component to display at the start of the chip
+   * @deprecated Use `startIcon` instead. This prop will be removed in v2.0.0
+   * @example <Icon>user</Icon>
+   */
+  icon?: React.ReactElement<typeof Icon>;
+  /**
+   * Icon component to display at the start of the chip
    * @example <Icon>user</Icon>
    */
   startIcon?:
@@ -74,6 +80,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
     startIcon,
     label,
     endIcon,
+    icon,
     badge,
     size = "small",
     disabled = false,
@@ -170,6 +177,11 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
         },
       }}
     >
+      {icon && (
+        <Box pl={2} display="flex">
+          {icon}
+        </Box>
+      )}
       {startIcon && (
         <Box pl={isStartIconAnIcon ? 2 : 0} display="flex">
           {startIcon}
