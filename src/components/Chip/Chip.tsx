@@ -40,7 +40,7 @@ export interface ChipProps
    * Affects dimensions, padding, typography, and icon sizes throughout the component.
    * @default 'medium'
    */
-  size?: "small" | "large";
+  size?: "small" | "medium";
   /**
    * Icon component to display at the start of the chip
    * @example <Icon>user</Icon>

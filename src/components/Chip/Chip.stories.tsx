@@ -18,7 +18,7 @@ const meta = {
   argTypes: {
     size: {
       control: { type: "select" },
-      options: ["small", "large"],
+      options: ["small", "medium"],
     },
     color: {
       control: { type: "select" },
@@ -105,9 +105,9 @@ export const Sizes: Story = {
         }
       />
       <Chip
-        size="large"
-        label="Large"
-        onClick={() => console.log("Large clicked")}
+        size="medium"
+        label="Medium"
+        onClick={() => console.log("Medium clicked")}
         startIcon={
           <Icon color="neutral/10" size={16}>
             user
