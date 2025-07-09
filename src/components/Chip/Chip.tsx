@@ -72,6 +72,17 @@ export interface ChipProps
    * @default 'primary'
    */
   color?: PaletteNames;
+  /**
+   * Makes the chip clickable and adds hover/focus states
+   * @deprecated Use `onClick` prop instead. This boolean prop will be removed in v2.0.0
+   * @example
+   * // Before (deprecated)
+   * <Chip clickable>Label</Chip>
+   *
+   * // After (recommended)
+   * <Chip onClick={() => handleClick()}>Label</Chip>
+   */
+  clickable?: boolean;
 }
 
 const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
