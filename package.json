@@ -1,6 +1,6 @@
 {
   "name": "@cegid/vsb-cds-react",
-  "version": "1.13.4",
+  "version": "1.13.5",
   "description": "The BIM! by Cegid theme for the Cegid Design System",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
