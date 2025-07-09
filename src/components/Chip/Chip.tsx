@@ -151,13 +151,16 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
   const isStartIconAnIcon = startIcon && startIcon.type === Icon;
 
   const renderLabel = () => {
+    const labelColor = clickable && clicked ? colorTheme[60] : "neutral/10";
+
     if (typeof label === "string") {
       return (
-        <Typography color="neutral/10" variant="bodySSemiBold">
+        <Typography color={labelColor} variant="bodySSemiBold">
           {label}
         </Typography>
       );
     }
+
     return label;
   };
 
@@ -189,18 +192,32 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
       }}
     >
       {icon && (
-        <Box pl={2} display="flex">
+        <Box
+          pl={2}
+          display="flex"
+          sx={{ color: clickable && clicked ? colorTheme[60] : "neutral/10" }}
+        >
           {icon}
         </Box>
       )}
       {startIcon && (
-        <Box pl={isStartIconAnIcon ? 2 : 0} display="flex">
+        <Box
+          pl={isStartIconAnIcon ? 2 : 0}
+          display="flex"
+          sx={{ color: clickable && clicked ? colorTheme[60] : "neutral/10" }}
+        >
           {startIcon}
         </Box>
       )}
       {renderLabel()}
       {endIcon}
-      {badge}
+      {
+        <Box
+          sx={{ color: clickable && clicked ? colorTheme[60] : "neutral/10" }}
+        >
+          {badge}
+        </Box>
+      }
     </Row>
   );
 });

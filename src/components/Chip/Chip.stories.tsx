@@ -172,7 +172,7 @@ export const Interactive: Story = {
               color={chip.color as any}
               onClick={() => toggleChip(chip.id)}
               startIcon={
-                <Icon color="neutral/10" size={14}>
+                <Icon color="inherit" size={14}>
                   code
                 </Icon>
               }
