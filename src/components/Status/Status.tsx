@@ -84,7 +84,7 @@ const Status: React.FC<StatusProps> = ({
   label,
   size = "medium",
   color = "primary",
-  variant,
+  variant = "light",
   icon,
   sx,
   className,
