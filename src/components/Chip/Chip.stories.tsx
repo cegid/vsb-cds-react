@@ -1,70 +1,41 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
+import { Box } from "@mui/material";
 
-import { Check, Close, Face } from '@cegid/icons-react';
-
-import Chip from './Chip';
-import Box from '../Box';
-import Typography from '../Typography';
-import Stack from '../Stack';
+import Chip from "./Chip";
+import Typography from "../Typography";
+import Icon from "../Icon";
+import Badge from "../Badge";
+import Avatar from "../Avatar";
 
 const meta = {
-  title: 'Components/Display/Chip',
+  title: "Components/Display/Chip",
   component: Chip,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     size: {
-      control: 'radio',
-      options: ['small', 'medium'],
-      description: 'La taille du Chip',
+      control: { type: "select" },
+      options: ["small", "medium"],
     },
-    icon: {
-      control: 'select',
-      options: ['Check', 'Face', 'None'],
-      mapping: {
-        Check: <Check />,
-        Face: <Face />,
-        None: undefined,
-      },
-      description: "L'icône à afficher",
-    },
-    label: {
-      control: 'text',
-      description: 'Le texte à afficher',
-    },
-    deleteIcon: {
-      control: 'select',
-      options: ['Check', 'Face', 'None'],
-      mapping: {
-        Check: <Check />,
-        Face: <Face />,
-        None: undefined,
-      },
-      description: "L'icône à afficher",
+    color: {
+      control: { type: "select" },
+      options: ["primary", "secondary", "success", "warning", "error"],
     },
     disabled: {
-      control: 'boolean',
-      description: 'Désactiver le chip',
+      control: { type: "boolean" },
     },
-    onDelete: {
-      control: 'boolean',
-      description: 'Rend une action au clic sur delete',
-    },
-    onClick: {
-      control: 'boolean',
-      description: 'Rendre le chip cliquable',
+    label: {
+      control: { type: "text" },
     },
   },
   args: {
-    size: 'medium',
-    icon: <Check />,
-    deleteIcon: <Close />,
-    label: 'Chip',
+    size: "small",
+    color: "primary",
     disabled: false,
-    onDelete: () => { },
-    onClick: () => { },
+    label: "Label",
   },
 } satisfies Meta<typeof Chip>;
 
@@ -74,97 +45,250 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    label: 'Chip',
+    label: "Default Chip",
   },
 };
 
-export const SizeComparison: Story = {
-  render: (args) => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Box>
-        <Typography variant="titleLSemiBold">
-          Taille Medium
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-          <Chip key={`medium`} {...args} size="medium" icon={<Check />} label="medium" />
-        </Box>
-      </Box>
-      <Box>
-        <Typography variant="titleLSemiBold">
-          Taille Small
-        </Typography>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-          <Chip key={`small`} {...args} size="small" icon={<Check />} label="small" />
-        </Box>
-      </Box>
+export const Complete: Story = {
+  args: {
+    label: (
+      <Typography color="neutral/10" variant="bodySSemiBold">
+        Complete Chip
+      </Typography>
+    ),
+    onClick: () => {
+      console.log("Chip clicked");
+    },
+    size: "small",
+    startIcon: (
+      <Icon color="neutral/10" size={14}>
+        add-01
+      </Icon>
+    ),
+    endIcon: (
+      <Icon color="neutral/10" size={14}>
+        chevron-down
+      </Icon>
+    ),
+    badge: (
+      <Badge size="small" color="critical">
+        5
+      </Badge>
+    ),
+  },
+};
+
+export const WithAvatar: Story = {
+  args: {
+    label: "User Chip",
+    onClick: () => console.log("Avatar chip clicked"),
+    startIcon: <Avatar size="extraSmall" trigram="CI" color="primary" />,
+    endIcon: (
+      <Icon color="neutral/10" size={14}>
+        x
+      </Icon>
+    ),
+  },
+};
+
+export const Sizes: Story = {
+  render: () => (
+    <Box display="flex" gap={2} alignItems="center">
+      <Chip
+        size="small"
+        label="Small"
+        onClick={() => console.log("Small clicked")}
+        startIcon={
+          <Icon color="neutral/10" size={14}>
+            user
+          </Icon>
+        }
+      />
+      <Chip
+        size="medium"
+        label="Medium"
+        onClick={() => console.log("Medium clicked")}
+        startIcon={
+          <Icon color="neutral/10" size={16}>
+            user
+          </Icon>
+        }
+      />
     </Box>
   ),
 };
 
-export const IconsAndNoIcons: Story = {
-  render: (args) => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleLSemiBold">
-        Chips avec et sans icônes
-      </Typography>
-      <Stack spacing={2}>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-          <Chip {...args} icon={<Check />} label="Avec Icône" />
-          <Chip {...args} icon={undefined} label="Sans Icône" />
-        </Box>
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-          <Chip {...args} icon={<Check />} label="Avec Icône" />
-          <Chip {...args} icon={undefined} label="Sans Icône" />
-        </Box>
-      </Stack>
-    </Box>
-  ),
-};
-
-export const WithDeleteIcon: Story = {
-  render: (args) => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleLSemiBold">
-        Chips avec icône de suppression
-      </Typography>
-      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-        <Chip label="Supprimable" onDelete={() => { }} deleteIcon={<Close />} />
-      </Box>
-    </Box>
-  ),
-};
-
-export const Clickable: Story = {
-  render: (args) => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleLSemiBold">
-        Chips cliquables
-      </Typography>
-      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-        <Chip label="Cliquable" onClick={() => alert('Chip cliqué!')} clickable />
-        <Chip label="Cliquable" onClick={() => alert('Chip cliqué!')} clickable />
+export const Colors: Story = {
+  render: () => (
+    <Box display="flex" gap={2} flexWrap="wrap">
+      {["primary", "secondary", "success", "warning", "error"].map((color) => (
         <Chip
-          icon={<Check />}
-          label="Cliquable avec Icône"
-          onClick={() => alert('Chip cliqué!')}
-          clickable
+          key={color}
+          color={color as any}
+          label={`${color.charAt(0).toUpperCase() + color.slice(1)}`}
+          onClick={() => console.log(`${color} clicked`)}
+          startIcon={
+            <Icon color="neutral/10" size={14}>
+              star
+            </Icon>
+          }
         />
-      </Box>
+      ))}
     </Box>
   ),
+};
+
+export const Interactive: Story = {
+  render: () => {
+    const [selectedChips, setSelectedChips] = useState<string[]>([]);
+
+    const toggleChip = (chipId: string) => {
+      setSelectedChips((prev) =>
+        prev.includes(chipId)
+          ? prev.filter((id) => id !== chipId)
+          : [...prev, chipId]
+      );
+    };
+
+    const chips = [
+      { id: "react", label: "React", color: "primary" },
+      { id: "vue", label: "Vue", color: "success" },
+      { id: "angular", label: "Angular", color: "error" },
+      { id: "svelte", label: "Svelte", color: "warning" },
+    ];
+
+    return (
+      <Box>
+        <Box mb={2}>
+          <Typography variant="bodySSemiBold">
+            Select your favorite frameworks:
+          </Typography>
+        </Box>
+        <Box display="flex" gap={1.5} flexWrap="wrap">
+          {chips.map((chip) => (
+            <Chip
+              key={chip.id}
+              label={chip.label}
+              color={chip.color as any}
+              onClick={() => toggleChip(chip.id)}
+              startIcon={
+                <Icon color="inherit" size={14}>
+                  code
+                </Icon>
+              }
+              sx={{
+                backgroundColor: selectedChips.includes(chip.id)
+                  ? undefined
+                  : "white",
+              }}
+            />
+          ))}
+        </Box>
+        <Box mt={2}>
+          <Typography variant="bodySSemiBold" color="neutral/50">
+            Selected: {selectedChips.join(", ") || "None"}
+          </Typography>
+        </Box>
+      </Box>
+    );
+  },
 };
 
 export const Disabled: Story = {
-  render: (args) => (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <Typography variant="titleLSemiBold">
-        Chips désactivés
-      </Typography>
-      <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
-        <Chip label="Désactivé" disabled />
-        <Chip icon={<Check />} label="Désactivé avec Icône" disabled />
-        <Chip label="Désactivé Supprimable" onDelete={() => { }} disabled />
-      </Box>
+  render: () => (
+    <Box display="flex" gap={2} alignItems="center">
+      <Chip
+        label="Normal"
+        onClick={() => console.log("Normal clicked")}
+        startIcon={
+          <Icon color="neutral/10" size={14}>
+            check
+          </Icon>
+        }
+      />
+      <Chip
+        label="Disabled"
+        disabled
+        onClick={() => console.log("Disabled clicked")}
+        startIcon={
+          <Icon color="neutral/40" size={14}>
+            check
+          </Icon>
+        }
+      />
+    </Box>
+  ),
+};
+
+export const NonClickable: Story = {
+  render: () => (
+    <Box display="flex" gap={2} alignItems="center">
+      <Chip
+        label="Clickable"
+        onClick={() => console.log("Clicked")}
+        startIcon={
+          <Icon color="neutral/10" size={14}>
+            cursor-click
+          </Icon>
+        }
+      />
+      <Chip
+        label="Non-clickable"
+        startIcon={
+          <Icon color="neutral/10" size={14}>
+            info
+          </Icon>
+        }
+      />
+    </Box>
+  ),
+};
+
+export const WithBadges: Story = {
+  render: () => (
+    <Box display="flex" gap={2} flexWrap="wrap">
+      <Chip
+        label="Notifications"
+        onClick={() => console.log("Notifications clicked")}
+        startIcon={
+          <Icon color="neutral/10" size={14}>
+            bell
+          </Icon>
+        }
+        badge={
+          <Badge size="small" color="critical">
+            3
+          </Badge>
+        }
+      />
+      <Chip
+        label="Messages"
+        onClick={() => console.log("Messages clicked")}
+        startIcon={
+          <Icon color="neutral/10" size={14}>
+            message
+          </Icon>
+        }
+        badge={
+          <Badge size="small" color="yellow">
+            12
+          </Badge>
+        }
+      />
+      <Chip
+        label="Tasks"
+        onClick={() => console.log("Tasks clicked")}
+        startIcon={
+          <Icon color="neutral/10" size={14}>
+            task
+          </Icon>
+        }
+        badge={
+          <Badge size="small" color="success">
+            ✓
+          </Badge>
+        }
+      />
     </Box>
   ),
 };

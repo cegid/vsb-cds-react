@@ -82,6 +82,56 @@ export const VSBTheme = createTheme({
           color: ${neutral[50]} !important;
         }`,
     },
+    MuiMenu: {
+      defaultProps: {
+        BackdropProps: {
+          style: { backgroundColor: "transparent" },
+        },
+        anchorOrigin: {
+          vertical: "bottom",
+          horizontal: "left",
+        },
+        transformOrigin: {
+          vertical: "top",
+          horizontal: "left",
+        },
+      },
+      styleOverrides: {
+        root: {
+          alignItems: 'flex-start',
+        },
+        paper: {
+          alignItems: 'flex-start',
+          backgroundColor: "#FFF",
+          border: `1px solid ${neutral[95]}`,
+          borderRadius: "16px",
+          boxShadow:
+            "0px 4px 8px rgba(0, 0, 0, 0.04), 0px 2px 4px rgba(0, 0, 0, 0.04)",
+          maxWidth: "680px",
+          width: "232px",
+          padding: "8px 0",
+        },
+        list: {
+          padding: 0,
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: () => ({
+          display: "flex",
+          alignItems: "center",
+          alignSelf: "stretch",
+          borderRadius: "8px",
+          gap: spacing(4),
+          padding: spacing(4),
+          margin: '0 8px',
+          "&:hover, &:focus": {
+            backgroundColor: neutral[99],
+          },
+        }),
+      },
+    },
   },
   mixins: defaultTheme.mixins,
 });

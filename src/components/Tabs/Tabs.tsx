@@ -11,6 +11,10 @@ const StyledTabs = styled(CegidTabs)({
   "& .MuiTabs-indicator": {
     display: "none",
   },
+  minHeight: "32px",
+  "& .MuiTabs-root": {
+    minHeight: "32px",
+  },
 });
 
 const Tabs: React.FC<CegidTabsProps> = (props) => {

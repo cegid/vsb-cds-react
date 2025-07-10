@@ -1,6 +1,6 @@
 import { Divider, Grid } from "@mui/material";
 
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 
 import colorPalettes, { CustomColorString } from "../../theme/colors";
 import Typography from "../Typography/Typography";

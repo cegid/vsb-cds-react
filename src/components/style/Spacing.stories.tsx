@@ -1,6 +1,6 @@
 import { Divider, Paper } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { Meta, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react-vite';
 import React from 'react';
 import Box from '../Box';
 import Stack from '../Stack';

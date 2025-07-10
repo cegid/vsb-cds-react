@@ -21,16 +21,16 @@ export const HEADER_ITEMS: NavItem[] = [
 export const NAV_ITEMS: NavItem[] = [
 
   {
-    key: 'depense',
+    key: 'depense_root',
     label: 'Dépenses',
     icon: "shopping-bag-02",
     path: '/depense',
-    subItems: [
+    children: [
       {
         key: 'dépense',
         label: 'Dépenses',
         icon: "estimate-02",
-        path: '/depense/estimate',
+        path: '/depense',
         onClick: () => console.log('dépense (sous item) clicked'),
       },
       {
@@ -48,7 +48,7 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Ventes',
     icon: "cashier-02",
     path: '/ventes',
-    subItems: [
+    children: [
       {
         key: 'devis',
         label: 'Devis',
@@ -83,6 +83,36 @@ export const NAV_ITEMS: NavItem[] = [
         icon: "payment-01",
         path: '/ventes/reglements',
         onClick: () => console.log('règlement clicked'),
+        children: [
+          {
+            key: 'reglements-new',
+            label: 'Saisir des Règlements',
+            icon: "payment-01",
+            path: '/ventes/reglements/new',
+            onClick: () => console.log('reglement new clicked'),
+          },
+          {
+            key: 'reglements-late',
+            label: 'En retard',
+            icon: "payment-01",
+            path: '/ventes/reglements/late',
+            onClick: () => console.log('reglement late clicked'),
+          },
+          {
+            key: 'reglements-incoming',
+            label: 'A venir',
+            icon: "payment-01",
+            path: '/ventes/reglements/incoming',
+            onClick: () => console.log('reglement incoming clicked'),
+          },
+          {
+            key: 'reglements-received',
+            label: 'Reçus',
+            icon: "payment-01",
+            path: '/ventes/reglements/received',
+            onClick: () => console.log('reglement new clicked'),
+          },
+        ]
       },
     ],
     onClick: () => console.log('ventes clicked'),

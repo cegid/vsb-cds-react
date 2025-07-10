@@ -132,9 +132,11 @@ const SettingsButton: React.FC<{
   onClick: () => void;
 }> = ({ props = {}, onClick }) => (
   <IconButton {...ICON_BUTTON_PROPS} {...(props as any)} onClick={onClick}>
-    <Icon size={16} color="neutral/10">
-      setting-07
-    </Icon>
+    {props.children ?? (
+      <Icon size={16} color="neutral/10">
+        setting-07
+      </Icon>
+    )}
   </IconButton>
 );
 

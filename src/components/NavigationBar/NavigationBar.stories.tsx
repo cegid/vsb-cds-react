@@ -1,5 +1,5 @@
 import React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import NavigationBar from "./NavigationBar";
 import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS, PROFILE_MENU_ITEMS } from "./constants";
 
@@ -71,7 +71,7 @@ export const Default: Story = {
     userFirstName: "John",
     userLastName: "Doe",
     userTrigram: "JD",
-    activePath: "/ventes/devis",
+    activePath: "/ventes/reglements/incoming",
     onLogOut: () => console.log("logOut clicked!"),
   },
   render: (args) => (
