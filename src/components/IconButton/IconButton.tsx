@@ -35,16 +35,18 @@ export type CustomColor =
   | "warning"
   | "default"
   | "neutral";
+export type IconButtonSize = "small" | "medium" | "large" | "auto";
 
 interface IconButtonOwnProps {
   variant?: CustomVariant;
   color?: CustomColor;
   square?: boolean;
+  size?: IconButtonSize;
 }
 
 type IconButtonProps = Omit<
   CegidIconButtonProps,
-  "variant" | "color" | "brightness"
+  "variant" | "color" | "brightness" | "size"
 > &
   IconButtonOwnProps;
 
@@ -133,6 +135,48 @@ const createOutlinedIconButtonStyle = (color: any, colorIndex = 50) => ({
   },
 });
 
+const getSizeStyles = (size: IconButtonSize, isContained = false) => {
+  const heightReduction = isContained ? 4 : 0;
+
+  switch (size) {
+    case "small":
+      return {
+        height: `${24 - heightReduction}px`,
+        width: `${24 - heightReduction}px`,
+      };
+    case "medium":
+      return {
+        height: `${32 - heightReduction}px`,
+        width: `${32 - heightReduction}px`,
+      };
+    case "large":
+      return {
+        height: `${40 - heightReduction}px`,
+        width: `${40 - heightReduction}px`,
+      };
+    case "auto":
+    default:
+      return {
+        height: `${32 - heightReduction}px`,
+        width: `${32 - heightReduction}px`,
+        "@media (max-width: 600px)": {
+          height: `${40 - heightReduction}px`,
+          width: `${40 - heightReduction}px`,
+        },
+      };
+  }
+};
+
+const getRadius = (square: boolean, isContained: boolean) => {
+  if (isContained && square) {
+    return 10;
+  }
+  if (square) {
+    return 12;
+  }
+  return RADIUS.FULL;
+};
+
 const IconButtonRoot = styled(CegidIconButton, {
   name: "CdsIconButton",
   slot: "root",
@@ -144,10 +188,9 @@ const IconButtonRoot = styled(CegidIconButton, {
 })<{ ownerState: IconButtonProps }>(({ theme, ownerState }) => {
   const isContained = ownerState.variant === "contained";
   const baseStyles = {
-    borderRadius: ownerState.square ? "10px" : RADIUS.FULL,
+    borderRadius: getRadius(ownerState?.square ?? false, isContained),
     boxShadow: "none",
-    width: isContained ? "28px" : "32px",
-    height: isContained ? "28px" : "32px",
+    ...getSizeStyles(ownerState?.size ?? "auto", isContained),
     padding: "8px",
     display: "flex",
     "& .MuiSvgIcon-root": {
@@ -156,8 +199,6 @@ const IconButtonRoot = styled(CegidIconButton, {
       fontSize: "16px",
     },
     [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
-      width: isContained ? "36px" : "40px",
-      height: isContained ? "36px" : "40px",
       padding: "12px",
     },
   };
@@ -289,6 +330,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       color = "primary",
       className,
       square = false,
+      size = "auto",
       ...restProps
     } = props;
 

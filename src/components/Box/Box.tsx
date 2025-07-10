@@ -75,13 +75,13 @@ export type BorderProps = {
    * The width of the border in pixels.
    * Specifies the thickness of the border line.
    */
-  width: number; // in pixels
+  width?: number; // in pixels
 
   /**
    * The visual style of the border.
    * Determines how the border line is rendered.
    */
-  style: BorderStyleProps;
+  style?: BorderStyleProps;
   /**
    * The opacity of the border color as a percentage (0-100).
    * 100 means fully opaque, 0 means fully transparent.
@@ -132,7 +132,7 @@ const Box = React.forwardRef<HTMLDivElement, CustomBoxProps>((props, ref) => {
 
   const formatBorder = (border?: BorderProps) => {
     return border
-      ? `${border?.style} ${border?.width}px ${parseCustomColor(border?.color ?? "")}${opacityToHex(border?.opacity ?? 100)}`
+      ? `${border?.style ?? "solid"} ${border?.width ?? 1}px ${parseCustomColor(border?.color)}${opacityToHex(border?.opacity ?? 100)}`
       : undefined;
   };
 
