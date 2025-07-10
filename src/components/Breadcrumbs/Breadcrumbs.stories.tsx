@@ -1,5 +1,5 @@
 import React from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import Breadcrumbs, { BreadcrumbsItem } from "./Breadcrumbs";
 
 const BREAD_CRUMS_TREE: BreadcrumbsItem[] = [

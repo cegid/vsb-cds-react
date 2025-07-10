@@ -1,6 +1,6 @@
 // ElevationDemo.stories.tsx
 import { Card, Divider, Grid, Paper } from "@mui/material";
-import { Meta, StoryObj } from "@storybook/react";
+import { Meta, StoryObj } from "@storybook/react-vite";
 
 import { ELEVATION, ELEVATION_CSS } from "../../theme/shadows";
 import Typography from "../Typography";

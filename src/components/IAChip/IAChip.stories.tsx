@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import IAChip from "./IAChip";
 import Icon from "../Icon";
 import Typography, { ExtendedVariant } from "../Typography";
