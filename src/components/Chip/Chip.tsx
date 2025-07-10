@@ -195,7 +195,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
         <Box
           pl={2}
           display="flex"
-          sx={{ color: clickable && clicked ? colorTheme[60] : "neutral/10" }}
+          sx={{ color: clickable && clicked ? colorTheme[60] : neutral[10] }}
         >
           {icon}
         </Box>
@@ -204,20 +204,20 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
         <Box
           pl={isStartIconAnIcon ? 2 : 0}
           display="flex"
-          sx={{ color: clickable && clicked ? colorTheme[60] : "neutral/10" }}
+          sx={{ color: clickable && clicked ? colorTheme[60] : neutral[10] }}
         >
           {startIcon}
         </Box>
       )}
       {renderLabel()}
       {endIcon}
-      {
+      {badge && (
         <Box
-          sx={{ color: clickable && clicked ? colorTheme[60] : "neutral/10" }}
+          sx={{ color: clickable && clicked ? colorTheme[60] : neutral[10] }}
         >
           {badge}
         </Box>
-      }
+      )}
     </Row>
   );
 });
