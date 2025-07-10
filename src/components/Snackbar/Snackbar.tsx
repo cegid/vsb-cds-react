@@ -8,6 +8,7 @@ import Icon from "../Icon";
 import IconButton from "../IconButton";
 import Row from "../Row";
 import Typography from "../Typography";
+import React from "react";
 
 /**
  * Represents an action button that can be displayed in the snackbar
@@ -87,7 +88,9 @@ const SEVERITY_CONFIG = {
   },
 } as const;
 
-const useIsObjectMessage = (message: SnackbarMessage): message is SnackbarObjectMessage => {
+const useIsObjectMessage = (
+  message: SnackbarMessage
+): message is SnackbarObjectMessage => {
   return useMemo(() => {
     return (
       typeof message === "object" &&
@@ -123,7 +126,7 @@ const ActionButton = ({ action }: { action: SnackbarAction }) => (
 
 const SeverityIcon = ({ severity }: { severity: SnackbarSeverity }) => {
   const config = SEVERITY_CONFIG[severity];
-  
+
   return (
     <Box
       width={24}
@@ -145,7 +148,7 @@ const SeverityIcon = ({ severity }: { severity: SnackbarSeverity }) => {
 
 const MessageContent = ({ message }: { message: SnackbarMessage }) => {
   const isObjectMessage = useIsObjectMessage(message);
-  
+
   if (isObjectMessage) {
     return (
       <Column>
@@ -158,45 +161,44 @@ const MessageContent = ({ message }: { message: SnackbarMessage }) => {
       </Column>
     );
   }
-  
+
   return <>{message}</>;
 };
 
-const Snackbar = ({
-  severity = "success",
-  size = "small",
-  message,
-  action,
-  onClose,
-}: Readonly<SnackbarProps>) => {
-  return (
-    <Row
-      backgroundColor="white"
-      flexWrap="wrap"
-      px={4}
-      py={4}
-      borderRadius={2}
-      maxWidth={350}
-      gap={4}
-      alignItems="center"
-      sx={{
-        whiteSpace: "normal",
-        wordBreak: "break-word",
-      }}
-    >
-      <Row gap={4} alignItems="center" width="fit-content">
-        <Box height="100%" display="flex" alignSelf="flex-start">
-          <SeverityIcon severity={severity} />
-        </Box>
-        <MessageContent message={message} />
+const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>(
+  ({ severity = "success", size = "small", message, action, onClose }, ref) => {
+    return (
+      <Row
+        ref={ref}
+        backgroundColor="white"
+        flexWrap="wrap"
+        px={4}
+        py={4}
+        borderRadius={2}
+        maxWidth={350}
+        gap={4}
+        alignItems="center"
+        sx={{
+          whiteSpace: "normal",
+          wordBreak: "break-word",
+        }}
+      >
+        <Row gap={4} alignItems="center" width="fit-content">
+          <Box height="100%" display="flex" alignSelf="flex-start">
+            <SeverityIcon severity={severity} />
+          </Box>
+          <MessageContent message={message} />
+        </Row>
+
+        <Row justifyContent="flex-end" width="fit-content" gap={4} flex={1}>
+          {action && <ActionButton action={action} />}
+          {onClose && <CloseButton onClose={onClose} />}
+        </Row>
       </Row>
-      
-      <Row justifyContent="flex-end" width="fit-content" gap={4} flex={1}>
-        {action && <ActionButton action={action} />}
-        {onClose && <CloseButton onClose={onClose} />}
-      </Row>
-    </Row>
-  );
-};
+    );
+  }
+);
+
+Snackbar.displayName = "Snackbar";
 
 export default Snackbar;

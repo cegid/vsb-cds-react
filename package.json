@@ -1,6 +1,6 @@
 {
   "name": "@cegid/vsb-cds-react",
-  "version": "1.13.6",
+  "version": "1.14.0",
   "description": "The BIM! by Cegid theme for the Cegid Design System",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
@@ -58,7 +58,8 @@
     "@emotion/styled": "^11.0.0",
     "@mui/material": "^5.0.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "notistack": "2.0.5"
   },
   "devDependencies": {
     "@cegid/cds-react": "^3.26.1",

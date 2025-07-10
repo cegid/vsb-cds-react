@@ -36,7 +36,7 @@ export const Default: Story = {
   args: {
     message: (
       <Typography variant="bodySMedium" color="neutral/50" width="100%">
-        azzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzazzzazazazazazzazaza
+        Message
       </Typography>
     ),
     action: { label: "Annuler", onClick: () => console.log("Action clicked") },
