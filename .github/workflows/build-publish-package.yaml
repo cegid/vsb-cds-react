@@ -4,9 +4,65 @@ on:
   release:
     types: [created]
   workflow_dispatch:
+    inputs:
+      ACTIVATE_BLACKDUCK_DETECT:
+        description: 'Activate Black Duck Detect'
+        required: false
+        type: boolean
+        default: false
     
 
 jobs:
+
+  blackduck-scan:
+  
+    if: ${{ inputs.ACTIVATE_BLACKDUCK_DETECT || github.event_name == 'push' }} 
+    runs-on: 'ubuntu-latest'
+    continue-on-error: true
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Set up Java (required by Black Duck Detect)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Download Black Duck Detect script
+        run: |
+          curl -s -L -o detect.sh detect.blackduck.com/detect10.sh
+          chmod +x detect.sh
+
+      - name: Run Black Duck scan
+        env:
+          DETECT_PROJECT_NAME: ${{ github.repository }}
+          DETECT_PROJECT_VERSION_NAME: ${{ github.ref_name }}
+          DETECT_SOURCE_PATH: '.'
+          DETECTOR_TYPE: 'ALL'
+          BLACKDUCK_API_TOKEN: ${{ secrets.VSB_BLACKDUCK_API_TOKEN }}
+          VSB_BLACKDUCK_API_TOKEN: ${{ secrets.VSB_BLACKDUCK_API_TOKEN }}
+          VSB_BLACKDUCK_URL: ${{ secrets.VSB_BLACKDUCK_URL }}
+          
+        run: |
+          ./detect.sh \
+            --blackduck.url=${{ secrets.VSB_BLACKDUCK_URL }} \
+            --blackduck.api.token=${{ secrets.VSB_BLACKDUCK_API_TOKEN }} \
+            --detect.project.name="${DETECT_PROJECT_NAME}" \
+            --detect.project.version.name="${DETECT_PROJECT_VERSION_NAME}" \
+            --detect.tools="DETECTOR,SIGNATURE_SCAN" \
+            --detect.detector.search.depth="10" \
+            --detect.included.detector.types="${DETECTOR_TYPE}" \
+            --detect.source.path="${DETECT_SOURCE_PATH}" \
+            --detect.wait.for.results=true \
+            --detect.accuracy.required="NONE" \
+            --detect.project.version.phase="RELEASED" \
+            --detect.project.version.update=true \
+            --detect.report.timeout=30000 \
+            --detect.project.user.groups="[vsb-project]_admin"
+
   build:
     runs-on: ubuntu-latest
     steps:
