@@ -97,7 +97,7 @@ const createContainedIconButtonStyle = (
   activeIndex = 60
 ) => ({
   backgroundColor: color[backgroundIndex],
-  boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
+  boxShadow: `0px 0.3px 0.8px 0px ${color[40]}`,
   color: white,
   "&:hover": {
     backgroundColor: color[hoverIndex],
@@ -247,7 +247,7 @@ const IconButtonRoot = styled(CegidIconButton, {
         borderColor: neutral[90],
         backgroundColor: white,
         color: neutral[50],
-        boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
+        boxShadow: `0px 0.3px 0.8px 0px ${neutral[90]}`,
         "&:hover": {
           backgroundColor: neutral[99],
         },
@@ -272,13 +272,13 @@ const IconButtonRoot = styled(CegidIconButton, {
       variantStyles = createContainedIconButtonStyle(colorPalette);
     } else if (isNeutralColor) {
       variantStyles = {
-        backgroundColor: neutral[50],
-        color: white,
+        backgroundColor: white,
+        color: neutral[10],
         "&:hover": {
-          backgroundColor: neutral[40],
+          backgroundColor: neutral[99],
         },
         "&:active": {
-          backgroundColor: neutral[30],
+          backgroundColor: white,
         },
         "&.Mui-disabled": {
           backgroundColor: neutral[99],
