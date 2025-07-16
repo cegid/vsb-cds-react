@@ -4,7 +4,7 @@ import {
 } from "@cegid/cds-react";
 import React from "react";
 
-const List = React.forwardRef<HTMLDivElement, CegidListProps>((props, ref) => {
+const List = React.forwardRef<HTMLUListElement, CegidListProps>((props, ref) => {
   return (
     <CegidList
       ref={ref}
