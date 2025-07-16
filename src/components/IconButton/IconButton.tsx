@@ -16,6 +16,7 @@ import colorPalettes, {
 } from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
+import shadows from "../../theme/shadows";
 
 const { primary, secondary, success, critical, yellow, neutral } =
   colorPalettes;
@@ -42,9 +43,10 @@ interface IconButtonOwnProps {
   color?: CustomColor;
   square?: boolean;
   size?: IconButtonSize;
+  elevation?: number;
 }
 
-type IconButtonProps = Omit<
+export type IconButtonProps = Omit<
   CegidIconButtonProps,
   "variant" | "color" | "brightness" | "size"
 > &
@@ -113,6 +115,7 @@ const createContainedIconButtonStyle = (
     color: neutral[90],
     border: "1px solid",
     borderColor: neutral[90],
+    boxShadow: "none",
   },
 });
 
@@ -331,6 +334,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       className,
       square = false,
       size = "auto",
+      elevation = 0,
       ...restProps
     } = props;
 
@@ -400,7 +404,10 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         className={className}
         color={mapColor(color)}
         ref={ref}
-        disableRipple={true}
+        disableRipple
+        disableTouchRipple
+        disableFocusRipple
+        sx={{ boxShadow: shadows[elevation] }}
       />
     );
   }
