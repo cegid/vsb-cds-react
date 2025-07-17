@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import Tab from "./Tab";
 import Typography from "../Typography";
+import Tabs from "../Tabs";
+import Box from "../Box";
 
 const meta = {
   title: "Components/Structure/Tab",
@@ -34,51 +36,56 @@ export const Default: Story = {
 
 export const WithBadgeExamples: Story = {
   render: () => (
-    <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-      <Tab label="Default" />
-      <Tab
-        label="Messages"
-        badge={{
-          children: (
-            <Typography variant="captionRegular" color="inherit">
-              5
-            </Typography>
-          ),
-          variant: "tonal",
-          color: "primary",
-        }}
-      />
-      <Tab
-        label="Notifications"
-        badge={{
-          children: (
-            <Typography variant="captionRegular" color="inherit">
-              12
-            </Typography>
-          ),
-          variant: "outlined",
-          color: "critical",
-        }}
-      />
-      <Tab
-        label="Status"
-        badge={{
-          size: "small",
-          color: "success",
-        }}
-      />
-      <Tab
-        label="Archive"
-        badge={{
-          children: (
-            <Typography variant="captionRegular" color="inherit">
-              99+
-            </Typography>
-          ),
-          variant: "tonal",
-          color: "neutral",
-        }}
-      />
-    </div>
+    <Box width={600}>
+      <Tabs>
+        <Tab
+          label="Messages"
+          badge={{
+            children: (
+              <Typography variant="captionRegular" color="inherit">
+                5
+              </Typography>
+            ),
+            variant: "tonal",
+            color: "primary",
+          }}
+        />
+        <Tab
+          label="Notifications"
+          startBadge={{
+            size: "small",
+            color: "success",
+          }}
+          badge={{
+            children: (
+              <Typography variant="captionRegular" color="inherit">
+                12
+              </Typography>
+            ),
+            variant: "outlined",
+            color: "critical",
+          }}
+        />
+        <Tab
+          label="Status"
+          badge={{
+            size: "small",
+            color: "success",
+          }}
+        />
+        <Tab
+          label="Archive"
+          badge={{
+            children: (
+              <Typography variant="captionRegular" color="inherit">
+                99+
+              </Typography>
+            ),
+            variant: "tonal",
+            color: "neutral",
+          }}
+        />
+      </Tabs>
+    </Box>
   ),
 };

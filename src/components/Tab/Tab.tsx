@@ -18,6 +18,12 @@ export interface TabProps extends CegidTabProps {
    * Supports all Badge variants (tonal, outlined) and sizes (small, medium).
    */
   badge?: BadgeProps;
+  /**
+   * Optional badge configuration to display next to the tab label.
+   * When provided, renders a Badge component with the specified props on the left side of the tab text.
+   * Supports all Badge variants (tonal, outlined) and sizes (small, medium).
+   */
+  startBadge?: BadgeProps;
 }
 
 const StyledTab = styled(CegidTab)({
@@ -53,21 +59,29 @@ const StyledTab = styled(CegidTab)({
   },
   "&:hover": {
     backgroundColor: neutral[99],
-    borderRadius: "8px",
+    borderRadius: 8,
   },
 });
 
 const TabContent = styled(Box)({
   display: "flex",
   alignItems: "center",
-  gap: "8px",
+  gap: 4,
 });
 
-const Tab: React.FC<TabProps> = ({ badge, label, children, ...props }) => {
+const Tab: React.FC<TabProps> = ({
+  badge,
+  label,
+  children,
+  startBadge,
+  ...props
+}) => {
   const tabContent = badge ? (
     <TabContent>
+      {startBadge && <Badge {...startBadge} />}
+
       {label || children}
-      <Badge {...badge} />
+      {badge && <Badge {...badge} />}
     </TabContent>
   ) : (
     label || children
