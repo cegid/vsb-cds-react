@@ -215,7 +215,7 @@ export const WithIconButtons: Story = {
 
 export const WithSegmentedControl: Story = {
   args: {
-    title: "Dashboard",
+    title: "",
     segmentedControlRight: true,
     segmentedControlProps: {
       actions: [

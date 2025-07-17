@@ -23,7 +23,7 @@ interface CustomButtonProps {
 interface BaseHeaderProps {
   id?: string;
   /** The main title text displayed in the header */
-  title?: string;
+  title?: string | React.ReactNode;
   /** The text content displayed inside the primary action button */
   primaryButtonText?: string;
   /** The text content displayed inside the secondary action button (desktop only) */
@@ -102,7 +102,7 @@ const ICON_BUTTON_PROPS = {
 };
 
 const HeaderTitle: React.FC<{
-  title?: string;
+  title?: string | React.ReactNode;
   backAction?: () => void;
   isMobile: boolean;
   backIcon?: React.ReactElement<typeof Icon>;
@@ -114,15 +114,21 @@ const HeaderTitle: React.FC<{
       </Box>
     )}
     {title && (
-      <Typography
-        variant="bodyMSemiBold"
-        color="neutral/10"
-        component="p"
-        display="flex"
-        sx={TITLE_STYLES}
-      >
-        {title}
-      </Typography>
+      <>
+        {React.isValidElement(title) ? (
+          title
+        ) : (
+          <Typography
+            variant="bodyMSemiBold"
+            color="neutral/10"
+            component="p"
+            display="flex"
+            sx={TITLE_STYLES}
+          >
+            {title}
+          </Typography>
+        )}
+      </>
     )}
   </Row>
 );
