@@ -177,7 +177,7 @@ export const Size: Story = {
   ),
 };
 
-export const IconsAndNoIcons: Story = {
+export const Icons: Story = {
   render: (args) => (
     <Stack direction="column" spacing={2}>
       <Stack direction="row" spacing={2} flexWrap="wrap">
@@ -187,7 +187,6 @@ export const IconsAndNoIcons: Story = {
           icon="information-circle"
           label="With Icon"
         />
-        <Status {...args} color="success" label="No Icon" />
       </Stack>
       <Stack direction="row" spacing={2} flexWrap="wrap">
         <Status
@@ -197,7 +196,6 @@ export const IconsAndNoIcons: Story = {
           icon="information-circle"
           label="With Icon"
         />
-        <Status {...args} variant="dark" color="yellow" label="No Icon" />
       </Stack>
     </Stack>
   ),
