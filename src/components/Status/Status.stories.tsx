@@ -133,7 +133,7 @@ export const Colors: Story = {
   ),
 };
 
-export const SizeComparison: Story = {
+export const Size: Story = {
   render: (args) => (
     <Stack direction="column" spacing={3}>
       <Box>
@@ -199,51 +199,6 @@ export const IconsAndNoIcons: Story = {
         />
         <Status {...args} variant="dark" color="yellow" label="No Icon" />
       </Stack>
-    </Stack>
-  ),
-};
-
-export const AllColors: Story = {
-  render: () => (
-    <Stack direction="column" spacing={3}>
-      {colorNames.map((colorName) => (
-        <Box
-          key={colorName}
-          display="grid"
-          gridTemplateColumns="repeat(4, auto)"
-          gap={2}
-          alignItems="center"
-        >
-          <Status
-            size="medium"
-            variant="light"
-            color={colorName as PaletteNames}
-            icon="information-circle"
-            label={colorName}
-          />
-          <Status
-            size="medium"
-            variant="dark"
-            color={colorName as PaletteNames}
-            icon="information-circle"
-            label={colorName}
-          />
-          <Status
-            size="small"
-            variant="light"
-            color={colorName as PaletteNames}
-            icon="information-circle"
-            label={colorName}
-          />
-          <Status
-            size="small"
-            variant="dark"
-            color={colorName as PaletteNames}
-            icon="information-circle"
-            label={colorName}
-          />
-        </Box>
-      ))}
     </Stack>
   ),
 };
