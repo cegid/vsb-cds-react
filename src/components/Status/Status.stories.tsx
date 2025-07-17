@@ -260,21 +260,21 @@ export const WithAvatars: Story = {
             {...args}
             variant="light"
             color="primary"
-            avatar={<Avatar size="small" color="primary" trigram="JD" />}
+            avatar={<Avatar size="extraSmall" color="primary" trigram="JD" />}
             label="John Doe"
           />
           <Status
             {...args}
             variant="dark"
             color="success"
-            avatar={<Avatar size="small" color="success" trigram="AM" />}
+            avatar={<Avatar size="extraSmall" color="success" trigram="AM" />}
             label="Alice Martin"
           />
           <Status
             {...args}
             variant="link"
             color="yellow"
-            avatar={<Avatar size="small" color="yellow" trigram="BL" />}
+            avatar={<Avatar size="extraSmall" color="yellow" trigram="BL" />}
             label="Bob Lee"
           />
         </Stack>
@@ -291,7 +291,7 @@ export const WithAvatars: Story = {
             color="primary"
             avatar={
               <Avatar
-                size="small"
+                size="extraSmall"
                 color="primary"
                 imageUrl="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
               />
@@ -304,7 +304,7 @@ export const WithAvatars: Story = {
             color="info"
             avatar={
               <Avatar
-                size="small"
+                size="extraSmall"
                 color="info"
                 imageUrl="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face"
               />
@@ -324,7 +324,11 @@ export const WithAvatars: Story = {
             variant="light"
             color="critical"
             avatar={
-              <Avatar size="small" color="critical" icon={<span>👤</span>} />
+              <Avatar
+                size="extraSmall"
+                color="critical"
+                icon={<span>👤</span>}
+              />
             }
             label="Admin"
           />
@@ -333,7 +337,11 @@ export const WithAvatars: Story = {
             variant="dark"
             color="secondary"
             avatar={
-              <Avatar size="small" color="secondary" icon={<span>⚙️</span>} />
+              <Avatar
+                size="extraSmall"
+                color="secondary"
+                icon={<span>⚙️</span>}
+              />
             }
             label="Settings"
           />
@@ -342,4 +350,3 @@ export const WithAvatars: Story = {
     </Stack>
   ),
 };
-
