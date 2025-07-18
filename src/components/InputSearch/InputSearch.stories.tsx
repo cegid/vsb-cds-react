@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 
 import InputSearch from "./InputSearch";
-import Box from "../Box";
 
 const meta = {
   title: "Components/Inputs/InputSearch",
@@ -14,15 +13,20 @@ const meta = {
   argTypes: {
     placeholder: {
       control: "text",
-      description: "Texte d'aide affiché dans le champ",
+      description: "Helper text displayed in the field",
     },
     value: {
       control: "text",
-      description: "Valeur du champ de recherche",
+      description: "Value of the search field",
     },
     disabled: {
       control: "boolean",
-      description: "Désactive le champ de recherche",
+      description: "Disables the search field",
+    },
+    defaultSize: {
+      control: "select",
+      options: ["short", "long"],
+      description: "default size of the search field on load",
     },
   },
   args: {},
@@ -33,21 +37,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    placeholder: "Cherchez par nom, tél, type…",
+    placeholder: "Search by name, phone, type…",
+    defaultSize: "long",
   },
   render: (args) => {
     const [value, setValue] = useState("");
 
     return (
-      <Box minWidth="350px">
-        <InputSearch
-          {...args}
-          fullWidth
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onFilterClick={() => {}}
-        />
-      </Box>
+      <InputSearch
+        {...args}
+        fullWidth
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onFilterClick={() => {}}
+      />
     );
   },
 };
