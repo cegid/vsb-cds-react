@@ -17,6 +17,7 @@ import colorPalettes, {
 import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
 import shadows from "../../theme/shadows";
+import theme from "@cegid/cds-react/styles/defaultTheme";
 
 const { primary, secondary, success, critical, yellow, neutral } =
   colorPalettes;
@@ -162,7 +163,7 @@ const getSizeStyles = (size: IconButtonSize, isContained = false) => {
       return {
         height: `${32 - heightReduction}px`,
         width: `${32 - heightReduction}px`,
-        "@media (max-width: 600px)": {
+        [theme.breakpoints.down("sm")]: {
           height: `${40 - heightReduction}px`,
           width: `${40 - heightReduction}px`,
         },
