@@ -13,29 +13,19 @@ import Icon from "../Icon";
 import Snackbar, {
   SnackbarAction,
   SnackbarMessage,
-  SnackbarObjectMessage,
   SnackbarSeverity,
 } from "../Snackbar/Snackbar";
 
 const MAX = 3;
 
-/**
- * Props for the slide transition component
- */
 interface SlideTransitionProps extends TransitionProps {
   children: React.ReactElement;
 }
 
-/**
- * Slide transition component for snackbar animations
- */
 function SlideTransition(props: Readonly<SlideTransitionProps>) {
   return <Slide {...props} />;
 }
 
-/**
- * Options for configuring toaster behavior
- */
 export interface ToasterOptions {
   /** Severity level of the notification */
   severity?: SnackbarSeverity;
@@ -45,11 +35,10 @@ export interface ToasterOptions {
   action?: SnackbarAction;
   /** Callback when notification is closed */
   onClose?: () => void;
+  /** Auto-hide duration in milliseconds (default: 5000)*/
+  autoHideDuration?: number;
 }
 
-/**
- * Context value for managing toaster state
- */
 interface StackContextValue {
   display: (
     message: SnackbarMessage,
@@ -59,22 +48,17 @@ interface StackContextValue {
   close: (key: SnackbarKey) => void;
 }
 
-/**
- * Context for toaster functionality
- */
 const StackContext = React.createContext<StackContextValue>({
   display: () => -1,
   close: () => {},
 });
 
-/**
- * Provider component that manages toaster state and queue
- */
 const StackContextProvider = (props: React.PropsWithChildren) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const keysOnScreen = React.useRef<SnackbarKey[]>([]);
   const stackRef = React.useRef<Function[]>([]);
+  const timers = React.useRef<Map<SnackbarKey, NodeJS.Timeout>>(new Map());
 
   /**
    * Consumes the next notification from the queue if under the limit
@@ -106,21 +90,13 @@ const StackContextProvider = (props: React.PropsWithChildren) => {
     if (index > -1) {
       keysOnScreen.current.splice(index, 1);
     }
+    // Clear timer if exists
+    const timer = timers.current.get(key);
+    if (timer) {
+      clearTimeout(timer);
+      timers.current.delete(key);
+    }
     consume();
-  };
-
-  /**
-   * Type guard to check if message is an object message
-   */
-  const isMessageObject = (
-    message: SnackbarMessage
-  ): message is SnackbarObjectMessage => {
-    return (
-      typeof message === "object" &&
-      message !== null &&
-      "title" in message &&
-      "message" in message
-    );
   };
 
   /**
@@ -132,12 +108,14 @@ const StackContextProvider = (props: React.PropsWithChildren) => {
       action,
       onClose,
       severity: optionsSeverity,
+      autoHideDuration = 5000,
       ...options
     }: ToasterOptions = {},
     severity: SnackbarSeverity = "info"
   ): SnackbarKey => {
     const key = new Date().getTime() + Math.random();
     const finalSeverity = optionsSeverity || severity;
+    const shouldAutoHide = autoHideDuration > 0 && !action;
 
     const doDisplay = () => {
       enqueueSnackbar("", {
@@ -153,6 +131,14 @@ const StackContextProvider = (props: React.PropsWithChildren) => {
         ),
       });
       keysOnScreen.current.push(key);
+      
+      // Set auto-hide timer if enabled and no action present
+      if (shouldAutoHide) {
+        const timer = setTimeout(() => {
+          close(key);
+        }, autoHideDuration);
+        timers.current.set(key, timer);
+      }
     };
 
     keysOnScreen.current.length < MAX
@@ -219,12 +205,13 @@ const ToasterProvider = ({ anchorOrigin, children }: ToasterProviderProps) => {
     <SnackbarProvider
       anchorOrigin={
         anchorOrigin ?? {
-          vertical: "bottom",
+          vertical: "top",
           horizontal: "right",
         }
       }
       maxSnack={MAX}
       TransitionComponent={SlideTransition}
+
     >
       <StackContextProvider>{children}</StackContextProvider>
     </SnackbarProvider>

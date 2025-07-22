@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import Box from "../Box";
 import Button from "../Button";
 import Column from "../Column";
@@ -8,7 +8,6 @@ import Icon from "../Icon";
 import IconButton from "../IconButton";
 import Row from "../Row";
 import Typography from "../Typography";
-import React from "react";
 
 /**
  * Represents an action button that can be displayed in the snackbar
