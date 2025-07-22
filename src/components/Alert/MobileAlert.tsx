@@ -150,7 +150,7 @@ const MobileAlert: React.FC<AlertProps> = ({
         </Column>
 
         {isMediumSize && onClose && renderCloseButton()}
-        {isExtraSmallSize && renderChevronButton()}
+        {isExtraSmallSize && onActionClick && renderChevronButton()}
       </Row>
 
       {renderActionButton()}
