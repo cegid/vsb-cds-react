@@ -7,20 +7,31 @@ import {
 } from "@cegid/cds-react";
 import React from "react";
 
-const StyledTabs = styled(CegidTabs)({
-  "& .MuiTabs-indicator": {
-    display: "none",
-  },
-  minHeight: "32px",
-  "& .MuiTabs-root": {
+export interface TabsProps extends CegidTabsProps {
+  fullwidth?: boolean;
+}
+
+const StyledTabs = styled(CegidTabs)<{ fullwidth: boolean }>(
+  ({ fullwidth }) => ({
+    "& .MuiTabs-indicator": {
+      display: "none",
+    },
     minHeight: "32px",
-  },
-});
+    ...(fullwidth && { width: "100%" }),
+    "& .MuiTabs-root": {
+      minHeight: "32px",
+    },
+  })
+);
 
-const Tabs: React.FC<CegidTabsProps> = (props) => {
-  const { children } = props;
+const Tabs: React.FC<TabsProps> = (props) => {
+  const { children, fullwidth = false, ...otherProps } = props;
 
-  return <StyledTabs {...props}>{children}</StyledTabs>;
+  return (
+    <StyledTabs fullwidth={fullwidth} {...otherProps}>
+      {children}
+    </StyledTabs>
+  );
 };
 
 export default Tabs;
