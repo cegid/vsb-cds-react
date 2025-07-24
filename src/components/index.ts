@@ -88,3 +88,5 @@ export { default as List } from "./List";
 export * from "./List";
 export { default as ListItemButton } from "./ListItemButton";
 export * from "./ListItemButton";
+export { default as ProgressBar } from "./ProgressBar";
+export * from "./ProgressBar";
