@@ -1,15 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import IconButton from "./IconButton";
-import {
-  Add,
-  Delete,
-  Edit,
-  Favorite,
-  Search,
-  Settings,
-} from "@cegid/icons-react";
 import Stack from "../Stack";
+import Icon from "../Icon/Icon";
 
 const meta = {
   title: "Components/Buttons/IconButton",
@@ -63,7 +56,7 @@ export const Default: Story = {
   args: {},
   render: (args) => (
     <IconButton {...args}>
-      <Add />
+      <Icon size={16}>add-01</Icon>
     </IconButton>
   ),
 };
@@ -75,22 +68,22 @@ export const IconOnly: Story = {
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
       <IconButton {...args}>
-        <Add />
+        <Icon size={16}>add-01</Icon>
       </IconButton>
       <IconButton {...args} color="secondary">
-        <Edit />
+        <Icon size={16}>edit-01</Icon>
       </IconButton>
       <IconButton {...args} color="success">
-        <Favorite />
+        <Icon size={16}>favourite</Icon>
       </IconButton>
       <IconButton {...args} color="error">
-        <Delete />
+        <Icon size={16}>delete-01</Icon>
       </IconButton>
       <IconButton {...args} color="warning">
-        <Settings />
+        <Icon size={16}>settings-01</Icon>
       </IconButton>
       <IconButton {...args} color="info">
-        <Search />
+        <Icon size={16}>search-01</Icon>
       </IconButton>
     </Stack>
   ),
@@ -103,22 +96,22 @@ export const Contained: Story = {
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
       <IconButton {...args}>
-        <Add />
+        <Icon size={16}>add-01</Icon>
       </IconButton>
       <IconButton {...args} color="secondary">
-        <Edit />
+        <Icon size={16}>edit-01</Icon>
       </IconButton>
       <IconButton {...args} color="success">
-        <Favorite />
+        <Icon size={16}>favourite</Icon>
       </IconButton>
       <IconButton {...args} color="error">
-        <Delete />
+        <Icon size={16}>delete-01</Icon>
       </IconButton>
       <IconButton {...args} color="warning">
-        <Settings />
+        <Icon size={16}>settings-01</Icon>
       </IconButton>
       <IconButton {...args} color="info">
-        <Search />
+        <Icon size={16}>search-01</Icon>
       </IconButton>
     </Stack>
   ),
@@ -131,22 +124,22 @@ export const Outlined: Story = {
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
       <IconButton {...args}>
-        <Add />
+        <Icon size={16}>add-01</Icon>
       </IconButton>
       <IconButton {...args} color="secondary">
-        <Edit />
+        <Icon size={16}>edit-01</Icon>
       </IconButton>
       <IconButton {...args} color="success">
-        <Favorite />
+        <Icon size={16}>favourite</Icon>
       </IconButton>
       <IconButton {...args} color="error">
-        <Delete />
+        <Icon size={16}>delete-01</Icon>
       </IconButton>
       <IconButton {...args} color="warning">
-        <Settings />
+        <Icon size={16}>settings-01</Icon>
       </IconButton>
       <IconButton {...args} color="info">
-        <Search />
+        <Icon size={16}>search-01</Icon>
       </IconButton>
     </Stack>
   ),
@@ -159,22 +152,22 @@ export const Tonal: Story = {
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
       <IconButton {...args}>
-        <Add />
+        <Icon size={16}>add-01</Icon>
       </IconButton>
       <IconButton {...args} color="secondary">
-        <Edit />
+        <Icon size={16}>edit-01</Icon>
       </IconButton>
       <IconButton {...args} color="success">
-        <Favorite />
+        <Icon size={16}>favourite</Icon>
       </IconButton>
       <IconButton {...args} color="error">
-        <Delete />
+        <Icon size={16}>delete-01</Icon>
       </IconButton>
       <IconButton {...args} color="warning">
-        <Settings />
+        <Icon size={16}>settings-01</Icon>
       </IconButton>
       <IconButton {...args} color="info">
-        <Search />
+        <Icon size={16}>search-01</Icon>
       </IconButton>
     </Stack>
   ),
@@ -187,16 +180,16 @@ export const Square: Story = {
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
       <IconButton {...args}>
-        <Add />
+        <Icon size={16}>add-01</Icon>
       </IconButton>
       <IconButton {...args} variant="contained" color="secondary">
-        <Edit />
+        <Icon size={16}>edit-01</Icon>
       </IconButton>
       <IconButton {...args} variant="outlined" color="success">
-        <Favorite />
+        <Icon size={16}>favourite</Icon>
       </IconButton>
       <IconButton {...args} variant="tonal" color="error">
-        <Delete />
+        <Icon size={16}>delete-01</Icon>
       </IconButton>
     </Stack>
   ),
@@ -209,19 +202,19 @@ export const Disabled: Story = {
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
       <IconButton {...args}>
-        <Add />
+        <Icon size={16}>add-01</Icon>
       </IconButton>
       <IconButton {...args} variant="iconOnly" color="secondary">
-        <Edit />
+        <Icon size={16}>edit-01</Icon>
       </IconButton>
       <IconButton {...args} variant="contained" color="success">
-        <Favorite />
+        <Icon size={16}>favourite</Icon>
       </IconButton>
       <IconButton {...args} variant="outlined" color="error">
-        <Delete />
+        <Icon size={16}>delete-01</Icon>
       </IconButton>
       <IconButton {...args} variant="tonal" color="warning">
-        <Settings />
+        <Icon size={16}>settings-01</Icon>
       </IconButton>
     </Stack>
   ),
@@ -231,22 +224,22 @@ export const AllColors: Story = {
   render: (args) => (
     <Stack direction="row" spacing={2} flexWrap="wrap">
       <IconButton {...args}>
-        <Add />
+        <Icon size={16}>add-01</Icon>
       </IconButton>
       <IconButton {...args} color="secondary">
-        <Edit />
+        <Icon size={16}>edit-01</Icon>
       </IconButton>
       <IconButton {...args} color="success">
-        <Favorite />
+        <Icon size={16}>favourite</Icon>
       </IconButton>
       <IconButton {...args} color="error">
-        <Delete />
+        <Icon size={16}>delete-01</Icon>
       </IconButton>
       <IconButton {...args} color="warning">
-        <Settings />
+        <Icon size={16}>settings-01</Icon>
       </IconButton>
       <IconButton {...args} color="info">
-        <Search />
+        <Icon size={16}>search-01</Icon>
       </IconButton>
     </Stack>
   ),

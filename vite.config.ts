@@ -92,7 +92,6 @@ export default defineConfig({
         "@emotion/react",
         "@emotion/styled",
         "@cegid/cds-react",
-        "@cegid/icons-react",
       ],
       output: {
         entryFileNames: (chunkInfo) => {
@@ -113,7 +112,6 @@ export default defineConfig({
           "@emotion/react": "EmotionReact",
           "@emotion/styled": "EmotionStyled",
           "@cegid/cds-react": "CegidCdsReact",
-          "@cegid/icons-react": "CegidIconsReact",
         },
       },
     },
