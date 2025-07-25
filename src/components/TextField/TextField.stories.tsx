@@ -4,7 +4,7 @@ import { Grid } from '@cegid/cds-react';
 import TextField from './TextField';
 
 const meta = {
-  title: 'Components/Inputs/TextField',
+  title: '🎛️ Form Controls/TextField',
   component: TextField,
   parameters: {
     layout: 'centered',

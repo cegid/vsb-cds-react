@@ -5,7 +5,7 @@ import Typography from "../Typography";
 import Icon from "../Icon";
 
 const meta = {
-  title: "Components/Display/Avatar",
+  title: "📊 Data Display/Avatar",
   component: Avatar,
   parameters: {
     layout: "centered",

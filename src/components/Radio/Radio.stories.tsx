@@ -11,7 +11,7 @@ import {
 import Radio from "./Radio";
 
 const meta = {
-  title: "Components/Buttons/Radio",
+  title: "🎛️ Form Controls/Radio",
   component: Radio,
   parameters: {
     layout: "centered",

@@ -5,7 +5,7 @@ import Stack from "../Stack";
 import Icon from "../Icon/Icon";
 
 const meta = {
-  title: "Components/Buttons/IconButton",
+  title: "🎛️ Form Controls/IconButton",
   component: IconButton,
   parameters: {
     layout: "centered",

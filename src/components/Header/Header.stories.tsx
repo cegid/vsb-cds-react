@@ -5,7 +5,7 @@ import Header from "./Header";
 import Icon from "../Icon";
 
 const meta = {
-  title: "Components/Structure/Header",
+  title: "🧭 Navigation & Layout/Header",
   component: Header,
   parameters: {
     layout: "centered",

@@ -6,6 +6,18 @@ import "../src/theme/icons/hugeicons-font.css";
 
 const preview = {
   parameters: {
+    options: {
+      storySort: {
+        order: [
+          'Introduction', 
+          ['Getting Started', 'Architecture'],
+          'Design Tokens',
+          'Components',
+          ['Buttons', 'Inputs', 'Navigation', 'Layout', 'Data Display', 'Feedback'],
+          '*'
+        ],
+      },
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,

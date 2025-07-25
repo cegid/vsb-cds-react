@@ -4,7 +4,7 @@ import Snackbar from "./Snackbar";
 import Typography from "../Typography";
 
 const meta = {
-  title: "Components/Display/Snackbar",
+  title: "💬 Feedback/Snackbar",
   component: Snackbar,
   parameters: {
     layout: "centered",

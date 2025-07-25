@@ -4,7 +4,7 @@ import NavigationBar from "./NavigationBar";
 import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS, PROFILE_MENU_ITEMS } from "./constants";
 
 const meta = {
-  title: "Components/Navigation/NavigationBar",
+  title: "🧭 Navigation & Layout/NavigationBar",
   component: NavigationBar,
   parameters: {
     layout: "start",

@@ -5,7 +5,7 @@ import AutoComplete from "./Autocomplete";
 import Icon from "../Icon";
 
 const meta = {
-  title: "Components/Inputs/AutoComplete",
+  title: "🎛️ Form Controls/AutoComplete",
   component: AutoComplete,
   parameters: {
     layout: "centered",

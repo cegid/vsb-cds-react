@@ -3,7 +3,7 @@ import { MenuItem, Grid } from '@cegid/cds-react';
 import Select from './Select';
 
 const meta = {
-    title: 'Components/Inputs/Select',
+    title: '🎛️ Form Controls/Select',
     component: Select,
     parameters: {
         layout: 'centered',

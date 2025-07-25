@@ -3,7 +3,8 @@ import { version } from '../package.json';
 
 const config = {
   stories: [
-    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'
+    '../src/stories/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../src/components/**/*.stories.@(js|jsx|mjs|ts|tsx)'
   ],
 
   addons: [

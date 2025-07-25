@@ -22,7 +22,7 @@ const iconNames = {
 };
 
 const meta = {
-  title: "Components/Display/IAChip",
+  title: "📊 Data Display/IAChip",
   component: IAChip,
   parameters: {
     layout: "centered",
