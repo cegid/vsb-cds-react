@@ -29,7 +29,7 @@ const BREAD_CRUMS_TREE: BreadcrumbsItem[] = [
 
 
 const meta = {
-  title: "Components/Navigation/Breadcrumbs",
+  title: "🧭 Navigation & Layout/Breadcrumbs",
   component: Breadcrumbs,
   parameters: {
     layout: "centered",

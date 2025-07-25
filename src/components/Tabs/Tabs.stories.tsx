@@ -5,7 +5,7 @@ import Tabs from "./Tabs";
 import Tab from "../Tab";
 
 const meta = {
-  title: "Components/Structure/Tabs",
+  title: "🧭 Navigation & Layout/Tabs",
   component: Tabs,
   parameters: {
     layout: "centered",

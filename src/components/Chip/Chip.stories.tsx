@@ -9,7 +9,7 @@ import Badge from "../Badge";
 import Avatar from "../Avatar";
 
 const meta = {
-  title: "Components/Display/Chip",
+  title: "📊 Data Display/Chip",
   component: Chip,
   parameters: {
     layout: "padded",

@@ -5,7 +5,7 @@ import Typography from '../Typography';
 import Stack from '../Stack';
 
 const meta = {
-  title: 'Components/Structure/Box',
+  title: '🧭 Navigation & Layout/Box',
   component: Box,
   parameters: {
     layout: 'centered',

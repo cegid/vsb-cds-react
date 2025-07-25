@@ -4,7 +4,7 @@ import { TestIcon } from "./test";
 import React from "react";
 
 const meta = {
-  title: "Components/Display/Alert",
+  title: "💬 Feedback/Alert",
   component: Alert,
   parameters: {
     layout: "centered",
