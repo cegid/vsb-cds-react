@@ -16,7 +16,7 @@ jobs:
 
   blackduck-scan:
   
-    if: ${{ inputs.ACTIVATE_BLACKDUCK_DETECT || github.event_name == 'push' }} 
+    if: ${{ inputs.ACTIVATE_BLACKDUCK_DETECT || github.event_name == 'push' ||  github.event.pull_request.base.ref == 'main' }} 
     runs-on: 'ubuntu-latest'
     continue-on-error: true
     
