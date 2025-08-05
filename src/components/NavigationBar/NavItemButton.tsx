@@ -89,6 +89,8 @@ export const NavListItemIcon = styled(ListItemIcon)(() => ({
   margin: 0,
   minWidth: 0,
   padding: 0,
+  width: "18px",
+  justifyContent: "center",
 }));
 
 interface NavItemButtonProps {
