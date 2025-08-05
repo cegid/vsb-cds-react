@@ -143,7 +143,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Tooltip title={navItem.label} open={showTooltip}>
+      <Tooltip title={navItem.label} open={showTooltip} color="dark">
         <NavListItemButton
           onClick={onClick}
           active={navItem.isActive}
@@ -157,7 +157,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
               <MenuIcon
                 variant={iconVariant}
                 color="primary/10"
-                size={isHovered ? "18px" : "16px"}
+                size={isHovered && !navItem.isDisabled ? "18px" : "16px"}
                 expanded={isExpanded}
               >
                 {navItem.icon}
