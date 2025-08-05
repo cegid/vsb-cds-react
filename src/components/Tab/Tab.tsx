@@ -24,44 +24,60 @@ export interface TabProps extends CegidTabProps {
    * Supports all Badge variants (tonal, outlined) and sizes (small, medium).
    */
   startBadge?: BadgeProps;
+  /**
+   * Controls whether the bottom line under the tab is displayed.
+   * When false, hides the bottom line indicator.
+   */
+  hideBottomLine?: boolean;
 }
 
-const StyledTab = styled(CegidTab)({
-  color: neutral[50],
-  opacity: 1,
-  ...typography.bodySSemiBold,
-  padding: "2px 8px",
-  minHeight: "auto",
-  position: "relative",
-  overflow: "visible",
-  flex: 1,
-  "&::after": {
-    content: '""',
-    position: "absolute",
-    bottom: "-5px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    width: "100%",
-    height: "1px",
-    borderRadius: "1px",
-    transition: "background-color 0.3s ease",
-    backgroundColor: neutral[95],
-  },
-  "&.Mui-selected": {
-    color: neutral[10],
-    backgroundColor: neutral[99],
-    border: `solid 1px ${neutral[95]}`,
-    borderRadius: "8px",
-    "&::after": {
-      backgroundColor: neutral[10],
-      bottom: "-6px",
+const StyledTab = styled(CegidTab)<{ hideBottomLine?: boolean }>(
+  ({ hideBottomLine }) => ({
+    color: neutral[50],
+    opacity: 1,
+    padding: "2px 8px",
+    minHeight: "auto",
+    position: "relative",
+    overflow: "visible",
+    flex: "0 0 auto",
+    border: "solid 1px transparent",
+    ...(!hideBottomLine && {
+      "&::after": {
+        content: '""',
+        position: "absolute",
+        bottom: "-5px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "100%",
+        height: "1px",
+        borderRadius: "1px",
+        transition: "background-color 0.3s ease",
+        backgroundColor: neutral[95],
+      },
+    }),
+    "&.MuiButtonBase-root": {
+      ...typography.bodyMRegular,
     },
-  },
-  "&:hover": {
-    backgroundColor: neutral[99],
-    borderRadius: 8,
-  },
-});
+    "&.Mui-selected": {
+      color: neutral[10],
+      ...typography.bodyMSemiBold,
+      backgroundColor: neutral[99],
+      border: `solid 1px ${neutral[95]}`,
+      borderRadius: "8px",
+      ...(!hideBottomLine && {
+        "&::after": {
+          backgroundColor: neutral[10],
+          bottom: "-6px",
+        },
+      }),
+    },
+    "&:hover": {
+      backgroundColor: neutral[99],
+      borderRadius: 8,
+      borderColor: neutral[95],
+    },
+  })
+);
 
 const TabContent = styled(Box)({
   display: "flex",
@@ -74,6 +90,7 @@ const Tab: React.FC<TabProps> = ({
   label,
   children,
   startBadge,
+  hideBottomLine,
   ...props
 }) => {
   const tabContent = badge ? (
@@ -87,7 +104,14 @@ const Tab: React.FC<TabProps> = ({
     label || children
   );
 
-  return <StyledTab {...props} label={tabContent} disableRipple />;
+  return (
+    <StyledTab
+      {...props}
+      label={tabContent}
+      hideBottomLine={hideBottomLine}
+      disableRipple
+    />
+  );
 };
 
 export default Tab;
