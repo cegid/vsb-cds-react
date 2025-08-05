@@ -43,7 +43,7 @@ export const Default: Story = {
   },
 };
 
-export const Multiple: Story = {
+export const WithoutBottomLine: Story = {
   render: () => {
     const [value, setValue] = useState(0);
 
@@ -52,11 +52,10 @@ export const Multiple: Story = {
     };
 
     return (
-      <Tabs aria-label="Customer tabs" value={value} onChange={handleChange}>
+      <Tabs aria-label="Tabs without bottom line" value={value} onChange={handleChange} bottomLine={false}>
         <Tab label="Particulier" />
         <Tab label="Professionnel" />
         <Tab label="Entreprise" />
-        <Tab label="Association" />
       </Tabs>
     );
   },

@@ -9,6 +9,7 @@ import React from "react";
 
 export interface TabsProps extends CegidTabsProps {
   fullwidth?: boolean;
+  bottomLine?: boolean;
 }
 
 const StyledTabs = styled(CegidTabs)<{ fullwidth: boolean }>(
@@ -16,20 +17,30 @@ const StyledTabs = styled(CegidTabs)<{ fullwidth: boolean }>(
     "& .MuiTabs-indicator": {
       display: "none",
     },
-    minHeight: "32px",
+    minHeight: "34px",
     ...(fullwidth && { width: "100%" }),
     "& .MuiTabs-root": {
-      minHeight: "32px",
+      minHeight: "34px",
     },
   })
 );
 
 const Tabs: React.FC<TabsProps> = (props) => {
-  const { children, fullwidth = false, ...otherProps } = props;
+  const { children, fullwidth = false, bottomLine = true, ...otherProps } = props;
+
+  const modifiedChildren = React.Children.map(children, (child) => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, {
+        ...child.props,
+        hideBottomLine: !bottomLine,
+      });
+    }
+    return child;
+  });
 
   return (
     <StyledTabs fullwidth={fullwidth} {...otherProps}>
-      {children}
+      {modifiedChildren}
     </StyledTabs>
   );
 };
