@@ -124,7 +124,7 @@ const ColorDemo = () => {
 };
 
 const meta: Meta = {
-  title: "Theme/Color Palette",
+  title: "🎨 Theme/Color Palette",
   component: ColorDemo,
   parameters: {
     layout: "fullscreen",
