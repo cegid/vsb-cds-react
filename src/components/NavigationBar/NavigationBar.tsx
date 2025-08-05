@@ -19,6 +19,8 @@ export interface NavItem {
   path?: string;
   children?: NavItem[];
   onClick?: () => void;
+  createPath?: string;
+  onCreateClick?: () => void;
 }
 
 export interface ProfileMenuItem {

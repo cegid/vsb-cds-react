@@ -69,6 +69,8 @@ export const NAV_ITEMS: NavItem[] = [
         icon: "location-user-01",
         path: '/ventes/clients',
         onClick: () => console.log('client clicked'),
+        createPath: '/ventes/clients/new',
+        onCreateClick: () => console.log('Créer un nouveau client'),
       },
       {
         key: 'catalogues',
@@ -76,6 +78,8 @@ export const NAV_ITEMS: NavItem[] = [
         icon: "library",
         path: '/ventes/catalogues',
         onClick: () => console.log('catalogues clicked'),
+        createPath: '/ventes/catalogues/new',
+        onCreateClick: () => console.log('Créer un nouveau catalogue'),
       },
       {
         key: 'reglements',
