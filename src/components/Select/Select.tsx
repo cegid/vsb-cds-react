@@ -28,6 +28,14 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
       outline: `2px solid ${primary[70]}`,
       outlineOffset: "1px",
     },
+    "&.Mui-focused:has([aria-expanded='true'])": {
+      outline: "none",
+      outlineOffset: "0",
+    },
+    "&.Mui-focused:has(.MuiSelect-select:not(:empty))": {
+      outline: "none",
+      outlineOffset: "0",
+    },
     "&.Mui-readOnly": {
       backgroundColor: neutral[99],
       "&.Mui-focused": {
@@ -131,13 +139,28 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
   },
 }));
 
-function Select(props: CegidSelectProps) {
+function Select(props: Readonly<CegidSelectProps>) {
   const { errorText, ...otherProps } = props;
 
   return (
     <>
       <StyledSelect
         {...otherProps}
+        SelectProps={{
+          MenuProps: {
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "left",
+            },
+            transformOrigin: {
+              vertical: "top",
+              horizontal: "left",
+            },
+            disableScrollLock: true,
+            ...otherProps.SelectProps?.MenuProps,
+          },
+          ...otherProps.SelectProps,
+        }}
         InputProps={{
           endAdornment: <Icon size={16}>arrow-down-01</Icon>,
         }}
