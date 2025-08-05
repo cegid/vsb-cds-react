@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react-vite";
+import { version } from "../../package.json";
 import {
   Alert,
   Avatar,
@@ -81,7 +82,7 @@ const DocumentationContent = () => {
             justifyContent="center"
           >
             <Chip
-              label="Stable v1.16.1"
+              label={"Stable v " + version}
               color="success"
               startIcon={<Icon>check-circle</Icon>}
             />
@@ -451,7 +452,6 @@ function App() {
           <Typography variant="titleLSemiBold" color="neutral/10">
             Ready to get started?
           </Typography>
-
           <Typography variant="bodyMRegular" color="neutral/70" maxWidth={500}>
             Explore our complete collection of components and start building
             exceptional interfaces with the BIM! by Cegid design system.
@@ -466,10 +466,9 @@ function App() {
           >
             Source code
           </Button>
-
           <Stack direction="row" spacing={1} alignItems="center">
             <Typography variant="captionRegular" color="neutral/60">
-              v1.16.1 • Made with
+              v{version} • Made with
             </Typography>
             <Icon size={12} color="critical/50">
               heart
