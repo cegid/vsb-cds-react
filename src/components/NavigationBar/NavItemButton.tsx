@@ -14,6 +14,8 @@ import Typography from "../Typography";
 import { primary } from "../../theme";
 import { useState, useRef, useEffect } from "react";
 import Tooltip from "../Tooltip";
+import Box from "../Box";
+import IconButton from "../IconButton";
 
 export interface NavListItemButtonProp {
   active: boolean;
@@ -89,6 +91,8 @@ export const NavListItemIcon = styled(ListItemIcon)(() => ({
   margin: 0,
   minWidth: 0,
   padding: 0,
+  width: "18px",
+  justifyContent: "center",
 }));
 
 interface NavItemButtonProps {
@@ -173,6 +177,17 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
                 </Typography>
               }
             />
+          )}
+          {navItem.createPath && isExpanded && (
+            <IconButton
+              onClick={() => navItem.onCreateClick}
+              variant="iconOnly"
+              square
+            >
+              <Icon variant="stroke" color="primary/10" size="12px">
+                add-01
+              </Icon>
+            </IconButton>
           )}
           {isSideBar && hasChildren && (
             <CollapseIcon
