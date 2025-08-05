@@ -45,7 +45,7 @@ const StyledTab = styled(CegidTab)<{ hideBottomLine?: boolean }>(
       "&::after": {
         content: '""',
         position: "absolute",
-        bottom: "-5px",
+        bottom: "-4px",
         left: "50%",
         transform: "translateX(-50%)",
         width: "100%",
@@ -67,14 +67,14 @@ const StyledTab = styled(CegidTab)<{ hideBottomLine?: boolean }>(
       ...(!hideBottomLine && {
         "&::after": {
           backgroundColor: neutral[10],
-          bottom: "-6px",
+          bottom: "-4px",
         },
       }),
     },
     "&:hover": {
       backgroundColor: neutral[99],
       borderRadius: 8,
-      borderColor: neutral[95],
+      border: `solid 1px ${neutral[95]}`,
     },
   })
 );

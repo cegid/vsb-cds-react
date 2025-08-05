@@ -17,10 +17,10 @@ const StyledTabs = styled(CegidTabs)<{ fullwidth: boolean }>(
     "& .MuiTabs-indicator": {
       display: "none",
     },
-    minHeight: "32px",
+    minHeight: "34px",
     ...(fullwidth && { width: "100%" }),
     "& .MuiTabs-root": {
-      minHeight: "32px",
+      minHeight: "34px",
     },
   })
 );
