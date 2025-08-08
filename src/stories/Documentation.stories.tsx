@@ -102,7 +102,6 @@ const DocumentationContent = () => {
 
       {/* Navigation Tabs */}
       <Box
-        borderBottom={{ color: "neutral/95", width: 1, style: "solid" }}
         mb={4}
       >
         <Tabs
