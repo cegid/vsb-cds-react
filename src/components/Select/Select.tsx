@@ -16,6 +16,7 @@ const { primary, neutral, critical } = colorPalettes;
 
 const StyledSelect = styled(CegidSelect)(({ theme }) => ({
   "& .MuiInputBase-root": {
+    caretColor: "transparent",
     padding: "8px 8px 8px 16px",
     "& .MuiInputAdornment-root": {
       left: "8px",
@@ -23,16 +24,15 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
     "&.Mui-error": {
       borderColor: critical[80],
       backgroundColor: critical[99],
+      "&:hover": {
+        backgroundColor: critical[90],
+      },
     },
     "&.Mui-focused": {
       outline: `2px solid ${primary[70]}`,
       outlineOffset: "1px",
     },
     "&.Mui-focused:has([aria-expanded='true'])": {
-      outline: "none",
-      outlineOffset: "0",
-    },
-    "&.Mui-focused:has(.MuiSelect-select:not(:empty))": {
       outline: "none",
       outlineOffset: "0",
     },
@@ -46,6 +46,14 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
     "& .MuiSelect-icon": {
       display: "none",
     },
+    "&.Mui-focused:not(.Mui-error)::before": {
+      borderColor: neutral[90],
+    },
+    ":hover": {
+      backgroundColor: neutral[99],
+      borderColor: neutral[90],
+    },
+
   },
   "& .MuiSelect-select": {
     ...typography.bodyMRegular,
@@ -89,9 +97,6 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
     "&.Mui-selected": {
       backgroundColor: primary[95],
       "&:hover": {
-        backgroundColor: primary[90],
-      },
-      "&.Mui-focusVisible": {
         backgroundColor: primary[90],
       },
     },

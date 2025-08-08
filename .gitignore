@@ -46,3 +46,6 @@ certificates
 public/invoice_data.json
 *storybook.log
 /.vscode
+
+# tools
+/.claude/*
