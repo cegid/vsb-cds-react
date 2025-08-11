@@ -25,16 +25,18 @@ export interface SearchInputProps
   extends Omit<TextFieldProps, "InputProps" | "size"> {
   /**
    * Callback function triggered when the filter button is clicked
-   * @callback onFilterClick
-   * @returns {void}
    */
   onFilterClick?: () => void;
-
   /**
    * Default size of the search input component
    * @default "long"
    */
   defaultSize?: SearchInputSize;
+  /**
+   * Whether the input should take the full width of its container
+   * @default false
+   */
+  fullwidth?: boolean;
 }
 
 const CustomTextField = styled(TextField)<{ $size?: SearchInputSize }>(
@@ -96,6 +98,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onChange,
   onFilterClick,
   defaultSize = "long",
+  fullwidth = false,
   ...props
 }) => {
   const [hasValue, setHasValue] = useState(false);
@@ -130,7 +133,10 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
   return (
     <Row gap={4}>
-      <Box onClick={() => (size === "short" ? setSize("long") : undefined)}>
+      <Box
+        onClick={() => (size === "short" ? setSize("long") : undefined)}
+        flex={size === "long" ? 1 : 0}
+      >
         <CustomTextField
           $size={size}
           placeholder={size === "short" ? "" : placeholder}
