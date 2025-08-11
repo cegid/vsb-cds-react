@@ -30,17 +30,20 @@ const meta = {
     },
     fullwidth: {
       control: "boolean",
-      description: "Whether the input should take the full width of its container",
+      description:
+        "Whether the input should take the full width of its container",
     },
     onFilterClick: {
       action: "filter clicked",
-      description: "Callback function triggered when the filter button is clicked",
+      description:
+        "Callback function triggered when the filter button is clicked",
     },
   },
   args: {
     placeholder: "Cherchez par nom, tél, type...",
     defaultSize: "long",
     fullwidth: false,
+    onFilterClick: () => {},
   },
 } satisfies Meta<typeof InputSearch>;
 
