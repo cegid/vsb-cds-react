@@ -14,7 +14,6 @@ import Typography from "../Typography";
 import { primary } from "../../theme";
 import { useState, useRef, useEffect } from "react";
 import Tooltip from "../Tooltip";
-import Box from "../Box";
 import IconButton from "../IconButton";
 
 export interface NavListItemButtonProp {
@@ -122,9 +121,12 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
     Array.isArray(navItem.children) && navItem.children.length > 0;
   const handleMouseEnter = () => {
     setIsHovered(true);
-    tooltipTimer.current = window.setTimeout(() => {
-      setShowTooltip(true);
-    }, 1000);
+    // Only show tooltip if navigation is collapsed (text is not visible)
+    if (!isExpanded) {
+      tooltipTimer.current = window.setTimeout(() => {
+        setShowTooltip(true);
+      }, 1000);
+    }
     onMouseEnter?.();
   };
 
@@ -147,7 +149,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Tooltip title={navItem.label} open={showTooltip} color="dark">
+      <Tooltip title={navItem.label} open={showTooltip} color="dark" placement="right">
         <NavListItemButton
           onClick={onClick}
           active={navItem.isActive}
