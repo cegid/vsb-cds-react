@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { useTheme, useMediaQuery } from "@mui/material";
 import Box from "../Box";
 import { neutral } from "../../theme";
 import typography from "../../theme/typography";
@@ -27,6 +28,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isIconOnly = actions.every((action) => !action.label);
 
   useEffect(() => {
@@ -66,7 +69,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     padding: "2px",
     gap: "4px",
     width: fullwidth ? "100%" : "fit-content",
-    height: "40px",
+    height: isMobile ? "40px" : "32px",
     ...typography.bodySSemiBold,
   };
 
@@ -97,8 +100,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     border: "none",
     background: "none",
     fontSize: "14px",
-    height: "36px",
-    minWidth: isIconOnly ? "36px" : "auto",
+    height: isMobile ? "36px" : "28px",
+    minWidth: isIconOnly ? (isMobile ? "36px" : "28px") : "auto",
     justifyContent: "center",
   });
 
