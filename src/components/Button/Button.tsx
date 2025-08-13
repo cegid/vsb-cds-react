@@ -109,7 +109,7 @@ const createContainedButtonStyle = (
   activeIndex = 60
 ) => ({
   backgroundColor: color[backgroundIndex],
-  boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
+  boxShadow: `0px 0.3px 0.8px ${color[40]}`,
   "&:hover": {
     backgroundColor: color[hoverIndex],
     "&:before": {
@@ -268,7 +268,7 @@ const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
     "&.MuiButton-containedNeutral": {
       color: neutral[10],
       backgroundColor: white,
-      boxShadow: "0px 0.3px 0.8px rgba(0, 0, 0, 0.1)",
+      boxShadow: `0px 0.3px 0.8px ${neutral[90]}`,
       border: "none",
       "&:hover": {
         backgroundColor: neutral[99],
