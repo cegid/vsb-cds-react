@@ -4,6 +4,10 @@ import { styled } from "@mui/material/styles";
 import Box from "../Box";
 import Column from "../Column";
 import ChartCore, { ChartCoreProps } from "./ChartCore";
+import Row from "../Row";
+import Typography from "../Typography";
+import IconButton from "../IconButton";
+import Icon from "../Icon";
 
 interface ChartModalProps {
   open: boolean;
@@ -41,6 +45,7 @@ const ChartModal: React.FC<ChartModalProps> = ({
   open,
   onClose,
   chartProps,
+  title,
 }) => {
   return (
     <StyledDialog
@@ -52,22 +57,48 @@ const ChartModal: React.FC<ChartModalProps> = ({
     >
       <StyledDialogContent>
         <Column
-          p={6}
-          gap={6}
+          px={11}
+          gap={11}
+          py={8}
           height="100%"
-          padding={2}
-          backgroundColor="primary/95"
-          borderRadius={4}
+          width="100%"
+          backgroundColor="white"
+          borderRadius={5}
         >
-          <Box
-            flex={1}
-            minHeight={0}
+          <Row>
+            <Typography variant="displaySSemiBold" color="neutral/10" flex={1}>
+              {title}
+            </Typography>
+            <IconButton
+              color="neutral"
+              variant="tonal"
+              square
+              onClick={onClose}
+            >
+              <Icon size={16} variant="solid">
+                cancel-01
+              </Icon>
+            </IconButton>
+          </Row>
+          <Column
+            p={6}
+            gap={6}
+            padding={2}
+            backgroundColor="primary/95"
+            borderRadius={4}
             height="100%"
-            backgroundColor="white"
-            borderRadius={3}
+            width="100%"
           >
-            <ChartCore {...chartProps} showTooltip={true} />
-          </Box>
+            <Box
+              flex={1}
+              minHeight={0}
+              height="100%"
+              backgroundColor="white"
+              borderRadius={3}
+            >
+              <ChartCore {...chartProps} showTooltip={true} />
+            </Box>
+          </Column>
         </Column>
       </StyledDialogContent>
     </StyledDialog>
