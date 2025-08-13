@@ -1,384 +1,236 @@
-"use client";
-
 import React from "react";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  ArcElement,
-  ChartOptions,
-  ChartData,
-} from "chart.js";
-import { Line, Bar, Pie, Doughnut } from "react-chartjs-2";
-import { styled } from "@mui/material/styles";
-import Box from "../Box";
 import Typography from "../Typography";
-import { neutral, CustomColorString, parseCustomColor } from "../../theme";
-import typography from "../../theme/typography";
 import Column from "../Column";
-import Icon from "../Icon";
 import Row from "../Row";
+import IconButton from "../IconButton";
+import Icon from "../Icon";
+import ChartModal from "./ChartModal";
+import ChartCore, { ChartCoreProps, ChartType } from "./ChartCore";
+import Box from "../Box";
+import { PaletteNames, RADIUS, parseCustomColor } from "../../theme";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-);
+export type { ChartType, ChartDataset, CustomChartData } from "./ChartCore";
 
-export type ChartType = "line" | "bar" | "pie" | "doughnut";
+export const getChartIcon = (
+  chartType: ChartType,
+  color?: string
+): React.ReactNode => {
+  const iconStyle = { width: 12, height: 12, fill: "white" };
 
-export interface ChartDataset {
-  /**
-   * Dataset label displayed in legends and tooltips
-   */
-  label?: string;
-  /**
-   * Array of data points for the dataset
-   */
-  data: number[];
-  /**
-   * Background color(s) using theme color palette (e.g., "primary/50")
-   * Can be a single color or array for multiple data points
-   */
-  backgroundColor?: CustomColorString | CustomColorString[];
-  /**
-   * Border color(s) using theme color palette (e.g., "primary/30")
-   * Can be a single color or array for multiple data points
-   */
-  borderColor?: CustomColorString | CustomColorString[];
-  /**
-   * Width of the border in pixels
-   */
-  borderWidth?: number;
-  /**
-   * Line tension for line charts (0 = straight lines, 1 = very curved)
-   * @default 0
-   */
-  tension?: number;
-  /**
-   * Additional Chart.js dataset properties
-   */
-  [key: string]: any;
-}
+  switch (chartType) {
+    case "bar":
+      return (
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={iconStyle}
+        >
+          <rect width="12" height="12" rx="4" fill={color} />
+        </svg>
+      );
+    case "line":
+      return (
+        <svg
+          width="12"
+          height="4"
+          viewBox="0 0 12 4"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={iconStyle}
+        >
+          <rect width="12" height="4" rx="2" fill={color} />
+        </svg>
+      );
+    case "pie":
+    case "doughnut":
+      return (
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={iconStyle}
+        >
+          <path
+            d="M0 1.33333C0 0.596954 0.596954 0 1.33333 0C7.22437 0 12 4.77563 12 10.6667C12 11.403 11.403 12 10.6667 12H2C0.895431 12 0 11.1046 0 10V1.33333Z"
+            fill={color}
+          />
+        </svg>
+      );
+  }
+};
 
-export interface CustomChartData {
+export interface ChartProps extends ChartCoreProps {
   /**
-   * Array of labels for the chart's x-axis
-   */
-  labels: string[];
-  /**
-   * Array of datasets containing the chart data and styling
-   */
-  datasets: ChartDataset[];
-}
-
-export interface ChartProps {
-  /**
-   * The type of chart to render
-   */
-  type: ChartType;
-  /**
-   * Chart data containing labels and datasets with enforced CustomColorString types
-   */
-  data: CustomChartData;
-  /**
-   * Chart.js configuration options to override defaults
-   */
-  options?: ChartOptions<any>;
-  /**
-   * Width of the chart container in pixels
-   */
-  width?: number;
-  /**
-   * Height of the chart container in pixels
-   */
-  height?: number;
-  /**
-   * CSS class name for the chart container
-   */
-  className?: string;
-  /**
-   * Whether to show vertical grid lines (X-axis)
-   * @default false
-   */
-  showVerticalGrid?: boolean;
-  /**
-   * Whether to show horizontal grid lines (Y-axis)
-   * @default true
-   */
-  showHorizontalGrid?: boolean;
-  /**
-   * Background colors for chart datasets using theme color palette
-   */
-  backgroundColor?: CustomColorString | CustomColorString[];
-  /**
-   * Whether to show tooltips on hover
-   * @default true
-   */
-  showTooltip?: boolean;
-  /**
-   * Title displayed in the tooltip
+   * Title displayed in the chart header
    */
   title?: string;
+  backgroundColor: PaletteNames;
 }
 
-const StyledChartContainer = styled(Box)(({ theme }) => ({
-  position: "relative",
-  width: "100%",
-  "& canvas": {
-    maxWidth: "100%",
-    height: "auto !important",
-  },
-}));
-
-const TooltipDivider = styled(Box)(({ theme }) => ({
-  height: "1px",
-  backgroundColor: neutral[40],
-  margin: "0px -12px",
-  width: "calc(100% + 24px)",
-}));
-
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
-  (
-    {
-      type,
-      data,
-      options,
-      width,
-      height,
-      className,
-      showVerticalGrid = false,
-      showHorizontalGrid = true,
-      backgroundColor,
-      showTooltip = true,
-      title = "Titre",
-      ...props
-    },
-    ref
-  ) => {
-    const tooltipRef = React.useRef<HTMLDivElement>(null);
-    const [tooltipData, setTooltipData] = React.useState<any>(null);
-    
-    const getChartIcon = (chartType: ChartType): string => {
-      switch (chartType) {
-        case "bar":
-          return "chart-01";
-        case "pie":
-          return "pie-chart";
-        case "doughnut":
-          return "pie-chart-08";
-        case "line":
-          return "chart-line-data-01";
-        default:
-          return "chart-01";
-      }
-    };
-
-    const externalTooltipHandler = React.useCallback(
-      (context: any) => {
-        const { tooltip } = context;
-        const tooltipEl = tooltipRef.current;
-
-        if (!tooltipEl) return;
-
-        if (tooltip.opacity === 0) {
-          tooltipEl.style.display = "none";
-          setTooltipData(null);
-           return;
-        }
-
-        tooltipEl.style.display = "block";
-
-        if (tooltip.body) {
-          const dataPoint = tooltip.dataPoints[0];
-          setTooltipData({
-            chartType: type.charAt(0).toUpperCase() + type.slice(1),
-            label: dataPoint.label,
-            value: dataPoint.parsed.y,
-          });
-        }
-
-        tooltipEl.style.left = tooltip.caretX + "px";
-        tooltipEl.style.top = tooltip.caretY + "px";
-      },
-      [type]
+  ({ title = "Titre", ...chartProps }, ref) => {
+    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [hiddenDatasets, setHiddenDatasets] = React.useState<Set<number>>(
+      new Set()
+    );
+    const [hoveredDataset, setHoveredDataset] = React.useState<number | null>(
+      null
     );
 
-    const processedData = React.useMemo((): ChartData<any> => {
+    const totalValue = React.useMemo(() => {
+      return chartProps.data.datasets.reduce((total, dataset, index) => {
+        if (hiddenDatasets.has(index)) return total;
+        return total + dataset.data.reduce((sum, value) => sum + value, 0);
+      }, 0);
+    }, [chartProps.data, hiddenDatasets]);
+
+    const filteredChartData = React.useMemo(() => {
       return {
-        ...data,
-        datasets: data.datasets.map((dataset, index) => {
-          const convertedDataset = { ...dataset };
-
-          if (dataset.backgroundColor) {
-            if (Array.isArray(dataset.backgroundColor)) {
-              (convertedDataset as any).backgroundColor =
-                dataset.backgroundColor.map(parseCustomColor);
-            } else {
-              (convertedDataset as any).backgroundColor = parseCustomColor(
-                dataset.backgroundColor
-              );
-            }
-          }
-
-          if (dataset.borderColor) {
-            if (Array.isArray(dataset.borderColor)) {
-              (convertedDataset as any).borderColor =
-                dataset.borderColor.map(parseCustomColor);
-            } else {
-              (convertedDataset as any).borderColor = parseCustomColor(
-                dataset.borderColor
-              );
-            }
-          }
-
-          if (backgroundColor) {
-            const backgroundColors = Array.isArray(backgroundColor)
-              ? backgroundColor
-              : [backgroundColor];
-            (convertedDataset as any).backgroundColor = parseCustomColor(
-              backgroundColors[index % backgroundColors.length]
-            );
-          }
-
-          return convertedDataset;
-        }),
+        ...chartProps.data,
+        datasets: chartProps.data.datasets.filter(
+          (_, index) => !hiddenDatasets.has(index)
+        ),
       };
-    }, [data, backgroundColor]);
-    const defaultOptions: ChartOptions<any> = {
-      responsive: true,
-      maintainAspectRatio: false,
-      onHover: (
-        event: { native: { target: HTMLCanvasElement } },
-        elements: string | any[]
-      ) => {
-        const canvas = event.native?.target;
-        if (canvas) {
-          canvas.style.cursor = elements.length > 0 ? "pointer" : "default";
+    }, [chartProps.data, hiddenDatasets]);
+
+    const toggleDataset = (index: number) => {
+      setHiddenDatasets((prev) => {
+        const newSet = new Set(prev);
+        if (newSet.has(index)) {
+          newSet.delete(index);
+        } else {
+          newSet.add(index);
         }
-      },
-      plugins: {
-        legend: {
-          display: false,
-        },
-        tooltip: {
-          enabled: false,
-          external: showTooltip ? externalTooltipHandler : undefined,
-        },
-      },
-      ...(type === "line" || type === "bar"
-        ? {
-            scales: {
-              x: {
-                grid: {
-                  display: showVerticalGrid,
-                  color: "rgba(0, 0, 0, 0.1)",
-                },
-                ticks: {
-                  padding: 10,
-                  color: neutral[50],
-                  font: {
-                    family: typography.captionSemiBold.fontFamily,
-                    size: typography.captionSemiBold.fontSize,
-                  },
-                },
-              },
-              y: {
-                grid: {
-                  display: showHorizontalGrid,
-                  color: "rgba(0, 0, 0, 0.1)",
-                },
-                ticks: {
-                  padding: 10,
-                  color: neutral[50],
-                  font: {
-                    family: typography.captionSemiBold.fontFamily,
-                    size: typography.captionSemiBold.fontSize,
-                  },
-                },
-              },
-            },
-          }
-        : {}),
-      ...options,
-    };
-
-    const renderChart = () => {
-      const commonProps = {
-        data: processedData,
-        options: defaultOptions,
-        width,
-        height,
-      };
-
-      switch (type) {
-        case "line":
-          return <Line {...commonProps} />;
-        case "bar":
-          return <Bar {...commonProps} />;
-        case "pie":
-          return <Pie {...commonProps} />;
-        case "doughnut":
-          return <Doughnut {...commonProps} />;
-        default:
-          return <Line {...commonProps} />;
-      }
+        return newSet;
+      });
     };
 
     return (
-      <StyledChartContainer
-        ref={ref}
-        className={className}
-        width={width || "100%"}
-        height={height || 400}
-        {...props}
-      >
-        {renderChart()}
-        <Box
-          ref={tooltipRef}
-          position="absolute"
-          backgroundColor="neutral/20"
-          p={5}
-          borderRadius={2}
-          width="fit-content"
-          justifyContent="center"
-          alignItems="center"
-          display="none"
-          minWidth="150px"
-        >
-          {tooltipData && (
-            <Column gap={4}>
-              <Row gap={2}>
-                <Icon variant="stroke" size={12} color="white">
-                  {getChartIcon(type)}
-                </Icon>
-                <Typography variant="captionSemiBold" color="white">
-                  {tooltipData.label}
-                </Typography>
-              </Row>
-              <Typography variant="bodySSemiBold" color="white">
-                {tooltipData.value}
-              </Typography>
-              <TooltipDivider />
-              <Typography variant="captionSemiBold" color="neutral/80">
-                {title}
-              </Typography>
-            </Column>
-          )}
-        </Box>
-      </StyledChartContainer>
+      <Box p={2} borderRadius={4} backgroundColor="primary/95">
+        <Column p={6} borderRadius={3} gap={6} backgroundColor="white">
+          <Row gap={4}>
+            <Typography variant="titleLSemiBold" color="neutral/10" flex={1}>
+              {title}
+            </Typography>
+            <IconButton square color="neutral" variant="tonal">
+              <Icon size={16}>more-horizontal</Icon>
+            </IconButton>
+            <IconButton
+              square
+              color="neutral"
+              variant="tonal"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <Icon size={16}>play</Icon>
+            </IconButton>
+          </Row>
+          <Column>
+            <Typography variant="bodyMMedium" color="neutral/50">
+              Total Value
+            </Typography>
+            <Typography variant="displaySSemiBold" color="neutral/10">
+              {totalValue.toLocaleString()}
+            </Typography>
+          </Column>
+          <Row gap={2} flexWrap="wrap">
+            {chartProps.data.datasets.map((dataset, index) => {
+              let datasetColor = "#666666";
+
+              if (
+                dataset.backgroundColor &&
+                typeof dataset.backgroundColor === "string"
+              ) {
+                datasetColor =
+                  parseCustomColor(dataset.backgroundColor) ?? "white";
+              } else if (
+                dataset.backgroundColor &&
+                Array.isArray(dataset.backgroundColor) &&
+                dataset.backgroundColor[0]
+              ) {
+                datasetColor =
+                  parseCustomColor(dataset.backgroundColor[0]) ?? "white";
+              }
+
+              return (
+                <Row
+                  alignItems="center"
+                  key={`${dataset.label}-${index}`}
+                  gap={4}
+                  backgroundColor="white"
+                  border={{ color: "neutral/60", opacity: 30 }}
+                  py={2}
+                  px={4}
+                  width={"auto"}
+                  borderRadius={RADIUS.FULL}
+                  onClick={() => toggleDataset(index)}
+                  onMouseEnter={() => setHoveredDataset(index)}
+                  onMouseLeave={() => setHoveredDataset(null)}
+                  sx={{
+                    cursor: "pointer",
+                  }}
+                >
+                  <Box
+                    width={12}
+                    height={12}
+                    display="flex"
+                    position="relative"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Box
+                      position="absolute"
+                      sx={{
+                        opacity: hiddenDatasets.has(index)
+                          ? 0
+                          : hoveredDataset === index
+                          ? 0
+                          : 1,
+                        transition: "opacity 200ms ease-in-out",
+                      }}
+                    >
+                      {getChartIcon(chartProps.type, datasetColor)}
+                    </Box>
+                    <Box
+                      sx={{
+                        opacity: hiddenDatasets.has(index)
+                          ? 1
+                          : hoveredDataset === index
+                          ? 1
+                          : 0,
+                        transition: "opacity 200ms ease-in-out",
+                      }}
+                    >
+                      <Icon
+                        variant="stroke"
+                        style="rounded"
+                        color="neutral/50"
+                        size={12}
+                      >
+                        {hiddenDatasets.has(index) ? "view-off-slash" : "view"}
+                      </Icon>
+                    </Box>
+                  </Box>
+                  <Typography variant="bodySMedium" color="neutral/50">
+                    {dataset.label}
+                  </Typography>
+                </Row>
+              );
+            })}
+          </Row>
+          <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
+          <ChartModal
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            chartProps={{ ...chartProps, data: filteredChartData }}
+            title={title}
+          />
+        </Column>
+      </Box>
     );
   }
 );

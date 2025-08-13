@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import Chart, { CustomChartData } from "./Chart";
 import Stack from "../Stack";
+import Box from "../Box";
+import WarningDecorator from "../../storycomponents/WarningDecorator";
 
 const sampleLineData: CustomChartData = {
   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
@@ -10,7 +12,7 @@ const sampleLineData: CustomChartData = {
       label: "Revenue",
       data: [12000, 19000, 15000, 25000, 22000, 30000],
       borderColor: "primary/50",
-      backgroundColor: "primary/95",
+      backgroundColor: "primary/60",
       tension: 0.4,
     },
     {
@@ -29,16 +31,23 @@ const sampleBarData: CustomChartData = {
     {
       label: "Sales",
       data: [65000, 59000, 80000, 81000],
-      backgroundColor: "primary/50",
-      borderColor: "primary/30",
+      backgroundColor: "primary/60",
+      borderColor: "primary/50",
       borderWidth: 1,
     },
     {
       label: "Target",
       data: [70000, 65000, 75000, 85000],
-      backgroundColor: "success/50",
-      borderColor: "success/30",
+      backgroundColor: "primary/80",
+      borderColor: "primary/70",
       borderWidth: 1,
+    },
+    {
+      label: "Others",
+      data: [8000, 12000, 10000, 15000],
+      borderColor: "primary/50",
+      backgroundColor: "primary/40",
+      tension: 0.4,
     },
   ],
 };
@@ -70,6 +79,7 @@ const sampleDoughnutData: CustomChartData = {
 const meta = {
   title: "📊 Data Display/Chart",
   component: Chart,
+  decorators: [WarningDecorator],
   parameters: {
     layout: "centered",
   },
@@ -112,7 +122,6 @@ const meta = {
   },
   args: {
     type: "bar",
-    height: 400,
     showVerticalGrid: false,
     showHorizontalGrid: true,
     showTooltip: true,
@@ -124,18 +133,28 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const LineChart: Story = {
-  args: {
-    type: "bar",
-    data: sampleLineData,
-  },
-};
-
 export const BarChart: Story = {
   args: {
     type: "bar",
     data: sampleBarData,
   },
+  render: (args) => (
+    <Box width={600}>
+      <Chart {...args} />
+    </Box>
+  ),
+};
+
+export const LineChart: Story = {
+  args: {
+    type: "line",
+    data: sampleLineData,
+  },
+  render: (args) => (
+    <Box width={450}>
+      <Chart {...args} />
+    </Box>
+  ),
 };
 
 export const PieChart: Story = {
@@ -224,7 +243,7 @@ export const Responsive: Story = {
     data: sampleBarData,
   },
   render: (args) => (
-    <div style={{ width: "100%", height: "400px", minWidth: "300px" }}>
+    <div style={{ width: "450px", height: "400px" }}>
       <Chart {...args} />
     </div>
   ),
