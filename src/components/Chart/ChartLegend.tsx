@@ -35,42 +35,41 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   useEffect(() => {
     const calculateVisibleItems = () => {
       if (!containerRef.current) return;
-      
+
       const containerWidth = containerRef.current.offsetWidth;
       const gap = 8;
       const plusButtonWidth = 70;
-      
-      // Calculer combien d'items peuvent tenir sans le bouton +
+
       let totalWidth = 0;
       let maxItems = 0;
-      
+
       for (let i = 0; i < datasets.length; i++) {
-        // Estimation plus précise basée sur le contenu
         const labelLength = datasets[i].label?.length || 10;
         const estimatedWidth = Math.max(100, labelLength * 8 + 60); // 60px pour l'icône et padding
-        
-        if (totalWidth + estimatedWidth + (i > 0 ? gap : 0) <= containerWidth - plusButtonWidth) {
+
+        if (
+          totalWidth + estimatedWidth + (i > 0 ? gap : 0) <=
+          containerWidth - plusButtonWidth
+        ) {
           totalWidth += estimatedWidth + (i > 0 ? gap : 0);
           maxItems = i + 1;
         } else {
           break;
         }
       }
-      
-      // Si on peut afficher tous les items, pas besoin du bouton +
+
       if (maxItems === datasets.length) {
         setVisibleCount(datasets.length);
       } else {
-        // Sinon, vérifier si on peut en afficher plus sans le bouton +
         totalWidth = 0;
         let allItemsWidth = 0;
-        
+
         for (let i = 0; i < datasets.length; i++) {
           const labelLength = datasets[i].label?.length || 10;
           const estimatedWidth = Math.max(100, labelLength * 8 + 60);
           allItemsWidth += estimatedWidth + (i > 0 ? gap : 0);
         }
-        
+
         if (allItemsWidth <= containerWidth) {
           setVisibleCount(datasets.length);
         } else {
@@ -80,8 +79,8 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     };
 
     setTimeout(calculateVisibleItems, 100);
-    window.addEventListener('resize', calculateVisibleItems);
-    return () => window.removeEventListener('resize', calculateVisibleItems);
+    window.addEventListener("resize", calculateVisibleItems);
+    return () => window.removeEventListener("resize", calculateVisibleItems);
   }, [datasets]);
 
   useEffect(() => {
@@ -97,8 +96,9 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     };
 
     if (showModal) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [showModal]);
 
@@ -106,22 +106,24 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   const remainingDatasets = datasets.slice(visibleCount);
   const remainingCount = datasets.length - visibleCount;
 
-  const renderDatasetItem = (dataset: any, index: number, isInModal = false) => {
+  const renderDatasetItem = (
+    dataset: any,
+    index: number,
+    isInModal = false
+  ) => {
     let datasetColor = "#666666";
 
     if (
       dataset.backgroundColor &&
       typeof dataset.backgroundColor === "string"
     ) {
-      datasetColor =
-        parseCustomColor(dataset.backgroundColor) ?? "white";
+      datasetColor = parseCustomColor(dataset.backgroundColor) ?? "white";
     } else if (
       dataset.backgroundColor &&
       Array.isArray(dataset.backgroundColor) &&
       dataset.backgroundColor[0]
     ) {
-      datasetColor =
-        parseCustomColor(dataset.backgroundColor[0]) ?? "white";
+      datasetColor = parseCustomColor(dataset.backgroundColor[0]) ?? "white";
     }
 
     return (
@@ -133,8 +135,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         border={{ color: "neutral/60", opacity: 30 }}
         py={2}
         px={4}
-        width={isInModal ? "100%" : "auto"}
-        minWidth={isInModal ? "auto" : 100}
+        width={isInModal ? "auto" : "auto"}
         borderRadius={RADIUS.FULL}
         onClick={() => onToggleDataset(index)}
         onMouseEnter={() => onMouseEnter(index)}
@@ -154,6 +155,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         >
           <Box
             position="absolute"
+            display="flex"
             sx={{
               opacity: hiddenDatasets.has(index)
                 ? 0
@@ -166,6 +168,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             {getChartIcon(chartType, datasetColor)}
           </Box>
           <Box
+            display="flex"
             sx={{
               opacity: hiddenDatasets.has(index)
                 ? 1
@@ -175,12 +178,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               transition: "opacity 200ms ease-in-out",
             }}
           >
-            <Icon
-              variant="stroke"
-              style="rounded"
-              color="neutral/50"
-              size={12}
-            >
+            <Icon variant="stroke" style="rounded" color="neutral/50" size={12}>
               {hiddenDatasets.has(index) ? "view-off-slash" : "view"}
             </Icon>
           </Box>
@@ -195,8 +193,10 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   return (
     <Box position="relative">
       <Row ref={containerRef} gap={2} flexWrap="nowrap" overflow="hidden">
-        {displayedDatasets.map((dataset, index) => renderDatasetItem(dataset, index))}
-        
+        {displayedDatasets.map((dataset, index) =>
+          renderDatasetItem(dataset, index)
+        )}
+
         {remainingCount > 0 && (
           <Row
             ref={plusButtonRef}
@@ -244,11 +244,10 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           p={3}
           boxShadow="0px 4px 12px rgba(0, 0, 0, 0.15)"
           zIndex={1000}
-          minWidth={200}
-          maxWidth={300}
+          width="fit-content"
         >
           <Box display="flex" flexDirection="column" gap={2}>
-            {remainingDatasets.map((dataset, index) => 
+            {remainingDatasets.map((dataset, index) =>
               renderDatasetItem(dataset, visibleCount + index, true)
             )}
           </Box>
