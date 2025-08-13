@@ -18,6 +18,8 @@ export const getChartIcon = (
 
   switch (chartType) {
     case "bar":
+    case "verticalBar":
+    case "horizontalBar":
       return (
         <svg
           width="12"

@@ -48,7 +48,7 @@ interface TooltipData {
 /**
  * Supported chart types for rendering different visualization formats
  */
-export type ChartType = "line" | "bar" | "pie" | "doughnut";
+export type ChartType = "line" | "bar" | "verticalBar" | "horizontalBar" | "pie" | "doughnut";
 
 /**
  * Configuration for a single dataset within a chart
@@ -145,6 +145,21 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
     const [tooltipData, setTooltipData] = React.useState<TooltipData | null>(
       null
     );
+
+    const getChartConfig = () => {
+      switch (type) {
+        case "verticalBar":
+          return { chartType: "bar", indexAxis: "x" as const };
+        case "horizontalBar":
+          return { chartType: "bar", indexAxis: "y" as const };
+        case "bar":
+          return { chartType: "bar", indexAxis: "x" as const };
+        default:
+          return { chartType: type, indexAxis: "x" as const };
+      }
+    };
+
+    const { chartType, indexAxis } = getChartConfig();
 
     const hideTooltip = React.useCallback((tooltipEl: HTMLDivElement) => {
       tooltipEl.style.display = "none";
@@ -255,7 +270,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
 
         let position = { left: tooltip.caretX, top: tooltip.caretY };
 
-        if (type === "bar" && tooltip.dataPoints[0]) {
+        if (chartType === "bar" && tooltip.dataPoints[0]) {
           position = calculateBarTooltipPosition(
             context,
             tooltip,
@@ -336,7 +351,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           external: showTooltip ? externalTooltipHandler : undefined,
         },
       },
-      ...(type === "line" || type === "bar"
+      ...(type === "line" || chartType === "bar"
         ? {
             scales: {
               x: {
@@ -368,8 +383,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                 },
               },
             },
-            ...(type === "bar"
+            ...(chartType === "bar"
               ? {
+                  indexAxis,
                   elements: {
                     bar: {
                       borderRadius: {
@@ -399,6 +415,8 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         case "line":
           return <Line {...commonProps} />;
         case "bar":
+        case "verticalBar":
+        case "horizontalBar":
           return <Bar {...commonProps} />;
         case "pie":
           return <Pie {...commonProps} />;

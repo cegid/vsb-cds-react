@@ -139,7 +139,7 @@ const meta = {
   argTypes: {
     type: {
       control: "select",
-      options: ["bar"],
+      options: ["verticalBar", "horizontalBar", "pie", "doughnut", "line"],
       description: "The type of chart to display",
     },
     width: {
@@ -173,11 +173,12 @@ const meta = {
     },
     showDetailedTotals: {
       control: "boolean",
-      description: "Show detailed totals for each dataset instead of global total",
+      description:
+        "Show detailed totals for each dataset instead of global total",
     },
   },
   args: {
-    type: "bar",
+    type: "verticalBar",
     backgroundColor: "primary",
     showVerticalGrid: false,
     showHorizontalGrid: true,
@@ -191,11 +192,38 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const VerticalBarChart: Story = {
   args: {
-    type: "bar",
+    type: "verticalBar",
     backgroundColor: "primary",
     data: sampleBarData,
+  },
+  render: (args) => (
+    <Box width={600}>
+      <Chart {...args} />
+    </Box>
+  ),
+};
+
+export const HorizontalBarChart: Story = {
+  args: {
+    type: "horizontalBar",
+    backgroundColor: "primary",
+    data: sampleHorizontalBarData,
+  },
+  render: (args) => (
+    <Box width={600} height={500}>
+      <Chart {...args} />
+    </Box>
+  ),
+};
+
+export const WithDetailedTotals: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "primary",
+    data: sampleBarData,
+    showDetailedTotals: true,
   },
   render: (args) => (
     <Box width={600}>
