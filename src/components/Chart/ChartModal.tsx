@@ -1,7 +1,6 @@
 import React from "react";
 import { Dialog, DialogContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Box from "../Box";
 import Column from "../Column";
 import ChartCore, { ChartCoreProps } from "./ChartCore";
 import ChartTotals from "./ChartTotals";

@@ -146,21 +146,13 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
       null
     );
 
-    const externalTooltipHandler = React.useCallback(
-      (context: any) => {
-        const { tooltip } = context;
-        const tooltipEl = tooltipRef.current;
+    const hideTooltip = React.useCallback((tooltipEl: HTMLDivElement) => {
+      tooltipEl.style.display = "none";
+      setTooltipData(null);
+    }, []);
 
-        if (!tooltipEl) return;
-
-        if (tooltip.opacity === 0) {
-          tooltipEl.style.display = "none";
-          setTooltipData(null);
-          return;
-        }
-
-        tooltipEl.style.display = "block";
-
+    const updateTooltipData = React.useCallback(
+      (tooltip: any) => {
         if (tooltip.body) {
           const dataPoint = tooltip.dataPoints[0];
           setTooltipData({
@@ -171,45 +163,57 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             color: dataPoint.dataset.backgroundColor,
           });
         }
+      },
+      [type]
+    );
 
-        const containerEl = tooltipEl.parentElement;
-        if (!containerEl) return;
+    const calculateBarTooltipPosition = React.useCallback(
+      (
+        context: any,
+        tooltip: any,
+        containerRect: DOMRect,
+        tooltipRect: DOMRect
+      ) => {
+        const chart = context.chart;
+        const datasetIndex = tooltip.dataPoints[0].datasetIndex;
+        const dataIndex = tooltip.dataPoints[0].dataIndex;
+        const element = chart.getDatasetMeta(datasetIndex).data[dataIndex];
 
-        const containerRect = containerEl.getBoundingClientRect();
-        const tooltipRect = tooltipEl.getBoundingClientRect();
+        if (!element) return { left: tooltip.caretX, top: tooltip.caretY };
 
-        let left = tooltip.caretX;
-        let top = tooltip.caretY;
+        let left = element.x - tooltipRect.width / 2;
+        let top;
 
-        if (type === "bar" && tooltip.dataPoints[0]) {
-          const chart = context.chart;
-          const datasetIndex = tooltip.dataPoints[0].datasetIndex;
-          const dataIndex = tooltip.dataPoints[0].dataIndex;
-          const element = chart.getDatasetMeta(datasetIndex).data[dataIndex];
-          
-          if (element) {
-            left = element.x - tooltipRect.width / 2;
-            
-            const barTop = Math.min(element.y, element.base);
-            const barBottom = Math.max(element.y, element.base);
-            const spaceAbove = barTop;
-            const spaceBelow = containerRect.height - barBottom;
-            
-            if (spaceAbove >= tooltipRect.height + 15) {
-              top = barTop - tooltipRect.height - 15;
-            } else if (spaceBelow >= tooltipRect.height + 15) {
-              top = barBottom + 15;
-            } else {
-              if (element.x > containerRect.width / 2) {
-                left = element.x - element.width / 2 - tooltipRect.width ;
-                top = element.y - tooltipRect.height / 2;
-              } else {
-                left = element.x + element.width / 2 ;
-                top = element.y - tooltipRect.height / 2;
-              }
-            }
-          }
+        const barTop = Math.min(element.y, element.base);
+        const barBottom = Math.max(element.y, element.base);
+        const spaceAbove = barTop;
+        const spaceBelow = containerRect.height - barBottom;
+
+        if (spaceAbove >= tooltipRect.height + 15) {
+          top = barTop - tooltipRect.height - 15;
+        } else if (spaceBelow >= tooltipRect.height + 15) {
+          top = barBottom + 15;
+        } else if (element.x > containerRect.width / 2) {
+          left = element.x - element.width / 2 - tooltipRect.width;
+          top = element.y - tooltipRect.height / 2;
+        } else {
+          left = element.x + element.width / 2;
+          top = element.y - tooltipRect.height / 2;
         }
+
+        return { left, top };
+      },
+      []
+    );
+
+    const constrainTooltipPosition = React.useCallback(
+      (
+        position: { left: number; top: number },
+        containerRect: DOMRect,
+        tooltipRect: DOMRect
+      ) => {
+        let { left, top } = position;
+
         if (left + tooltipRect.width > containerRect.width) {
           left = containerRect.width - tooltipRect.width - 10;
         }
@@ -223,10 +227,59 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           top = 10;
         }
 
-        tooltipEl.style.left = left + "px";
-        tooltipEl.style.top = top + "px";
+        return { left, top };
       },
-      [type]
+      []
+    );
+
+    const externalTooltipHandler = React.useCallback(
+      (context: any) => {
+        const { tooltip } = context;
+        const tooltipEl = tooltipRef.current;
+
+        if (!tooltipEl) return;
+
+        if (tooltip.opacity === 0) {
+          hideTooltip(tooltipEl);
+          return;
+        }
+
+        tooltipEl.style.display = "block";
+        updateTooltipData(tooltip);
+
+        const containerEl = tooltipEl.parentElement;
+        if (!containerEl) return;
+
+        const containerRect = containerEl.getBoundingClientRect();
+        const tooltipRect = tooltipEl.getBoundingClientRect();
+
+        let position = { left: tooltip.caretX, top: tooltip.caretY };
+
+        if (type === "bar" && tooltip.dataPoints[0]) {
+          position = calculateBarTooltipPosition(
+            context,
+            tooltip,
+            containerRect,
+            tooltipRect
+          );
+        }
+
+        const finalPosition = constrainTooltipPosition(
+          position,
+          containerRect,
+          tooltipRect
+        );
+
+        tooltipEl.style.left = finalPosition.left + "px";
+        tooltipEl.style.top = finalPosition.top + "px";
+      },
+      [
+        type,
+        hideTooltip,
+        updateTooltipData,
+        calculateBarTooltipPosition,
+        constrainTooltipPosition,
+      ]
     );
 
     const processedData = React.useMemo((): ChartData<any> => {

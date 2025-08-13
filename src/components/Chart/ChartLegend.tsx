@@ -32,52 +32,61 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   const modalRef = useRef<HTMLDivElement>(null);
   const plusButtonRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const calculateVisibleItems = () => {
-      if (!containerRef.current) return;
+  const getEstimatedWidth = (dataset: any) => {
+    const labelLength = dataset.label?.length || 10;
+    return Math.max(100, labelLength * 8 + 60);
+  };
 
-      const containerWidth = containerRef.current.offsetWidth;
-      const gap = 8;
-      const plusButtonWidth = 70;
+  const calculateMaxItemsWithButton = (containerWidth: number, gap: number, plusButtonWidth: number) => {
+    let totalWidth = 0;
+    let maxItems = 0;
 
-      let totalWidth = 0;
-      let maxItems = 0;
+    for (let i = 0; i < datasets.length; i++) {
+      const estimatedWidth = getEstimatedWidth(datasets[i]);
+      const gapWidth = i > 0 ? gap : 0;
 
-      for (let i = 0; i < datasets.length; i++) {
-        const labelLength = datasets[i].label?.length || 10;
-        const estimatedWidth = Math.max(100, labelLength * 8 + 60); // 60px pour l'icône et padding
-
-        if (
-          totalWidth + estimatedWidth + (i > 0 ? gap : 0) <=
-          containerWidth - plusButtonWidth
-        ) {
-          totalWidth += estimatedWidth + (i > 0 ? gap : 0);
-          maxItems = i + 1;
-        } else {
-          break;
-        }
+      if (totalWidth + estimatedWidth + gapWidth <= containerWidth - plusButtonWidth) {
+        totalWidth += estimatedWidth + gapWidth;
+        maxItems = i + 1;
+      } else {
+        break;
       }
+    }
 
-      if (maxItems === datasets.length) {
+    return maxItems;
+  };
+
+  const calculateTotalWidth = (gap: number) => {
+    return datasets.reduce((total, dataset, i) => {
+      const estimatedWidth = getEstimatedWidth(dataset);
+      const gapWidth = i > 0 ? gap : 0;
+      return total + estimatedWidth + gapWidth;
+    }, 0);
+  };
+
+  const calculateVisibleItems = () => {
+    if (!containerRef.current) return;
+
+    const containerWidth = containerRef.current.offsetWidth;
+    const gap = 8;
+    const plusButtonWidth = 70;
+
+    const maxItems = calculateMaxItemsWithButton(containerWidth, gap, plusButtonWidth);
+
+    if (maxItems === datasets.length) {
+      setVisibleCount(datasets.length);
+    } else {
+      const allItemsWidth = calculateTotalWidth(gap);
+      
+      if (allItemsWidth <= containerWidth) {
         setVisibleCount(datasets.length);
       } else {
-        totalWidth = 0;
-        let allItemsWidth = 0;
-
-        for (let i = 0; i < datasets.length; i++) {
-          const labelLength = datasets[i].label?.length || 10;
-          const estimatedWidth = Math.max(100, labelLength * 8 + 60);
-          allItemsWidth += estimatedWidth + (i > 0 ? gap : 0);
-        }
-
-        if (allItemsWidth <= containerWidth) {
-          setVisibleCount(datasets.length);
-        } else {
-          setVisibleCount(Math.max(1, maxItems));
-        }
+        setVisibleCount(Math.max(1, maxItems));
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     setTimeout(calculateVisibleItems, 100);
     window.addEventListener("resize", calculateVisibleItems);
     return () => window.removeEventListener("resize", calculateVisibleItems);
@@ -126,6 +135,11 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
       datasetColor = parseCustomColor(dataset.backgroundColor[0]) ?? "white";
     }
 
+    const isHidden = hiddenDatasets.has(index);
+    const isHovered = hoveredDataset === index;
+    const iconOpacity = isHidden || isHovered ? 0 : 1;
+    const eyeIconOpacity = isHidden || isHovered ? 1 : 0;
+
     return (
       <Row
         alignItems="center"
@@ -135,7 +149,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         border={{ color: "neutral/60", opacity: 30 }}
         py={2}
         px={4}
-        width={isInModal ? "auto" : "auto"}
+        width="auto"
         borderRadius={RADIUS.FULL}
         onClick={() => onToggleDataset(index)}
         onMouseEnter={() => onMouseEnter(index)}
@@ -157,11 +171,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             position="absolute"
             display="flex"
             sx={{
-              opacity: hiddenDatasets.has(index)
-                ? 0
-                : hoveredDataset === index
-                ? 0
-                : 1,
+              opacity: iconOpacity,
               transition: "opacity 200ms ease-in-out",
             }}
           >
@@ -170,16 +180,12 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           <Box
             display="flex"
             sx={{
-              opacity: hiddenDatasets.has(index)
-                ? 1
-                : hoveredDataset === index
-                ? 1
-                : 0,
+              opacity: eyeIconOpacity,
               transition: "opacity 200ms ease-in-out",
             }}
           >
             <Icon variant="stroke" style="rounded" color="neutral/50" size={12}>
-              {hiddenDatasets.has(index) ? "view-off-slash" : "view"}
+              {isHidden ? "view-off-slash" : "view"}
             </Icon>
           </Box>
         </Box>
