@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Icon from "../Icon";
 import { neutral, primary } from "../../theme";
 import typography from "../../theme/typography";
@@ -103,10 +103,17 @@ const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   const [hasValue, setHasValue] = useState(false);
   const [size, setSize] = useState(defaultSize);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setHasValue(Boolean(value && value.toString().trim() !== ""));
   }, [value]);
+
+  useEffect(() => {
+    if (size === "long" && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [size]);
 
   const handleClearClick = () => {
     if (onChange) {
@@ -142,6 +149,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
           placeholder={size === "short" ? "" : placeholder}
           value={value}
           onChange={(e) => handleChange(e)}
+          inputRef={inputRef}
           InputProps={{
             startAdornment: (
               <Box
@@ -180,10 +188,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
           color="neutral"
           square
           onClick={onFilterClick}
+          disabled={props.disabled}
         >
-          <Icon size={16} color="primary/10">
-            filter
-          </Icon>
+          <Icon size={16}>filter</Icon>
         </IconButton>
       )}
     </Row>
