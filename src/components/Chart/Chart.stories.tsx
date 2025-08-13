@@ -128,6 +128,30 @@ const sampleHorizontalBarData: CustomChartData = {
   ],
 };
 
+const samplePieData: CustomChartData = {
+  labels: ["Desktop", "Mobile", "Tablet"],
+  datasets: [
+    {
+      data: [55, 35, 10],
+      backgroundColor: ["primary/50", "success/50", "yellow/50"],
+      borderColor: ["primary/30", "success/30", "yellow/30"],
+      borderWidth: 2,
+    },
+  ],
+};
+
+const sampleDoughnutData: CustomChartData = {
+  labels: ["Product A", "Product B", "Product C", "Product D"],
+  datasets: [
+    {
+      data: [30, 25, 25, 20],
+      backgroundColor: ["primary/50", "success/50", "yellow/50", "critical/50"],
+      borderColor: ["primary/30", "success/30", "yellow/30", "critical/30"],
+      borderWidth: 2,
+    },
+  ],
+};
+
 const meta = {
   title: "📊 Data Display/Chart",
   component: Chart,
@@ -218,12 +242,24 @@ export const HorizontalBarChart: Story = {
   ),
 };
 
-export const WithDetailedTotals: Story = {
+export const PieChart: Story = {
   args: {
-    type: "verticalBar",
+    type: "pie",
     backgroundColor: "primary",
-    data: sampleBarData,
-    showDetailedTotals: true,
+    data: samplePieData,
+  },
+  render: (args) => (
+    <Box width={600}>
+      <Chart {...args} />
+    </Box>
+  ),
+};
+
+export const DoughnutChart: Story = {
+  args: {
+    type: "doughnut",
+    backgroundColor: "primary",
+    data: sampleDoughnutData,
   },
   render: (args) => (
     <Box width={600}>

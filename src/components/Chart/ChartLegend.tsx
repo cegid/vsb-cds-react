@@ -6,6 +6,7 @@ import Icon from "../Icon";
 import { ChartType } from "./ChartCore";
 import { RADIUS, parseCustomColor } from "../../theme";
 import { getChartIcon } from "./Chart";
+import Column from "../Column";
 
 interface ChartLegendProps {
   datasets: any[];
@@ -15,6 +16,7 @@ interface ChartLegendProps {
   onToggleDataset: (index: number) => void;
   onMouseEnter: (index: number) => void;
   onMouseLeave: () => void;
+  labels?: string[];
 }
 
 const ChartLegend: React.FC<ChartLegendProps> = ({
@@ -25,6 +27,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   onToggleDataset,
   onMouseEnter,
   onMouseLeave,
+  labels = [],
 }) => {
   const [visibleCount, setVisibleCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -114,6 +117,8 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   const displayedDatasets = datasets.slice(0, visibleCount);
   const remainingDatasets = datasets.slice(visibleCount);
   const remainingCount = datasets.length - visibleCount;
+  
+  const isVerticalLayout = chartType === "pie" || chartType === "doughnut";
 
   const renderDatasetItem = (
     dataset: any,
@@ -196,70 +201,97 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     );
   };
 
-  return (
-    <Box position="relative">
-      <Row ref={containerRef} gap={2} flexWrap="nowrap" overflow="hidden">
-        {displayedDatasets.map((dataset, index) =>
-          renderDatasetItem(dataset, index)
-        )}
+  const getPieDatasets = () => {
+    if (!isVerticalLayout) return datasets;
+    
+    // Pour les graphiques pie/doughnut, créer des datasets virtuels basés sur les labels
+    const pieDataset = datasets[0];
+    if (!pieDataset) return [];
+    
+    return pieDataset.data.map((value: number, index: number) => ({
+      label: labels[index] || `Item ${index + 1}`,
+      data: [value],
+      backgroundColor: Array.isArray(pieDataset.backgroundColor) 
+        ? pieDataset.backgroundColor[index] 
+        : pieDataset.backgroundColor,
+      borderColor: Array.isArray(pieDataset.borderColor) 
+        ? pieDataset.borderColor[index] 
+        : pieDataset.borderColor,
+    }));
+  };
 
-        {remainingCount > 0 && (
-          <Row
-            ref={plusButtonRef}
-            alignItems="center"
-            gap={4}
+  const renderDatasets = getPieDatasets();
+
+  return (
+    isVerticalLayout ? (
+      <Column gap={2}>
+        {renderDatasets.map((dataset: any, index: number) => renderDatasetItem(dataset, index, false))}
+      </Column>
+    ) : (
+      <Box position="relative">
+        <Row ref={containerRef} gap={2} flexWrap="nowrap" overflow="hidden">
+          {displayedDatasets.map((dataset, index) =>
+            renderDatasetItem(dataset, index)
+          )}
+
+          {remainingCount > 0 && (
+            <Row
+              ref={plusButtonRef}
+              alignItems="center"
+              gap={4}
+              backgroundColor="white"
+              border={{ color: "neutral/60", opacity: 30 }}
+              py={2}
+              px={4}
+              width={"auto"}
+              minWidth={50}
+              borderRadius={RADIUS.FULL}
+              onClick={() => setShowModal(!showModal)}
+              sx={{
+                cursor: "pointer",
+                flexShrink: 0,
+              }}
+            >
+              <Box
+                width={12}
+                height={12}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {getChartIcon(chartType, "#666666")}
+              </Box>
+              <Typography variant="bodySMedium" color="neutral/50">
+                +{remainingCount}
+              </Typography>
+            </Row>
+          )}
+        </Row>
+
+        {showModal && remainingCount > 0 && (
+          <Box
+            ref={modalRef}
+            position="absolute"
+            bottom="100%"
+            right={0}
+            mb={1}
             backgroundColor="white"
             border={{ color: "neutral/60", opacity: 30 }}
-            py={2}
-            px={4}
-            width={"auto"}
-            minWidth={50}
-            borderRadius={RADIUS.FULL}
-            onClick={() => setShowModal(!showModal)}
-            sx={{
-              cursor: "pointer",
-              flexShrink: 0,
-            }}
+            borderRadius={3}
+            p={3}
+            boxShadow="0px 4px 12px rgba(0, 0, 0, 0.15)"
+            zIndex={1000}
+            width="fit-content"
           >
-            <Box
-              width={12}
-              height={12}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-            >
-              {getChartIcon(chartType, "#666666")}
+            <Box display="flex" flexDirection="column" gap={2}>
+              {remainingDatasets.map((dataset, index) =>
+                renderDatasetItem(dataset, visibleCount + index, true)
+              )}
             </Box>
-            <Typography variant="bodySMedium" color="neutral/50">
-              +{remainingCount}
-            </Typography>
-          </Row>
-        )}
-      </Row>
-
-      {showModal && remainingCount > 0 && (
-        <Box
-          ref={modalRef}
-          position="absolute"
-          bottom="100%"
-          right={0}
-          mb={1}
-          backgroundColor="white"
-          border={{ color: "neutral/60", opacity: 30 }}
-          borderRadius={3}
-          p={3}
-          boxShadow="0px 4px 12px rgba(0, 0, 0, 0.15)"
-          zIndex={1000}
-          width="fit-content"
-        >
-          <Box display="flex" flexDirection="column" gap={2}>
-            {remainingDatasets.map((dataset, index) =>
-              renderDatasetItem(dataset, visibleCount + index, true)
-            )}
           </Box>
-        </Box>
-      )}
-    </Box>
+        )}
+      </Box>
+    )
   );
 };
 
