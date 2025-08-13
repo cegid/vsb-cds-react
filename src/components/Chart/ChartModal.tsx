@@ -4,22 +4,31 @@ import { styled } from "@mui/material/styles";
 import Box from "../Box";
 import Column from "../Column";
 import ChartCore, { ChartCoreProps } from "./ChartCore";
+import ChartTotals from "./ChartTotals";
 import Row from "../Row";
 import Typography from "../Typography";
 import IconButton from "../IconButton";
 import Icon from "../Icon";
+
+interface DetailedTotal {
+  label: string;
+  total: number;
+  datasetIndex: number;
+}
 
 interface ChartModalProps {
   open: boolean;
   onClose: () => void;
   chartProps: ChartCoreProps;
   title: string;
+  totalValue: number;
+  detailedTotals: DetailedTotal[];
 }
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
-    width: "60vw",
-    height: "60vh",
+    width: "70vw",
+    height: "80vh",
     maxWidth: "none",
     maxHeight: "none",
     margin: 0,
@@ -46,13 +55,15 @@ const ChartModal: React.FC<ChartModalProps> = ({
   onClose,
   chartProps,
   title,
+  totalValue,
+  detailedTotals,
 }) => {
   return (
     <StyledDialog
       open={open}
       onClose={onClose}
       maxWidth={false}
-      fullWidth={false}
+      fullWidth={true}
       PaperProps={{ sx: { background: "transparent" } }}
     >
       <StyledDialogContent>
@@ -89,15 +100,24 @@ const ChartModal: React.FC<ChartModalProps> = ({
             height="100%"
             width="100%"
           >
-            <Box
+            <Column
               flex={1}
               minHeight={0}
               height="100%"
               backgroundColor="white"
               borderRadius={3}
+              p={8}
+              gap={6}
             >
+              <ChartTotals
+                showDetailedTotals={true}
+                totalValue={totalValue}
+                detailedTotals={detailedTotals}
+                chartType={chartProps.type}
+                datasets={chartProps.data.datasets}
+              />
               <ChartCore {...chartProps} showTooltip={true} />
-            </Box>
+            </Column>
           </Column>
         </Column>
       </StyledDialogContent>

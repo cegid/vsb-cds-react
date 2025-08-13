@@ -1,13 +1,12 @@
 import React from "react";
-import Typography from "../Typography";
 import Column from "../Column";
-import Row from "../Row";
-import IconButton from "../IconButton";
-import Icon from "../Icon";
 import ChartModal from "./ChartModal";
 import ChartCore, { ChartCoreProps, ChartType } from "./ChartCore";
+import ChartHeader from "./ChartHeader";
+import ChartTotals from "./ChartTotals";
+import ChartLegend from "./ChartLegend";
 import Box from "../Box";
-import { PaletteNames, RADIUS, parseCustomColor } from "../../theme";
+import { PaletteNames } from "../../theme";
 
 export type { ChartType, ChartDataset, CustomChartData } from "./ChartCore";
 
@@ -70,10 +69,14 @@ export interface ChartProps extends ChartCoreProps {
    */
   title?: string;
   backgroundColor: PaletteNames;
+  /**
+   * Show detailed totals for each dataset label instead of global total
+   */
+  showDetailedTotals?: boolean;
 }
 
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
-  ({ title = "Titre", ...chartProps }, ref) => {
+  ({ title = "Titre", showDetailedTotals = false, ...chartProps }, ref) => {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [hiddenDatasets, setHiddenDatasets] = React.useState<Set<number>>(
       new Set()
@@ -87,6 +90,20 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
         if (hiddenDatasets.has(index)) return total;
         return total + dataset.data.reduce((sum, value) => sum + value, 0);
       }, 0);
+    }, [chartProps.data, hiddenDatasets]);
+
+    const detailedTotals = React.useMemo(() => {
+      return chartProps.data.datasets
+        .map((dataset, datasetIndex) => {
+          if (hiddenDatasets.has(datasetIndex)) return null;
+          const total = dataset.data.reduce((sum, value) => sum + value, 0);
+          return {
+            label: dataset.label || `Dataset ${datasetIndex + 1}`,
+            total,
+            datasetIndex,
+          };
+        })
+        .filter((item): item is { label: string; total: number; datasetIndex: number } => item !== null);
     }, [chartProps.data, hiddenDatasets]);
 
     const filteredChartData = React.useMemo(() => {
@@ -110,124 +127,47 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       });
     };
 
+    const handleMouseEnter = (index: number) => {
+      setHoveredDataset(index);
+    };
+
+    const handleMouseLeave = () => {
+      setHoveredDataset(null);
+    };
+
     return (
       <Box p={2} borderRadius={4} backgroundColor="primary/95">
         <Column p={6} borderRadius={3} gap={6} backgroundColor="white">
-          <Row gap={4}>
-            <Typography variant="titleLSemiBold" color="neutral/10" flex={1}>
-              {title}
-            </Typography>
-            <IconButton square color="neutral" variant="tonal">
-              <Icon size={16}>more-horizontal</Icon>
-            </IconButton>
-            <IconButton
-              square
-              color="neutral"
-              variant="tonal"
-              onClick={() => setIsModalOpen(true)}
-            >
-              <Icon size={16}>play</Icon>
-            </IconButton>
-          </Row>
-          <Column>
-            <Typography variant="bodyMMedium" color="neutral/50">
-              Total Value
-            </Typography>
-            <Typography variant="displaySSemiBold" color="neutral/10">
-              {totalValue.toLocaleString()}
-            </Typography>
-          </Column>
-          <Row gap={2} flexWrap="wrap">
-            {chartProps.data.datasets.map((dataset, index) => {
-              let datasetColor = "#666666";
-
-              if (
-                dataset.backgroundColor &&
-                typeof dataset.backgroundColor === "string"
-              ) {
-                datasetColor =
-                  parseCustomColor(dataset.backgroundColor) ?? "white";
-              } else if (
-                dataset.backgroundColor &&
-                Array.isArray(dataset.backgroundColor) &&
-                dataset.backgroundColor[0]
-              ) {
-                datasetColor =
-                  parseCustomColor(dataset.backgroundColor[0]) ?? "white";
-              }
-
-              return (
-                <Row
-                  alignItems="center"
-                  key={`${dataset.label}-${index}`}
-                  gap={4}
-                  backgroundColor="white"
-                  border={{ color: "neutral/60", opacity: 30 }}
-                  py={2}
-                  px={4}
-                  width={"auto"}
-                  borderRadius={RADIUS.FULL}
-                  onClick={() => toggleDataset(index)}
-                  onMouseEnter={() => setHoveredDataset(index)}
-                  onMouseLeave={() => setHoveredDataset(null)}
-                  sx={{
-                    cursor: "pointer",
-                  }}
-                >
-                  <Box
-                    width={12}
-                    height={12}
-                    display="flex"
-                    position="relative"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Box
-                      position="absolute"
-                      sx={{
-                        opacity: hiddenDatasets.has(index)
-                          ? 0
-                          : hoveredDataset === index
-                          ? 0
-                          : 1,
-                        transition: "opacity 200ms ease-in-out",
-                      }}
-                    >
-                      {getChartIcon(chartProps.type, datasetColor)}
-                    </Box>
-                    <Box
-                      sx={{
-                        opacity: hiddenDatasets.has(index)
-                          ? 1
-                          : hoveredDataset === index
-                          ? 1
-                          : 0,
-                        transition: "opacity 200ms ease-in-out",
-                      }}
-                    >
-                      <Icon
-                        variant="stroke"
-                        style="rounded"
-                        color="neutral/50"
-                        size={12}
-                      >
-                        {hiddenDatasets.has(index) ? "view-off-slash" : "view"}
-                      </Icon>
-                    </Box>
-                  </Box>
-                  <Typography variant="bodySMedium" color="neutral/50">
-                    {dataset.label}
-                  </Typography>
-                </Row>
-              );
-            })}
-          </Row>
+          <ChartHeader
+            title={title}
+            onModalOpen={() => setIsModalOpen(true)}
+          />
+          
+          <ChartTotals
+            showDetailedTotals={showDetailedTotals}
+            totalValue={totalValue}
+            detailedTotals={detailedTotals}
+            chartType={chartProps.type}
+            datasets={chartProps.data.datasets}
+          />
+          
+          <ChartLegend
+            datasets={chartProps.data.datasets}
+            chartType={chartProps.type}
+            hiddenDatasets={hiddenDatasets}
+            hoveredDataset={hoveredDataset}
+            onToggleDataset={toggleDataset}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          />
           <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
           <ChartModal
             open={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             chartProps={{ ...chartProps, data: filteredChartData }}
             title={title}
+            totalValue={totalValue}
+            detailedTotals={detailedTotals}
           />
         </Column>
       </Box>
