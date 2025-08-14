@@ -215,7 +215,6 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   const getPieDatasets = () => {
     if (!isVerticalLayout) return datasets;
 
-    // Pour les graphiques pie/doughnut, créer des datasets virtuels basés sur les labels
     const pieDataset = datasets[0];
     if (!pieDataset) return [];
 
@@ -247,36 +246,78 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         )}
 
         {remainingCount > 0 && (
-          <Row
+          <Box
             ref={plusButtonRef}
-            alignItems="center"
-            gap={4}
-            backgroundColor="white"
-            border={{ color: "neutral/60", opacity: 30 }}
-            py={2}
-            px={4}
-            width={"auto"}
-            minWidth={50}
-            borderRadius={RADIUS.FULL}
+            position="relative"
             onClick={() => setShowModal(!showModal)}
             sx={{
               cursor: "pointer",
               flexShrink: 0,
             }}
+            ml={2}
           >
+            {/* Layer 3 - Bottom */}
             <Box
-              width={12}
-              height={12}
-              display="flex"
+              position="absolute"
+              height="100%"
+              left={-4}
+              backgroundColor="white"
+              borderRadius={RADIUS.FULL}
+              py={2}
+              px={4}
+              minWidth={50}
+              sx={{
+                border: "1px solid #E6E7EA",
+                zIndex: 1,
+              }}
+            />
+
+            {/* Layer 2 - Middle */}
+            <Box
+              height="100%"
+              position="absolute"
+              left={-2}
+              backgroundColor="white"
+              borderRadius={RADIUS.FULL}
+              py={2}
+              px={4}
+              minWidth={50}
+              sx={{
+                border: "1px solid #E6E7EA",
+                zIndex: 2,
+              }}
+            />
+
+            {/* Layer 1 - Top (interactive) */}
+            <Row
               alignItems="center"
-              justifyContent="center"
+              gap={4}
+              backgroundColor="white"
+              py={2}
+              px={4}
+              width={"auto"}
+              minWidth={50}
+              borderRadius={RADIUS.FULL}
+              sx={{
+                border: "1px solid #E6E7EA",
+                zIndex: 3,
+                position: "relative",
+              }}
             >
-              {getChartIcon(chartType, "#666666")}
-            </Box>
-            <Typography variant="bodySMedium" color="neutral/50">
-              +{remainingCount}
-            </Typography>
-          </Row>
+              <Box
+                width={12}
+                height={12}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                {getChartIcon(chartType, "#666666")}
+              </Box>
+              <Typography variant="bodySMedium" color="neutral/50">
+                +{remainingCount}
+              </Typography>
+            </Row>
+          </Box>
         )}
       </Row>
 
