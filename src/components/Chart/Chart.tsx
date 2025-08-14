@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import Column from "../Column";
@@ -8,7 +8,7 @@ import ChartHeader from "./ChartHeader";
 import ChartTotals from "./ChartTotals";
 import ChartLegend from "./ChartLegend";
 import Box from "../Box";
-import { PaletteNames } from "../../theme";
+import { PaletteNames, primary } from "../../theme";
 import Row from "../Row";
 
 export type { ChartType, ChartDataset, CustomChartData } from "./ChartCore";
@@ -92,8 +92,9 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
     const [hoveredDataset, setHoveredDataset] = React.useState<number | null>(
       null
     );
-    
-    const isPieOrDoughnut = chartProps.type === "pie" || chartProps.type === "doughnut";
+
+    const isPieOrDoughnut =
+      chartProps.type === "pie" || chartProps.type === "doughnut";
 
     const totalValue = React.useMemo(() => {
       if (isPieOrDoughnut) {
@@ -104,7 +105,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           return sum + value;
         }, 0);
       }
-      
+
       return chartProps.data.datasets.reduce((total, dataset, index) => {
         if (hiddenDatasets.has(index)) return total;
         return total + dataset.data.reduce((sum, value) => sum + value, 0);
@@ -115,7 +116,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       if (isPieOrDoughnut) {
         const dataset = chartProps.data.datasets[0];
         if (!dataset) return [];
-        
+
         return dataset.data
           .map((value, index) => {
             if (hiddenDataPoints.has(index)) return null;
@@ -125,9 +126,14 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
               datasetIndex: index,
             };
           })
-          .filter((item): item is { label: string; total: number; datasetIndex: number } => item !== null);
+          .filter(
+            (
+              item
+            ): item is { label: string; total: number; datasetIndex: number } =>
+              item !== null
+          );
       }
-      
+
       return chartProps.data.datasets
         .map((dataset, datasetIndex) => {
           if (hiddenDatasets.has(datasetIndex)) return null;
@@ -138,39 +144,54 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             datasetIndex,
           };
         })
-        .filter((item): item is { label: string; total: number; datasetIndex: number } => item !== null);
+        .filter(
+          (
+            item
+          ): item is { label: string; total: number; datasetIndex: number } =>
+            item !== null
+        );
     }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut]);
 
     const filteredChartData = React.useMemo(() => {
       if (isPieOrDoughnut) {
         const originalDataset = chartProps.data.datasets[0];
         if (!originalDataset) return chartProps.data;
-        
-        const filteredData = originalDataset.data.filter((_, index) => !hiddenDataPoints.has(index));
-        const filteredLabels = chartProps.data.labels.filter((_, index) => !hiddenDataPoints.has(index));
-        
+
+        const filteredData = originalDataset.data.filter(
+          (_, index) => !hiddenDataPoints.has(index)
+        );
+        const filteredLabels = chartProps.data.labels.filter(
+          (_, index) => !hiddenDataPoints.has(index)
+        );
+
         let filteredBackgroundColor = originalDataset.backgroundColor;
         let filteredBorderColor = originalDataset.borderColor;
-        
+
         if (Array.isArray(originalDataset.backgroundColor)) {
-          filteredBackgroundColor = originalDataset.backgroundColor.filter((_, index) => !hiddenDataPoints.has(index));
+          filteredBackgroundColor = originalDataset.backgroundColor.filter(
+            (_, index) => !hiddenDataPoints.has(index)
+          );
         }
-        
+
         if (Array.isArray(originalDataset.borderColor)) {
-          filteredBorderColor = originalDataset.borderColor.filter((_, index) => !hiddenDataPoints.has(index));
+          filteredBorderColor = originalDataset.borderColor.filter(
+            (_, index) => !hiddenDataPoints.has(index)
+          );
         }
-        
+
         return {
           labels: filteredLabels,
-          datasets: [{
-            ...originalDataset,
-            data: filteredData,
-            backgroundColor: filteredBackgroundColor,
-            borderColor: filteredBorderColor,
-          }],
+          datasets: [
+            {
+              ...originalDataset,
+              data: filteredData,
+              backgroundColor: filteredBackgroundColor,
+              borderColor: filteredBorderColor,
+            },
+          ],
         };
       }
-      
+
       return {
         ...chartProps.data,
         datasets: chartProps.data.datasets.filter(
@@ -212,13 +233,19 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
     };
 
     return (
-      <Box p={2} borderRadius={4} backgroundColor="primary/95">
+      <Box
+        p={2}
+        borderRadius={4}
+        sx={{
+          transition: "background-color 0.2s ease-in-out",
+          "&:hover": {
+            backgroundColor: primary[95],
+          },
+        }}
+      >
         <Column p={6} borderRadius={3} gap={6} backgroundColor="white">
-          <ChartHeader
-            title={title}
-            onModalOpen={() => setIsModalOpen(true)}
-          />
-          
+          <ChartHeader title={title} onModalOpen={() => setIsModalOpen(true)} />
+
           <ChartTotals
             showDetailedTotals={showDetailedTotals}
             totalValue={totalValue}
@@ -226,7 +253,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             chartType={chartProps.type}
             datasets={chartProps.data.datasets}
           />
-          
+
           {chartProps.type === "pie" || chartProps.type === "doughnut" ? (
             <Row gap={6} alignItems="center">
               <Box flex={1}>
@@ -236,7 +263,9 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                 <ChartLegend
                   datasets={chartProps.data.datasets}
                   chartType={chartProps.type}
-                  hiddenDatasets={isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets}
+                  hiddenDatasets={
+                    isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
+                  }
                   hoveredDataset={hoveredDataset}
                   onToggleDataset={toggleDataset}
                   onMouseEnter={handleMouseEnter}
@@ -250,7 +279,9 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
               <ChartLegend
                 datasets={chartProps.data.datasets}
                 chartType={chartProps.type}
-                hiddenDatasets={isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets}
+                hiddenDatasets={
+                  isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
+                }
                 hoveredDataset={hoveredDataset}
                 onToggleDataset={toggleDataset}
                 onMouseEnter={handleMouseEnter}
