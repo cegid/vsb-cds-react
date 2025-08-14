@@ -177,6 +177,7 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>(
         maxWidth={350}
         gap={4}
         alignItems="center"
+        boxShadow="0 0 3px 2px #23252926"
         sx={{
           whiteSpace: "normal",
           wordBreak: "break-word",
