@@ -388,12 +388,19 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                   indexAxis,
                   elements: {
                     bar: {
-                      borderRadius: {
-                        topLeft: 4,
-                        topRight: 4,
-                        bottomLeft: 0,
-                        bottomRight: 0,
-                      },
+                      borderRadius: indexAxis === "y" 
+                        ? {
+                            topLeft: 0,
+                            topRight: 4,
+                            bottomLeft: 0,
+                            bottomRight: 4,
+                          }
+                        : {
+                            topLeft: 4,
+                            topRight: 4,
+                            bottomLeft: 0,
+                            bottomRight: 0,
+                          },
                     },
                   },
                 }
