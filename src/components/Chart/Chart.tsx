@@ -8,7 +8,7 @@ import ChartHeader from "./ChartHeader";
 import ChartTotals from "./ChartTotals";
 import ChartLegend from "./ChartLegend";
 import Box from "../Box";
-import { PaletteNames, primary } from "../../theme";
+import { PaletteNames, parseCustomColor } from "../../theme";
 import Row from "../Row";
 
 export type { ChartType, ChartDataset, CustomChartData } from "./ChartCore";
@@ -81,7 +81,15 @@ export interface ChartProps extends ChartCoreProps {
 }
 
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
-  ({ title = "Titre", showDetailedTotals = false, ...chartProps }, ref) => {
+  (
+    {
+      title = "Titre",
+      showDetailedTotals = false,
+      backgroundColor,
+      ...chartProps
+    },
+    ref
+  ) => {
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [hiddenDatasets, setHiddenDatasets] = React.useState<Set<number>>(
       new Set()
@@ -239,7 +247,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
         sx={{
           transition: "background-color 0.2s ease-in-out",
           "&:hover": {
-            backgroundColor: primary[95],
+            backgroundColor: parseCustomColor(`${backgroundColor}/95`),
           },
         }}
       >
@@ -298,6 +306,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             title={title}
             totalValue={totalValue}
             detailedTotals={detailedTotals}
+            backgroundColor={backgroundColor}
           />
         </Column>
       </Box>

@@ -8,6 +8,7 @@ import Row from "../Row";
 import Typography from "../Typography";
 import IconButton from "../IconButton";
 import Icon from "../Icon";
+import { PaletteNames, parseCustomColor } from "../../theme";
 
 interface DetailedTotal {
   label: string;
@@ -22,12 +23,13 @@ interface ChartModalProps {
   title: string;
   totalValue: number;
   detailedTotals: DetailedTotal[];
+  backgroundColor: PaletteNames;
 }
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
-    width: "70vw",
-    height: "80vh",
+    width: "90vw",
+    height: "90vh",
     maxWidth: "none",
     maxHeight: "none",
     margin: 0,
@@ -56,6 +58,7 @@ const ChartModal: React.FC<ChartModalProps> = ({
   title,
   totalValue,
   detailedTotals,
+  backgroundColor,
 }) => {
   return (
     <StyledDialog
@@ -63,6 +66,13 @@ const ChartModal: React.FC<ChartModalProps> = ({
       onClose={onClose}
       maxWidth={false}
       fullWidth={true}
+      sx={{
+        "& .MuiBackdrop-root": {
+          background: `linear-gradient(135deg, ${parseCustomColor(
+            `${backgroundColor}/95`
+          )}, ${parseCustomColor(`${backgroundColor}/90`)})`,
+        },
+      }}
       PaperProps={{ sx: { background: "transparent" } }}
     >
       <StyledDialogContent>
