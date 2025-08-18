@@ -13,6 +13,8 @@ import Row from "../Row";
 
 export type { ChartType, ChartDataset, CustomChartData } from "./ChartCore";
 
+export type TotalsDisplayMode = "simple" | "detailed" | "none";
+
 export const getChartIcon = (
   chartType: ChartType,
   color?: string
@@ -75,16 +77,16 @@ export interface ChartProps extends ChartCoreProps {
   title?: string;
   backgroundColor: PaletteNames;
   /**
-   * Show detailed totals for each dataset label instead of global total
+   * Display mode for totals: "simple" (default), "detailed", or "none"
    */
-  showDetailedTotals?: boolean;
+  totalsDisplayMode?: TotalsDisplayMode;
 }
 
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
   (
     {
       title = "Titre",
-      showDetailedTotals = false,
+      totalsDisplayMode = "simple",
       backgroundColor,
       ...chartProps
     },
@@ -109,8 +111,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
     React.useEffect(() => {
       const checkMobileLayout = () => {
         if (containerRef.current && isPieOrDoughnut) {
-          const containerWidth = containerRef.current.offsetWidth;
-          // Si la largeur est inférieure à 600px, on passe en layout mobile
+          const containerWidth = containerRef.current?.offsetWidth || 0;
           setIsMobileLayout(containerWidth < 600);
         }
       };
@@ -137,19 +138,19 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
     }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut]);
 
     const detailedTotals = React.useMemo(() => {
+      if (totalsDisplayMode === "none") return [];
+      
       if (isPieOrDoughnut) {
         const dataset = chartProps.data.datasets[0];
         if (!dataset) return [];
 
-        if (showDetailedTotals) {
-          // Mode detailed totals : on affiche tous les éléments
+        if (totalsDisplayMode === "detailed") {
           return dataset.data.map((value, index) => ({
             label: chartProps.data.labels[index] || `Item ${index + 1}`,
             total: value,
             datasetIndex: index,
           }));
         } else {
-          // Mode normal : on filtre les éléments cachés
           return dataset.data
             .map((value, index) => {
               if (hiddenDataPoints.has(index)) return null;
@@ -168,8 +169,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
         }
       }
 
-      if (showDetailedTotals) {
-        // Mode detailed totals : on affiche tous les datasets
+      if (totalsDisplayMode === "detailed") {
         return chartProps.data.datasets.map((dataset, datasetIndex) => {
           const total = dataset.data.reduce((sum, value) => sum + value, 0);
           return {
@@ -179,7 +179,6 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           };
         });
       } else {
-        // Mode normal : on filtre les datasets cachés
         return chartProps.data.datasets
           .map((dataset, datasetIndex) => {
             if (hiddenDatasets.has(datasetIndex)) return null;
@@ -197,7 +196,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
               item !== null
           );
       }
-    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut, showDetailedTotals]);
+    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut, totalsDisplayMode]);
 
     const filteredChartData = React.useMemo(() => {
       if (isPieOrDoughnut) {
@@ -245,7 +244,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           (_, index) => !hiddenDatasets.has(index)
         ),
       };
-    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut, showDetailedTotals]);
+    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut, totalsDisplayMode]);
 
     const toggleDataset = (index: number) => {
       if (isPieOrDoughnut) {
@@ -293,21 +292,23 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
         <Column ref={containerRef} p={6} borderRadius={3} gap={6} backgroundColor="white">
           <ChartHeader title={title} onModalOpen={() => setIsModalOpen(true)} />
 
-          <ChartTotals
-            showDetailedTotals={showDetailedTotals}
-            totalValue={totalValue}
-            detailedTotals={detailedTotals}
-            chartType={chartProps.type}
-            datasets={chartProps.data.datasets}
-            hiddenDatasets={hiddenDatasets}
-            hiddenDataPoints={hiddenDataPoints}
-            hoveredDataset={hoveredDataset}
-            onToggleDataset={toggleDataset}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          />
+          {totalsDisplayMode !== "none" && (
+            <ChartTotals
+              showDetailedTotals={totalsDisplayMode === "detailed"}
+              totalValue={totalValue}
+              detailedTotals={detailedTotals}
+              chartType={chartProps.type}
+              datasets={chartProps.data.datasets}
+              hiddenDatasets={hiddenDatasets}
+              hiddenDataPoints={hiddenDataPoints}
+              hoveredDataset={hoveredDataset}
+              onToggleDataset={toggleDataset}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            />
+          )}
 
-          {!showDetailedTotals && (chartProps.type === "pie" || chartProps.type === "doughnut" ? (
+          {totalsDisplayMode !== "detailed" && (chartProps.type === "pie" || chartProps.type === "doughnut" ? (
             !isMobileLayout ? (
               <Row gap={6} alignItems="center">
                 <Box flex={1}>
@@ -364,7 +365,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             </>
           ))}
           
-          {showDetailedTotals && (
+          {totalsDisplayMode === "detailed" && (
             <ChartCore 
               ref={ref} 
               {...chartProps} 
@@ -379,7 +380,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             totalValue={totalValue}
             detailedTotals={detailedTotals}
             backgroundColor={backgroundColor}
-            showDetailedTotals={showDetailedTotals}
+            totalsDisplayMode={totalsDisplayMode}
             hiddenDatasets={hiddenDatasets}
             hiddenDataPoints={hiddenDataPoints}
             hoveredDataset={hoveredDataset}

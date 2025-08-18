@@ -11,6 +11,7 @@ import IconButton from "../IconButton";
 import Icon from "../Icon";
 import Box from "../Box";
 import { PaletteNames, parseCustomColor } from "../../theme";
+import { TotalsDisplayMode } from "./Chart";
 
 interface DetailedTotal {
   label: string;
@@ -26,7 +27,7 @@ interface ChartModalProps {
   totalValue: number;
   detailedTotals: DetailedTotal[];
   backgroundColor: PaletteNames;
-  showDetailedTotals: boolean;
+  totalsDisplayMode: TotalsDisplayMode;
   hiddenDatasets: Set<number>;
   hiddenDataPoints: Set<number>;
   hoveredDataset: number | null;
@@ -67,7 +68,7 @@ const ChartModal: React.FC<ChartModalProps> = ({
   totalValue,
   detailedTotals,
   backgroundColor,
-  showDetailedTotals,
+  totalsDisplayMode,
   hiddenDatasets,
   hiddenDataPoints,
   hoveredDataset,
@@ -121,21 +122,23 @@ const ChartModal: React.FC<ChartModalProps> = ({
               {title}
             </Typography>
 
-            <ChartTotals
-              showDetailedTotals={showDetailedTotals}
-              totalValue={totalValue}
-              detailedTotals={detailedTotals}
-              chartType={chartProps.type}
-              datasets={chartProps.data.datasets}
-              hiddenDatasets={hiddenDatasets}
-              hiddenDataPoints={hiddenDataPoints}
-              hoveredDataset={hoveredDataset}
-              onToggleDataset={onToggleDataset}
-              onMouseEnter={onMouseEnter}
-              onMouseLeave={onMouseLeave}
-            />
+            {totalsDisplayMode !== "none" && (
+              <ChartTotals
+                showDetailedTotals={totalsDisplayMode === "detailed"}
+                totalValue={totalValue}
+                detailedTotals={detailedTotals}
+                chartType={chartProps.type}
+                datasets={chartProps.data.datasets}
+                hiddenDatasets={hiddenDatasets}
+                hiddenDataPoints={hiddenDataPoints}
+                hoveredDataset={hoveredDataset}
+                onToggleDataset={onToggleDataset}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+              />
+            )}
 
-            {!showDetailedTotals && (isPieOrDoughnut ? (
+            {totalsDisplayMode !== "detailed" && (isPieOrDoughnut ? (
               <Row gap={6} alignItems="center">
                 <Box flex={1}>
                   <ChartCore {...chartProps} data={filteredChartData} />
@@ -173,7 +176,7 @@ const ChartModal: React.FC<ChartModalProps> = ({
               </>
             ))}
             
-            {showDetailedTotals && (
+            {totalsDisplayMode === "detailed" && (
               <ChartCore 
                 {...chartProps} 
                 data={filteredChartData} 

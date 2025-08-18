@@ -195,10 +195,11 @@ const meta = {
       description:
         "Background colors using theme color palette (e.g., 'primary/50')",
     },
-    showDetailedTotals: {
-      control: "boolean",
+    totalsDisplayMode: {
+      control: "select",
+      options: ["simple", "detailed", "none"],
       description:
-        "Show detailed totals for each dataset instead of global total",
+        "Display mode for totals: 'simple' (default), 'detailed', or 'none'",
     },
   },
   args: {
@@ -209,7 +210,7 @@ const meta = {
     showTooltip: true,
     title: "Titre",
     data: sampleBarData,
-    showDetailedTotals: false,
+    totalsDisplayMode: "simple",
   },
 } satisfies Meta<typeof Chart>;
 
@@ -223,7 +224,7 @@ export const VerticalBarChart: Story = {
     data: sampleBarData,
   },
   render: (args) => (
-    <Box width={600}>
+    <Box width={700}>
       <Chart {...args} />
     </Box>
   ),
@@ -260,6 +261,51 @@ export const DoughnutChart: Story = {
     type: "doughnut",
     backgroundColor: "primary",
     data: sampleDoughnutData,
+  },
+  render: (args) => (
+    <Box width={600}>
+      <Chart {...args} />
+    </Box>
+  ),
+};
+
+export const ChartWithSimpleTotals: Story = {
+  args: {
+    type: "pie",
+    backgroundColor: "primary",
+    data: samplePieData,
+    totalsDisplayMode: "simple",
+    title: "Chart with Simple Totals",
+  },
+  render: (args) => (
+    <Box width={600}>
+      <Chart {...args} />
+    </Box>
+  ),
+};
+
+export const ChartWithDetailedTotals: Story = {
+  args: {
+    type: "doughnut",
+    backgroundColor: "secondary",
+    data: sampleDoughnutData,
+    totalsDisplayMode: "detailed",
+    title: "Chart with Detailed Totals",
+  },
+  render: (args) => (
+    <Box width={700}>
+      <Chart {...args} />
+    </Box>
+  ),
+};
+
+export const ChartWithNoTotals: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "success",
+    data: sampleBarData,
+    totalsDisplayMode: "none",
+    title: "Chart with No Totals",
   },
   render: (args) => (
     <Box width={600}>
