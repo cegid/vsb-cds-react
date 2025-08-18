@@ -5,7 +5,6 @@ import Column from "../Column";
 import ChartCore, { ChartCoreProps } from "./ChartCore";
 import ChartTotals from "./ChartTotals";
 import ChartLegend from "./ChartLegend";
-import ChartHeader from "./ChartHeader";
 import Row from "../Row";
 import Typography from "../Typography";
 import IconButton from "../IconButton";
@@ -86,12 +85,16 @@ const ChartModal: React.FC<ChartModalProps> = ({
       maxWidth={false}
       fullWidth={true}
       PaperProps={{
-        sx: { background: parseCustomColor(`${backgroundColor}/95`), borderRadius: 4 },
+        sx: {
+          background: parseCustomColor(`${backgroundColor}/95`),
+          borderRadius: 4,
+        },
       }}
     >
       <StyledDialogContent>
         <Box
-          p={2}
+          px={12}
+          py={11}
           borderRadius={4}
           sx={{
             transition: "background-color 0.2s ease-in-out",
@@ -100,26 +103,23 @@ const ChartModal: React.FC<ChartModalProps> = ({
             },
           }}
         >
+          <Box position="absolute" top={12} right={12}>
+            <IconButton
+              color="neutral"
+              variant="iconOnly"
+              square
+              onClick={onClose}
+            >
+              <Icon size={16} variant="solid">
+                cancel-01
+              </Icon>
+            </IconButton>
+          </Box>
+
           <Column p={6} borderRadius={3} gap={6} backgroundColor="white">
-            <Row>
-              <Typography
-                variant="displaySSemiBold"
-                color="neutral/10"
-                flex={1}
-              >
-                {title}
-              </Typography>
-              <IconButton
-                color="neutral"
-                variant="tonal"
-                square
-                onClick={onClose}
-              >
-                <Icon size={16} variant="solid">
-                  cancel-01
-                </Icon>
-              </IconButton>
-            </Row>
+            <Typography variant="displaySSemiBold" color="neutral/10">
+              {title}
+            </Typography>
 
             <ChartTotals
               showDetailedTotals={showDetailedTotals}
