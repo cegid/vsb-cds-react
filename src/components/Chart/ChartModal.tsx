@@ -127,9 +127,15 @@ const ChartModal: React.FC<ChartModalProps> = ({
               detailedTotals={detailedTotals}
               chartType={chartProps.type}
               datasets={chartProps.data.datasets}
+              hiddenDatasets={hiddenDatasets}
+              hiddenDataPoints={hiddenDataPoints}
+              hoveredDataset={hoveredDataset}
+              onToggleDataset={onToggleDataset}
+              onMouseEnter={onMouseEnter}
+              onMouseLeave={onMouseLeave}
             />
 
-            {isPieOrDoughnut ? (
+            {!showDetailedTotals && (isPieOrDoughnut ? (
               <Row gap={6} alignItems="center">
                 <Box flex={1}>
                   <ChartCore {...chartProps} data={filteredChartData} />
@@ -165,6 +171,13 @@ const ChartModal: React.FC<ChartModalProps> = ({
                 />
                 <ChartCore {...chartProps} data={filteredChartData} />
               </>
+            ))}
+            
+            {showDetailedTotals && (
+              <ChartCore 
+                {...chartProps} 
+                data={filteredChartData} 
+              />
             )}
           </Column>
         </Box>

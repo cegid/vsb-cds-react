@@ -125,13 +125,53 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
         const dataset = chartProps.data.datasets[0];
         if (!dataset) return [];
 
-        return dataset.data
-          .map((value, index) => {
-            if (hiddenDataPoints.has(index)) return null;
+        if (showDetailedTotals) {
+          // Mode detailed totals : on affiche tous les éléments
+          return dataset.data.map((value, index) => ({
+            label: chartProps.data.labels[index] || `Item ${index + 1}`,
+            total: value,
+            datasetIndex: index,
+          }));
+        } else {
+          // Mode normal : on filtre les éléments cachés
+          return dataset.data
+            .map((value, index) => {
+              if (hiddenDataPoints.has(index)) return null;
+              return {
+                label: chartProps.data.labels[index] || `Item ${index + 1}`,
+                total: value,
+                datasetIndex: index,
+              };
+            })
+            .filter(
+              (
+                item
+              ): item is { label: string; total: number; datasetIndex: number } =>
+                item !== null
+            );
+        }
+      }
+
+      if (showDetailedTotals) {
+        // Mode detailed totals : on affiche tous les datasets
+        return chartProps.data.datasets.map((dataset, datasetIndex) => {
+          const total = dataset.data.reduce((sum, value) => sum + value, 0);
+          return {
+            label: dataset.label || `Dataset ${datasetIndex + 1}`,
+            total,
+            datasetIndex,
+          };
+        });
+      } else {
+        // Mode normal : on filtre les datasets cachés
+        return chartProps.data.datasets
+          .map((dataset, datasetIndex) => {
+            if (hiddenDatasets.has(datasetIndex)) return null;
+            const total = dataset.data.reduce((sum, value) => sum + value, 0);
             return {
-              label: chartProps.data.labels[index] || `Item ${index + 1}`,
-              total: value,
-              datasetIndex: index,
+              label: dataset.label || `Dataset ${datasetIndex + 1}`,
+              total,
+              datasetIndex,
             };
           })
           .filter(
@@ -141,24 +181,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
               item !== null
           );
       }
-
-      return chartProps.data.datasets
-        .map((dataset, datasetIndex) => {
-          if (hiddenDatasets.has(datasetIndex)) return null;
-          const total = dataset.data.reduce((sum, value) => sum + value, 0);
-          return {
-            label: dataset.label || `Dataset ${datasetIndex + 1}`,
-            total,
-            datasetIndex,
-          };
-        })
-        .filter(
-          (
-            item
-          ): item is { label: string; total: number; datasetIndex: number } =>
-            item !== null
-        );
-    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut]);
+    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut, showDetailedTotals]);
 
     const filteredChartData = React.useMemo(() => {
       if (isPieOrDoughnut) {
@@ -206,7 +229,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           (_, index) => !hiddenDatasets.has(index)
         ),
       };
-    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut]);
+    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut, showDetailedTotals]);
 
     const toggleDataset = (index: number) => {
       if (isPieOrDoughnut) {
@@ -260,9 +283,15 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             detailedTotals={detailedTotals}
             chartType={chartProps.type}
             datasets={chartProps.data.datasets}
+            hiddenDatasets={hiddenDatasets}
+            hiddenDataPoints={hiddenDataPoints}
+            hoveredDataset={hoveredDataset}
+            onToggleDataset={toggleDataset}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           />
 
-          {chartProps.type === "pie" || chartProps.type === "doughnut" ? (
+          {!showDetailedTotals && (chartProps.type === "pie" || chartProps.type === "doughnut" ? (
             <Row gap={6} alignItems="center">
               <Box flex={1}>
                 <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
@@ -298,6 +327,14 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
               />
               <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
             </>
+          ))}
+          
+          {showDetailedTotals && (
+            <ChartCore 
+              ref={ref} 
+              {...chartProps} 
+              data={filteredChartData} 
+            />
           )}
           <ChartModal
             open={isModalOpen}

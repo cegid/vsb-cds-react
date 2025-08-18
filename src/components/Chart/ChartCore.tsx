@@ -116,6 +116,12 @@ export interface ChartCoreProps {
   showTooltip?: boolean;
   /** Chart title text */
   title?: string;
+  /** Hidden datasets for transparency effect */
+  hiddenDatasets?: Set<number>;
+  /** Hidden data points for transparency effect */
+  hiddenDataPoints?: Set<number>;
+  /** Whether to use transparency instead of filtering */
+  useTransparency?: boolean;
 }
 
 const StyledChartContainer = styled(Box)(({ theme }) => ({
@@ -149,6 +155,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
       showHorizontalGrid = true,
       showTooltip = true,
       title = "Titre",
+      hiddenDatasets = new Set(),
+      hiddenDataPoints = new Set(),
+      useTransparency = false,
       ...props
     },
     ref
@@ -310,37 +319,100 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
     );
 
     const processedData = React.useMemo((): ChartData<any> => {
+      const isPieOrDoughnut = type === "pie" || type === "doughnut";
+      const currentHiddenDatasets = isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets;
+
       return {
         ...data,
-        datasets: data.datasets.map((dataset, index) => {
+        datasets: data.datasets.map((dataset, datasetIndex) => {
           const convertedDataset = { ...dataset };
 
           if (dataset.backgroundColor) {
             if (Array.isArray(dataset.backgroundColor)) {
-              (convertedDataset as any).backgroundColor =
-                dataset.backgroundColor.map(parseCustomColor);
+              (convertedDataset as any).backgroundColor = dataset.backgroundColor.map((color, colorIndex) => {
+                const parsedColor = parseCustomColor(color);
+                if (useTransparency && currentHiddenDatasets.has(isPieOrDoughnut ? colorIndex : datasetIndex)) {
+                  // Convertir vers rgba avec transparence
+                  if (parsedColor.startsWith('#')) {
+                    // Convertir hex vers rgba
+                    const r = parseInt(parsedColor.slice(1, 3), 16);
+                    const g = parseInt(parsedColor.slice(3, 5), 16);
+                    const b = parseInt(parsedColor.slice(5, 7), 16);
+                    return `rgba(${r}, ${g}, ${b}, 0.1)`;
+                  } else if (parsedColor.startsWith('rgb(')) {
+                    return parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
+                  } else if (parsedColor.startsWith('rgba(')) {
+                    return parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+                  }
+                  return parsedColor;
+                }
+                return parsedColor;
+              });
             } else {
-              (convertedDataset as any).backgroundColor = parseCustomColor(
-                dataset.backgroundColor
-              );
+              let parsedColor = parseCustomColor(dataset.backgroundColor);
+              if (useTransparency && currentHiddenDatasets.has(datasetIndex)) {
+                // Convertir vers rgba avec transparence
+                if (parsedColor.startsWith('#')) {
+                  // Convertir hex vers rgba
+                  const r = parseInt(parsedColor.slice(1, 3), 16);
+                  const g = parseInt(parsedColor.slice(3, 5), 16);
+                  const b = parseInt(parsedColor.slice(5, 7), 16);
+                  parsedColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
+                } else if (parsedColor.startsWith('rgb(')) {
+                  parsedColor = parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
+                } else if (parsedColor.startsWith('rgba(')) {
+                  parsedColor = parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+                }
+              }
+              (convertedDataset as any).backgroundColor = parsedColor;
             }
           }
 
           if (dataset.borderColor) {
             if (Array.isArray(dataset.borderColor)) {
-              (convertedDataset as any).borderColor =
-                dataset.borderColor.map(parseCustomColor);
+              (convertedDataset as any).borderColor = dataset.borderColor.map((color, colorIndex) => {
+                const parsedColor = parseCustomColor(color);
+                if (useTransparency && currentHiddenDatasets.has(isPieOrDoughnut ? colorIndex : datasetIndex)) {
+                  // Convertir vers rgba avec transparence
+                  if (parsedColor.startsWith('#')) {
+                    // Convertir hex vers rgba
+                    const r = parseInt(parsedColor.slice(1, 3), 16);
+                    const g = parseInt(parsedColor.slice(3, 5), 16);
+                    const b = parseInt(parsedColor.slice(5, 7), 16);
+                    return `rgba(${r}, ${g}, ${b}, 0.1)`;
+                  } else if (parsedColor.startsWith('rgb(')) {
+                    return parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
+                  } else if (parsedColor.startsWith('rgba(')) {
+                    return parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+                  }
+                  return parsedColor;
+                }
+                return parsedColor;
+              });
             } else {
-              (convertedDataset as any).borderColor = parseCustomColor(
-                dataset.borderColor
-              );
+              let parsedColor = parseCustomColor(dataset.borderColor);
+              if (useTransparency && currentHiddenDatasets.has(datasetIndex)) {
+                // Convertir vers rgba avec transparence
+                if (parsedColor.startsWith('#')) {
+                  // Convertir hex vers rgba
+                  const r = parseInt(parsedColor.slice(1, 3), 16);
+                  const g = parseInt(parsedColor.slice(3, 5), 16);
+                  const b = parseInt(parsedColor.slice(5, 7), 16);
+                  parsedColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
+                } else if (parsedColor.startsWith('rgb(')) {
+                  parsedColor = parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
+                } else if (parsedColor.startsWith('rgba(')) {
+                  parsedColor = parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+                }
+              }
+              (convertedDataset as any).borderColor = parsedColor;
             }
           }
 
           return convertedDataset;
         }),
       };
-    }, [data]);
+    }, [data, useTransparency, hiddenDatasets, hiddenDataPoints, type]);
 
     const defaultOptions: ChartOptions<any> = {
       responsive: true,
