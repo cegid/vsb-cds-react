@@ -4,10 +4,13 @@ import { styled } from "@mui/material/styles";
 import Column from "../Column";
 import ChartCore, { ChartCoreProps } from "./ChartCore";
 import ChartTotals from "./ChartTotals";
+import ChartLegend from "./ChartLegend";
+import ChartHeader from "./ChartHeader";
 import Row from "../Row";
 import Typography from "../Typography";
 import IconButton from "../IconButton";
 import Icon from "../Icon";
+import Box from "../Box";
 import { PaletteNames, parseCustomColor } from "../../theme";
 
 interface DetailedTotal {
@@ -24,13 +27,19 @@ interface ChartModalProps {
   totalValue: number;
   detailedTotals: DetailedTotal[];
   backgroundColor: PaletteNames;
+  showDetailedTotals: boolean;
+  hiddenDatasets: Set<number>;
+  hiddenDataPoints: Set<number>;
+  hoveredDataset: number | null;
+  filteredChartData: any;
+  onToggleDataset: (index: number) => void;
+  onMouseEnter: (index: number) => void;
+  onMouseLeave: () => void;
 }
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
-    width: "90vw",
-    height: "90vh",
-    maxWidth: "none",
+    maxWidth: "70vw",
     maxHeight: "none",
     margin: 0,
     boxShadow: "none !important",
@@ -59,76 +68,106 @@ const ChartModal: React.FC<ChartModalProps> = ({
   totalValue,
   detailedTotals,
   backgroundColor,
+  showDetailedTotals,
+  hiddenDatasets,
+  hiddenDataPoints,
+  hoveredDataset,
+  filteredChartData,
+  onToggleDataset,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
+  const isPieOrDoughnut =
+    chartProps.type === "pie" || chartProps.type === "doughnut";
   return (
     <StyledDialog
       open={open}
       onClose={onClose}
       maxWidth={false}
       fullWidth={true}
-      sx={{
-        "& .MuiBackdrop-root": {
-          background: `linear-gradient(135deg, ${parseCustomColor(
-            `${backgroundColor}/95`
-          )}, ${parseCustomColor(`${backgroundColor}/90`)})`,
-        },
+      PaperProps={{
+        sx: { background: parseCustomColor(`${backgroundColor}/95`), borderRadius: 4 },
       }}
-      PaperProps={{ sx: { background: "transparent" } }}
     >
       <StyledDialogContent>
-        <Column
-          px={11}
-          gap={11}
-          py={8}
-          height="100%"
-          width="100%"
-          backgroundColor="white"
-          borderRadius={5}
+        <Box
+          p={2}
+          borderRadius={4}
+          sx={{
+            transition: "background-color 0.2s ease-in-out",
+            "&:hover": {
+              backgroundColor: parseCustomColor(`${backgroundColor}/95`),
+            },
+          }}
         >
-          <Row>
-            <Typography variant="displaySSemiBold" color="neutral/10" flex={1}>
-              {title}
-            </Typography>
-            <IconButton
-              color="neutral"
-              variant="tonal"
-              square
-              onClick={onClose}
-            >
-              <Icon size={16} variant="solid">
-                cancel-01
-              </Icon>
-            </IconButton>
-          </Row>
-          <Column
-            p={6}
-            gap={6}
-            padding={2}
-            backgroundColor="primary/95"
-            borderRadius={4}
-            height="100%"
-            width="100%"
-          >
-            <Column
-              flex={1}
-              minHeight={0}
-              height="100%"
-              backgroundColor="white"
-              borderRadius={3}
-              p={8}
-              gap={6}
-            >
-              <ChartTotals
-                showDetailedTotals={true}
-                totalValue={totalValue}
-                detailedTotals={detailedTotals}
-                chartType={chartProps.type}
-                datasets={chartProps.data.datasets}
-              />
-              <ChartCore {...chartProps} showTooltip={true} />
-            </Column>
+          <Column p={6} borderRadius={3} gap={6} backgroundColor="white">
+            <Row>
+              <Typography
+                variant="displaySSemiBold"
+                color="neutral/10"
+                flex={1}
+              >
+                {title}
+              </Typography>
+              <IconButton
+                color="neutral"
+                variant="tonal"
+                square
+                onClick={onClose}
+              >
+                <Icon size={16} variant="solid">
+                  cancel-01
+                </Icon>
+              </IconButton>
+            </Row>
+
+            <ChartTotals
+              showDetailedTotals={showDetailedTotals}
+              totalValue={totalValue}
+              detailedTotals={detailedTotals}
+              chartType={chartProps.type}
+              datasets={chartProps.data.datasets}
+            />
+
+            {isPieOrDoughnut ? (
+              <Row gap={6} alignItems="center">
+                <Box flex={1}>
+                  <ChartCore {...chartProps} data={filteredChartData} />
+                </Box>
+                <Column gap={2} minWidth="200px">
+                  <ChartLegend
+                    datasets={chartProps.data.datasets}
+                    chartType={chartProps.type}
+                    hiddenDatasets={
+                      isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
+                    }
+                    hoveredDataset={hoveredDataset}
+                    onToggleDataset={onToggleDataset}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                    labels={chartProps.data.labels}
+                  />
+                </Column>
+              </Row>
+            ) : (
+              <>
+                <ChartLegend
+                  datasets={chartProps.data.datasets}
+                  chartType={chartProps.type}
+                  hiddenDatasets={
+                    isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
+                  }
+                  hoveredDataset={hoveredDataset}
+                  onToggleDataset={onToggleDataset}
+                  onMouseEnter={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
+                  labels={chartProps.data.labels}
+                />
+                <ChartCore {...chartProps} data={filteredChartData} />
+              </>
+            )}
           </Column>
-        </Column>
+        </Box>
       </StyledDialogContent>
     </StyledDialog>
   );

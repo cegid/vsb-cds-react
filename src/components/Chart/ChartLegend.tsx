@@ -172,7 +172,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         sx={{
           cursor: "pointer",
           flexShrink: isInModal ? 1 : 0,
-          border: "1px solid #E6E7EA",
+          border: isInModal ? "none" : "1px solid #E6E7EA",
         }}
       >
         <Box

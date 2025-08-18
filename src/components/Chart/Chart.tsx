@@ -302,11 +302,19 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           <ChartModal
             open={isModalOpen}
             onClose={() => setIsModalOpen(false)}
-            chartProps={{ ...chartProps, data: filteredChartData }}
+            chartProps={chartProps}
             title={title}
             totalValue={totalValue}
             detailedTotals={detailedTotals}
             backgroundColor={backgroundColor}
+            showDetailedTotals={showDetailedTotals}
+            hiddenDatasets={hiddenDatasets}
+            hiddenDataPoints={hiddenDataPoints}
+            hoveredDataset={hoveredDataset}
+            filteredChartData={filteredChartData}
+            onToggleDataset={toggleDataset}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           />
         </Column>
       </Box>
