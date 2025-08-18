@@ -331,10 +331,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             if (Array.isArray(dataset.backgroundColor)) {
               (convertedDataset as any).backgroundColor = dataset.backgroundColor.map((color, colorIndex) => {
                 const parsedColor = parseCustomColor(color);
+                if (!parsedColor) return color;
                 if (useTransparency && currentHiddenDatasets.has(isPieOrDoughnut ? colorIndex : datasetIndex)) {
-                  // Convertir vers rgba avec transparence
                   if (parsedColor.startsWith('#')) {
-                    // Convertir hex vers rgba
                     const r = parseInt(parsedColor.slice(1, 3), 16);
                     const g = parseInt(parsedColor.slice(3, 5), 16);
                     const b = parseInt(parsedColor.slice(5, 7), 16);
@@ -350,21 +349,23 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
               });
             } else {
               let parsedColor = parseCustomColor(dataset.backgroundColor);
-              if (useTransparency && currentHiddenDatasets.has(datasetIndex)) {
-                // Convertir vers rgba avec transparence
-                if (parsedColor.startsWith('#')) {
-                  // Convertir hex vers rgba
-                  const r = parseInt(parsedColor.slice(1, 3), 16);
-                  const g = parseInt(parsedColor.slice(3, 5), 16);
-                  const b = parseInt(parsedColor.slice(5, 7), 16);
-                  parsedColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
-                } else if (parsedColor.startsWith('rgb(')) {
-                  parsedColor = parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
-                } else if (parsedColor.startsWith('rgba(')) {
-                  parsedColor = parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+              if (!parsedColor) {
+                (convertedDataset as any).backgroundColor = dataset.backgroundColor;
+              } else {
+                if (useTransparency && currentHiddenDatasets.has(datasetIndex)) {
+                  if (parsedColor.startsWith('#')) {
+                    const r = parseInt(parsedColor.slice(1, 3), 16);
+                    const g = parseInt(parsedColor.slice(3, 5), 16);
+                    const b = parseInt(parsedColor.slice(5, 7), 16);
+                    parsedColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
+                  } else if (parsedColor.startsWith('rgb(')) {
+                    parsedColor = parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
+                  } else if (parsedColor.startsWith('rgba(')) {
+                    parsedColor = parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+                  }
                 }
+                (convertedDataset as any).backgroundColor = parsedColor;
               }
-              (convertedDataset as any).backgroundColor = parsedColor;
             }
           }
 
@@ -372,10 +373,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             if (Array.isArray(dataset.borderColor)) {
               (convertedDataset as any).borderColor = dataset.borderColor.map((color, colorIndex) => {
                 const parsedColor = parseCustomColor(color);
+                if (!parsedColor) return color;
                 if (useTransparency && currentHiddenDatasets.has(isPieOrDoughnut ? colorIndex : datasetIndex)) {
-                  // Convertir vers rgba avec transparence
                   if (parsedColor.startsWith('#')) {
-                    // Convertir hex vers rgba
                     const r = parseInt(parsedColor.slice(1, 3), 16);
                     const g = parseInt(parsedColor.slice(3, 5), 16);
                     const b = parseInt(parsedColor.slice(5, 7), 16);
@@ -391,21 +391,23 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
               });
             } else {
               let parsedColor = parseCustomColor(dataset.borderColor);
-              if (useTransparency && currentHiddenDatasets.has(datasetIndex)) {
-                // Convertir vers rgba avec transparence
-                if (parsedColor.startsWith('#')) {
-                  // Convertir hex vers rgba
-                  const r = parseInt(parsedColor.slice(1, 3), 16);
-                  const g = parseInt(parsedColor.slice(3, 5), 16);
-                  const b = parseInt(parsedColor.slice(5, 7), 16);
-                  parsedColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
-                } else if (parsedColor.startsWith('rgb(')) {
-                  parsedColor = parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
-                } else if (parsedColor.startsWith('rgba(')) {
-                  parsedColor = parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+              if (!parsedColor) {
+                (convertedDataset as any).borderColor = dataset.borderColor;
+              } else {
+                if (useTransparency && currentHiddenDatasets.has(datasetIndex)) {
+                  if (parsedColor.startsWith('#')) {
+                    const r = parseInt(parsedColor.slice(1, 3), 16);
+                    const g = parseInt(parsedColor.slice(3, 5), 16);
+                    const b = parseInt(parsedColor.slice(5, 7), 16);
+                    parsedColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
+                  } else if (parsedColor.startsWith('rgb(')) {
+                    parsedColor = parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
+                  } else if (parsedColor.startsWith('rgba(')) {
+                    parsedColor = parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+                  }
                 }
+                (convertedDataset as any).borderColor = parsedColor;
               }
-              (convertedDataset as any).borderColor = parsedColor;
             }
           }
 
