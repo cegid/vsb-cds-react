@@ -256,7 +256,6 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
             }}
             ml={2}
           >
-            {/* Layer 3 - Bottom */}
             <Box
               position="absolute"
               height="100%"
@@ -271,8 +270,6 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 zIndex: 1,
               }}
             />
-
-            {/* Layer 2 - Middle */}
             <Box
               height="100%"
               position="absolute"
@@ -287,8 +284,6 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 zIndex: 2,
               }}
             />
-
-            {/* Layer 1 - Top (interactive) */}
             <Row
               alignItems="center"
               gap={4}
