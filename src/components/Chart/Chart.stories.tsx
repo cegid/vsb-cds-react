@@ -134,7 +134,7 @@ const samplePieData: CustomChartData = {
     {
       data: [55, 35, 10],
       backgroundColor: ["primary/50", "success/50", "yellow/50"],
-      borderColor: ["primary/30", "success/30", "yellow/30"],
+      borderColor: ["white", "white", "white"],
       borderWidth: 2,
     },
   ],
@@ -146,7 +146,7 @@ const sampleDoughnutData: CustomChartData = {
     {
       data: [30, 25, 25, 20],
       backgroundColor: ["primary/50", "success/50", "yellow/50", "critical/50"],
-      borderColor: ["primary/30", "success/30", "yellow/30", "critical/30"],
+      borderColor: ["white", "white", "white", "white"],
       borderWidth: 2,
     },
   ],

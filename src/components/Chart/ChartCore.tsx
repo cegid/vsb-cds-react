@@ -15,11 +15,17 @@ import {
   ChartOptions,
   ChartData,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Line, Bar, Pie, Doughnut } from "react-chartjs-2";
 import { styled } from "@mui/material/styles";
 import Box from "../Box";
 import Typography from "../Typography";
-import { neutral, CustomColorString, parseCustomColor } from "../../theme";
+import {
+  neutral,
+  CustomColorString,
+  parseCustomColor,
+  RADIUS,
+} from "../../theme";
 import typography from "../../theme/typography";
 import Column from "../Column";
 import Row from "../Row";
@@ -48,7 +54,13 @@ interface TooltipData {
 /**
  * Supported chart types for rendering different visualization formats
  */
-export type ChartType = "line" | "bar" | "verticalBar" | "horizontalBar" | "pie" | "doughnut";
+export type ChartType =
+  | "line"
+  | "bar"
+  | "verticalBar"
+  | "horizontalBar"
+  | "pie"
+  | "doughnut";
 
 /**
  * Configuration for a single dataset within a chart
@@ -350,6 +362,37 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           enabled: false,
           external: showTooltip ? externalTooltipHandler : undefined,
         },
+        ...(type === "pie" || type === "doughnut"
+          ? {
+              datalabels: {
+                display: true,
+                color: neutral[10],
+                backgroundColor: neutral[99],
+                borderColor: "#E6E7EA",
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: {
+                  top: 5,
+                  bottom: 2,
+                  left: 8,
+                  right: 8,
+                },
+                font: {
+                  size: typography.captionRegular.fontSize,
+                  family: typography.captionRegular.fontFamily,
+                },
+                formatter: (value: number) => value.toString(),
+                textAlign: 'center',
+                textBaseline: 'middle',
+                anchor: 'center',
+                align: 'center',
+              },
+            }
+          : {
+              datalabels: {
+                display: false,
+              },
+            }),
       },
       ...(type === "line" || chartType === "bar"
         ? {
@@ -388,19 +431,20 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                   indexAxis,
                   elements: {
                     bar: {
-                      borderRadius: indexAxis === "y" 
-                        ? {
-                            topLeft: 0,
-                            topRight: 4,
-                            bottomLeft: 0,
-                            bottomRight: 4,
-                          }
-                        : {
-                            topLeft: 4,
-                            topRight: 4,
-                            bottomLeft: 0,
-                            bottomRight: 0,
-                          },
+                      borderRadius:
+                        indexAxis === "y"
+                          ? {
+                              topLeft: 0,
+                              topRight: 4,
+                              bottomLeft: 0,
+                              bottomRight: 4,
+                            }
+                          : {
+                              topLeft: 4,
+                              topRight: 4,
+                              bottomLeft: 0,
+                              bottomRight: 0,
+                            },
                     },
                   },
                 }
@@ -426,9 +470,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         case "horizontalBar":
           return <Bar {...commonProps} />;
         case "pie":
-          return <Pie {...commonProps} />;
+          return <Pie {...commonProps} plugins={[ChartDataLabels]} />;
         case "doughnut":
-          return <Doughnut {...commonProps} />;
+          return <Doughnut {...commonProps} plugins={[ChartDataLabels]} />;
         default:
           return <Line {...commonProps} />;
       }
