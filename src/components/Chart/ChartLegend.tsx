@@ -17,6 +17,7 @@ interface ChartLegendProps {
   onMouseEnter: (index: number) => void;
   onMouseLeave: () => void;
   labels?: string[];
+  isMobileLayout?: boolean;
 }
 
 const ChartLegend: React.FC<ChartLegendProps> = ({
@@ -28,6 +29,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   onMouseEnter,
   onMouseLeave,
   labels = [],
+  isMobileLayout = false,
 }) => {
   const [visibleCount, setVisibleCount] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -164,7 +166,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         backgroundColor="white"
         py={2}
         px={4}
-        width="auto"
+        width="fit-content"
         borderRadius={RADIUS.FULL}
         onClick={() => onToggleDataset(index)}
         onMouseEnter={() => onMouseEnter(index)}
@@ -173,6 +175,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
           cursor: "pointer",
           flexShrink: isInModal ? 1 : 0,
           border: isInModal || isVerticalLayout ? "none" : "1px solid #E6E7EA",
+          display: "inline-flex",
         }}
       >
         <Box
@@ -233,11 +236,19 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
   const renderDatasets = getPieDatasets();
 
   return isVerticalLayout ? (
-    <Column gap={2}>
-      {renderDatasets.map((dataset: any, index: number) =>
-        renderDatasetItem(dataset, index, false)
-      )}
-    </Column>
+    isMobileLayout ? (
+      <Row gap={2} flexWrap="wrap">
+        {renderDatasets.map((dataset: any, index: number) =>
+          renderDatasetItem(dataset, index, false)
+        )}
+      </Row>
+    ) : (
+      <Column gap={2}>
+        {renderDatasets.map((dataset: any, index: number) =>
+          renderDatasetItem(dataset, index, false)
+        )}
+      </Column>
+    )
   ) : (
     <Box position="relative">
       <Row ref={containerRef} gap={2} flexWrap="nowrap" overflow="hidden">

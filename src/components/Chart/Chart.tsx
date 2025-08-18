@@ -100,9 +100,25 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
     const [hoveredDataset, setHoveredDataset] = React.useState<number | null>(
       null
     );
+    const [isMobileLayout, setIsMobileLayout] = React.useState(false);
+    const containerRef = React.useRef<HTMLDivElement>(null);
 
     const isPieOrDoughnut =
       chartProps.type === "pie" || chartProps.type === "doughnut";
+
+    React.useEffect(() => {
+      const checkMobileLayout = () => {
+        if (containerRef.current && isPieOrDoughnut) {
+          const containerWidth = containerRef.current.offsetWidth;
+          // Si la largeur est inférieure à 600px, on passe en layout mobile
+          setIsMobileLayout(containerWidth < 600);
+        }
+      };
+
+      checkMobileLayout();
+      window.addEventListener('resize', checkMobileLayout);
+      return () => window.removeEventListener('resize', checkMobileLayout);
+    }, [isPieOrDoughnut]);
 
     const totalValue = React.useMemo(() => {
       if (isPieOrDoughnut) {
@@ -274,7 +290,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           },
         }}
       >
-        <Column p={6} borderRadius={3} gap={6} backgroundColor="white">
+        <Column ref={containerRef} p={6} borderRadius={3} gap={6} backgroundColor="white">
           <ChartHeader title={title} onModalOpen={() => setIsModalOpen(true)} />
 
           <ChartTotals
@@ -292,11 +308,28 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           />
 
           {!showDetailedTotals && (chartProps.type === "pie" || chartProps.type === "doughnut" ? (
-            <Row gap={6} alignItems="center">
-              <Box flex={1}>
-                <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
-              </Box>
-              <Column gap={2} minWidth="200px">
+            !isMobileLayout ? (
+              <Row gap={6} alignItems="center">
+                <Box flex={1}>
+                  <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
+                </Box>
+                <Column gap={2} minWidth="200px" width="auto">
+                  <ChartLegend
+                    datasets={chartProps.data.datasets}
+                    chartType={chartProps.type}
+                    hiddenDatasets={
+                      isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
+                    }
+                    hoveredDataset={hoveredDataset}
+                    onToggleDataset={toggleDataset}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    labels={chartProps.data.labels}
+                  />
+                </Column>
+              </Row>
+            ) : (
+              <>
                 <ChartLegend
                   datasets={chartProps.data.datasets}
                   chartType={chartProps.type}
@@ -308,9 +341,11 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                   labels={chartProps.data.labels}
+                  isMobileLayout={isMobileLayout}
                 />
-              </Column>
-            </Row>
+                <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
+              </>
+            )
           ) : (
             <>
               <ChartLegend
