@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Typography from "../Typography";
 import Column from "../Column";
 import Row from "../Row";
 import Box from "../Box";
 import Icon from "../Icon";
+import IconButton from "../IconButton";
 import { ChartType } from "./ChartCore";
 import { parseCustomColor, RADIUS } from "../../theme";
 import { getChartIcon } from "./Chart";
@@ -42,97 +43,234 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
   onMouseLeave = () => {},
 }) => {
   const isPieOrDoughnut = chartType === "pie" || chartType === "doughnut";
-  const currentHiddenDatasets = isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets;
+  const currentHiddenDatasets = isPieOrDoughnut
+    ? hiddenDataPoints
+    : hiddenDatasets;
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(3);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const canScrollLeft = currentIndex > 0;
+  const canScrollRight = currentIndex + itemsPerView < detailedTotals.length;
+
+  useEffect(() => {
+    const calculateItemsPerView = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        const itemWidth = 200; // largeur estimée d'un item + gap
+        const maxItems = Math.max(2, Math.min(3, Math.floor(containerWidth / itemWidth)));
+        setItemsPerView(maxItems);
+        // Réajuster l'index si nécessaire
+        setCurrentIndex(prev => {
+          const maxIndex = Math.max(0, detailedTotals.length - maxItems);
+          return Math.min(prev, maxIndex);
+        });
+      }
+    };
+
+    calculateItemsPerView();
+    window.addEventListener("resize", calculateItemsPerView);
+    return () => window.removeEventListener("resize", calculateItemsPerView);
+  }, [detailedTotals.length]);
+
+  const handlePrevious = () => {
+    setCurrentIndex((prev) => Math.max(0, prev - itemsPerView));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => {
+      const maxIndex = Math.max(0, detailedTotals.length - itemsPerView);
+      return Math.min(maxIndex, prev + itemsPerView);
+    });
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - (containerRef.current?.offsetLeft || 0));
+    setScrollLeft(containerRef.current?.scrollLeft || 0);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - (containerRef.current.offsetLeft || 0);
+    const walk = (x - startX) * 2;
+    containerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setIsDragging(true);
+    setStartX(touch.pageX - (containerRef.current?.offsetLeft || 0));
+    setScrollLeft(containerRef.current?.scrollLeft || 0);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    const touch = e.touches[0];
+    const x = touch.pageX - (containerRef.current.offsetLeft || 0);
+    const walk = (x - startX) * 2;
+    containerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+  };
   if (showDetailedTotals) {
+    const visibleTotals = detailedTotals.slice(currentIndex, currentIndex + itemsPerView);
+    
     return (
-      <Box sx={{ overflowX: 'auto', width: '100%' }}>
-        <Row gap={11} flexWrap="nowrap" minWidth="fit-content">
-          {detailedTotals.map((item, index) => {
-          let datasetColor = "#666666";
-          const dataset = datasets[item.datasetIndex];
+      <Row alignItems="center" width="100%" gap={2}>
+        <IconButton
+          color="neutral"
+          variant="iconOnly"
+          size="small"
+          onClick={handlePrevious}
+          disabled={!canScrollLeft}
+        >
+          <Icon size={16} variant="stroke">
+            arrow-left-01
+          </Icon>
+        </IconButton>
 
-          if (dataset?.backgroundColor) {
-            if (typeof dataset.backgroundColor === "string") {
-              datasetColor =
-                parseCustomColor(dataset.backgroundColor) ?? "#666666";
-            } else if (
-              Array.isArray(dataset.backgroundColor) &&
-              dataset.backgroundColor[0]
-            ) {
-              datasetColor =
-                parseCustomColor(dataset.backgroundColor[0]) ??
-                "#666666";
-            }
-          }
+        <Box
+          ref={containerRef}
+          sx={{
+            flex: 1,
+            overflowX: "hidden",
+            cursor: isDragging ? "grabbing" : "grab",
+            userSelect: "none",
+            position: "relative",
+          }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <Row 
+            gap={11} 
+            flexWrap="nowrap" 
+            justifyContent="space-between"
+            sx={{
+              transition: "all 0.3s ease-in-out",
+              opacity: isDragging ? 0.8 : 1,
+            }}
+          >
+            {visibleTotals.map((item, index) => {
+              let datasetColor = "#666666";
+              const dataset = datasets[item.datasetIndex];
 
-          const isHidden = currentHiddenDatasets.has(item.datasetIndex);
-          const isHovered = hoveredDataset === item.datasetIndex;
-          const iconOpacity = isHidden || isHovered ? 0 : 1;
-          const eyeIconOpacity = isHidden || isHovered ? 1 : 0;
+              if (dataset?.backgroundColor) {
+                if (typeof dataset.backgroundColor === "string") {
+                  datasetColor =
+                    parseCustomColor(dataset.backgroundColor) ?? "#666666";
+                } else if (
+                  Array.isArray(dataset.backgroundColor) &&
+                  dataset.backgroundColor[0]
+                ) {
+                  datasetColor =
+                    parseCustomColor(dataset.backgroundColor[0]) ?? "#666666";
+                }
+              }
 
-          return (
-            <Column
-              key={`${item.label}-${index}`}
-              justifyContent="space-between"
-              width="auto"
-              flexShrink={0}
-            >
-              <Typography variant="bodyMMedium" color="neutral/30">
-                Total
-              </Typography>
-              <Typography variant="displaySSemiBold" color="neutral/10">
-                {item.total.toLocaleString()}
-              </Typography>
-              <Row 
-                alignItems="center" 
-                gap={4} 
-                mt={1}
-                onClick={() => onToggleDataset(item.datasetIndex)}
-                onMouseEnter={() => onMouseEnter(item.datasetIndex)}
-                onMouseLeave={onMouseLeave}
-                sx={{
-                  cursor: "pointer",
-                }}
-              >
-                <Box
-                  width={12}
-                  height={12}
-                  display="flex"
-                  position="relative"
-                  alignItems="center"
-                  justifyContent="center"
+              const isHidden = currentHiddenDatasets.has(item.datasetIndex);
+              const isHovered = hoveredDataset === item.datasetIndex;
+              const iconOpacity = isHidden || isHovered ? 0 : 1;
+              const eyeIconOpacity = isHidden || isHovered ? 1 : 0;
+
+              return (
+                <Column
+                  key={`${item.label}-${currentIndex + index}`}
+                  justifyContent="space-between"
+                  sx={{
+                    flex: 1,
+                    minWidth: "150px",
+                  }}
                 >
-                  <Box
-                    position="absolute"
-                    display="flex"
+                  <Typography variant="bodyMMedium" color="neutral/30">
+                    Total
+                  </Typography>
+                  <Typography variant="displaySSemiBold" color="neutral/10">
+                    {item.total.toLocaleString()}
+                  </Typography>
+                  <Row
+                    alignItems="center"
+                    gap={4}
+                    mt={1}
+                    onClick={() => onToggleDataset(item.datasetIndex)}
+                    onMouseEnter={() => onMouseEnter(item.datasetIndex)}
+                    onMouseLeave={onMouseLeave}
                     sx={{
-                      opacity: iconOpacity,
-                      transition: "opacity 200ms ease-in-out",
+                      cursor: "pointer",
                     }}
                   >
-                    {getChartIcon(chartType, datasetColor)}
-                  </Box>
-                  <Box
-                    display="flex"
-                    sx={{
-                      opacity: eyeIconOpacity,
-                      transition: "opacity 200ms ease-in-out",
-                    }}
-                  >
-                    <Icon variant="stroke" style="rounded" color="neutral/50" size={12}>
-                      {isHidden ? "view-off-slash" : "view"}
-                    </Icon>
-                  </Box>
-                </Box>
-                <Typography variant="bodySMedium" color="neutral/50">
-                  {item.label}
-                </Typography>
-              </Row>
-            </Column>
-          );
-        })}
-        </Row>
-      </Box>
+                    <Box
+                      width={12}
+                      height={12}
+                      display="flex"
+                      position="relative"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Box
+                        position="absolute"
+                        display="flex"
+                        sx={{
+                          opacity: iconOpacity,
+                          transition: "opacity 200ms ease-in-out",
+                        }}
+                      >
+                        {getChartIcon(chartType, datasetColor)}
+                      </Box>
+                      <Box
+                        display="flex"
+                        sx={{
+                          opacity: eyeIconOpacity,
+                          transition: "opacity 200ms ease-in-out",
+                        }}
+                      >
+                        <Icon
+                          variant="stroke"
+                          style="rounded"
+                          color="neutral/50"
+                          size={12}
+                        >
+                          {isHidden ? "view-off-slash" : "view"}
+                        </Icon>
+                      </Box>
+                    </Box>
+                    <Typography variant="bodySMedium" color="neutral/50">
+                      {item.label}
+                    </Typography>
+                  </Row>
+                </Column>
+              );
+            })}
+          </Row>
+        </Box>
+
+        <IconButton
+          color="neutral"
+          variant="iconOnly"
+          size="small"
+          onClick={handleNext}
+          disabled={!canScrollRight}
+        >
+          <Icon size={16} variant="stroke">
+            arrow-right-01
+          </Icon>
+        </IconButton>
+      </Row>
     );
   }
 
