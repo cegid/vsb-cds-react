@@ -2,11 +2,15 @@ import React from "react";
 import Box from "../../Box";
 import Button from "../../Button";
 import Typography from "../../Typography";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+
+interface DayJsAdapter {
+  format: (date: Date, formatString: string) => string;
+  formatByString: (date: Date, formatString: string) => string;
+}
 
 interface MonthYearSelectorProps {
   currentMonth: Date;
-  adapter: AdapterDateFns;
+  adapter: DayJsAdapter;
   showMonthSelector: boolean;
   showYearSelector: boolean;
   onMonthSelect: (monthIndex: number) => void;
@@ -56,7 +60,7 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
               size="large"
               onClick={() => onMonthSelect(index)}
             >
-              {adapter.format(month, "month")}
+              {adapter.format(month, "monthLong")}
             </Button>
           ))}
         </Box>

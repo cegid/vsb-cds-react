@@ -4,8 +4,6 @@ import TextField from "../../TextField";
 import Typography from "../../Typography";
 
 interface TimeSelectorProps {
-  hours?: number;
-  minutes?: number;
   hoursInput: string;
   minutesInput: string;
   onHoursChange: (hours: number | undefined, input: string) => void;
@@ -13,8 +11,6 @@ interface TimeSelectorProps {
 }
 
 const TimeSelector: React.FC<TimeSelectorProps> = ({
-  hours,
-  minutes,
   hoursInput,
   minutesInput,
   onHoursChange,

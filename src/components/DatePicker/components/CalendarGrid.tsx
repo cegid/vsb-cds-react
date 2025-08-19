@@ -1,20 +1,25 @@
 import React from "react";
-import { PaletteNames, colorPalettes } from "../../../theme";
+import { CustomColorString, PaletteNames, colorPalettes } from "../../../theme";
 import Box from "../../Box";
 import Typography from "../../Typography";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+
+interface DayJsAdapter {
+  format: (date: Date, formatString: string) => string;
+  formatByString: (date: Date, formatString: string) => string;
+}
 
 interface CalendarGridProps {
   currentMonth: Date;
-  selectedDate?: Date;
+  selectedDate?: Date | [Date?, Date?];
   color?: PaletteNames;
-  adapter: AdapterDateFns;
+  adapter: DayJsAdapter;
   onDateSelect: (date: Date) => void;
   isDateDisabled: (date: Date) => boolean;
-  isDateSelected: (date: Date, selectedDate?: Date) => boolean;
+  isDateSelected: (date: Date, selectedDate?: Date | [Date?, Date?]) => boolean;
   isToday: (date: Date) => boolean;
   getDaysInMonth: (date: Date) => number;
   getFirstDayOfMonth: (date: Date) => number;
+  isDateRange?: boolean;
 }
 
 const CalendarGrid: React.FC<CalendarGridProps> = ({
@@ -28,6 +33,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
   isToday,
   getDaysInMonth,
   getFirstDayOfMonth,
+  isDateRange = false,
 }) => {
   const { neutral } = colorPalettes;
 
@@ -44,11 +50,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 
     for (let i = firstDay - 1; i >= 0; i--) {
       const day = daysInPrevMonth - i;
-      const date = new Date(
-        prevMonth.getFullYear(),
-        prevMonth.getMonth(),
-        day
-      );
+      const date = new Date(prevMonth.getFullYear(), prevMonth.getMonth(), day);
       const isDisabled = isDateDisabled(date);
 
       days.push(
@@ -89,13 +91,53 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
       const isSelected = isDateSelected(date, selectedDate);
       const isTodayDate = isToday(date);
 
+      let isInRange = false;
+      let isRangeStart = false;
+      let isRangeEnd = false;
+
+      if (isDateRange && Array.isArray(selectedDate)) {
+        const [startDate, endDate] = selectedDate;
+        if (startDate && endDate) {
+          isInRange = date >= startDate && date <= endDate;
+          isRangeStart = startDate.getTime() === date.getTime();
+          isRangeEnd = endDate.getTime() === date.getTime();
+        } else if (startDate) {
+          isRangeStart = startDate.getTime() === date.getTime();
+        }
+      }
+
       let dayColor;
+      let backgroundColor;
+      let borderRadius;
+
       if (isDisabled) {
         dayColor = "neutral/50";
-      } else if (isSelected) {
+        backgroundColor = "transparent";
+        borderRadius = "50%";
+      } else if (isDateRange && isRangeStart && isRangeEnd) {
         dayColor = "white";
+        backgroundColor = `${color}/60`;
+        borderRadius = "50%";
+      } else if (isDateRange && isRangeStart) {
+        dayColor = "white";
+        backgroundColor = `${color}/60`;
+        borderRadius = "16px 0 0 16px";
+      } else if (isDateRange && isRangeEnd) {
+        dayColor = "white";
+        backgroundColor = `${color}/60`;
+        borderRadius = "0 16px 16px 0";
+      } else if (isDateRange && isInRange) {
+        dayColor = neutral[10];
+        backgroundColor = neutral[95];
+        borderRadius = "50%";
+      } else if (!isDateRange && isSelected) {
+        dayColor = "white";
+        backgroundColor = `${color}/60`;
+        borderRadius = "50%";
       } else {
-        dayColor = "neutral/10";
+        dayColor = neutral[10];
+        backgroundColor = "transparent";
+        borderRadius = "50%";
       }
 
       days.push(
@@ -106,10 +148,10 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
           display="flex"
           alignItems="center"
           justifyContent="center"
-          borderRadius="50%"
-          backgroundColor={isSelected ? `${color}/60` : "transparent"}
+          borderRadius={borderRadius}
+          backgroundColor={backgroundColor as CustomColorString}
           border={
-            isTodayDate && !isSelected
+            isTodayDate && !isSelected && !isInRange
               ? { color: "neutral/10", width: 1, style: "solid" }
               : undefined
           }
@@ -117,7 +159,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
           sx={{
             cursor: isDisabled ? "not-allowed" : "pointer",
             "&:hover":
-              !isDisabled && !isSelected
+              !isDisabled && !isSelected && !isInRange
                 ? { backgroundColor: neutral[95] }
                 : {},
           }}
@@ -147,11 +189,7 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
     const daysToAdd = 7 - remainingInLastRow;
 
     for (let day = 1; day <= daysToAdd; day++) {
-      const date = new Date(
-        nextMonth.getFullYear(),
-        nextMonth.getMonth(),
-        day
-      );
+      const date = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), day);
       const isDisabled = isDateDisabled(date);
 
       days.push(
@@ -192,7 +230,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
 
   return (
     <>
-      {/* Week days header */}
       <Box
         display="grid"
         sx={{
@@ -220,7 +257,6 @@ const CalendarGrid: React.FC<CalendarGridProps> = ({
         ))}
       </Box>
 
-      {/* Calendar grid */}
       <Box
         display="grid"
         sx={{

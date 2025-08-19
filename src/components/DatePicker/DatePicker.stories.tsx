@@ -5,7 +5,7 @@ import DatePicker from "./DatePicker";
 import Box from "../Box";
 
 const meta = {
-  title: "Components/Inputs/DatePicker",
+  title: "🎛️ Form Controls/DatePicker",
   component: DatePicker,
   parameters: {
     layout: "centered",
@@ -14,11 +14,19 @@ const meta = {
   argTypes: {
     value: {
       control: { type: "date" },
-      description: "The selected date value",
+      description: "The selected date value or date range [startDate, endDate]",
     },
     onChange: {
       action: "changed",
       description: "Callback fired when the date changes",
+    },
+    isDateRange: {
+      control: { type: "boolean" },
+      description: "Whether to enable date range selection",
+    },
+    showTime: {
+      control: { type: "boolean" },
+      description: "Whether to show time selection (hours and minutes)",
     },
     disabled: {
       control: { type: "boolean" },
@@ -40,12 +48,28 @@ const meta = {
       control: { type: "text" },
       description: "Label for the date picker",
     },
+    locale: {
+      control: { type: "select" },
+      options: ["fr", "en", "de"],
+      description: "Locale for date formatting and labels",
+    },
+    timezone: {
+      control: { type: "text" },
+      description: "Timezone for date handling (e.g. 'Europe/Paris', 'UTC')",
+    },
+    utc: {
+      control: { type: "boolean" },
+      description: "Force UTC mode - all dates will be treated as UTC",
+    },
   },
   args: {
     disabled: false,
     placeholder: "Select date",
     label: "label",
     value: new Date("2024-12-25"),
+    isDateRange: false,
+    showTime: false,
+    locale: "fr",
   },
 } satisfies Meta<typeof DatePicker>;
 
@@ -55,7 +79,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
   render: (args) => {
-    const [value, setValue] = useState<Date | undefined>(args.value);
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
     
     return (
       <Box width={300} height={450}>
@@ -78,7 +102,7 @@ export const WithValue: Story = {
     label: "Date de naissance",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | undefined>(args.value);
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
     
     return (
       <Box width={300}>
@@ -102,7 +126,7 @@ export const Disabled: Story = {
     label: "Date de naissance",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | undefined>(args.value);
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
     
     return (
       <Box width={300}>
@@ -127,10 +151,83 @@ export const WithMinMaxDates: Story = {
     label: "Date de naissance",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | undefined>(args.value);
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
     
     return (
       <Box width={300}>
+        <DatePicker 
+          {...args} 
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const WithTime: Story = {
+  args: {
+    showTime: true,
+    value: new Date("2024-12-25"),
+    label: "Date et heure de rendez-vous",
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
+    
+    return (
+      <Box width={300} height={500}>
+        <DatePicker 
+          {...args} 
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const DateRange: Story = {
+  args: {
+    isDateRange: true,
+    value: [new Date("2024-12-25"), new Date("2024-12-31")],
+    label: "Période de vacances",
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
+    
+    return (
+      <Box width={300} height={450}>
+        <DatePicker 
+          {...args} 
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const DateRangeWithTime: Story = {
+  args: {
+    isDateRange: true,
+    showTime: true,
+    value: [new Date("2024-12-25"), new Date("2024-12-27")],
+    label: "Période avec heures",
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
+    
+    return (
+      <Box width={300} height={500}>
         <DatePicker 
           {...args} 
           value={value}
