@@ -31,7 +31,9 @@ export interface TabProps extends CegidTabProps {
   hideBottomLine?: boolean;
 }
 
-const StyledTab = styled(CegidTab)<{ hideBottomLine?: boolean }>(
+const StyledTab = styled(CegidTab, {
+  shouldForwardProp: (prop: string) => prop !== 'hideBottomLine',
+})<{ hideBottomLine?: boolean }>(
   ({ hideBottomLine }) => ({
     color: neutral[50],
     opacity: 1,

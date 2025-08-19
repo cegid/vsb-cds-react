@@ -12,7 +12,9 @@ export interface TabsProps extends CegidTabsProps {
   bottomLine?: boolean;
 }
 
-const StyledTabs = styled(CegidTabs)<{ fullwidth: boolean }>(
+const StyledTabs = styled(CegidTabs, {
+  shouldForwardProp: (prop: string) => prop !== 'fullwidth',
+})<{ fullwidth: boolean }>(
   ({ fullwidth }) => ({
     "& .MuiTabs-indicator": {
       display: "none",
