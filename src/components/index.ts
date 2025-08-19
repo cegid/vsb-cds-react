@@ -90,3 +90,5 @@ export { default as ListItemButton } from "./ListItemButton";
 export * from "./ListItemButton";
 export { default as ProgressBar } from "./ProgressBar";
 export * from "./ProgressBar";
+export { default as DatePicker } from "./DatePicker";
+export * from "./DatePicker";
