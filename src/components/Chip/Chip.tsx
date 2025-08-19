@@ -96,9 +96,11 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
     size = "small",
     disabled = false,
     color = "primary",
+    clickable,
+    ...restProps
   } = props;
   const [clicked, setClicked] = React.useState(false);
-  const clickable = onClick !== undefined;
+  const isClickable = onClick !== undefined;
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (onClick) {
@@ -151,7 +153,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
   const isStartIconAnIcon = startIcon && startIcon.type === Icon;
 
   const renderLabel = () => {
-    const labelColor = clickable && clicked ? colorTheme[60] : "neutral/10";
+    const labelColor = isClickable && clicked ? colorTheme[60] : "neutral/10";
 
     if (typeof label === "string") {
       return (
@@ -171,7 +173,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
       px={size === "small" ? 2 : 4}
       py={size === "small" ? 1 : 3}
       borderRadius={2}
-      {...props}
+      {...restProps}
       onClick={handleClick}
       border={{
         color: getBorderColor() as CustomColorString,
@@ -181,7 +183,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
       width="fit-content"
       alignItems="center"
       sx={{
-        cursor: clickable ? "pointer" : "auto",
+        cursor: isClickable ? "pointer" : "auto",
         backgroundColor: getBackgroundColor(),
         "&:hover": {
           backgroundColor: clicked ? colorTheme[90] : neutral[99],
@@ -195,7 +197,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
         <Box
           pl={2}
           display="flex"
-          sx={{ color: clickable && clicked ? colorTheme[60] : neutral[10] }}
+          sx={{ color: isClickable && clicked ? colorTheme[60] : neutral[10] }}
         >
           {icon}
         </Box>
@@ -204,7 +206,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
         <Box
           pl={isStartIconAnIcon ? 2 : 0}
           display="flex"
-          sx={{ color: clickable && clicked ? colorTheme[60] : neutral[10] }}
+          sx={{ color: isClickable && clicked ? colorTheme[60] : neutral[10] }}
         >
           {startIcon}
         </Box>
@@ -213,7 +215,7 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
       {endIcon}
       {badge && (
         <Box
-          sx={{ color: clickable && clicked ? colorTheme[60] : neutral[10] }}
+          sx={{ color: isClickable && clicked ? colorTheme[60] : neutral[10] }}
         >
           {badge}
         </Box>

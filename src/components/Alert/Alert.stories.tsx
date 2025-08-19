@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import Alert from "./Alert";
 import { TestIcon } from "./test";
 import React from "react";
+import Column from "../Column";
 
 const meta = {
   title: "💬 Feedback/Alert",
@@ -57,7 +58,7 @@ export const Default: Story = {
 
 export const AllVariants: Story = {
   render: () => (
-    <>
+    <Column gap={4}>
       <Alert
         variant="info"
         title="Information"
@@ -86,13 +87,13 @@ export const AllVariants: Story = {
         image={TestIcon}
         buttonLabel="Retry"
       />
-    </>
+    </Column>
   ),
 };
 
 export const AllSizes: Story = {
   render: () => (
-    <>
+    <Column gap={4}>
       <Alert
         variant="info"
         size="M"
@@ -109,13 +110,13 @@ export const AllSizes: Story = {
         image={TestIcon}
         buttonLabel="OK"
       />
-    </>
+    </Column>
   ),
 };
 
 export const WithoutElements: Story = {
   render: () => (
-    <>
+    <Column gap={4}>
       <Alert
         variant="info"
         title="No image alert"
@@ -134,13 +135,13 @@ export const WithoutElements: Story = {
         image={TestIcon}
         buttonLabel="Action"
       />
-    </>
+    </Column>
   ),
 };
 
 export const WithActions: Story = {
   render: () => (
-    <>
+    <Column gap={4}>
       <Alert
         variant="error"
         title="Alert with actions"
@@ -154,10 +155,10 @@ export const WithActions: Story = {
         variant="info"
         title="With string image URL"
         description="This alert uses a string URL for the image"
-        image="https://via.placeholder.com/50x50"
+        image="https://w7.pngwing.com/pngs/980/712/png-transparent-computer-icons-user-avatar-avatar-heroes-silhouette-50x50.png"
         buttonLabel="View"
         onActionClick={() => alert("View clicked!")}
       />
-    </>
+    </Column>
   ),
 };
