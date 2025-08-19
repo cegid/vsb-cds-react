@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Icon from "../Icon";
 import { neutral, primary } from "../../theme";
 import typography from "../../theme/typography";
@@ -25,16 +25,18 @@ export interface SearchInputProps
   extends Omit<TextFieldProps, "InputProps" | "size"> {
   /**
    * Callback function triggered when the filter button is clicked
-   * @callback onFilterClick
-   * @returns {void}
    */
   onFilterClick?: () => void;
-
   /**
    * Default size of the search input component
    * @default "long"
    */
   defaultSize?: SearchInputSize;
+  /**
+   * Whether the input should take the full width of its container
+   * @default false
+   */
+  fullwidth?: boolean;
 }
 
 const CustomTextField = styled(TextField)<{ $size?: SearchInputSize }>(
@@ -96,14 +98,22 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onChange,
   onFilterClick,
   defaultSize = "long",
+  fullwidth = false,
   ...props
 }) => {
   const [hasValue, setHasValue] = useState(false);
   const [size, setSize] = useState(defaultSize);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setHasValue(Boolean(value && value.toString().trim() !== ""));
   }, [value]);
+
+  useEffect(() => {
+    if (size === "long" && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [size]);
 
   const handleClearClick = () => {
     if (onChange) {
@@ -130,12 +140,16 @@ const SearchInput: React.FC<SearchInputProps> = ({
 
   return (
     <Row gap={4}>
-      <Box onClick={() => (size === "short" ? setSize("long") : undefined)}>
+      <Box
+        onClick={() => (size === "short" ? setSize("long") : undefined)}
+        flex={size === "long" ? 1 : 0}
+      >
         <CustomTextField
           $size={size}
           placeholder={size === "short" ? "" : placeholder}
           value={value}
           onChange={(e) => handleChange(e)}
+          inputRef={inputRef}
           InputProps={{
             startAdornment: (
               <Box
@@ -174,10 +188,9 @@ const SearchInput: React.FC<SearchInputProps> = ({
           color="neutral"
           square
           onClick={onFilterClick}
+          disabled={props.disabled}
         >
-          <Icon size={16} color="primary/10">
-            filter
-          </Icon>
+          <Icon size={16}>filter</Icon>
         </IconButton>
       )}
     </Row>

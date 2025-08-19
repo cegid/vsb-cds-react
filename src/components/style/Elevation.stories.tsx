@@ -288,7 +288,7 @@ const ElevationDemo = () => {
 };
 
 const meta: Meta = {
-  title: "Theme/Elevation Usage",
+  title: "🎨 Theme/Elevation Usage",
   component: ElevationDemo,
   parameters: {
     layout: "fullscreen",

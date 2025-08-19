@@ -4,7 +4,7 @@ import Row from "./Row";
 import Box from "../Box";
 
 const meta = {
-  title: "Components/Structure/Row",
+  title: "🧭 Navigation & Layout/Row",
   component: Row,
   parameters: {
     layout: "centered",

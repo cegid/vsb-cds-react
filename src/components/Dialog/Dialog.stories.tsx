@@ -7,7 +7,7 @@ import Typography from "../Typography";
 import Dialog from "./Dialog";
 
 const meta: Meta<typeof Dialog> = {
-  title: "Components/Structure/Dialog",
+  title: "💬 Feedback/Dialog",
   component: Dialog,
   parameters: {
     layout: "centered",

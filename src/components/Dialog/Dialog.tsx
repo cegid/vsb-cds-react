@@ -7,7 +7,10 @@ import Icon from "../Icon";
 import Typography from "../Typography";
 import Button from "../Button";
 
-import { Dialog as CegidDialog } from "@cegid/cds-react";
+import {
+  Dialog as CegidDialog,
+  DialogProps as CegidDialogProps,
+} from "@cegid/cds-react";
 
 import { useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -26,7 +29,11 @@ export type DialogVariant = "info" | "alert";
 /**
  * Props for the Dialog component
  */
-export interface DialogProps {
+export interface DialogProps
+  extends Omit<
+    CegidDialogProps,
+    "content" | "open" | "title" | "variant" | "onClose"
+  > {
   /**
    * The title text displayed in the dialog header
    */
@@ -87,10 +94,19 @@ const Dialog: React.FC<DialogProps> = (props) => {
     children,
     onClose,
     alertIcon,
+    PaperProps,
+    ...cegidDialogRestProps
   } = props;
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const paperProps = PaperProps ?? {
+    sx: {
+      backgroundColor: "transparent",
+      boxShadow: "none",
+    },
+  };
 
   const containerStyles = {
     ...(isMobile && { background: white }),
@@ -171,7 +187,6 @@ const Dialog: React.FC<DialogProps> = (props) => {
         )}
       </Box>
     );
-
     return actionsContainer;
   };
 
@@ -181,12 +196,8 @@ const Dialog: React.FC<DialogProps> = (props) => {
       onClose={onClose}
       disableCloseActions={!onClose}
       maxWidth="lg"
-      PaperProps={{
-        sx: {
-          backgroundColor: "transparent",
-          boxShadow: "none",
-        },
-      }}
+      PaperProps={paperProps}
+      {...cegidDialogRestProps}
     >
       {children}
       {!children && (

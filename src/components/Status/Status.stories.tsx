@@ -10,7 +10,7 @@ import Avatar from "../Avatar";
 const colorNames = Object.keys(colorPalettes);
 
 const meta = {
-  title: "Components/Display/Status",
+  title: "💬 Feedback/Status",
   component: Status,
   parameters: {
     layout: "padded",

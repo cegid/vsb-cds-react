@@ -4,7 +4,7 @@ import { useState } from "react";
 import InputSearch from "./InputSearch";
 
 const meta = {
-  title: "Components/Inputs/InputSearch",
+  title: "🎛️ Form Controls/InputSearch",
   component: InputSearch,
   parameters: {
     layout: "centered",
@@ -26,30 +26,40 @@ const meta = {
     defaultSize: {
       control: "select",
       options: ["short", "long"],
-      description: "default size of the search field on load",
+      description: "Default size of the search field on load",
+    },
+    fullwidth: {
+      control: "boolean",
+      description:
+        "Whether the input should take the full width of its container",
+    },
+    onFilterClick: {
+      action: "filter clicked",
+      description:
+        "Callback function triggered when the filter button is clicked",
     },
   },
-  args: {},
+  args: {
+    placeholder: "Cherchez par nom, tél, type...",
+    defaultSize: "long",
+    fullwidth: false,
+    onFilterClick: () => {},
+  },
 } satisfies Meta<typeof InputSearch>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    placeholder: "Search by name, phone, type…",
-    defaultSize: "long",
-  },
   render: (args) => {
     const [value, setValue] = useState("");
 
     return (
       <InputSearch
         {...args}
-        fullWidth
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        onFilterClick={() => {}}
+        onFilterClick={args.onFilterClick}
       />
     );
   },

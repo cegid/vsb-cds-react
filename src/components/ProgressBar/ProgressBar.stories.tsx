@@ -4,7 +4,7 @@ import ProgressBar from "./ProgressBar";
 import Box from "../Box";
 
 const meta = {
-  title: "Components/Display/ProgressBar",
+  title: "💬 Feedback/ProgressBar",
   component: ProgressBar,
   parameters: {
     layout: "centered",

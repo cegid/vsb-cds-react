@@ -367,12 +367,14 @@ const Header: React.FC<HeaderProps> = (props) => {
 
   return (
     <Row py={5} px={6} gap={4} alignItems="center" width="100%" id={id}>
-      <HeaderTitle
-        title={title}
-        backAction={backAction}
-        backIcon={backIcon}
-        isMobile={isMobile}
-      />
+      {(title || backAction) && (
+        <HeaderTitle
+          title={title}
+          backAction={backAction}
+          backIcon={backIcon}
+          isMobile={isMobile}
+        />
+      )}
 
       {segmentedControlRight ? (
         <SegmentedSection

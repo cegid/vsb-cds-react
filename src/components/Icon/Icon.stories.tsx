@@ -9,7 +9,7 @@ import { CustomColorString } from "../../theme/colors";
 import iconsList from "../../theme/icons/icons-list.json";
 
 const meta = {
-  title: "Components/Icons/Icon",
+  title: "📊 Data Display/Icon",
   component: Icon,
   parameters: {
     layout: "centered",

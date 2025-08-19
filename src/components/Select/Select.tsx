@@ -16,6 +16,7 @@ const { primary, neutral, critical } = colorPalettes;
 
 const StyledSelect = styled(CegidSelect)(({ theme }) => ({
   "& .MuiInputBase-root": {
+    caretColor: "transparent",
     padding: "8px 8px 8px 16px",
     "& .MuiInputAdornment-root": {
       left: "8px",
@@ -23,10 +24,17 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
     "&.Mui-error": {
       borderColor: critical[80],
       backgroundColor: critical[99],
+      "&:hover": {
+        backgroundColor: critical[90],
+      },
     },
     "&.Mui-focused": {
       outline: `2px solid ${primary[70]}`,
       outlineOffset: "1px",
+    },
+    "&.Mui-focused:has([aria-expanded='true'])": {
+      outline: "none",
+      outlineOffset: "0",
     },
     "&.Mui-readOnly": {
       backgroundColor: neutral[99],
@@ -37,6 +45,13 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
     },
     "& .MuiSelect-icon": {
       display: "none",
+    },
+    "&.Mui-focused:not(.Mui-error)::before": {
+      borderColor: neutral[90],
+    },
+    ":hover": {
+      backgroundColor: neutral[99],
+      borderColor: neutral[90],
     },
   },
   "& .MuiSelect-select": {
@@ -83,15 +98,15 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
       "&:hover": {
         backgroundColor: primary[90],
       },
-      "&.Mui-focusVisible": {
-        backgroundColor: primary[90],
-      },
     },
   },
   "& .MuiInputLabel-root": {
     ...typography.bodySSemiBold,
     marginBottom: "8px",
     color: neutral[50],
+    "&.Mui-focused": {
+      color: neutral[50],
+    },
     [theme.breakpoints.down("sm")]: {
       position: "absolute",
       top: "10px",
@@ -131,13 +146,28 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
   },
 }));
 
-function Select(props: CegidSelectProps) {
+function Select(props: Readonly<CegidSelectProps>) {
   const { errorText, ...otherProps } = props;
 
   return (
     <>
       <StyledSelect
         {...otherProps}
+        SelectProps={{
+          MenuProps: {
+            anchorOrigin: {
+              vertical: "bottom",
+              horizontal: "left",
+            },
+            transformOrigin: {
+              vertical: "top",
+              horizontal: "left",
+            },
+            disableScrollLock: true,
+            ...otherProps.SelectProps?.MenuProps,
+          },
+          ...otherProps.SelectProps,
+        }}
         InputProps={{
           endAdornment: <Icon size={16}>arrow-down-01</Icon>,
         }}

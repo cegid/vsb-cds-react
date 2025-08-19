@@ -5,7 +5,7 @@ import Typography from "../Typography";
 import Icon from "../Icon";
 
 const meta = {
-  title: "Components/Display/Badge",
+  title: "📊 Data Display/Badge",
   component: Badge,
   parameters: {
     layout: "centered",
