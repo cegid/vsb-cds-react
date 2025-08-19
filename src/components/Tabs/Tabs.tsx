@@ -28,7 +28,20 @@ const StyledTabs = styled(CegidTabs, {
 );
 
 const Tabs: React.FC<TabsProps> = (props) => {
-  const { children, fullwidth = false, bottomLine = true, ...otherProps } = props;
+  const { children, fullwidth = false, bottomLine = true, onChange, ...otherProps } = props;
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    // Vérifier si le tab sélectionné est disabled
+    const tabElements = React.Children.toArray(children);
+    const selectedTab = tabElements[newValue];
+    
+    if (React.isValidElement(selectedTab) && selectedTab.props.disabled) {
+      // Empêcher la sélection d'un tab disabled
+      return;
+    }
+    
+    onChange?.(event, newValue);
+  };
 
   const modifiedChildren = React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
@@ -41,7 +54,7 @@ const Tabs: React.FC<TabsProps> = (props) => {
   });
 
   return (
-    <StyledTabs fullwidth={fullwidth} {...otherProps}>
+    <StyledTabs fullwidth={fullwidth} onChange={handleChange} {...otherProps}>
       {modifiedChildren}
     </StyledTabs>
   );

@@ -80,7 +80,7 @@ export const WithoutBottomLine: Story = {
         onChange={handleChange}
       >
         <Tab label="Particulier" />
-        <Tab label="Professionnel" />
+        <Tab label="Professionnel" disabled />
         <Tab label="Entreprise" />
       </Tabs>
     );

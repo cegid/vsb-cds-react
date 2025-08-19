@@ -22,6 +22,14 @@ const meta = {
       control: "object",
       description: "Badge props to display next to the tab label",
     },
+    disabled: {
+      control: "boolean",
+      description: "Whether the tab is disabled",
+    },
+    hideBottomLine: {
+      control: "boolean",
+      description: "Whether to hide the bottom line under the tab",
+    },
   },
   args: {
     label: "Label",
@@ -93,6 +101,26 @@ export const WithBadgeExamples: Story = {
               color: "neutral",
             }}
           />
+        </Tabs>
+      </Box>
+    );
+  },
+};
+
+export const Disabled: Story = {
+  render: () => {
+    const [value, setValue] = useState(0);
+
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+      setValue(newValue);
+    };
+
+    return (
+      <Box width={600}>
+        <Tabs value={value} onChange={handleChange}>
+          <Tab label="Actif" />
+          <Tab label="Désactivé" disabled />
+          <Tab label="Autre actif" />
         </Tabs>
       </Box>
     );
