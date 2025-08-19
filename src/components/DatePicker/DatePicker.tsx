@@ -47,6 +47,8 @@ export interface DatePickerProps {
   timezone?: string;
   /** Force UTC mode - all dates will be treated as UTC */
   utc?: boolean;
+  /** Whether to display the date picker in static mode (always visible) */
+  static?: boolean;
 }
 
 const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
@@ -65,6 +67,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       locale = "fr",
       timezone,
       utc = false,
+      static: isStatic = false,
     } = props;
 
     const { primary, neutral } = colorPalettes;
@@ -222,7 +225,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
     return (
       <Box ref={ref} width="100%">
-        {label && (
+        {label && !isStatic && (
           <Typography
             variant="bodySSemiBold"
             color="neutral/50"
@@ -297,23 +300,23 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             </Icon>
           </Box>
 
-          {datePicker.isOpen && !disabled && (
+          {(datePicker.isOpen || isStatic) && !disabled && (
             <Column
-              position="absolute"
-              top={openUpward ? "auto" : "100%"}
-              bottom={openUpward ? "100%" : "auto"}
-              left={0}
-              right={0}
-              zIndex={1000}
-              mt={openUpward ? 0 : 4}
-              mb={openUpward ? 4 : 0}
+              position={isStatic ? "relative" : "absolute"}
+              top={isStatic ? "auto" : openUpward ? "auto" : "100%"}
+              bottom={isStatic ? "auto" : openUpward ? "100%" : "auto"}
+              left={isStatic ? "auto" : 0}
+              right={isStatic ? "auto" : 0}
+              zIndex={isStatic ? "auto" : 1000}
+              mt={isStatic ? 2 : openUpward ? 0 : 4}
+              mb={isStatic ? 0 : openUpward ? 4 : 0}
               p={4}
               gap={4}
               backgroundColor="white"
               border={{ color: "neutral/90", width: 1, style: "solid" }}
               borderRadius="6px"
               sx={{
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                boxShadow: isStatic ? "none" : "0 4px 12px rgba(0, 0, 0, 0.1)",
               }}
             >
               {showTime && (
