@@ -1,0 +1,273 @@
+import React from "react";
+import { CustomColorString, PaletteNames, colorPalettes } from "../../../theme";
+import Box from "../../Box";
+import Typography from "../../Typography";
+
+interface DayJsAdapter {
+  format: (date: Date, formatString: string) => string;
+  formatByString: (date: Date, formatString: string) => string;
+}
+
+interface CalendarGridProps {
+  currentMonth: Date;
+  selectedDate?: Date | [Date?, Date?];
+  color?: PaletteNames;
+  adapter: DayJsAdapter;
+  onDateSelect: (date: Date) => void;
+  isDateDisabled: (date: Date) => boolean;
+  isDateSelected: (date: Date, selectedDate?: Date | [Date?, Date?]) => boolean;
+  isToday: (date: Date) => boolean;
+  getDaysInMonth: (date: Date) => number;
+  getFirstDayOfMonth: (date: Date) => number;
+  isDateRange?: boolean;
+}
+
+const CalendarGrid: React.FC<CalendarGridProps> = ({
+  currentMonth,
+  selectedDate,
+  color = "primary",
+  adapter,
+  onDateSelect,
+  isDateDisabled,
+  isDateSelected,
+  isToday,
+  getDaysInMonth,
+  getFirstDayOfMonth,
+  isDateRange = false,
+}) => {
+  const { neutral } = colorPalettes;
+
+  const renderPreviousMonthDays = (
+    firstDay: number,
+    days: React.ReactNode[]
+  ) => {
+    const prevMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() - 1,
+      1
+    );
+    const daysInPrevMonth = getDaysInMonth(prevMonth);
+
+    for (let i = firstDay - 1; i >= 0; i--) {
+      const day = daysInPrevMonth - i;
+      const date = new Date(prevMonth.getFullYear(), prevMonth.getMonth(), day);
+      const isDisabled = isDateDisabled(date);
+
+      days.push(
+        <Box
+          key={`prev-${day}`}
+          width={32}
+          height={32}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="50%"
+          backgroundColor="transparent"
+          sx={{
+            cursor: isDisabled ? "not-allowed" : "pointer",
+            "&:hover": !isDisabled ? { backgroundColor: neutral[95] } : {},
+          }}
+          onClick={() => !isDisabled && onDateSelect(date)}
+        >
+          <Typography variant="bodySRegular" color="neutral/80">
+            {day}
+          </Typography>
+        </Box>
+      );
+    }
+  };
+
+  const renderCurrentMonthDays = (
+    daysInMonth: number,
+    days: React.ReactNode[]
+  ) => {
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth(),
+        day
+      );
+      const isDisabled = isDateDisabled(date);
+      const isSelected = isDateSelected(date, selectedDate);
+      const isTodayDate = isToday(date);
+
+      let isInRange = false;
+      let isRangeStart = false;
+      let isRangeEnd = false;
+
+      if (isDateRange && Array.isArray(selectedDate)) {
+        const [startDate, endDate] = selectedDate;
+        if (startDate && endDate) {
+          isInRange = date >= startDate && date <= endDate;
+          isRangeStart = startDate.getTime() === date.getTime();
+          isRangeEnd = endDate.getTime() === date.getTime();
+        } else if (startDate) {
+          isRangeStart = startDate.getTime() === date.getTime();
+        }
+      }
+
+      let dayColor;
+      let backgroundColor;
+      let borderRadius;
+
+      if (isDisabled) {
+        dayColor = "neutral/50";
+        backgroundColor = "transparent";
+        borderRadius = "50%";
+      } else if (isDateRange && isRangeStart && isRangeEnd) {
+        dayColor = "white";
+        backgroundColor = `${color}/60`;
+        borderRadius = "50%";
+      } else if (isDateRange && isRangeStart) {
+        dayColor = "white";
+        backgroundColor = `${color}/60`;
+        borderRadius = "16px 0 0 16px";
+      } else if (isDateRange && isRangeEnd) {
+        dayColor = "white";
+        backgroundColor = `${color}/60`;
+        borderRadius = "0 16px 16px 0";
+      } else if (isDateRange && isInRange) {
+        dayColor = neutral[10];
+        backgroundColor = neutral[95];
+        borderRadius = "50%";
+      } else if (!isDateRange && isSelected) {
+        dayColor = "white";
+        backgroundColor = `${color}/60`;
+        borderRadius = "50%";
+      } else {
+        dayColor = neutral[10];
+        backgroundColor = "transparent";
+        borderRadius = "50%";
+      }
+
+      days.push(
+        <Box
+          key={day}
+          width={32}
+          height={32}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius={borderRadius}
+          backgroundColor={backgroundColor as CustomColorString}
+          border={
+            isTodayDate && !isSelected && !isInRange
+              ? { color: "neutral/10", width: 1, style: "solid" }
+              : undefined
+          }
+          color={dayColor}
+          sx={{
+            cursor: isDisabled ? "not-allowed" : "pointer",
+            "&:hover":
+              !isDisabled && !isSelected && !isInRange
+                ? { backgroundColor: neutral[95] }
+                : {},
+          }}
+          onClick={() => !isDisabled && onDateSelect(date)}
+        >
+          <Typography variant="bodySRegular">{day}</Typography>
+        </Box>
+      );
+    }
+  };
+
+  const renderNextMonthDays = (
+    firstDay: number,
+    daysInMonth: number,
+    days: React.ReactNode[]
+  ) => {
+    const currentDays = firstDay + daysInMonth;
+    const remainingInLastRow = currentDays % 7;
+
+    if (remainingInLastRow === 0) return;
+
+    const nextMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() + 1,
+      1
+    );
+    const daysToAdd = 7 - remainingInLastRow;
+
+    for (let day = 1; day <= daysToAdd; day++) {
+      const date = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), day);
+      const isDisabled = isDateDisabled(date);
+
+      days.push(
+        <Box
+          key={`next-${day}`}
+          width={32}
+          height={32}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="50%"
+          backgroundColor="transparent"
+          sx={{
+            cursor: isDisabled ? "not-allowed" : "pointer",
+            "&:hover": !isDisabled ? { backgroundColor: neutral[95] } : {},
+          }}
+          onClick={() => !isDisabled && onDateSelect(date)}
+        >
+          <Typography variant="bodySRegular" color="neutral/80">
+            {day}
+          </Typography>
+        </Box>
+      );
+    }
+  };
+
+  const renderCalendar = () => {
+    const daysInMonth = getDaysInMonth(currentMonth);
+    const firstDay = getFirstDayOfMonth(currentMonth);
+    const days: React.ReactNode[] = [];
+
+    renderPreviousMonthDays(firstDay, days);
+    renderCurrentMonthDays(daysInMonth, days);
+    renderNextMonthDays(firstDay, daysInMonth, days);
+
+    return days;
+  };
+
+  return (
+    <>
+      <Box
+        display="grid"
+        sx={{
+          gridTemplateColumns: "repeat(7, 1fr)",
+          gap: 1,
+        }}
+      >
+        {Array.from({ length: 7 }, (_, index) => {
+          const date = new Date(2024, 0, 1 + index);
+          const dayShort = adapter.format(date, "weekdayShort");
+          return { date, dayShort };
+        }).map(({ dayShort, date }) => (
+          <Box
+            key={`weekday-${date.getDay()}`}
+            width={32}
+            height={32}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Typography variant="captionSemiBold" color="neutral/50">
+              {dayShort}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+
+      <Box
+        display="grid"
+        sx={{
+          gridTemplateColumns: "repeat(7, 1fr)",
+          gap: 1,
+        }}
+      >
+        {renderCalendar()}
+      </Box>
+    </>
+  );
+};
+
+export default CalendarGrid;

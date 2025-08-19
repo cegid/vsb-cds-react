@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { MenuItem, Grid } from "@cegid/cds-react";
+import { MenuItem } from "@cegid/cds-react";
 import Select from "./Select";
 
 const meta = {
@@ -47,18 +47,7 @@ const selectOptions = [
 
 export const Standard: Story = {
   args: {},
-  render: (args) => (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <Select {...args}>{selectOptions}</Select>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Select {...args} defaultValue="option2">
-          {selectOptions}
-        </Select>
-      </Grid>
-    </Grid>
-  ),
+  render: (args) => <Select {...args}>{selectOptions}</Select>,
 };
 
 export const WithErrors: Story = {
@@ -66,18 +55,9 @@ export const WithErrors: Story = {
     error: true,
   },
   render: (args) => (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <Select {...args} errorText="I am an error message">
-          {selectOptions}
-        </Select>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Select {...args} required errorText="This field is required">
-          {selectOptions}
-        </Select>
-      </Grid>
-    </Grid>
+    <Select {...args} required errorText="This field is required">
+      {selectOptions}
+    </Select>
   ),
 };
 
@@ -85,18 +65,7 @@ export const Disabled: Story = {
   args: {
     disabled: true,
   },
-  render: (args) => (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <Select {...args}>{selectOptions}</Select>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Select {...args} defaultValue="option2">
-          {selectOptions}
-        </Select>
-      </Grid>
-    </Grid>
-  ),
+  render: (args) => <Select {...args}>{selectOptions}</Select>,
 };
 
 export const MultipleSelect: Story = {
@@ -114,16 +83,5 @@ export const Required: Story = {
   args: {
     required: true,
   },
-  render: (args) => (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <Select {...args}>{selectOptions}</Select>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Select {...args} defaultValue="option1">
-          {selectOptions}
-        </Select>
-      </Grid>
-    </Grid>
-  ),
+  render: (args) => <Select {...args}>{selectOptions}</Select>,
 };
