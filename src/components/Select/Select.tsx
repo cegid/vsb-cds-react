@@ -53,7 +53,6 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
       backgroundColor: neutral[99],
       borderColor: neutral[90],
     },
-
   },
   "& .MuiSelect-select": {
     ...typography.bodyMRegular,
@@ -105,6 +104,9 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
     ...typography.bodySSemiBold,
     marginBottom: "8px",
     color: neutral[50],
+    "&.Mui-focused": {
+      color: neutral[50],
+    },
     [theme.breakpoints.down("sm")]: {
       position: "absolute",
       top: "10px",
