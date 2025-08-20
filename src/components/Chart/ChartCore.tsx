@@ -127,11 +127,23 @@ export interface ChartCoreProps {
 const StyledChartContainer = styled(Box)(({ theme }) => ({
   position: "relative",
   width: "100%",
-  minWidth: "300px",
-  minHeight: "300px",
+  minWidth: "280px",
+  minHeight: "250px",
   "& canvas": {
     maxWidth: "100%",
     height: "auto !important",
+  },
+  [theme.breakpoints.down('md')]: {
+    minWidth: "250px",
+    minHeight: "220px",
+  },
+  [theme.breakpoints.down('sm')]: {
+    minWidth: "200px",
+    minHeight: "200px",
+  },
+  '@media (max-width: 480px)': {
+    minWidth: "180px",
+    minHeight: "180px",
   },
 }));
 
@@ -419,6 +431,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
     const defaultOptions: ChartOptions<any> = {
       responsive: true,
       maintainAspectRatio: false,
+      aspectRatio: window.innerWidth < 480 ? 1 : window.innerWidth < 768 ? 1.2 : 1.5,
       onHover: (
         event: { native: { target: HTMLCanvasElement } },
         elements: string | any[]
