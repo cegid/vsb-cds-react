@@ -6,7 +6,7 @@ import Box from "../Box";
 import Icon from "../Icon";
 import IconButton from "../IconButton";
 import { ChartType } from "./ChartCore";
-import { parseCustomColor, RADIUS } from "../../theme";
+import { parseCustomColor } from "../../theme";
 import { getChartIcon } from "./Chart";
 
 interface DetailedTotal {

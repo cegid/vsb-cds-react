@@ -24,7 +24,6 @@ import {
   neutral,
   CustomColorString,
   parseCustomColor,
-  RADIUS,
 } from "../../theme";
 import typography from "../../theme/typography";
 import Column from "../Column";
@@ -427,7 +426,6 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             }
           }
 
-          // Empêcher le changement de couleur au hover (après traitement des couleurs)
           convertedDataset.hoverBackgroundColor = convertedDataset.backgroundColor;
           convertedDataset.hoverBorderColor = convertedDataset.borderColor;
 
