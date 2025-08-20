@@ -24,7 +24,7 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({ title, onModalOpen }) => {
         variant="tonal"
         onClick={onModalOpen}
       >
-        <Icon size={16}>play</Icon>
+        <Icon size={16}>arrow-expand-01</Icon>
       </IconButton>
     </Row>
   );
