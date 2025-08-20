@@ -60,11 +60,13 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
     const calculateItemsPerView = () => {
       if (containerRef.current) {
         const containerWidth = containerRef.current.offsetWidth;
-        const itemWidth = 200; // largeur estimée d'un item + gap
-        const maxItems = Math.max(2, Math.min(3, Math.floor(containerWidth / itemWidth)));
+        const itemWidth = 200;
+        const maxItems = Math.max(
+          2,
+          Math.min(3, Math.floor(containerWidth / itemWidth))
+        );
         setItemsPerView(maxItems);
-        // Réajuster l'index si nécessaire
-        setCurrentIndex(prev => {
+        setCurrentIndex((prev) => {
           const maxIndex = Math.max(0, detailedTotals.length - maxItems);
           return Math.min(prev, maxIndex);
         });
@@ -124,22 +126,13 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
     setIsDragging(false);
   };
   if (showDetailedTotals) {
-    const visibleTotals = detailedTotals.slice(currentIndex, currentIndex + itemsPerView);
-    
+    const visibleTotals = detailedTotals.slice(
+      currentIndex,
+      currentIndex + itemsPerView
+    );
+
     return (
       <Row alignItems="center" width="100%" gap={2}>
-        <IconButton
-          color="neutral"
-          variant="iconOnly"
-          size="small"
-          onClick={handlePrevious}
-          disabled={!canScrollLeft}
-        >
-          <Icon size={16} variant="stroke">
-            arrow-left-01
-          </Icon>
-        </IconButton>
-
         <Box
           ref={containerRef}
           sx={{
@@ -157,9 +150,9 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <Row 
-            gap={11} 
-            flexWrap="nowrap" 
+          <Row
+            gap={4}
+            flexWrap="nowrap"
             justifyContent="space-between"
             sx={{
               transition: "all 0.3s ease-in-out",
@@ -192,10 +185,8 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
                 <Column
                   key={`${item.label}-${currentIndex + index}`}
                   justifyContent="space-between"
-                  sx={{
-                    flex: 1,
-                    minWidth: "150px",
-                  }}
+                  flex={1}
+                  width="fit-content"
                 >
                   <Typography variant="bodyMMedium" color="neutral/30">
                     Total
@@ -258,7 +249,17 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
             })}
           </Row>
         </Box>
-
+        <IconButton
+          color="neutral"
+          variant="iconOnly"
+          size="small"
+          onClick={handlePrevious}
+          disabled={!canScrollLeft}
+        >
+          <Icon size={16} variant="stroke">
+            arrow-left-01
+          </Icon>
+        </IconButton>
         <IconButton
           color="neutral"
           variant="iconOnly"
