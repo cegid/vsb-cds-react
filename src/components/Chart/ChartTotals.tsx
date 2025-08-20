@@ -60,10 +60,12 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
     const calculateItemsPerView = () => {
       if (containerRef.current) {
         const containerWidth = containerRef.current.offsetWidth;
-        const itemWidth = 200;
+        const itemWidth = 120
+        const gap = 5 * 4;
+        const effectiveWidth = containerWidth - gap;
         const maxItems = Math.max(
           2,
-          Math.min(3, Math.floor(containerWidth / itemWidth))
+          Math.min(6, Math.floor(effectiveWidth / itemWidth))
         );
         setItemsPerView(maxItems);
         setCurrentIndex((prev) => {
@@ -151,9 +153,9 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
           onTouchEnd={handleTouchEnd}
         >
           <Row
-            gap={4}
+            gap={5}
             flexWrap="nowrap"
-            justifyContent="space-between"
+            justifyContent="flex-start"
             sx={{
               transition: "all 0.3s ease-in-out",
               opacity: isDragging ? 0.8 : 1,
@@ -185,8 +187,8 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
                 <Column
                   key={`${item.label}-${currentIndex + index}`}
                   justifyContent="space-between"
-                  flex={1}
                   width="fit-content"
+                  sx={{ flexShrink: 0 }}
                 >
                   <Typography variant="bodyMMedium" color="neutral/30">
                     Total
