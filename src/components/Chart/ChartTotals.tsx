@@ -163,18 +163,27 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
           >
             {visibleTotals.map((item, index) => {
               let datasetColor = "#666666";
-              const dataset = datasets[item.datasetIndex];
-
-              if (dataset?.backgroundColor) {
-                if (typeof dataset.backgroundColor === "string") {
-                  datasetColor =
-                    parseCustomColor(dataset.backgroundColor) ?? "#666666";
-                } else if (
-                  Array.isArray(dataset.backgroundColor) &&
-                  dataset.backgroundColor[0]
-                ) {
-                  datasetColor =
-                    parseCustomColor(dataset.backgroundColor[0]) ?? "#666666";
+              
+              if (isPieOrDoughnut) {
+                // Pour pie/doughnut, il n'y a qu'un dataset mais plusieurs couleurs
+                const dataset = datasets[0];
+                if (dataset?.backgroundColor && Array.isArray(dataset.backgroundColor)) {
+                  const colorAtIndex = dataset.backgroundColor[item.datasetIndex];
+                  if (colorAtIndex) {
+                    datasetColor = parseCustomColor(colorAtIndex) ?? "#666666";
+                  }
+                }
+              } else {
+                // Pour les autres charts, chaque dataset a sa couleur
+                const dataset = datasets[item.datasetIndex];
+                if (dataset?.backgroundColor) {
+                  if (typeof dataset.backgroundColor === "string") {
+                    datasetColor =
+                      parseCustomColor(dataset.backgroundColor) ?? "#666666";
+                  } else if (Array.isArray(dataset.backgroundColor) && dataset.backgroundColor[0]) {
+                    datasetColor =
+                      parseCustomColor(dataset.backgroundColor[0]) ?? "#666666";
+                  }
                 }
               }
 
