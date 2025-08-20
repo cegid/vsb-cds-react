@@ -339,6 +339,10 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         datasets: data.datasets.map((dataset, datasetIndex) => {
           const convertedDataset = { ...dataset };
 
+          if (isPieOrDoughnut) {
+            convertedDataset.hoverOffset = 12;
+          }
+
           if (dataset.backgroundColor) {
             if (Array.isArray(dataset.backgroundColor)) {
               (convertedDataset as any).backgroundColor = dataset.backgroundColor.map((color, colorIndex) => {
@@ -422,6 +426,10 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
               }
             }
           }
+
+          // Empêcher le changement de couleur au hover (après traitement des couleurs)
+          convertedDataset.hoverBackgroundColor = convertedDataset.backgroundColor;
+          convertedDataset.hoverBorderColor = convertedDataset.borderColor;
 
           return convertedDataset;
         }),
