@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 
 import Tab from "./Tab";
 import Typography from "../Typography";
@@ -21,6 +22,14 @@ const meta = {
       control: "object",
       description: "Badge props to display next to the tab label",
     },
+    disabled: {
+      control: "boolean",
+      description: "Whether the tab is disabled",
+    },
+    hideBottomLine: {
+      control: "boolean",
+      description: "Whether to hide the bottom line under the tab",
+    },
   },
   args: {
     label: "Label",
@@ -35,57 +44,85 @@ export const Default: Story = {
 };
 
 export const WithBadgeExamples: Story = {
-  render: () => (
-    <Box width={600}>
-      <Tabs>
-        <Tab
-          label="Messages"
-          badge={{
-            children: (
-              <Typography variant="captionRegular" color="inherit">
-                5
-              </Typography>
-            ),
-            variant: "tonal",
-            color: "primary",
-          }}
-        />
-        <Tab
-          label="Notifications"
-          startBadge={{
-            size: "small",
-            color: "success",
-          }}
-          badge={{
-            children: (
-              <Typography variant="captionRegular" color="inherit">
-                12
-              </Typography>
-            ),
-            variant: "outlined",
-            color: "critical",
-          }}
-        />
-        <Tab
-          label="Status"
-          badge={{
-            size: "small",
-            color: "success",
-          }}
-        />
-        <Tab
-          label="Archive"
-          badge={{
-            children: (
-              <Typography variant="captionRegular" color="inherit">
-                99+
-              </Typography>
-            ),
-            variant: "tonal",
-            color: "neutral",
-          }}
-        />
-      </Tabs>
-    </Box>
-  ),
+  render: () => {
+    const [value, setValue] = useState(0);
+
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+      setValue(newValue);
+    };
+
+    return (
+      <Box width={600}>
+        <Tabs value={value} onChange={handleChange}>
+          <Tab
+            label="Messages"
+            badge={{
+              children: (
+                <Typography variant="captionRegular" color="inherit">
+                  5
+                </Typography>
+              ),
+              variant: "tonal",
+              color: "primary",
+            }}
+          />
+          <Tab
+            label="Notifications"
+            startBadge={{
+              size: "small",
+              color: "success",
+            }}
+            badge={{
+              children: (
+                <Typography variant="captionRegular" color="inherit">
+                  12
+                </Typography>
+              ),
+              variant: "outlined",
+              color: "critical",
+            }}
+          />
+          <Tab
+            label="Status"
+            badge={{
+              size: "small",
+              color: "success",
+            }}
+          />
+          <Tab
+            label="Archive"
+            badge={{
+              children: (
+                <Typography variant="captionRegular" color="inherit">
+                  99+
+                </Typography>
+              ),
+              variant: "tonal",
+              color: "neutral",
+            }}
+          />
+        </Tabs>
+      </Box>
+    );
+  },
+};
+
+export const Disabled: Story = {
+  render: () => {
+    const [value, setValue] = useState(0);
+
+    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+      setValue(newValue);
+    };
+
+    return (
+      <Box width={600}>
+        <Tabs value={value} onChange={handleChange}>
+          <Tab label="Actif" />
+          <Tab label="Désactivé" disabled />
+          <Tab label="Autre actif" />
+        </Tabs>
+      </Box>
+    );
+  },
 };

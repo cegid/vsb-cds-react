@@ -29,11 +29,18 @@ export interface TabProps extends CegidTabProps {
    * When false, hides the bottom line indicator.
    */
   hideBottomLine?: boolean;
+  /**
+   * Controls whether the tab is disabled.
+   * When true, the tab text color becomes neutral/80 and onClick events are prevented.
+   */
+  disabled?: boolean;
 }
 
-const StyledTab = styled(CegidTab)<{ hideBottomLine?: boolean }>(
-  ({ hideBottomLine }) => ({
-    color: neutral[50],
+const StyledTab = styled(CegidTab, {
+  shouldForwardProp: (prop: string) => !['hideBottomLine', 'disabled'].includes(prop),
+})<{ hideBottomLine?: boolean; disabled?: boolean }>(
+  ({ hideBottomLine, disabled }) => ({
+    color: disabled ? neutral[80] : neutral[50],
     opacity: 1,
     padding: "2px 8px",
     minHeight: "auto",
@@ -41,6 +48,7 @@ const StyledTab = styled(CegidTab)<{ hideBottomLine?: boolean }>(
     overflow: "visible",
     flex: "0 0 auto",
     border: "solid 1px transparent",
+    cursor: disabled ? "not-allowed" : "pointer",
     ...(!hideBottomLine && {
       "&::after": {
         content: '""',
@@ -59,12 +67,12 @@ const StyledTab = styled(CegidTab)<{ hideBottomLine?: boolean }>(
       ...typography.bodyMRegular,
     },
     "&.Mui-selected": {
-      color: neutral[10],
+      color: disabled ? neutral[80] : neutral[10],
       ...typography.bodyMSemiBold,
-      backgroundColor: neutral[99],
-      border: `solid 1px ${neutral[95]}`,
+      backgroundColor: disabled ? "transparent" : neutral[99],
+      border: disabled ? "solid 1px transparent" : `solid 1px ${neutral[95]}`,
       borderRadius: "8px",
-      ...(!hideBottomLine && {
+      ...(!hideBottomLine && !disabled && {
         "&::after": {
           backgroundColor: neutral[10],
           bottom: "-4px",
@@ -72,9 +80,9 @@ const StyledTab = styled(CegidTab)<{ hideBottomLine?: boolean }>(
       }),
     },
     "&:hover": {
-      backgroundColor: neutral[99],
+      backgroundColor: disabled ? "transparent" : neutral[99],
       borderRadius: 8,
-      border: `solid 1px ${neutral[95]}`,
+      border: disabled ? "solid 1px transparent" : `solid 1px ${neutral[95]}`,
     },
   })
 );
@@ -91,12 +99,21 @@ const Tab: React.FC<TabProps> = ({
   children,
   startBadge,
   hideBottomLine,
+  disabled,
+  onClick,
   ...props
 }) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (disabled) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    onClick?.(event);
+  };
   const tabContent = badge ? (
     <TabContent>
       {startBadge && <Badge {...startBadge} />}
-
       {label || children}
       {badge && <Badge {...badge} />}
     </TabContent>
@@ -109,6 +126,8 @@ const Tab: React.FC<TabProps> = ({
       {...props}
       label={tabContent}
       hideBottomLine={hideBottomLine}
+      disabled={disabled}
+      onClick={handleClick}
       disableRipple
     />
   );

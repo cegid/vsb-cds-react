@@ -82,28 +82,26 @@ const DocumentationContent = () => {
             justifyContent="center"
           >
             <Chip
-              label={"Stable v " + version}
+              label={"Stable v" + version}
               color="success"
-              startIcon={<Icon>check-circle</Icon>}
+              startIcon={<Icon size={14}>checkmark-circle-03</Icon>}
             />
             <Chip
               label="React 18+"
               color="info"
-              startIcon={<Icon>code</Icon>}
+              startIcon={<Icon size={14}>code</Icon>}
             />
             <Chip
               label="TypeScript"
               color="yellow"
-              startIcon={<Icon>shield-check</Icon>}
+              startIcon={<Icon size={14}>shield-01</Icon>}
             />
           </Stack>
         </Stack>
       </Box>
 
       {/* Navigation Tabs */}
-      <Box
-        mb={4}
-      >
+      <Box mb={4}>
         <Tabs
           value={activeTab}
           centered
