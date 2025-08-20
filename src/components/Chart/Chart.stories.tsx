@@ -223,11 +223,7 @@ export const VerticalBarChart: Story = {
     backgroundColor: "primary",
     data: sampleBarData,
   },
-  render: (args) => (
-    <Box width={700}>
-      <Chart {...args} />
-    </Box>
-  ),
+  render: (args) => <Chart {...args} />,
 };
 
 export const HorizontalBarChart: Story = {
@@ -236,11 +232,7 @@ export const HorizontalBarChart: Story = {
     backgroundColor: "primary",
     data: sampleHorizontalBarData,
   },
-  render: (args) => (
-    <Box width={600} height={500}>
-      <Chart {...args} />
-    </Box>
-  ),
+  render: (args) => <Chart {...args} />,
 };
 
 export const PieChart: Story = {
@@ -249,11 +241,7 @@ export const PieChart: Story = {
     backgroundColor: "primary",
     data: samplePieData,
   },
-  render: (args) => (
-    <Box width={600}>
-      <Chart {...args} />
-    </Box>
-  ),
+  render: (args) => <Chart {...args} showTooltip={false} />,
 };
 
 export const DoughnutChart: Story = {
@@ -262,11 +250,7 @@ export const DoughnutChart: Story = {
     backgroundColor: "primary",
     data: sampleDoughnutData,
   },
-  render: (args) => (
-    <Box width={600}>
-      <Chart {...args} />
-    </Box>
-  ),
+  render: (args) => <Chart {...args} showTooltip={false} />,
 };
 
 export const ChartWithSimpleTotals: Story = {
@@ -277,11 +261,7 @@ export const ChartWithSimpleTotals: Story = {
     totalsDisplayMode: "simple",
     title: "Chart with Simple Totals",
   },
-  render: (args) => (
-    <Box width={600}>
-      <Chart {...args} />
-    </Box>
-  ),
+  render: (args) => <Chart {...args} showTooltip={false} />,
 };
 
 export const ChartWithDetailedTotals: Story = {
@@ -292,11 +272,7 @@ export const ChartWithDetailedTotals: Story = {
     totalsDisplayMode: "detailed",
     title: "Chart with Detailed Totals",
   },
-  render: (args) => (
-    <Box width={700}>
-      <Chart {...args} />
-    </Box>
-  ),
+  render: (args) => <Chart {...args} showTooltip={false} />,
 };
 
 export const ChartWithNoTotals: Story = {
@@ -307,9 +283,5 @@ export const ChartWithNoTotals: Story = {
     totalsDisplayMode: "none",
     title: "Chart with No Totals",
   },
-  render: (args) => (
-    <Box width={600}>
-      <Chart {...args} />
-    </Box>
-  ),
+  render: (args) => <Chart {...args} />,
 };
