@@ -12,6 +12,7 @@ import typography from "../../theme/typography";
 import Row from "../Row";
 import Icon from "../Icon";
 import Typography from "../Typography";
+import Box from "../Box";
 
 export interface TextFieldProps extends CegidTextFieldProps {}
 
@@ -43,6 +44,9 @@ const StyledTextField = styled(CegidTextField)(
           outline: "none",
           outlineOffset: "0",
         },
+        "&.Mui-error": {
+          backgroundColor: critical[99],
+        },
       },
       "&.MuiInputBase-multiline": {
         paddingLeft: "12px",
@@ -55,8 +59,10 @@ const StyledTextField = styled(CegidTextField)(
     },
 
     "& .MuiInputAdornment-positionStart": {
-      [theme.breakpoints.down("sm")]: { paddingTop: "24px" },
-      paddingLeft: "12px",
+      [theme.breakpoints.down("sm")]: { paddingTop: "18px" },
+    },
+    "& .MuiInputAdornment-positionEnd": {
+      [theme.breakpoints.down("sm")]: { paddingTop: "18px" },
     },
 
     "& .MuiInputBase-input": {
@@ -67,8 +73,8 @@ const StyledTextField = styled(CegidTextField)(
             ? "28px 8px 8px 0"
             : "8px 8px 8px 0"
           : label
-          ? "28px 8px 8px 16px"
-          : "8px 8px 8px 16px",
+            ? "28px 8px 8px 16px"
+            : "8px 8px 8px 16px",
       },
       height: "24px",
       color: neutral[10],
@@ -122,7 +128,7 @@ const StyledTextField = styled(CegidTextField)(
 
 const TextField = (props: CegidTextFieldProps) => {
   return (
-    <>
+    <Box>
       <StyledTextField {...props} />
       {props.errorText && (
         <Row gap={2} mt={4}>
@@ -134,7 +140,7 @@ const TextField = (props: CegidTextFieldProps) => {
           </Typography>
         </Row>
       )}
-    </>
+    </Box>
   );
 };
 

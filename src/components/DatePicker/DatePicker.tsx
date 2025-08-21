@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { PaletteNames, colorPalettes } from "../../theme";
-import { RADIUS } from "../../theme/radius";
-import typography from "../../theme/typography";
+import { PaletteNames } from "../../theme";
 import Box from "../Box";
 import Icon from "../Icon";
+import InputAdornment from "../InputAdornment";
 import IconButton from "../IconButton";
 import Typography from "../Typography";
 import Stack from "../Stack";
 import Button from "../Button";
 import SegmentedControl from "../SegmentedControl";
 import Column from "../Column";
+import TextField, { TextFieldProps } from "../TextField";
 import { useCalendar, Locale } from "./hooks/useCalendar";
 import { useDatePicker } from "./hooks/useDatePicker";
 import CalendarGrid from "./components/CalendarGrid";
@@ -20,7 +20,8 @@ import TimeSelector from "./components/TimeSelector";
  * Props for the DatePicker component.
  * @interface DatePickerProps
  */
-export interface DatePickerProps {
+export interface DatePickerProps
+  extends Omit<TextFieldProps, "onChange" | "color"> {
   /** The selected date value or date range [startDate, endDate] */
   value?: Date | [Date?, Date?];
   /** Callback fired when the date changes */
@@ -31,16 +32,10 @@ export interface DatePickerProps {
   showTime?: boolean;
   /** The color variant from available palette names */
   color?: PaletteNames;
-  /** Whether the date picker is disabled */
-  disabled?: boolean;
-  /** Placeholder text when no date is selected */
-  placeholder?: string;
   /** The minimum selectable date */
   minDate?: Date;
   /** The maximum selectable date */
   maxDate?: Date;
-  /** Label for the date picker */
-  label?: string;
   /** Locale for date formatting and labels (defaults to 'fr') */
   locale?: Locale;
   /** Timezone for date handling (defaults to browser timezone). Use 'UTC' for UTC mode. */
@@ -63,14 +58,13 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       placeholder = "Select date",
       minDate,
       maxDate,
-      label,
       locale = "fr",
       timezone,
       utc = false,
       static: isStatic = false,
+      ...textFieldProps
     } = props;
 
-    const { primary, neutral } = colorPalettes;
     const datePickerRef = useRef<HTMLDivElement>(null);
     const [openUpward, setOpenUpward] = useState(false);
 
@@ -134,25 +128,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
       return placeholder;
     };
-
-    const getButtonStyles = () => ({
-      width: "100%",
-      padding: "8px 40px 8px 16px",
-      minHeight: "40px",
-      borderRadius: RADIUS.S,
-      border: `1px solid ${neutral[90]}`,
-      backgroundColor: disabled ? neutral[99] : "transparent",
-      color: value ? neutral[10] : neutral[50],
-      ...typography.bodyMRegular,
-      outline:
-        datePicker.isFocused && !disabled ? `2px solid ${primary[70]}` : "none",
-      outlineOffset: datePicker.isFocused && !disabled ? "1px" : "0",
-      boxSizing: "border-box" as const,
-      cursor: disabled ? "not-allowed" : "pointer",
-      textAlign: "left" as const,
-      display: "flex",
-      alignItems: "center",
-    });
 
     const checkPosition = useCallback(() => {
       if (datePickerRef.current) {
@@ -225,80 +200,30 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
     return (
       <Box ref={ref} width="100%">
-        {label && !isStatic && (
-          <Typography
-            variant="bodySSemiBold"
-            color="neutral/50"
-            mb={4}
-            sx={{
-              display: { xs: "none", sm: "block" },
-            }}
-          >
-            {label}
-          </Typography>
-        )}
         <Box position="relative" ref={datePickerRef}>
-          <button
-            type="button"
+          <TextField
+            {...textFieldProps}
+            value={formatDateForDisplay(datePicker.displayValue)}
+            readOnly
+            disabled={disabled}
             onClick={handleButtonClick}
             onFocus={() => datePicker.setIsFocused(true)}
             onBlur={() => datePicker.setIsFocused(false)}
-            disabled={disabled}
-            style={getButtonStyles()}
-          >
-            {label && (
-              <Typography
-                variant="bodySSemiBold"
-                color="neutral/50"
-                sx={{
-                  display: { xs: "block", sm: "none" },
-                  position: "absolute",
-                  top: "10px",
-                  left: "16px",
-                  fontSize: "12px",
-                  zIndex: 1,
-                  backgroundColor: "transparent",
-                  transform: datePicker.displayValue
-                    ? "translateY(0) scale(0.85)"
-                    : "translateY(0)",
-                  transformOrigin: "top left",
-                  transition: "transform 0.2s ease",
-                }}
-              >
-                {label}
-              </Typography>
-            )}
-            <Box
-              component="span"
-              sx={{
-                paddingTop: { xs: label ? "18px" : "0", sm: "0" },
-                display: "block",
-                width: "100%",
-              }}
-            >
-              {formatDateForDisplay(datePicker.displayValue)}
-            </Box>
-          </button>
-          <Box
-            position="absolute"
-            right="12px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            sx={{
-              top: { xs: label ? "calc(50% + 9px)" : "50%", sm: "50%" },
-              transform: "translateY(-50%)",
-              pointerEvents: "none",
+            InputProps={{
+              ...textFieldProps.InputProps,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Icon
+                    variant="stroke"
+                    size={20}
+                    color={disabled ? "neutral/50" : "neutral/30"}
+                  >
+                    calendar-03
+                  </Icon>
+                </InputAdornment>
+              ),
             }}
-          >
-            <Icon
-              variant="stroke"
-              size={20}
-              color={disabled ? "neutral/50" : "neutral/30"}
-            >
-              calendar-03
-            </Icon>
-          </Box>
+          />
 
           {(datePicker.isOpen || isStatic) && !disabled && (
             <Column
