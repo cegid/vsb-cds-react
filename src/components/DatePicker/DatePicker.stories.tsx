@@ -65,6 +65,10 @@ const meta = {
       control: { type: "boolean" },
       description: "Display the date picker in static mode (always visible)",
     },
+    errorText: {
+      control: { type: "text" },
+      description: "Error message to display below the date picker",
+    },
   },
   args: {
     disabled: false,
@@ -83,11 +87,13 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300} height={450}>
-        <DatePicker 
+        <DatePicker
           {...args}
           value={value}
           onChange={(date) => {
@@ -106,12 +112,14 @@ export const WithValue: Story = {
     label: "Date de naissance",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -130,12 +138,14 @@ export const Disabled: Story = {
     label: "Date de naissance",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -155,12 +165,14 @@ export const WithMinMaxDates: Story = {
     label: "Date de naissance",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -179,12 +191,14 @@ export const WithTime: Story = {
     label: "Date et heure de rendez-vous",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300} height={500}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -203,12 +217,14 @@ export const DateRange: Story = {
     label: "Période de vacances",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300} height={450}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -228,12 +244,14 @@ export const DateRangeWithTime: Story = {
     label: "Période avec heures",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300} height={500}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -252,12 +270,14 @@ export const StaticMode: Story = {
     label: "Sélecteur toujours visible",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={350}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -269,20 +289,21 @@ export const StaticMode: Story = {
   },
 };
 
-export const StaticWithTime: Story = {
+export const WithError: Story = {
   args: {
-    static: true,
-    showTime: true,
-    value: new Date("2024-12-25"),
-    label: "Sélecteur statique avec heures",
+    value: undefined,
+    label: "Date",
+    errorText: "Ce champ est requis",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
-      <Box width={350}>
-        <DatePicker 
-          {...args} 
+      <Box width={300} height={450}>
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
