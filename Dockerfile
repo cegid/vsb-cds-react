@@ -12,7 +12,6 @@ ENV NPM_AUTH_EMAIL=$NPM_AUTH_EMAIL
 
 # Copier les fichiers de dépendances
 COPY package*.json ./
-COPY .npmrc ./
 
 # Créer le fichier `.npmrc` pour inclure les configurations d'authentification du registre npm
 RUN echo "email=${NPM_AUTH_EMAIL}" > /app/.npmrc && \
