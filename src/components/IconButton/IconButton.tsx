@@ -18,6 +18,7 @@ import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
 import shadows from "../../theme/shadows";
 import theme from "@cegid/cds-react/styles/defaultTheme";
+import ProgressBar from "../ProgressBar";
 
 const { primary, secondary, success, critical, yellow, neutral } =
   colorPalettes;
@@ -45,6 +46,11 @@ interface IconButtonOwnProps {
   square?: boolean;
   size?: IconButtonSize;
   elevation?: number;
+  /**
+   * Shows a loading state and disables the button interaction.
+   * @default false
+   */
+  isLoading?: boolean;
 }
 
 export type IconButtonProps = Omit<
@@ -336,8 +342,38 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       square = false,
       size = "auto",
       elevation = 0,
+      isLoading = false,
+      onClick,
       ...restProps
     } = props;
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (isLoading) {
+        return;
+      }
+      onClick?.(event);
+    };
+
+    const getProgressBarColor = () => {
+      switch (color) {
+        case "primary":
+          return "primary";
+        case "secondary":
+          return "secondary";
+        case "success":
+          return "success";
+        case "error":
+          return "critical";
+        case "warning":
+          return "yellow";
+        case "info":
+          return "info";
+        case "neutral":
+          return "neutral";
+        default:
+          return "primary";
+      }
+    };
 
     const ownerState = {
       variant,
@@ -391,9 +427,28 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
             ownerState={ownerState}
             {...restProps}
             color={mapColor(color)}
+            onClick={handleClick}
             ref={ref}
             disableRipple={true}
-          />
+          >
+            {isLoading ? (
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                width="100%"
+                height="100%"
+              >
+                <ProgressBar
+                  shape="circle"
+                  size={16}
+                  color={getProgressBarColor()}
+                />
+              </Box>
+            ) : (
+              restProps.children
+            )}
+          </IconButtonRoot>
         </Box>
       );
     }
@@ -404,12 +459,19 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         {...restProps}
         className={className}
         color={mapColor(color)}
+        onClick={handleClick}
         ref={ref}
         disableRipple
         disableTouchRipple
         disableFocusRipple
         sx={{ boxShadow: shadows[elevation] }}
-      />
+      >
+        {isLoading ? (
+          <ProgressBar shape="circle" size={16} color={getProgressBarColor()} />
+        ) : (
+          restProps.children
+        )}
+      </IconButtonRoot>
     );
   }
 );
