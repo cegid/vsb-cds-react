@@ -374,4 +374,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
 DatePicker.displayName = "DatePicker";
 
+export * from "./components/CalendarGrid";
+
 export default DatePicker;
