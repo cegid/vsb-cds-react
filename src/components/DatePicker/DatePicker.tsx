@@ -70,8 +70,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     const [openUpward, setOpenUpward] = useState(false);
     const [selectedGranularity, setSelectedGranularity] =
       useState<DatePickerGranularity>(granularities[0]);
-    
-    // Determine if we should show time based on selected granularity and not being in range mode
+
     const showTime = selectedGranularity === "hours" && !isDateRange;
 
     const calendar = useCalendar({
@@ -277,8 +276,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
     const getSelectedGranularityIndex = () => {
       const options = getGranularityOptions();
-      return options.findIndex(option => {
-        // Find the matching option by checking which granularity it handles
+      return options.findIndex((option) => {
         if (selectedGranularity === "day") {
           return option.label === "Date" || option.label === "Jour";
         }
@@ -296,7 +294,11 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     };
 
     const handleGranularityMonthSelect = (monthIndex: number) => {
-      const monthDate = new Date(calendar.currentMonth.getFullYear(), monthIndex, 1);
+      const monthDate = new Date(
+        calendar.currentMonth.getFullYear(),
+        monthIndex,
+        1
+      );
       handleSpecialDateSelect(monthDate);
     };
 
@@ -376,16 +378,35 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                 </Box>
               ) : null}
 
-              {(!showTime || (showTime && selectedGranularity === "day")) && (
+              {(!showTime ||
+                (showTime &&
+                  selectedGranularity ===
+                    ("day" as DatePickerGranularity))) && (
                 <>
-                  {selectedGranularity !== "day" || datePicker.showMonthSelector || datePicker.showYearSelector ? (
+                  {selectedGranularity !== "day" ||
+                  datePicker.showMonthSelector ||
+                  datePicker.showYearSelector ? (
                     <MonthYearSelector
                       currentMonth={calendar.currentMonth}
                       adapter={calendar.adapter}
-                      showMonthSelector={selectedGranularity === "month" || datePicker.showMonthSelector}
-                      showYearSelector={selectedGranularity === "year" || datePicker.showYearSelector}
-                      onMonthSelect={selectedGranularity === "month" ? handleGranularityMonthSelect : handleMonthSelect}
-                      onYearSelect={selectedGranularity === "year" ? handleGranularityYearSelect : handleYearSelect}
+                      showMonthSelector={
+                        selectedGranularity === "month" ||
+                        datePicker.showMonthSelector
+                      }
+                      showYearSelector={
+                        selectedGranularity === "year" ||
+                        datePicker.showYearSelector
+                      }
+                      onMonthSelect={
+                        selectedGranularity === "month"
+                          ? handleGranularityMonthSelect
+                          : handleMonthSelect
+                      }
+                      onYearSelect={
+                        selectedGranularity === "year"
+                          ? handleGranularityYearSelect
+                          : handleYearSelect
+                      }
                       onShowYearSelector={() => {
                         datePicker.setShowYearSelector(true);
                         datePicker.setShowMonthSelector(false);
@@ -417,11 +438,18 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                         </IconButton>
                         <Typography
                           variant="bodyMSemiBold"
-                          sx={{ 
-                            cursor: calendar.canSelectMonth() || calendar.canSelectYear() ? "pointer" : "default" 
+                          sx={{
+                            cursor:
+                              calendar.canSelectMonth() ||
+                              calendar.canSelectYear()
+                                ? "pointer"
+                                : "default",
                           }}
                           onClick={() => {
-                            if (calendar.canSelectMonth() || calendar.canSelectYear()) {
+                            if (
+                              calendar.canSelectMonth() ||
+                              calendar.canSelectYear()
+                            ) {
                               datePicker.setShowMonthSelector(true);
                               datePicker.setShowYearSelector(false);
                             }
