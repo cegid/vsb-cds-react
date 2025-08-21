@@ -18,6 +18,9 @@ env:
   SKIP_BUILD: ${{ github.event.inputs.SKIP_BUILD || false }}
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       SKIP_BUILD:
