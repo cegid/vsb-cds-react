@@ -91,7 +91,7 @@ export const Variants: Story = {
         displayMRegular - Size: 45px - Line Height: 52px - Regular
       </Typography>
       <Typography {...args} variant="displayMSemiBold">
-        displayMRegular - Size: 45px - Line Height: 52px - Regular
+        displayMSemiBold - Size: 45px - Line Height: 52px - SemiBold
       </Typography>
       <Typography {...args} variant="displaySRegular">
         displaySRegular - Size: 36px - Line Height: 44px - Regular
