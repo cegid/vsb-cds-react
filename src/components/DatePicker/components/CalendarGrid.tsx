@@ -3,12 +3,12 @@ import { CustomColorString, PaletteNames, colorPalettes } from "../../../theme";
 import Box from "../../Box";
 import Typography from "../../Typography";
 
-interface DayJsAdapter {
+export interface DayJsAdapter {
   format: (date: Date, formatString: string) => string;
   formatByString: (date: Date, formatString: string) => string;
 }
 
-interface CalendarGridProps {
+export interface CalendarGridProps {
   currentMonth: Date;
   selectedDate?: Date | [Date?, Date?];
   color?: PaletteNames;
@@ -22,7 +22,7 @@ interface CalendarGridProps {
   isDateRange?: boolean;
 }
 
-const CalendarGrid: React.FC<CalendarGridProps> = ({
+ export const CalendarGrid: React.FC<CalendarGridProps> = ({
   currentMonth,
   selectedDate,
   color = "primary",

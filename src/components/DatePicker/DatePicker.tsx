@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { PaletteNames } from "../../theme";
 import Box from "../Box";
 import Icon from "../Icon";
-import InputAdornment from "../InputAdornment";
 import IconButton from "../IconButton";
 import Typography from "../Typography";
 import Stack from "../Stack";
@@ -209,20 +208,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             onClick={handleButtonClick}
             onFocus={() => datePicker.setIsFocused(true)}
             onBlur={() => datePicker.setIsFocused(false)}
-            InputProps={{
-              ...textFieldProps.InputProps,
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Icon
-                    variant="stroke"
-                    size={20}
-                    color={disabled ? "neutral/50" : "neutral/30"}
-                  >
-                    calendar-03
-                  </Icon>
-                </InputAdornment>
-              ),
-            }}
           />
 
           {(datePicker.isOpen || isStatic) && !disabled && (

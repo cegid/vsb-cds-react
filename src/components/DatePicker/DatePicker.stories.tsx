@@ -3,6 +3,15 @@ import { useState } from "react";
 
 import DatePicker from "./DatePicker";
 import Box from "../Box";
+import InputAdornment from "../InputAdornment";
+import Icon from "../Icon";
+const endAdornment = (
+  <InputAdornment position="end">
+    <Icon variant="stroke" size={16} color="neutral/50">
+      search-01
+    </Icon>
+  </InputAdornment>
+);
 
 const meta = {
   title: "🎛️ Form Controls/DatePicker",
@@ -95,6 +104,9 @@ export const Default: Story = {
       <Box width={300} height={450}>
         <DatePicker
           {...args}
+          InputProps={{
+            endAdornment,
+          }}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
