@@ -1,19 +1,19 @@
 import React from "react";
 import Box from "../Box";
-import { 
-  PaletteNames, 
-  primary, 
-  secondary, 
-  neutral, 
-  success, 
-  yellow, 
-  banana, 
-  critical, 
-  pink, 
-  purple, 
-  plum, 
-  beige, 
-  info 
+import {
+  PaletteNames,
+  primary,
+  secondary,
+  neutral,
+  success,
+  yellow,
+  banana,
+  critical,
+  pink,
+  purple,
+  plum,
+  beige,
+  info,
 } from "../../theme";
 
 /**
@@ -67,7 +67,7 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
 
     if (shape === "circle") {
       const circleSize = size;
-      const strokeWidth = 3;
+      const strokeWidth = Math.max(2, Math.min(3, circleSize * 0.15));
       const radius = (circleSize - strokeWidth) / 2;
       const circumference = 2 * Math.PI * radius;
       const palette = getProgressColor();
@@ -79,18 +79,26 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
             ref={ref}
             width={circleSize}
             height={circleSize}
+            display="flex"
             sx={{
-              display: "inline-block",
-              "@keyframes spin": {
-                "0%": { transform: "rotate(0deg)" },
-                "100%": { transform: "rotate(360deg)" },
+              "& svg": {
+                "@keyframes spin": {
+                  "0%": { transform: "rotate(0deg)" },
+                  "100%": { transform: "rotate(360deg)" },
+                },
+                animation: "spin 1.5s linear infinite",
               },
-              animation: "spin 1.5s linear infinite",
             }}
           >
             <svg width={circleSize} height={circleSize}>
               <defs>
-                <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+                <linearGradient
+                  id={gradientId}
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="0%"
+                >
                   <stop offset="0%" stopColor={palette[50]} />
                   <stop offset="100%" stopColor={palette[90]} />
                 </linearGradient>
@@ -119,7 +127,8 @@ const ProgressBar = React.forwardRef<HTMLDivElement, ProgressBarProps>(
         );
       }
 
-      const strokeDashoffset = circumference - ((progress || 0) / 100) * circumference;
+      const strokeDashoffset =
+        circumference - ((progress || 0) / 100) * circumference;
 
       return (
         <Box

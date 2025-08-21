@@ -47,6 +47,10 @@ const meta = {
       control: "boolean",
       description: "Element placed after the children",
     },
+    isLoading: {
+      control: "boolean",
+      description: "Whether the button is in a loading state",
+    },
     onClick: { action: "clicked" },
   },
   args: {
@@ -56,6 +60,7 @@ const meta = {
     disabled: false,
     startIcon: false,
     endIcon: false,
+    isLoading: false,
   },
 } satisfies Meta<typeof Button>;
 
@@ -64,7 +69,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {},
-  render: (args) => <Button {...args}>Button</Button>,
+  render: (args) => (
+    <Button {...args} onClick={() => window.alert("click")}>
+      Button
+    </Button>
+  ),
 };
 
 export const Text: Story = {
@@ -247,6 +256,34 @@ export const Disabled: Story = {
       <Button {...args} variant="tonal">
         Tonal
       </Button>
+    </Stack>
+  ),
+};
+
+export const Loading: Story = {
+  args: {
+    isLoading: true,
+  },
+  render: (args) => (
+    <Stack direction="column" spacing={2}>
+      <Stack direction="row" spacing={2} flexWrap="wrap">
+        <Button
+          {...args}
+          variant="contained"
+          onClick={() => window.alert("click")}
+        >
+          Loading...
+        </Button>
+        <Button {...args} variant="outlined">
+          Loading...
+        </Button>
+        <Button {...args} variant="text">
+          Loading...
+        </Button>
+        <Button {...args} variant="tonal">
+          Loading...
+        </Button>
+      </Stack>
     </Stack>
   ),
 };
