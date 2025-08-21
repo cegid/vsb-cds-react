@@ -8,17 +8,32 @@ export interface DayJsAdapter {
   formatByString: (date: Date, formatString: string) => string;
 }
 
+/**
+ * Props for the CalendarGrid component.
+ * @interface CalendarGridProps
+ */
 export interface CalendarGridProps {
+  /** The current month being displayed */
   currentMonth: Date;
+  /** The selected date value or date range [startDate, endDate] */
   selectedDate?: Date | [Date?, Date?];
+  /** The color variant from available palette names */
   color?: PaletteNames;
+  /** Date adapter for formatting and manipulation */
   adapter: DayJsAdapter;
+  /** Callback fired when a date is selected */
   onDateSelect: (date: Date) => void;
+  /** Function to determine if a date should be disabled */
   isDateDisabled: (date: Date) => boolean;
+  /** Function to determine if a date is selected */
   isDateSelected: (date: Date, selectedDate?: Date | [Date?, Date?]) => boolean;
+  /** Function to determine if a date is today */
   isToday: (date: Date) => boolean;
+  /** Function to get the number of days in a month */
   getDaysInMonth: (date: Date) => number;
+  /** Function to get the first day of the month (0 = Monday) */
   getFirstDayOfMonth: (date: Date) => number;
+  /** Whether the calendar is in date range selection mode */
   isDateRange?: boolean;
 }
 
@@ -36,6 +51,19 @@ export interface CalendarGridProps {
   isDateRange = false,
 }) => {
   const { neutral } = colorPalettes;
+  const [hoveredDate, setHoveredDate] = React.useState<Date | null>(null);
+
+  const isInHoverRange = (date: Date) => {
+    if (!isDateRange || !hoveredDate || !Array.isArray(selectedDate)) return false;
+    
+    const [startDate] = selectedDate;
+    if (!startDate) return false;
+
+    const minDate = startDate < hoveredDate ? startDate : hoveredDate;
+    const maxDate = startDate < hoveredDate ? hoveredDate : startDate;
+    
+    return date >= minDate && date <= maxDate;
+  };
 
   const renderPreviousMonthDays = (
     firstDay: number,
@@ -53,6 +81,17 @@ export interface CalendarGridProps {
       const date = new Date(prevMonth.getFullYear(), prevMonth.getMonth(), day);
       const isDisabled = isDateDisabled(date);
 
+      if (isDisabled) {
+        days.push(
+          <Box
+            key={`prev-${day}`}
+            width={32}
+            height={32}
+          />
+        );
+        continue;
+      }
+
       days.push(
         <Box
           key={`prev-${day}`}
@@ -64,10 +103,12 @@ export interface CalendarGridProps {
           borderRadius="50%"
           backgroundColor="transparent"
           sx={{
-            cursor: isDisabled ? "not-allowed" : "pointer",
-            "&:hover": !isDisabled ? { backgroundColor: neutral[95] } : {},
+            cursor: "pointer",
+            "&:hover": { backgroundColor: neutral[95] },
           }}
-          onClick={() => !isDisabled && onDateSelect(date)}
+          onClick={() => onDateSelect(date)}
+          onMouseEnter={() => setHoveredDate(date)}
+          onMouseLeave={() => setHoveredDate(null)}
         >
           <Typography variant="bodySRegular" color="neutral/80">
             {day}
@@ -88,8 +129,21 @@ export interface CalendarGridProps {
         day
       );
       const isDisabled = isDateDisabled(date);
+
+      if (isDisabled) {
+        days.push(
+          <Box
+            key={day}
+            width={32}
+            height={32}
+          />
+        );
+        continue;
+      }
+
       const isSelected = isDateSelected(date, selectedDate);
       const isTodayDate = isToday(date);
+      const isInHoverRangeArea = isInHoverRange(date);
 
       let isInRange = false;
       let isRangeStart = false;
@@ -110,11 +164,7 @@ export interface CalendarGridProps {
       let backgroundColor;
       let borderRadius;
 
-      if (isDisabled) {
-        dayColor = "neutral/50";
-        backgroundColor = "transparent";
-        borderRadius = "50%";
-      } else if (isDateRange && isRangeStart && isRangeEnd) {
+      if (isDateRange && isRangeStart && isRangeEnd) {
         dayColor = "white";
         backgroundColor = `${color}/60`;
         borderRadius = "50%";
@@ -127,6 +177,10 @@ export interface CalendarGridProps {
         backgroundColor = `${color}/60`;
         borderRadius = "0 16px 16px 0";
       } else if (isDateRange && isInRange) {
+        dayColor = neutral[10];
+        backgroundColor = neutral[95];
+        borderRadius = "50%";
+      } else if (isDateRange && isInHoverRangeArea && !isInRange) {
         dayColor = neutral[10];
         backgroundColor = neutral[95];
         borderRadius = "50%";
@@ -157,13 +211,15 @@ export interface CalendarGridProps {
           }
           color={dayColor}
           sx={{
-            cursor: isDisabled ? "not-allowed" : "pointer",
+            cursor: "pointer",
             "&:hover":
-              !isDisabled && !isSelected && !isInRange
+              !isSelected && !isInRange && !isInHoverRangeArea
                 ? { backgroundColor: neutral[95] }
                 : {},
           }}
-          onClick={() => !isDisabled && onDateSelect(date)}
+          onClick={() => onDateSelect(date)}
+          onMouseEnter={() => setHoveredDate(date)}
+          onMouseLeave={() => setHoveredDate(null)}
         >
           <Typography variant="bodySRegular">{day}</Typography>
         </Box>
@@ -192,6 +248,17 @@ export interface CalendarGridProps {
       const date = new Date(nextMonth.getFullYear(), nextMonth.getMonth(), day);
       const isDisabled = isDateDisabled(date);
 
+      if (isDisabled) {
+        days.push(
+          <Box
+            key={`next-${day}`}
+            width={32}
+            height={32}
+          />
+        );
+        continue;
+      }
+
       days.push(
         <Box
           key={`next-${day}`}
@@ -203,10 +270,12 @@ export interface CalendarGridProps {
           borderRadius="50%"
           backgroundColor="transparent"
           sx={{
-            cursor: isDisabled ? "not-allowed" : "pointer",
-            "&:hover": !isDisabled ? { backgroundColor: neutral[95] } : {},
+            cursor: "pointer",
+            "&:hover": { backgroundColor: neutral[95] },
           }}
-          onClick={() => !isDisabled && onDateSelect(date)}
+          onClick={() => onDateSelect(date)}
+          onMouseEnter={() => setHoveredDate(date)}
+          onMouseLeave={() => setHoveredDate(null)}
         >
           <Typography variant="bodySRegular" color="neutral/80">
             {day}

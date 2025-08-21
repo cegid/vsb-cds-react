@@ -2,10 +2,10 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { PaletteNames } from "../../theme";
 import Box from "../Box";
 import Icon from "../Icon";
-import IconButton from "../IconButton";
+import IconButton, { CustomColor } from "../IconButton";
 import Typography from "../Typography";
 import Stack from "../Stack";
-import Button from "../Button";
+import Button, { ButtonColor } from "../Button";
 import SegmentedControl from "../SegmentedControl";
 import Column from "../Column";
 import TextField, { TextFieldProps } from "../TextField";
@@ -14,6 +14,8 @@ import { useDatePicker } from "./hooks/useDatePicker";
 import CalendarGrid from "./components/CalendarGrid";
 import MonthYearSelector from "./components/MonthYearSelector";
 import TimeSelector from "./components/TimeSelector";
+
+export type DatePickerGranularity = "day" | "month" | "year" | "hours";
 
 /**
  * Props for the DatePicker component.
@@ -27,8 +29,6 @@ export interface DatePickerProps
   onChange?: (date: Date | null | [Date?, Date?]) => void;
   /** Whether to enable date range selection */
   isDateRange?: boolean;
-  /** Whether to show time selection (hours and minutes) */
-  showTime?: boolean;
   /** The color variant from available palette names */
   color?: PaletteNames;
   /** The minimum selectable date */
@@ -43,6 +43,8 @@ export interface DatePickerProps
   utc?: boolean;
   /** Whether to display the date picker in static mode (always visible) */
   static?: boolean;
+  /** Available granularities to display in the segmented control */
+  granularities?: DatePickerGranularity[];
 }
 
 const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
@@ -51,7 +53,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       value,
       onChange,
       isDateRange = false,
-      showTime = false,
       color = "primary",
       disabled = false,
       placeholder = "Select date",
@@ -61,11 +62,17 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       timezone,
       utc = false,
       static: isStatic = false,
+      granularities = ["day"],
       ...textFieldProps
     } = props;
 
     const datePickerRef = useRef<HTMLDivElement>(null);
     const [openUpward, setOpenUpward] = useState(false);
+    const [selectedGranularity, setSelectedGranularity] =
+      useState<DatePickerGranularity>(granularities[0]);
+    
+    // Determine if we should show time based on selected granularity and not being in range mode
+    const showTime = selectedGranularity === "hours" && !isDateRange;
 
     const calendar = useCalendar({
       value: Array.isArray(value) ? value[0] : value,
@@ -168,6 +175,136 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       datePicker.setShowMonthSelector(true);
     };
 
+    const handleGranularityChange = (
+      granularityType: DatePickerGranularity
+    ) => {
+      setSelectedGranularity(granularityType);
+    };
+
+    const createDateRangeFromMonth = (month: Date): [Date, Date] => {
+      const startOfMonth = new Date(month.getFullYear(), month.getMonth(), 1);
+      const endOfMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+      return [startOfMonth, endOfMonth];
+    };
+
+    const createDateRangeFromYear = (year: Date): [Date, Date] => {
+      const startOfYear = new Date(year.getFullYear(), 0, 1);
+      const endOfYear = new Date(year.getFullYear(), 11, 31);
+      return [startOfYear, endOfYear];
+    };
+
+    const handleSpecialDateSelect = (date: Date) => {
+      if (!isDateRange || !onChange) return;
+
+      if (selectedGranularity === "month") {
+        const dateRange = createDateRangeFromMonth(date);
+        onChange(dateRange);
+        datePicker.setIsOpen(false);
+      } else if (selectedGranularity === "year") {
+        const dateRange = createDateRangeFromYear(date);
+        onChange(dateRange);
+        datePicker.setIsOpen(false);
+      }
+    };
+
+    const getGranularityOptions = () => {
+      const options: Array<{
+        label: string;
+        icon?: React.ReactNode;
+        onClick: () => void;
+      }> = [];
+
+      granularities.forEach((granularityType) => {
+        switch (granularityType) {
+          case "day":
+            if (showTime) {
+              options.push({
+                label: "Date",
+                icon: (
+                  <Icon size={16} color="neutral/10">
+                    calendar-03
+                  </Icon>
+                ),
+                onClick: () => {
+                  handleGranularityChange("day");
+                  datePicker.setSelectedTab(0);
+                },
+              });
+            } else if (isDateRange) {
+              options.push({
+                label: "Jour",
+                onClick: () => handleGranularityChange("day"),
+              });
+            }
+            break;
+          case "month":
+            if (isDateRange) {
+              options.push({
+                label: "Mois",
+                onClick: () => handleGranularityChange("month"),
+              });
+            }
+            break;
+          case "year":
+            if (isDateRange) {
+              options.push({
+                label: "Année",
+                onClick: () => handleGranularityChange("year"),
+              });
+            }
+            break;
+          case "hours":
+            if (!isDateRange) {
+              options.push({
+                label: "Heure",
+                icon: (
+                  <Icon size={16} color="neutral/10">
+                    time-quarter-02
+                  </Icon>
+                ),
+                onClick: () => {
+                  handleGranularityChange("hours");
+                  datePicker.setSelectedTab(1);
+                },
+              });
+            }
+            break;
+        }
+      });
+
+      return options;
+    };
+
+    const getSelectedGranularityIndex = () => {
+      const options = getGranularityOptions();
+      return options.findIndex(option => {
+        // Find the matching option by checking which granularity it handles
+        if (selectedGranularity === "day") {
+          return option.label === "Date" || option.label === "Jour";
+        }
+        if (selectedGranularity === "month") {
+          return option.label === "Mois";
+        }
+        if (selectedGranularity === "year") {
+          return option.label === "Année";
+        }
+        if (selectedGranularity === "hours") {
+          return option.label === "Heure";
+        }
+        return false;
+      });
+    };
+
+    const handleGranularityMonthSelect = (monthIndex: number) => {
+      const monthDate = new Date(calendar.currentMonth.getFullYear(), monthIndex, 1);
+      handleSpecialDateSelect(monthDate);
+    };
+
+    const handleGranularityYearSelect = (year: number) => {
+      const yearDate = new Date(year, 0, 1);
+      handleSpecialDateSelect(yearDate);
+    };
+
     const handleTimeChange = (
       type: "hours" | "minutes",
       value: number | undefined,
@@ -229,112 +366,105 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                 boxShadow: isStatic ? "none" : "0 4px 12px rgba(0, 0, 0, 0.1)",
               }}
             >
-              {showTime && (
+              {(isDateRange && granularities.length > 1) || showTime ? (
                 <Box mb={2}>
                   <SegmentedControl
                     fullwidth
-                    actions={[
-                      {
-                        label: "Date",
-                        icon: (
-                          <Icon size={16} color="neutral/10">
-                            calendar-03
-                          </Icon>
-                        ),
-                        onClick: () => datePicker.setSelectedTab(0),
-                      },
-                      {
-                        label: "Heure",
-                        icon: (
-                          <Icon size={16} color="neutral/10">
-                            time-quarter-02
-                          </Icon>
-                        ),
-                        onClick: () => datePicker.setSelectedTab(1),
-                      },
-                    ]}
-                    defaultSelected={datePicker.selectedTab}
+                    actions={getGranularityOptions()}
+                    defaultSelected={getSelectedGranularityIndex()}
                   />
                 </Box>
-              )}
+              ) : null}
 
-              {(!showTime || datePicker.selectedTab === 0) && (
+              {(!showTime || (showTime && selectedGranularity === "day")) && (
                 <>
-                  <MonthYearSelector
-                    currentMonth={calendar.currentMonth}
-                    adapter={calendar.adapter}
-                    showMonthSelector={datePicker.showMonthSelector}
-                    showYearSelector={datePicker.showYearSelector}
-                    onMonthSelect={handleMonthSelect}
-                    onYearSelect={handleYearSelect}
-                    onShowYearSelector={() => {
-                      datePicker.setShowYearSelector(true);
-                      datePicker.setShowMonthSelector(false);
-                    }}
-                  />
-
-                  {!datePicker.showMonthSelector &&
-                    !datePicker.showYearSelector && (
-                      <>
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          justifyContent="space-between"
+                  {selectedGranularity !== "day" || datePicker.showMonthSelector || datePicker.showYearSelector ? (
+                    <MonthYearSelector
+                      currentMonth={calendar.currentMonth}
+                      adapter={calendar.adapter}
+                      showMonthSelector={selectedGranularity === "month" || datePicker.showMonthSelector}
+                      showYearSelector={selectedGranularity === "year" || datePicker.showYearSelector}
+                      onMonthSelect={selectedGranularity === "month" ? handleGranularityMonthSelect : handleMonthSelect}
+                      onYearSelect={selectedGranularity === "year" ? handleGranularityYearSelect : handleYearSelect}
+                      onShowYearSelector={() => {
+                        datePicker.setShowYearSelector(true);
+                        datePicker.setShowMonthSelector(false);
+                      }}
+                      isMonthDisabled={calendar.isMonthDisabled}
+                      isYearDisabled={calendar.isYearDisabled}
+                      getAvailableYears={calendar.getAvailableYears}
+                      canSelectYear={calendar.canSelectYear}
+                      canSelectMonth={calendar.canSelectMonth}
+                    />
+                  ) : (
+                    <>
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <IconButton
+                          size="small"
+                          color={color as CustomColor}
+                          square
+                          variant="outlined"
+                          disabled={!calendar.canNavigateToPreviousMonth()}
+                          onClick={() => calendar.navigateMonth(-1)}
                         >
-                          <IconButton
-                            size="small"
-                            color="neutral"
-                            variant="iconOnly"
-                            onClick={() => calendar.navigateMonth(-1)}
-                          >
-                            <Icon variant="stroke" size={16}>
-                              arrow-left-01
-                            </Icon>
-                          </IconButton>
-                          <Typography
-                            variant="bodyMSemiBold"
-                            sx={{ cursor: "pointer" }}
-                            onClick={() => {
+                          <Icon variant="stroke" size={16}>
+                            arrow-left-01
+                          </Icon>
+                        </IconButton>
+                        <Typography
+                          variant="bodyMSemiBold"
+                          sx={{ 
+                            cursor: calendar.canSelectMonth() || calendar.canSelectYear() ? "pointer" : "default" 
+                          }}
+                          onClick={() => {
+                            if (calendar.canSelectMonth() || calendar.canSelectYear()) {
                               datePicker.setShowMonthSelector(true);
                               datePicker.setShowYearSelector(false);
-                            }}
-                          >
-                            {calendar.adapter.formatByString(
-                              calendar.currentMonth,
-                              "MMMM YYYY"
-                            )}
-                          </Typography>
-                          <IconButton
-                            size="small"
-                            color="neutral"
-                            variant="iconOnly"
-                            onClick={() => calendar.navigateMonth(1)}
-                          >
-                            <Icon variant="stroke" size={16}>
-                              arrow-right-01
-                            </Icon>
-                          </IconButton>
-                        </Stack>
+                            }
+                          }}
+                        >
+                          {calendar.adapter.formatByString(
+                            calendar.currentMonth,
+                            "MMMM YYYY"
+                          )}
+                        </Typography>
+                        <IconButton
+                          size="small"
+                          color={color as CustomColor}
+                          variant="outlined"
+                          disabled={!calendar.canNavigateToNextMonth()}
+                          onClick={() => calendar.navigateMonth(1)}
+                          square
+                        >
+                          <Icon variant="stroke" size={16}>
+                            arrow-right-01
+                          </Icon>
+                        </IconButton>
+                      </Stack>
 
-                        <CalendarGrid
-                          currentMonth={calendar.currentMonth}
-                          selectedDate={datePicker.tempValue}
-                          color={color}
-                          adapter={calendar.adapter}
-                          onDateSelect={datePicker.handleDateSelect}
-                          isDateDisabled={calendar.isDateDisabled}
-                          isDateSelected={isDateSelectedAdapter}
-                          isToday={calendar.isToday}
-                          getDaysInMonth={calendar.getDaysInMonth}
-                          getFirstDayOfMonth={calendar.getFirstDayOfMonth}
-                          isDateRange={isDateRange}
-                        />
-                      </>
-                    )}
+                      <CalendarGrid
+                        currentMonth={calendar.currentMonth}
+                        selectedDate={datePicker.tempValue}
+                        color={color}
+                        adapter={calendar.adapter}
+                        onDateSelect={datePicker.handleDateSelect}
+                        isDateDisabled={calendar.isDateDisabled}
+                        isDateSelected={isDateSelectedAdapter}
+                        isToday={calendar.isToday}
+                        getDaysInMonth={calendar.getDaysInMonth}
+                        getFirstDayOfMonth={calendar.getFirstDayOfMonth}
+                        isDateRange={isDateRange}
+                      />
+                    </>
+                  )}
                 </>
               )}
 
-              {showTime && datePicker.selectedTab === 1 && (
+              {showTime && selectedGranularity === "hours" && (
                 <TimeSelector
                   hoursInput={datePicker.hoursInput}
                   minutesInput={datePicker.minutesInput}
@@ -350,7 +480,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               <Stack direction="row" justifyContent="flex-end" gap={1}>
                 <Button
                   variant="text"
-                  color="neutral"
+                  color={color as ButtonColor}
                   size="large"
                   onClick={datePicker.handleCancel}
                 >
@@ -358,6 +488,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                 </Button>
                 <Button
                   variant="tonal"
+                  color={color as ButtonColor}
                   size="large"
                   onClick={datePicker.handleValidate}
                 >
@@ -373,7 +504,5 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 );
 
 DatePicker.displayName = "DatePicker";
-
-export * from "./components/CalendarGrid";
 
 export default DatePicker;

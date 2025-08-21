@@ -33,10 +33,6 @@ const meta = {
       control: { type: "boolean" },
       description: "Whether to enable date range selection",
     },
-    showTime: {
-      control: { type: "boolean" },
-      description: "Whether to show time selection (hours and minutes)",
-    },
     disabled: {
       control: { type: "boolean" },
       description: "Whether the date picker is disabled",
@@ -78,14 +74,18 @@ const meta = {
       control: { type: "text" },
       description: "Error message to display below the date picker",
     },
+    granularities: {
+      control: { type: "check" },
+      options: ["day", "month", "year", "hours"],
+      description: "Available granularities to display in the segmented control",
+    },
   },
   args: {
     disabled: false,
     placeholder: "Select date",
     label: "label",
-    value: new Date("2024-12-25"),
+    value: new Date(),
     isDateRange: false,
-    showTime: false,
     locale: "fr",
   },
 } satisfies Meta<typeof DatePicker>;
@@ -107,6 +107,58 @@ export const Default: Story = {
           InputProps={{
             endAdornment,
           }}
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const DateRangeWithMonthGranularity: Story = {
+  args: {
+    isDateRange: true,
+    granularities: ["day", "month"],
+    label: "Sélection par mois",
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
+    return (
+      <Box width={300} height={450}>
+        <DatePicker
+          {...args}
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const DateRangeWithYearGranularity: Story = {
+  args: {
+    isDateRange: true,
+    granularities: ["day", "month", "year"],
+    label: "Sélection par année",
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
+    return (
+      <Box width={300} height={450}>
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -198,7 +250,7 @@ export const WithMinMaxDates: Story = {
 
 export const WithTime: Story = {
   args: {
-    showTime: true,
+    granularities: ["day", "hours"],
     value: new Date("2024-12-25"),
     label: "Date et heure de rendez-vous",
   },
@@ -251,9 +303,9 @@ export const DateRange: Story = {
 export const DateRangeWithTime: Story = {
   args: {
     isDateRange: true,
-    showTime: true,
+    granularities: ["day"],
     value: [new Date("2024-12-25"), new Date("2024-12-27")],
-    label: "Période avec heures",
+    label: "Période de dates",
   },
   render: (args) => {
     const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(

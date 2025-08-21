@@ -16,6 +16,11 @@ interface MonthYearSelectorProps {
   onMonthSelect: (monthIndex: number) => void;
   onYearSelect: (year: number) => void;
   onShowYearSelector: () => void;
+  isMonthDisabled?: (monthIndex: number, year?: number) => boolean;
+  isYearDisabled?: (year: number) => boolean;
+  getAvailableYears?: () => number[];
+  canSelectYear?: () => boolean;
+  canSelectMonth?: (year?: number) => boolean;
 }
 
 const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
@@ -26,6 +31,11 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   onMonthSelect,
   onYearSelect,
   onShowYearSelector,
+  isMonthDisabled = () => false,
+  isYearDisabled = () => false,
+  getAvailableYears,
+  canSelectYear = () => true,
+  canSelectMonth = () => true,
 }) => {
   const renderMonthSelector = () => {
     const months = Array.from({ length: 12 }, (_, index) => {
@@ -37,11 +47,11 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
         <Typography
           variant="bodyMSemiBold"
           sx={{
-            cursor: "pointer",
+            cursor: canSelectYear() ? "pointer" : "default",
             textAlign: "center",
             mb: 2,
           }}
-          onClick={onShowYearSelector}
+          onClick={() => canSelectYear() && onShowYearSelector()}
         >
           {currentMonth.getFullYear()}
         </Typography>
@@ -52,28 +62,34 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
             gap: 2,
           }}
         >
-          {months.map((month, index) => (
-            <Button
-              key={`month-${month.getMonth()}`}
-              variant="outlined"
-              color="neutral"
-              size="large"
-              onClick={() => onMonthSelect(index)}
-            >
-              {adapter.format(month, "monthLong")}
-            </Button>
-          ))}
+          {months.map((month, index) => {
+            const disabled = isMonthDisabled(index, currentMonth.getFullYear());
+            return (
+              <Button
+                key={`month-${month.getMonth()}`}
+                variant="outlined"
+                color="neutral"
+                size="large"
+                disabled={disabled}
+                onClick={() => !disabled && onMonthSelect(index)}
+              >
+                {adapter.format(month, "monthLong")}
+              </Button>
+            );
+          })}
         </Box>
       </>
     );
   };
 
   const renderYearSelector = () => {
-    const currentYear = new Date().getFullYear();
-    const years = Array.from(
-      { length: currentYear - 1925 + 1 },
-      (_, i) => currentYear - i
-    );
+    const years = getAvailableYears ? getAvailableYears() : (() => {
+      const currentYear = new Date().getFullYear();
+      return Array.from(
+        { length: currentYear - 1925 + 1 },
+        (_, i) => currentYear - i
+      );
+    })();
 
     return (
       <Box
@@ -85,17 +101,21 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
           gap: 2,
         }}
       >
-        {years.map((year) => (
-          <Button
-            key={year}
-            variant="outlined"
-            color="neutral"
-            size="large"
-            onClick={() => onYearSelect(year)}
-          >
-            {year}
-          </Button>
-        ))}
+        {years.map((year) => {
+          const disabled = isYearDisabled(year);
+          return (
+            <Button
+              key={year}
+              variant="outlined"
+              color="neutral"
+              size="large"
+              disabled={disabled}
+              onClick={() => !disabled && onYearSelect(year)}
+            >
+              {year}
+            </Button>
+          );
+        })}
       </Box>
     );
   };

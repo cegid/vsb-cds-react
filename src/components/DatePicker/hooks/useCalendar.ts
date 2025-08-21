@@ -91,7 +91,7 @@ export const useCalendar = ({
 
   const getFirstDayOfMonth = (date: Date) => {
     const firstDay = dayjs(date).startOf('month').day();
-    return firstDay === 0 ? 6 : firstDay - 1; // Monday = 0
+    return firstDay === 0 ? 6 : firstDay - 1;
   };
 
   const createDayjs = (date: Date) => {
@@ -136,6 +136,78 @@ export const useCalendar = ({
     setCurrentMonth(newMonth.toDate());
   };
 
+  const hasAvailableDaysInMonth = (targetMonth: Date) => {
+    const daysInMonth = getDaysInMonth(targetMonth);
+    
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), day);
+      if (!isDateDisabled(date)) {
+        return true;
+      }
+    }
+    
+    return false;
+  };
+
+  const canNavigateToPreviousMonth = () => {
+    const previousMonth = dayjs(currentMonth).subtract(1, 'month').startOf('month').toDate();
+    return hasAvailableDaysInMonth(previousMonth);
+  };
+
+  const canNavigateToNextMonth = () => {
+    const nextMonth = dayjs(currentMonth).add(1, 'month').startOf('month').toDate();
+    return hasAvailableDaysInMonth(nextMonth);
+  };
+
+  const isMonthDisabled = (monthIndex: number, year?: number) => {
+    const targetYear = year || currentMonth.getFullYear();
+    const monthDate = new Date(targetYear, monthIndex, 1);
+    return !hasAvailableDaysInMonth(monthDate);
+  };
+
+  const isYearDisabled = (year: number) => {
+    for (let month = 0; month < 12; month++) {
+      const monthDate = new Date(year, month, 1);
+      if (hasAvailableDaysInMonth(monthDate)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const getAvailableYears = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    
+    for (let year = 1925; year <= currentYear; year++) {
+      if (!isYearDisabled(year)) {
+        years.push(year);
+      }
+    }
+    
+    return years.reverse();
+  };
+
+  const getAvailableMonthsInYear = (year: number) => {
+    const months = [];
+    for (let month = 0; month < 12; month++) {
+      if (!isMonthDisabled(month, year)) {
+        months.push(month);
+      }
+    }
+    return months;
+  };
+
+  const canSelectYear = () => {
+    return getAvailableYears().length > 1;
+  };
+
+  const canSelectMonth = (year?: number) => {
+    const targetYear = year || currentMonth.getFullYear();
+    return getAvailableMonthsInYear(targetYear).length > 1;
+  };
+
+
   return {
     currentMonth,
     setCurrentMonth,
@@ -148,5 +220,13 @@ export const useCalendar = ({
     navigateMonth,
     goToMonth,
     goToYear,
+    canNavigateToPreviousMonth,
+    canNavigateToNextMonth,
+    isMonthDisabled,
+    isYearDisabled,
+    getAvailableYears,
+    getAvailableMonthsInYear,
+    canSelectYear,
+    canSelectMonth,
   };
 };
