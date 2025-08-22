@@ -92,6 +92,8 @@ export { default as ListItemButton } from "./ListItemButton";
 export * from "./ListItemButton";
 export { default as ProgressBar } from "./ProgressBar";
 export * from "./ProgressBar";
+export { default as Chart } from "./Chart";
+export * from "./Chart";
 export { default as DatePicker } from "./DatePicker";
 export * from "./DatePicker";
 export { default as CalendarGrid } from "./DatePicker/components/CalendarGrid";
