@@ -7,25 +7,33 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs.js"
     },
     "./components": {
+      "types": "./dist/components/index.d.ts",
       "import": "./dist/components/index.es.js",
-      "require": "./dist/components/index.cjs.js",
-      "types": "./dist/components/index.d.ts"
+      "require": "./dist/components/index.cjs.js"
     },
     "./components/*": {
+      "types": "./dist/components/*/index.d.ts",
       "import": "./dist/components/*/index.es.js",
-      "require": "./dist/components/*/index.cjs.js",
-      "types": "./dist/components/*/index.d.ts"
+      "require": "./dist/components/*/index.cjs.js"
     },
     "./fonts.css": "./dist/fonts/fonts.css",
     "./icons.css": "./dist/icons/hugeicons-font.css"
   },
   "files": [
-    "dist/**/*"
+    "dist/*.js",
+    "dist/*.d.ts",
+    "dist/components/**/*.js",
+    "dist/components/**/*.d.ts",
+    "dist/theme/**/*.d.ts",
+    "dist/fonts/**/*",
+    "dist/icons/hgi-stroke-rounded.*",
+    "dist/icons/hugeicons-font.css",
+    "dist/storycomponents/**/*.d.ts"
   ],
   "sideEffects": [
     "**/*.css",
@@ -37,11 +45,14 @@
   ],
   "scripts": {
     "start": "npm run storybook",
-    "build": "NODE_OPTIONS='--max-old-space-size=8192' tsc && NODE_OPTIONS='--max-old-space-size=8192' vite build",
-    "build:dev": "vite build",
+    "build": "npm run clean && tsc && vite build && npm run build:optimize",
+    "build:dev": "npm run clean && vite build",
+    "build:optimize": "node scripts/post-build-cleanup.js",
+    "clean": "rimraf dist",
     "storybook": "storybook dev -p 6006",
     "extract-icons": "node scripts/extract-icons.js",
-    "build-storybook": "npm run extract-icons && storybook build"
+    "build-storybook": "npm run extract-icons && storybook build",
+    "analyze": "npm run build && npx vite-bundle-analyzer dist"
   },
   "keywords": [
     "design-system",
@@ -60,12 +71,12 @@
     "react-dom": "^18.3.1"
   },
   "dependencies": {
+    "@mui/x-date-pickers": "8.9.0",
     "chart.js": "^4.5.0",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "dayjs": "^1.11.13",
     "notistack": "2.0.5",
-    "react-chartjs-2": "^5.3.0",
-    "@mui/x-date-pickers": "8.9.0",
-    "dayjs": "^1.11.13"
+    "react-chartjs-2": "^5.3.0"
   },
   "devDependencies": {
     "@cegid/cds-react": "^3.26.1",
@@ -87,6 +98,7 @@
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "rimraf": "^6.0.1",
     "storybook": "^9.0.16",
     "typescript": "^5.0.0",
     "vite": "^6.2.3",

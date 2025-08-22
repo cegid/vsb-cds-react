@@ -1,0 +1,46 @@
+# Development files
+.storybook/
+storybook-static/
+src/
+scripts/
+node_modules/
+.git/
+.gitignore
+.gitattributes
+
+# Build artifacts to exclude
+dist/**/*.stories.*
+dist/storycomponents/
+dist/**/*.test.*
+dist/**/*.spec.*
+
+# Config files
+vite.config.ts
+tsconfig.json
+*.tgz
+
+# Documentation
+README.md
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Icon variants not needed (keep only stroke-rounded)
+dist/icons/hgi-solid-*
+dist/icons/hgi-bulk-*
+dist/icons/hgi-duotone-*
+dist/icons/hgi-twotone-*
+dist/icons/hgi-*-sharp.*
+dist/icons/hgi-*-standard.*
+dist/icons/*.eot
+dist/icons/*.ttf
+dist/icons/*.svg

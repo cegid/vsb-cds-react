@@ -92,6 +92,12 @@ export default defineConfig({
         "@emotion/react",
         "@emotion/styled",
         "@cegid/cds-react",
+        "chart.js",
+        "react-chartjs-2",
+        "chartjs-plugin-datalabels",
+        "notistack",
+        "@mui/x-date-pickers",
+        "dayjs",
       ],
       output: {
         entryFileNames: (chunkInfo) => {
@@ -105,6 +111,7 @@ export default defineConfig({
           }
           return "[name].[format].js";
         },
+        chunkFileNames: "[name].[format].js",
         globals: {
           react: "React",
           "react-dom": "ReactDOM",
