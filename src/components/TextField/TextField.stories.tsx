@@ -1,32 +1,46 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import { Grid } from '@cegid/cds-react';
-import TextField from './TextField';
+import TextField from "./TextField";
+import Column from "../Column";
+import Icon from "../Icon";
+import InputAdornment from "../InputAdornment";
 
 const meta = {
-  title: '🎛️ Form Controls/TextField',
+  title: "🎛️ Form Controls/TextField",
   component: TextField,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    label: { control: 'text', description: 'The label of the TextField' },
-    placeholder: { control: 'text', description: 'The placeholder text' },
-    defaultValue: { control: 'text', description: 'The default value of the TextField' },
-    required: { control: 'boolean', description: 'If true, the label is displayed as required' },
+    label: { control: "text", description: "The label of the TextField" },
+    placeholder: { control: "text", description: "The placeholder text" },
+    defaultValue: {
+      control: "text",
+      description: "The default value of the TextField",
+    },
+    required: {
+      control: "boolean",
+      description: "If true, the label is displayed as required",
+    },
     error: {
-      control: 'boolean',
-      description: 'If true, the TextField will indicate an error state',
+      control: "boolean",
+      description: "If true, the TextField will indicate an error state",
     },
-    helperText: { control: 'text', description: 'Helper text to display below the TextField' },
-    disabled: { control: 'boolean', description: 'If true, the TextField is disabled' },
+    helperText: {
+      control: "text",
+      description: "Helper text to display below the TextField",
+    },
+    disabled: {
+      control: "boolean",
+      description: "If true, the TextField is disabled",
+    },
     type: {
-      control: 'select',
-      options: ['text', 'password', 'number', 'email', 'search'],
-      description: 'The type of the TextField element',
+      control: "select",
+      options: ["text", "password", "number", "email", "search"],
+      description: "The type of the TextField element",
     },
-    onChange: { action: 'changed' },
+    onChange: { action: "changed" },
   },
   args: {
     fullWidth: true,
@@ -36,102 +50,145 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const startAdornment = (
+  <InputAdornment position="start">
+    <Icon variant="stroke" size={16} color="neutral/50">
+      search-01
+    </Icon>
+  </InputAdornment>
+);
+
+const endAdornment = (
+  <InputAdornment position="end">
+    <Icon variant="stroke" size={16} color="neutral/50">
+      search-01
+    </Icon>
+  </InputAdornment>
+);
+
 export const Standard: Story = {
   render: (args) => (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <TextField
-          {...args}
-          label="Standard TextField"
-          placeholder="Placeholder text"
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextField
-          {...args}
-          label="With Default Value"
-          defaultValue="Default text"
-        />
-      </Grid>
-    </Grid>
+    <Column gap={3}>
+      <TextField
+        {...args}
+        label="Standard TextField"
+        placeholder="Placeholder text"
+      />
+      <TextField
+        {...args}
+        label="With Default Value"
+        defaultValue="Default text"
+      />
+    </Column>
+  ),
+};
+
+export const WithIcons: Story = {
+  render: (args) => (
+    <Column gap={3}>
+      <TextField
+        {...args}
+        label="With Start Icon"
+        placeholder="Search something..."
+        InputProps={{
+          startAdornment,
+        }}
+      />
+      <TextField
+        {...args}
+        label="With End Icon"
+        placeholder="Enter amount"
+        InputProps={{
+          endAdornment,
+        }}
+      />
+      <TextField
+        {...args}
+        label="With Both Icons"
+        placeholder="Amount with icons"
+        InputProps={{
+          startAdornment,
+          endAdornment,
+        }}
+      />
+    </Column>
   ),
 };
 
 export const Required: Story = {
   render: (args) => (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <TextField
-          {...args}
-          label="Required TextField"
-          placeholder="This field is required"
-          required
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextField {...args} label="Required With Value" defaultValue="Required value" required />
-      </Grid>
-    </Grid>
+    <Column gap={3}>
+      <TextField
+        {...args}
+        label="Required TextField"
+        placeholder="This field is required"
+        required
+      />
+      <TextField
+        {...args}
+        label="Required With Value"
+        defaultValue="Required value"
+        required
+      />
+    </Column>
   ),
 };
 
 export const WithErrors: Story = {
   render: (args) => (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <TextField
-          {...args}
-          label="Error State"
-          placeholder="Error TextField"
-          errorText="This is an error message"
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextField
-          {...args}
-          label="Required With Error"
-          placeholder="Missing value"
-          required
-          errorText="This field is required"
-        />
-      </Grid>
-    </Grid>
+    <Column gap={3}>
+      <TextField
+        {...args}
+        label="Error State"
+        placeholder="Error TextField"
+        errorText="This is an error message"
+      />
+      <TextField
+        {...args}
+        label="Required With Error"
+        placeholder="Missing value"
+        required
+        errorText="This field is required"
+      />
+    </Column>
   ),
 };
 
 export const Disabled: Story = {
   render: (args) => (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <TextField {...args} label="Disabled TextField" placeholder="Cannot be modified" disabled />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextField
-          {...args}
-          label="Disabled With Value"
-          defaultValue="Disabled with content"
-          disabled
-        />
-      </Grid>
-    </Grid>
+    <Column gap={3}>
+      <TextField
+        {...args}
+        label="Disabled TextField"
+        placeholder="Cannot be modified"
+        disabled
+      />
+      <TextField
+        {...args}
+        label="Disabled With Value"
+        defaultValue="Disabled with content"
+        disabled
+      />
+    </Column>
   ),
 };
 
 export const ReadOnly: Story = {
   render: (args) => (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <TextField {...args} label="Read Only TextField" defaultValue="Read only value" readOnly />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextField
-          {...args}
-          label="Read Only Required"
-          defaultValue="Required read-only value"
-          required
-          readOnly
-        />
-      </Grid>
-    </Grid>
+    <Column gap={3}>
+      <TextField
+        {...args}
+        label="Read Only TextField"
+        defaultValue="Read only value"
+        readOnly
+      />
+      <TextField
+        {...args}
+        label="Read Only Required"
+        defaultValue="Required read-only value"
+        required
+        readOnly
+      />
+    </Column>
   ),
 };

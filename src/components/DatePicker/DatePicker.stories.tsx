@@ -3,6 +3,15 @@ import { useState } from "react";
 
 import DatePicker from "./DatePicker";
 import Box from "../Box";
+import InputAdornment from "../InputAdornment";
+import Icon from "../Icon";
+const endAdornment = (
+  <InputAdornment position="end">
+    <Icon variant="stroke" size={16} color="neutral/50">
+      search-01
+    </Icon>
+  </InputAdornment>
+);
 
 const meta = {
   title: "🎛️ Form Controls/DatePicker",
@@ -23,10 +32,6 @@ const meta = {
     isDateRange: {
       control: { type: "boolean" },
       description: "Whether to enable date range selection",
-    },
-    showTime: {
-      control: { type: "boolean" },
-      description: "Whether to show time selection (hours and minutes)",
     },
     disabled: {
       control: { type: "boolean" },
@@ -65,14 +70,22 @@ const meta = {
       control: { type: "boolean" },
       description: "Display the date picker in static mode (always visible)",
     },
+    errorText: {
+      control: { type: "text" },
+      description: "Error message to display below the date picker",
+    },
+    granularities: {
+      control: { type: "check" },
+      options: ["day", "month", "year", "hours"],
+      description: "Available granularities to display in the segmented control",
+    },
   },
   args: {
     disabled: false,
     placeholder: "Select date",
     label: "label",
-    value: new Date("2024-12-25"),
+    value: new Date(),
     isDateRange: false,
-    showTime: false,
     locale: "fr",
   },
 } satisfies Meta<typeof DatePicker>;
@@ -83,11 +96,68 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300} height={450}>
-        <DatePicker 
+        <DatePicker
+          {...args}
+          InputProps={{
+            endAdornment,
+          }}
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const DateRangeWithMonthGranularity: Story = {
+  args: {
+    isDateRange: true,
+    granularities: ["day", "month"],
+    label: "Sélection par mois",
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
+    return (
+      <Box width={300} height={450}>
+        <DatePicker
+          {...args}
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const DateRangeWithYearGranularity: Story = {
+  args: {
+    isDateRange: true,
+    granularities: ["day", "month", "year"],
+    label: "Sélection par année",
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
+    return (
+      <Box width={300} height={450}>
+        <DatePicker
           {...args}
           value={value}
           onChange={(date) => {
@@ -106,12 +176,14 @@ export const WithValue: Story = {
     label: "Date de naissance",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -130,12 +202,14 @@ export const Disabled: Story = {
     label: "Date de naissance",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -155,12 +229,14 @@ export const WithMinMaxDates: Story = {
     label: "Date de naissance",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -174,17 +250,19 @@ export const WithMinMaxDates: Story = {
 
 export const WithTime: Story = {
   args: {
-    showTime: true,
+    granularities: ["day", "hours"],
     value: new Date("2024-12-25"),
     label: "Date et heure de rendez-vous",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300} height={500}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -203,12 +281,14 @@ export const DateRange: Story = {
     label: "Période de vacances",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300} height={450}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -223,17 +303,19 @@ export const DateRange: Story = {
 export const DateRangeWithTime: Story = {
   args: {
     isDateRange: true,
-    showTime: true,
+    granularities: ["day"],
     value: [new Date("2024-12-25"), new Date("2024-12-27")],
-    label: "Période avec heures",
+    label: "Période de dates",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={300} height={500}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -252,12 +334,14 @@ export const StaticMode: Story = {
     label: "Sélecteur toujours visible",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
       <Box width={350}>
-        <DatePicker 
-          {...args} 
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);
@@ -269,20 +353,21 @@ export const StaticMode: Story = {
   },
 };
 
-export const StaticWithTime: Story = {
+export const WithError: Story = {
   args: {
-    static: true,
-    showTime: true,
-    value: new Date("2024-12-25"),
-    label: "Sélecteur statique avec heures",
+    value: undefined,
+    label: "Date",
+    errorText: "Ce champ est requis",
   },
   render: (args) => {
-    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(args.value);
-    
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
     return (
-      <Box width={350}>
-        <DatePicker 
-          {...args} 
+      <Box width={300} height={450}>
+        <DatePicker
+          {...args}
           value={value}
           onChange={(date) => {
             setValue(date || undefined);

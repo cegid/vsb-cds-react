@@ -38,6 +38,10 @@ const meta = {
       control: "boolean",
       description: "If true, rounded corners are disabled",
     },
+    isLoading: {
+      control: "boolean",
+      description: "Whether the icon button is in a loading state",
+    },
     onClick: { action: "clicked" },
   },
   args: {
@@ -46,6 +50,7 @@ const meta = {
     size: "medium",
     disabled: false,
     square: false,
+    isLoading: false,
   },
 } satisfies Meta<typeof IconButton>;
 
@@ -55,7 +60,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
   render: (args) => (
-    <IconButton {...args}>
+    <IconButton {...args} onClick={() => window.alert("click")}>
       <Icon size={16}>add-01</Icon>
     </IconButton>
   ),
@@ -216,6 +221,30 @@ export const Disabled: Story = {
       <IconButton {...args} variant="tonal" color="warning">
         <Icon size={16}>settings-01</Icon>
       </IconButton>
+    </Stack>
+  ),
+};
+
+export const Loading: Story = {
+  args: {
+    isLoading: true,
+  },
+  render: (args) => (
+    <Stack direction="column" spacing={2}>
+      <Stack direction="row" spacing={2} flexWrap="wrap">
+        <IconButton {...args} variant="contained">
+          <Icon size={16}>add-01</Icon>
+        </IconButton>
+        <IconButton {...args} variant="outlined">
+          <Icon size={16}>edit-01</Icon>
+        </IconButton>
+        <IconButton {...args} variant="tonal">
+          <Icon size={16}>settings-01</Icon>
+        </IconButton>
+        <IconButton {...args} variant="iconOnly">
+          <Icon size={16}>search-01</Icon>
+        </IconButton>
+      </Stack>
     </Stack>
   ),
 };

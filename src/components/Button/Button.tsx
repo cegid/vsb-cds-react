@@ -10,6 +10,7 @@ import colorPalettes, { CustomColorString, white } from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
 import typography from "../../theme/typography";
+import ProgressBar from "../ProgressBar";
 
 export type ButtonVariant = NonNullable<CegidButtonProps["variant"]>;
 export type ButtonColor = NonNullable<CegidButtonProps["color"]>;
@@ -25,6 +26,11 @@ export interface ExtendedButtonProps extends Omit<CegidButtonProps, "size"> {
    * - `auto`: Responsive size (32px on desktop, 40px on mobile)
    */
   size?: ButtonSize;
+  /**
+   * Shows a loading state and disables the button interaction.
+   * @default false
+   */
+  isLoading?: boolean;
 }
 
 const { primary, secondary, success, critical, yellow, plum, neutral, info } =
@@ -379,7 +385,35 @@ const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
 
 const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
   (props, ref) => {
-    const { size = "auto", ...restProps } = props;
+    const { size = "auto", isLoading = false, onClick, ...restProps } = props;
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (isLoading) {
+        return;
+      }
+      onClick?.(event);
+    };
+
+    const getProgressBarColor = () => {
+      switch (props.color) {
+        case "primary":
+          return "primary";
+        case "secondary":
+          return "secondary";
+        case "success":
+          return "success";
+        case "error":
+          return "critical";
+        case "warning":
+          return "yellow";
+        case "info":
+          return "info";
+        case "neutral":
+          return "neutral";
+        default:
+          return "primary";
+      }
+    };
 
     const getContainedBackgroundColor = () => {
       if (!props.disabled) {
@@ -415,8 +449,15 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
           <StyledButton
             {...{ disableRipple: true, disableElevation: true, ...restProps }}
             buttonsize={size}
+            onClick={handleClick}
             ref={ref}
-          />
+          >
+            {isLoading ? (
+              <ProgressBar shape="circle" size={16} color={getProgressBarColor()} />
+            ) : (
+              restProps.children
+            )}
+          </StyledButton>
         </Box>
       );
     } else {
@@ -424,8 +465,15 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
         <StyledButton
           {...{ disableRipple: true, disableElevation: true, ...restProps }}
           buttonsize={size}
+          onClick={handleClick}
           ref={ref}
-        />
+        >
+          {isLoading ? (
+            <ProgressBar shape="circle" size={16} color={getProgressBarColor()} />
+          ) : (
+            restProps.children
+          )}
+        </StyledButton>
       );
     }
   }
