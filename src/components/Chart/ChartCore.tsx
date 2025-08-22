@@ -342,6 +342,13 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             convertedDataset.hoverOffset = 12;
           }
 
+          if (type === "line") {
+            convertedDataset.borderWidth = 3;
+            convertedDataset.tension = 0.4;
+            convertedDataset.pointRadius = 0;
+            convertedDataset.pointHoverRadius = 0;
+          }
+
           if (dataset.backgroundColor) {
             if (Array.isArray(dataset.backgroundColor)) {
               (convertedDataset as any).backgroundColor = dataset.backgroundColor.map((color, colorIndex) => {
@@ -519,6 +526,20 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                 },
               },
             },
+            ...(type === "line"
+              ? {
+                  elements: {
+                    line: {
+                      borderWidth: 3,
+                      tension: 0.4,
+                    },
+                    point: {
+                      radius: 0,
+                      hoverRadius: 0,
+                    },
+                  },
+                }
+              : {}),
             ...(chartType === "bar"
               ? {
                   indexAxis,
