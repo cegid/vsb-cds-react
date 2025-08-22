@@ -76,7 +76,7 @@ const meta = {
     },
     granularities: {
       control: { type: "check" },
-      options: ["day", "month", "year", "hours"],
+      options: ["day", "week", "month", "year", "hours"],
       description: "Available granularities to display in the segmented control",
     },
   },
@@ -358,6 +358,33 @@ export const WithError: Story = {
     value: undefined,
     label: "Date",
     errorText: "Ce champ est requis",
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
+    return (
+      <Box width={300} height={450}>
+        <DatePicker
+          {...args}
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const WeekSelection: Story = {
+  args: {
+    value: new Date("2024-12-25"),
+    label: "Sélection de semaine",
+    granularities: ["day", "week", "month"],
+    isDateRange: true,
   },
   render: (args) => {
     const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(

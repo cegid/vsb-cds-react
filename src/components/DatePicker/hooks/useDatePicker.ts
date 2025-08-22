@@ -32,6 +32,7 @@ export const useDatePicker = ({
   const [minutesInput, setMinutesInput] = useState("");
   const [showMonthSelector, setShowMonthSelector] = useState(false);
   const [showYearSelector, setShowYearSelector] = useState(false);
+  const [showWeekSelector, setShowWeekSelector] = useState(false);
   const [rangeSelection, setRangeSelection] = useState<"start" | "end">(
     "start"
   );
@@ -53,8 +54,20 @@ export const useDatePicker = ({
     setIsOpen(!isOpen);
   };
 
-  const handleDateSelect = (date: Date) => {
-    if (isDateRange) {
+  const handleDateSelect = (date: Date, isWeekMode = false) => {
+    if (isWeekMode) {
+      const startOfWeek = new Date(date);
+      startOfWeek.setDate(date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1)); // Lundi
+      const endOfWeek = new Date(startOfWeek);
+      endOfWeek.setDate(startOfWeek.getDate() + 6); // Dimanche
+
+      if (isDateRange) {
+        setTempValue([startOfWeek, endOfWeek]);
+        setRangeSelection("start");
+      } else {
+        setTempValue(startOfWeek);
+      }
+    } else if (isDateRange) {
       const currentRange = Array.isArray(tempValue)
         ? tempValue
         : [undefined, undefined];
@@ -116,6 +129,8 @@ export const useDatePicker = ({
     setShowMonthSelector,
     showYearSelector,
     setShowYearSelector,
+    showWeekSelector,
+    setShowWeekSelector,
     rangeSelection,
     setRangeSelection,
     localeLabels: localeLabels[locale],

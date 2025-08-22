@@ -37,7 +37,7 @@ export interface CalendarGridProps {
   isDateRange?: boolean;
 }
 
- export const CalendarGrid: React.FC<CalendarGridProps> = ({
+export const CalendarGrid: React.FC<CalendarGridProps> = ({
   currentMonth,
   selectedDate,
   color = "primary",
@@ -54,14 +54,15 @@ export interface CalendarGridProps {
   const [hoveredDate, setHoveredDate] = React.useState<Date | null>(null);
 
   const isInHoverRange = (date: Date) => {
-    if (!isDateRange || !hoveredDate || !Array.isArray(selectedDate)) return false;
-    
+    if (!isDateRange || !hoveredDate || !Array.isArray(selectedDate))
+      return false;
+
     const [startDate] = selectedDate;
     if (!startDate) return false;
 
     const minDate = startDate < hoveredDate ? startDate : hoveredDate;
     const maxDate = startDate < hoveredDate ? hoveredDate : startDate;
-    
+
     return date >= minDate && date <= maxDate;
   };
 
@@ -82,13 +83,7 @@ export interface CalendarGridProps {
       const isDisabled = isDateDisabled(date);
 
       if (isDisabled) {
-        days.push(
-          <Box
-            key={`prev-${day}`}
-            width={32}
-            height={32}
-          />
-        );
+        days.push(<Box key={`prev-${day}`} width={32} height={32} />);
         continue;
       }
 
@@ -131,13 +126,7 @@ export interface CalendarGridProps {
       const isDisabled = isDateDisabled(date);
 
       if (isDisabled) {
-        days.push(
-          <Box
-            key={day}
-            width={32}
-            height={32}
-          />
-        );
+        days.push(<Box key={day} width={32} height={32} />);
         continue;
       }
 
@@ -249,13 +238,7 @@ export interface CalendarGridProps {
       const isDisabled = isDateDisabled(date);
 
       if (isDisabled) {
-        days.push(
-          <Box
-            key={`next-${day}`}
-            width={32}
-            height={32}
-          />
-        );
+        days.push(<Box key={`next-${day}`} width={32} height={32} />);
         continue;
       }
 
