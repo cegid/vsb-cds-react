@@ -101,9 +101,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     }, [value]);
 
     const getDateFormat = (date: Date) => {
-      const format =
-        selectedGranularity === "week" ? "DD/MM/YYYY" : "shortDate";
-      return calendar.adapter.formatByString(date, format);
+      if (selectedGranularity === "week") {
+        return calendar.adapter.format(date, "shortDate");
+      }
+      return calendar.adapter.format(date, "shortDate");
     };
 
     const formatDateForDisplay = (
@@ -120,10 +121,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
         return `${startStr} - ${endStr}`;
       } else if (!Array.isArray(dateValue)) {
-        const dateStr = calendar.adapter.formatByString(
-          dateValue,
-          "DD/MM/YYYY"
-        );
+        const dateStr = calendar.adapter.format(dateValue, "shortDate");
 
         if (
           showTime &&
