@@ -39,7 +39,6 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
       return weeks;
     }
 
-    // Ajuster les dates au début/fin de l'année courante si nécessaire
     if (startDate.getFullYear() < currentYear) {
       startDate = new Date(currentYear, 0, 1);
     }
@@ -47,11 +46,8 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
       endDate = new Date(currentYear, 11, 31);
     }
 
-    // Ajuster au lundi de la première semaine
     const firstWeekStart = new Date(startDate);
     const dayOfWeek = firstWeekStart.getDay();
-    const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Si dimanche (0), reculer de 6 jours, sinon ajuster au lundi
-    firstWeekStart.setDate(firstWeekStart.getDate() + diff);
 
     if (firstWeekStart < startDate) {
       firstWeekStart.setDate(firstWeekStart.getDate() + 7);
@@ -94,7 +90,6 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
   const isWeekDisabled = (weekStart: Date, weekEnd: Date) => {
     if (!isDateDisabled) return false;
 
-    // Une semaine est désactivée si tous ses jours sont désactivés
     let currentDate = new Date(weekStart);
     while (currentDate <= weekEnd) {
       if (!isDateDisabled(currentDate)) {

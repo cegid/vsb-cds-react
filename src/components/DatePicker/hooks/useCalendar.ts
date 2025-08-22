@@ -121,19 +121,6 @@ export const useCalendar = ({
     return createDayjs(date).isSame(today, 'day');
   };
 
-  const getWeekRange = (date: Date): [Date, Date] => {
-    const day = createDayjs(date);
-    const startOfWeek = day.startOf('week').toDate();
-    const endOfWeek = day.endOf('week').toDate();
-    return [startOfWeek, endOfWeek];
-  };
-
-  const isDateInWeek = (date: Date, weekStart: Date) => {
-    const day = createDayjs(date);
-    const start = createDayjs(weekStart).startOf('week');
-    return day.isSame(start, 'week');
-  };
-
   const navigateMonth = (direction: 1 | -1) => {
     const newMonth = dayjs(currentMonth).add(direction, 'month').startOf('month');
     setCurrentMonth(newMonth.toDate());

@@ -101,8 +101,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     }, [value]);
 
     const getDateFormat = (date: Date) => {
-      // Utilise le format DD pour avoir toujours 2 chiffres pour le jour
-      const format = selectedGranularity === "week" ? "DD/MM/YYYY" : "shortDate";
+      const format =
+        selectedGranularity === "week" ? "DD/MM/YYYY" : "shortDate";
       return calendar.adapter.formatByString(date, format);
     };
 
@@ -115,23 +115,26 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         const [startDate, endDate] = dateValue;
         if (!startDate && !endDate) return placeholder;
 
-        const startStr = startDate
-          ? getDateFormat(startDate)
-          : "___";
-        const endStr = endDate
-          ? getDateFormat(endDate)
-          : "___";
+        const startStr = startDate ? getDateFormat(startDate) : "___";
+        const endStr = endDate ? getDateFormat(endDate) : "___";
 
         return `${startStr} - ${endStr}`;
       } else if (!Array.isArray(dateValue)) {
-        const dateStr = calendar.adapter.formatByString(dateValue, "DD/MM/YYYY");
+        const dateStr = calendar.adapter.formatByString(
+          dateValue,
+          "DD/MM/YYYY"
+        );
 
         if (
           showTime &&
           datePicker.hours !== undefined &&
           datePicker.minutes !== undefined
         ) {
-          const timeStr = `${datePicker.hours.toString().padStart(2, "0")}:${datePicker.minutes.toString().padStart(2, "0")}`;
+          const timeStr = `${datePicker.hours
+            .toString()
+            .padStart(2, "0")}:${datePicker.minutes
+            .toString()
+            .padStart(2, "0")}`;
           return `${dateStr} ${timeStr}`;
         }
 
@@ -366,7 +369,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     };
 
     const renderSelector = () => {
-      // Week selector
       if (selectedGranularity === "week") {
         return (
           <WeekSelector
@@ -397,23 +399,30 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         );
       }
 
-      // Month/Year selector
-      if (selectedGranularity !== "day" ||
-          datePicker.showMonthSelector ||
-          datePicker.showYearSelector) {
+      if (
+        selectedGranularity !== "day" ||
+        datePicker.showMonthSelector ||
+        datePicker.showYearSelector
+      ) {
         return (
           <MonthYearSelector
             currentMonth={calendar.currentMonth}
             adapter={calendar.adapter}
-            showMonthSelector={selectedGranularity === "month" || datePicker.showMonthSelector}
-            showYearSelector={selectedGranularity === "year" || datePicker.showYearSelector}
-            onMonthSelect={selectedGranularity === "month"
-              ? handleGranularityMonthSelect
-              : handleMonthSelect
+            showMonthSelector={
+              selectedGranularity === "month" || datePicker.showMonthSelector
             }
-            onYearSelect={selectedGranularity === "year"
-              ? handleGranularityYearSelect
-              : handleYearSelect
+            showYearSelector={
+              selectedGranularity === "year" || datePicker.showYearSelector
+            }
+            onMonthSelect={
+              selectedGranularity === "month"
+                ? handleGranularityMonthSelect
+                : handleMonthSelect
+            }
+            onYearSelect={
+              selectedGranularity === "year"
+                ? handleGranularityYearSelect
+                : handleYearSelect
             }
             onShowYearSelector={() => {
               datePicker.setShowYearSelector(true);
@@ -428,10 +437,13 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         );
       }
 
-      // Default day selector header
       return (
         <>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <IconButton
               size="small"
               color={color as CustomColor}
@@ -440,14 +452,17 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               disabled={!calendar.canNavigateToPreviousMonth()}
               onClick={() => calendar.navigateMonth(-1)}
             >
-              <Icon variant="stroke" size={16}>arrow-left-01</Icon>
+              <Icon variant="stroke" size={16}>
+                arrow-left-01
+              </Icon>
             </IconButton>
             <Typography
               variant="bodyMSemiBold"
               sx={{
-                cursor: calendar.canSelectMonth() || calendar.canSelectYear()
-                  ? "pointer"
-                  : "default",
+                cursor:
+                  calendar.canSelectMonth() || calendar.canSelectYear()
+                    ? "pointer"
+                    : "default",
               }}
               onClick={() => {
                 if (calendar.canSelectMonth() || calendar.canSelectYear()) {
@@ -492,7 +507,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             getDaysInMonth={calendar.getDaysInMonth}
             getFirstDayOfMonth={calendar.getFirstDayOfMonth}
             isDateRange={isDateRange}
-            isWeekMode={selectedGranularity === ("week" as DatePickerGranularity)}
           />
         </>
       );
@@ -542,10 +556,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
               {(!showTime ||
                 (showTime &&
-                  selectedGranularity === ("day" as DatePickerGranularity))) && (
-                  <>
-                    {renderSelector()}
-                  </>
+                  selectedGranularity ===
+                    ("day" as DatePickerGranularity))) && (
+                <>{renderSelector()}</>
               )}
 
               {showTime && selectedGranularity === "hours" && (
