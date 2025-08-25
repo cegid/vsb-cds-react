@@ -7,7 +7,21 @@ console.log('🧹 Starting post-build cleanup...');
 const iconFiles = glob.sync('dist/icons/**/*');
 const filesToRemove = iconFiles.filter(file => {
   const filename = path.basename(file);
-  return !filename.includes('stroke-rounded') && !filename.endsWith('.css');
+
+  const usedStyles = [
+    'bulk-rounded',
+    'duotone-rounded', 
+    'solid-rounded',
+    'solid-sharp',
+    'solid-standard',
+    'stroke-rounded',
+    'stroke-sharp', 
+    'stroke-standard',
+    'twotone-rounded'
+  ];
+  
+  const isUsedStyle = usedStyles.some(style => filename.includes(style));
+  return !isUsedStyle && !filename.endsWith('.css');
 });
 
 filesToRemove.forEach(file => {
