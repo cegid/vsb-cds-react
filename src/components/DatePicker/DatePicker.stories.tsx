@@ -84,7 +84,7 @@ const meta = {
     disabled: false,
     placeholder: "Select date",
     label: "label",
-    value: new Date(),
+    value: undefined,
     isDateRange: false,
     locale: "fr",
   },

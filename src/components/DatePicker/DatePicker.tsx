@@ -1,10 +1,13 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { PaletteNames } from "../../theme";
+import { colorPalettes } from "../../theme/colors";
 import Box from "../Box";
 import Icon from "../Icon";
 import IconButton, { CustomColor } from "../IconButton";
 import Typography from "../Typography";
 import Stack from "../Stack";
+
+const { primary, neutral } = colorPalettes;
 import Button, { ButtonColor } from "../Button";
 import SegmentedControl from "../SegmentedControl";
 import Column from "../Column";
@@ -15,6 +18,22 @@ import CalendarGrid from "./components/CalendarGrid";
 import MonthYearSelector from "./components/MonthYearSelector";
 import TimeSelector from "./components/TimeSelector";
 import WeekSelector from "./components/WeekSelector";
+import { Popper, styled } from "@cegid/cds-react";
+
+const StyledTextField = styled(TextField)(() => ({
+  "& .MuiInputBase-root": {
+    "&.Mui-readOnly": {
+      backgroundColor: "transparent",
+      "&:hover": {
+        backgroundColor: neutral[99],
+      },
+      "&.Mui-focused": {
+        outline: `2px solid ${primary[70]}`,
+        outlineOffset: "1px",
+      }
+    }
+  }
+}));
 
 export type DatePickerGranularity = "day" | "week" | "month" | "year" | "hours";
 
@@ -67,8 +86,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       ...textFieldProps
     } = props;
 
-    const datePickerRef = useRef<HTMLDivElement>(null);
-    const [openUpward, setOpenUpward] = useState(false);
+    const inputRef = useRef<HTMLDivElement>(null);
     const [selectedGranularity, setSelectedGranularity] =
       useState<DatePickerGranularity>(granularities[0]);
 
@@ -110,11 +128,11 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     const formatDateForDisplay = (
       dateValue: Date | [Date?, Date?] | undefined
     ) => {
-      if (!dateValue) return placeholder;
+      if (!dateValue) return undefined;
 
       if (isDateRange && Array.isArray(dateValue)) {
         const [startDate, endDate] = dateValue;
-        if (!startDate && !endDate) return placeholder;
+        if (!startDate && !endDate) return undefined;
 
         const startStr = startDate ? getDateFormat(startDate) : "___";
         const endStr = endDate ? getDateFormat(endDate) : "___";
@@ -139,41 +157,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         return dateStr;
       }
 
-      return placeholder;
+      return undefined;
     };
 
-    const getTopPosition = () => {
-      if (isStatic) return "auto";
-      return openUpward ? "auto" : "100%";
-    };
 
-    const getBottomPosition = () => {
-      if (isStatic) return "auto";
-      return openUpward ? "100%" : "auto";
-    };
 
-    const getMarginTop = () => {
-      if (isStatic) return 2;
-      return openUpward ? 0 : 4;
-    };
 
-    const getMarginBottom = () => {
-      if (isStatic) return 0;
-      return openUpward ? 4 : 0;
-    };
-
-    const checkPosition = useCallback(() => {
-      if (datePickerRef.current) {
-        const rect = datePickerRef.current.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        const dropdownHeight = 400;
-
-        const spaceBelow = viewportHeight - rect.bottom;
-        const spaceAbove = rect.top;
-
-        setOpenUpward(spaceBelow < dropdownHeight && spaceAbove > spaceBelow);
-      }
-    }, []);
 
     const handleButtonClick = () => {
       if (!disabled) {
@@ -185,7 +174,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             );
           }
         }
-        checkPosition();
         datePicker.handleOpen();
       }
     };
@@ -510,89 +498,124 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       );
     };
 
+    const renderDatePickerContent = () => {
+      return (
+        <>
+          {granularities.length > 1 || showTime ? (
+            <Box mb={2}>
+              <SegmentedControl
+                fullwidth
+                actions={getGranularityOptions()}
+                defaultSelected={getSelectedGranularityIndex()}
+              />
+            </Box>
+          ) : null}
+
+          {(!showTime ||
+            (showTime &&
+              selectedGranularity === ("day" as DatePickerGranularity))) && (
+            <>{renderSelector()}</>
+          )}
+
+          {showTime && selectedGranularity === "hours" && (
+            <TimeSelector
+              hoursInput={datePicker.hoursInput}
+              minutesInput={datePicker.minutesInput}
+              onHoursChange={(hours, input) =>
+                handleTimeChange("hours", hours, input)
+              }
+              onMinutesChange={(minutes, input) =>
+                handleTimeChange("minutes", minutes, input)
+              }
+            />
+          )}
+
+          <Stack direction="row" justifyContent="flex-end" gap={1}>
+            <Button
+              variant="text"
+              color={color as ButtonColor}
+              size="large"
+              onClick={datePicker.handleCancel}
+            >
+              {datePicker.localeLabels.cancel}
+            </Button>
+            <Button
+              variant="tonal"
+              color={color as ButtonColor}
+              size="large"
+              onClick={datePicker.handleValidate}
+            >
+              {datePicker.localeLabels.ok}
+            </Button>
+          </Stack>
+        </>
+      );
+    };
+
     return (
       <Box ref={ref} width="100%">
-        <Box position="relative" ref={datePickerRef}>
-          <TextField
+        <Box position="relative" ref={inputRef}>
+          <StyledTextField
             {...textFieldProps}
-            value={formatDateForDisplay(datePicker.displayValue)}
+            value={datePicker.displayValue ? formatDateForDisplay(datePicker.displayValue) : ""}
             readOnly
+            placeholder={placeholder}
             disabled={disabled}
             onClick={handleButtonClick}
             onFocus={() => datePicker.setIsFocused(true)}
             onBlur={() => datePicker.setIsFocused(false)}
           />
-
-          {(datePicker.isOpen || isStatic) && !disabled && (
-            <Column
-              position={isStatic ? "relative" : "absolute"}
-              top={getTopPosition()}
-              bottom={getBottomPosition()}
-              left={isStatic ? "auto" : 0}
-              right={isStatic ? "auto" : 0}
-              zIndex={isStatic ? "auto" : 1000}
-              mt={getMarginTop()}
-              mb={getMarginBottom()}
-              p={4}
-              gap={4}
-              backgroundColor="white"
-              border={{ color: "neutral/90", width: 1, style: "solid" }}
-              borderRadius="6px"
-              sx={{
-                boxShadow: isStatic ? "none" : "0 4px 12px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              {granularities.length > 1 || showTime ? (
-                <Box mb={2}>
-                  <SegmentedControl
-                    fullwidth
-                    actions={getGranularityOptions()}
-                    defaultSelected={getSelectedGranularityIndex()}
-                  />
-                </Box>
-              ) : null}
-
-              {(!showTime ||
-                (showTime &&
-                  selectedGranularity ===
-                    ("day" as DatePickerGranularity))) && (
-                <>{renderSelector()}</>
-              )}
-
-              {showTime && selectedGranularity === "hours" && (
-                <TimeSelector
-                  hoursInput={datePicker.hoursInput}
-                  minutesInput={datePicker.minutesInput}
-                  onHoursChange={(hours, input) =>
-                    handleTimeChange("hours", hours, input)
-                  }
-                  onMinutesChange={(minutes, input) =>
-                    handleTimeChange("minutes", minutes, input)
-                  }
-                />
-              )}
-
-              <Stack direction="row" justifyContent="flex-end" gap={1}>
-                <Button
-                  variant="text"
-                  color={color as ButtonColor}
-                  size="large"
-                  onClick={datePicker.handleCancel}
-                >
-                  {datePicker.localeLabels.cancel}
-                </Button>
-                <Button
-                  variant="tonal"
-                  color={color as ButtonColor}
-                  size="large"
-                  onClick={datePicker.handleValidate}
-                >
-                  {datePicker.localeLabels.ok}
-                </Button>
-              </Stack>
-            </Column>
-          )}
         </Box>
+
+        {(datePicker.isOpen || isStatic) && !disabled && (
+          <>
+            {isStatic ? (
+              <Column
+                position="relative"
+                p={4}
+                gap={4}
+                backgroundColor="white"
+                border={{ color: "neutral/90", width: 1, style: "solid" }}
+                borderRadius="6px"
+                sx={{
+                  boxShadow: "none",
+                }}
+              >
+                {renderDatePickerContent()}
+              </Column>
+            ) : (
+              <Popper
+                open={datePicker.isOpen}
+                anchorEl={inputRef.current}
+                placement="bottom-start"
+                role="dialog"
+                style={{ zIndex: 9999 }}
+                modifiers={[
+                  {
+                    name: 'offset',
+                    options: {
+                      offset: [0, 8],
+                    },
+                  },
+                ]}
+              >
+                <Column
+                  p={4}
+                  gap={4}
+                  backgroundColor="white"
+                  border={{ color: "neutral/90", width: 1, style: "solid" }}
+                  borderRadius="6px"
+                  width={338}
+                  sx={{
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  {renderDatePickerContent()}
+                </Column>
+              </Popper>
+            )}
+          </>
+        )}
       </Box>
     );
   }
