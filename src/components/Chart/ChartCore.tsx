@@ -48,6 +48,24 @@ interface TooltipData {
   chartType: ChartType;
   label: string;
   color: string;
+  allValues?: Array<{
+    label: string;
+    value: string;
+    color: string;
+    type: string;
+  }>;
+  mainItem?: {
+    label: string;
+    value: string;
+    color: string;
+    type: string;
+  };
+  otherItems?: Array<{
+    label: string;
+    value: string;
+    color: string;
+    type: string;
+  }>;
 }
 
 /**
@@ -59,7 +77,8 @@ export type ChartType =
   | "verticalBar"
   | "horizontalBar"
   | "pie"
-  | "doughnut";
+  | "doughnut"
+  | "mixed";
 
 /**
  * Configuration for a single dataset within a chart
@@ -77,6 +96,10 @@ export interface ChartDataset {
   borderWidth?: number;
   /** Smoothness of line curves (0-1, line charts only) */
   tension?: number;
+  /** Chart type for mixed charts (bar, line, etc.) */
+  type?: string;
+  /** Y-axis ID for dual axis charts */
+  yAxisID?: string;
   /** Additional Chart.js dataset properties */
   [key: string]: any;
 }
@@ -187,6 +210,8 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           return { chartType: "bar", indexAxis: "y" as const };
         case "bar":
           return { chartType: "bar", indexAxis: "x" as const };
+        case "mixed":
+          return { chartType: "bar", indexAxis: "x" as const };
         default:
           return { chartType: type, indexAxis: "x" as const };
       }
@@ -208,13 +233,66 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           
           tooltipTimeoutRef.current = setTimeout(() => {
             const dataPoint = tooltip.dataPoints[0];
-            const newTooltipData = {
-              chartType: type,
-              label: dataPoint.dataset.label || '',
-              x: dataPoint.label || '',
-              y: dataPoint.formattedValue || '',
-              color: dataPoint.dataset.backgroundColor || '',
-            };
+            
+            let newTooltipData;
+            
+            if (type === "mixed") {
+              // Pour les graphiques mixtes, récupère toutes les valeurs du même label
+              const labelIndex = dataPoint.dataIndex;
+              const allValues = data.datasets.map((dataset, index) => {
+                let color: string;
+                const colorSource = dataset.type === "line" 
+                  ? (dataset.borderColor || dataset.backgroundColor || '#666666')
+                  : (dataset.backgroundColor || '#666666');
+                
+                if (typeof colorSource === 'string') {
+                  color = colorSource;
+                } else if (Array.isArray(colorSource) && colorSource.length > 0) {
+                  color = colorSource[0];
+                } else {
+                  color = '#666666';
+                }
+                
+                return {
+                  label: dataset.label || `Dataset ${index + 1}`,
+                  value: dataset.data[labelIndex]?.toLocaleString() || '0',
+                  color: color,
+                  type: dataset.type || 'bar'
+                };
+              });
+
+              // Trouve le type le moins utilisé
+              const typeCounts = allValues.reduce((acc, item) => {
+                acc[item.type] = (acc[item.type] || 0) + 1;
+                return acc;
+              }, {} as Record<string, number>);
+              
+              const leastUsedType = Object.entries(typeCounts)
+                .sort(([,a], [,b]) => a - b)[0]?.[0];
+              
+              // Sépare l'élément principal des autres
+              const mainItem = allValues.find(item => item.type === leastUsedType);
+              const otherItems = allValues.filter(item => item.type !== leastUsedType);
+              
+              newTooltipData = {
+                chartType: type,
+                label: dataPoint.dataset.label || '',
+                x: dataPoint.label || '',
+                y: dataPoint.formattedValue || '',
+                color: dataPoint.dataset.backgroundColor || '',
+                allValues: allValues,
+                mainItem: mainItem,
+                otherItems: otherItems
+              };
+            } else {
+              newTooltipData = {
+                chartType: type,
+                label: dataPoint.dataset.label || '',
+                x: dataPoint.label || '',
+                y: dataPoint.formattedValue || '',
+                color: dataPoint.dataset.backgroundColor || '',
+              };
+            }
             
             setTooltipData(prevData => {
               if (!prevData || 
@@ -222,7 +300,8 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                   prevData.label !== newTooltipData.label ||
                   prevData.x !== newTooltipData.x ||
                   prevData.y !== newTooltipData.y ||
-                  prevData.color !== newTooltipData.color) {
+                  prevData.color !== newTooltipData.color ||
+                  JSON.stringify(prevData.allValues) !== JSON.stringify(newTooltipData.allValues)) {
                 return newTooltipData;
               }
               return prevData;
@@ -230,7 +309,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           }, 10);
         }
       },
-      [type]
+      [type, data]
     );
 
     const calculateBarTooltipPosition = React.useCallback(
@@ -361,11 +440,16 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             convertedDataset.hoverOffset = 12;
           }
 
-          if (type === "line") {
+          if (type === "line" || convertedDataset.type === "line") {
             convertedDataset.borderWidth = 3;
             convertedDataset.tension = 0.4;
-            convertedDataset.pointRadius = 0;
-            convertedDataset.pointHoverRadius = 0;
+            convertedDataset.pointRadius = convertedDataset.pointRadius ?? 0;
+            convertedDataset.pointHoverRadius = convertedDataset.pointHoverRadius ?? 0;
+            convertedDataset.order = 0; // Place les lignes au premier plan
+          }
+          
+          if (convertedDataset.type === "bar") {
+            convertedDataset.order = 1; // Place les barres en arrière-plan
           }
 
           if (dataset.backgroundColor) {
@@ -455,7 +539,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           const borderWidth = dataset.borderWidth;
           
           convertedDataset.borderWidth = borderWidth;
-          if (type !== "line") {
+          if (type !== "line" && convertedDataset.type !== "line") {
             convertedDataset.borderColor = 'transparent';
           }
 
@@ -592,6 +676,57 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
               : {}),
           }
         : {}),
+      ...(type === "mixed" ? {
+        scales: {
+          x: {
+            grid: {
+              display: showVerticalGrid,
+              color: "#E6E7EA",
+            },
+            ticks: {
+              padding: 10,
+              color: neutral[50],
+              font: {
+                family: typography.captionSemiBold.fontFamily,
+                size: typography.captionSemiBold.fontSize,
+              },
+            },
+          },
+          y: {
+            type: 'linear',
+            display: true,
+            position: 'left',
+            grid: {
+              display: showHorizontalGrid,
+              color: "#E6E7EA",
+            },
+            ticks: {
+              padding: 10,
+              color: neutral[50],
+              font: {
+                family: typography.captionSemiBold.fontFamily,
+                size: typography.captionSemiBold.fontSize,
+              },
+            },
+          },
+          y1: {
+            type: 'linear',
+            display: true,
+            position: 'right',
+            grid: {
+              drawOnChartArea: false,
+            },
+            ticks: {
+              padding: 10,
+              color: neutral[50],
+              font: {
+                family: typography.captionSemiBold.fontFamily,
+                size: typography.captionSemiBold.fontSize,
+              },
+            },
+          },
+        },
+      } : {}),
       ...options,
     }), [
       type,
@@ -619,6 +754,8 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         case "verticalBar":
         case "horizontalBar":
           return <Bar {...commonProps} />;
+        case "mixed":
+          return <Bar {...commonProps} />;
         case "pie":
           return <Pie {...commonProps} plugins={[ChartDataLabels]} />;
         case "doughnut":
@@ -640,8 +777,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         <Box
           ref={tooltipRef}
           position="absolute"
-          backgroundColor="neutral/20"
-          p={5}
+          backgroundColor="neutral/10"
+          px={5}
+          py={4}
           borderRadius={2}
           width="fit-content"
           justifyContent="center"
@@ -651,19 +789,77 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         >
           {tooltipData && (
             <Column gap={4}>
-              <Row gap={2}>
-                {getChartIcon(type, tooltipData.color)}
-                <Typography variant="captionSemiBold" color="white">
-                  {tooltipData.label}
-                </Typography>
-              </Row>
-              <Typography variant="bodySSemiBold" color="white">
-                {tooltipData.y}
-              </Typography>
-              <TooltipDivider />
-              <Typography variant="captionSemiBold" color="neutral/80">
-                {tooltipData.x}
-              </Typography>
+              {tooltipData.mainItem ? (
+                <>
+                  <Column gap={2}>
+                    <Row gap={2} alignItems="center">
+                      {getChartIcon(
+                        tooltipData.mainItem.type === "line" ? "line" : "verticalBar", 
+                        parseCustomColor(tooltipData.mainItem.color) || tooltipData.mainItem.color
+                      )}
+                      <Typography variant="captionRegular" color="white">
+                        {tooltipData.mainItem.label}
+                      </Typography>
+                    </Row>
+                    <Typography variant="titleLSemiBold" color="white">
+                      {tooltipData.mainItem.value}
+                    </Typography>
+                  </Column>
+                  {tooltipData.otherItems && tooltipData.otherItems.length > 0 && (
+                    <Column gap={2}>
+                      {tooltipData.otherItems.map((item, index, array) => {
+                        const currentStack = item.label.includes('Prévision') ? 
+                          item.label.replace('Prévision ', '') : item.label;
+                        const nextItem = array[index + 1];
+                        const nextStack = nextItem ? (nextItem.label.includes('Prévision') ? 
+                          nextItem.label.replace('Prévision ', '') : nextItem.label) : null;
+                        const isLastInStack = !nextItem || currentStack !== nextStack;
+                        
+                        return (
+                          <React.Fragment key={index}>
+                            <Row gap={5} alignItems="center">
+                              {getChartIcon(
+                                item.type === "line" ? "line" : "verticalBar", 
+                                parseCustomColor(item.color) || item.color
+                              )}
+                              <Typography variant="captionRegular" color="white" flex={1}>
+                                {item.label}
+                              </Typography>
+                              <Typography variant="captionSemiBold" color="white">
+                                {item.value}
+                              </Typography>
+                            </Row>
+                            {isLastInStack && index < array.length - 1 && (
+                              <Box height={2} />
+                            )}
+                          </React.Fragment>
+                        );
+                      })}
+                    </Column>
+                  )}
+                  
+                  <TooltipDivider />
+                  <Typography variant="captionSemiBold" color="neutral/80">
+                    {tooltipData.x}
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <Row gap={2}>
+                    {getChartIcon(type, tooltipData.color)}
+                    <Typography variant="captionSemiBold" color="white">
+                      {tooltipData.label}
+                    </Typography>
+                  </Row>
+                  <Typography variant="bodySSemiBold" color="white">
+                    {tooltipData.y}
+                  </Typography>
+                  <TooltipDivider />
+                  <Typography variant="captionSemiBold" color="neutral/80">
+                    {tooltipData.x}
+                  </Typography>
+                </>
+              )}
             </Column>
           )}
         </Box>

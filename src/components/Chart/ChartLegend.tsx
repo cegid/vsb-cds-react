@@ -138,19 +138,28 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
     index: number,
     isInModal = false
   ) => {
+    // Détermine le type d'icône selon le dataset pour les graphiques mixtes
+    const getDatasetChartType = () => {
+      if (chartType === "mixed" && dataset.type) {
+        return dataset.type === "line" ? "line" : "verticalBar";
+      }
+      return chartType;
+    };
+
+    const datasetChartType = getDatasetChartType();
+
     let datasetColor = "#666666";
 
-    if (
-      dataset.backgroundColor &&
-      typeof dataset.backgroundColor === "string"
-    ) {
-      datasetColor = parseCustomColor(dataset.backgroundColor) ?? "white";
-    } else if (
-      dataset.backgroundColor &&
-      Array.isArray(dataset.backgroundColor) &&
-      dataset.backgroundColor[0]
-    ) {
-      datasetColor = parseCustomColor(dataset.backgroundColor[0]) ?? "white";
+    // Pour les lignes, utilise la borderColor, sinon la backgroundColor
+    const isLineType = datasetChartType === "line";
+    const colorSource = isLineType
+      ? dataset.borderColor
+      : dataset.backgroundColor;
+
+    if (colorSource && typeof colorSource === "string") {
+      datasetColor = parseCustomColor(colorSource) ?? "#666666";
+    } else if (colorSource && Array.isArray(colorSource) && colorSource[0]) {
+      datasetColor = parseCustomColor(colorSource[0]) ?? "#666666";
     }
 
     const isHidden = hiddenDatasets.has(index);
@@ -194,7 +203,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               transition: "opacity 200ms ease-in-out",
             }}
           >
-            {getChartIcon(chartType, datasetColor)}
+            {getChartIcon(datasetChartType, datasetColor)}
           </Box>
           <Box
             display="flex"
@@ -317,7 +326,10 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
                 alignItems="center"
                 justifyContent="center"
               >
-                {getChartIcon(chartType, "#666666")}
+                {getChartIcon(
+                  chartType === "mixed" ? "verticalBar" : chartType,
+                  parseCustomColor("neutral/60")
+                )}
               </Box>
               <Typography variant="bodySMedium" color="neutral/50">
                 +{remainingCount}

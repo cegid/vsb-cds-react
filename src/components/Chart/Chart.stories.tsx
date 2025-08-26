@@ -222,6 +222,65 @@ const sampleLineData: CustomChartData = {
   ],
 };
 
+const sampleMixedData: CustomChartData = {
+  labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin"],
+  datasets: [
+    {
+      label: "Encaissements",
+      data: [625000, 658000, 582000, 731000, 768000, 694000],
+      backgroundColor: "primary/60",
+      borderColor: "primary/95",
+      borderWidth: 0,
+      type: "bar",
+      yAxisID: "y",
+      stack: "Encaissements",
+    },
+    {
+      label: "Prévision Encaissements",
+      data: [640000, 670000, 595000, 745000, 780000, 726000],
+      backgroundColor: "primary/95",
+      borderColor: "primary/95",
+      borderWidth: 0,
+      type: "bar",
+      yAxisID: "y",
+      stack: "Encaissements",
+    },
+    {
+      label: "Décaissements",
+      data: [500000, 495000, 510000, 525000, 535000, 533000],
+      backgroundColor: "secondary/60",
+      borderColor: "secondary/95",
+      borderWidth: 0,
+      type: "bar",
+      yAxisID: "y",
+      stack: "Décaissements",
+    },
+    {
+      label: "Prévision Décaissements",
+      data: [515000, 505000, 518000, 530000, 540000, 542000],
+      backgroundColor: "secondary/95",
+      borderColor: "secondary/95",
+      borderWidth: 0,
+      type: "bar",
+      yAxisID: "y",
+      stack: "Décaissements",
+    },
+    {
+      label: "Solde Net",
+      data: [125000, 163000, 72000, 206000, 233000, 161000],
+      borderColor: "neutral/60",
+      backgroundColor: "white",
+      borderWidth: 3,
+      type: "line",
+      fill: false,
+      tension: 0.4,
+      yAxisID: "y1",
+      pointRadius: 4,
+      pointHoverRadius: 6,
+    },
+  ],
+};
+
 const meta = {
   title: "📊 Data Display/Chart",
   component: Chart,
@@ -232,7 +291,7 @@ const meta = {
   argTypes: {
     type: {
       control: "select",
-      options: ["verticalBar", "horizontalBar", "pie", "doughnut", "line"],
+      options: ["verticalBar", "horizontalBar", "pie", "doughnut", "line", "mixed"],
       description: "The type of chart to display",
     },
     width: {
@@ -285,6 +344,21 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const MixedChart: Story = {
+  args: {
+    type: "mixed",
+    backgroundColor: "primary",
+    data: sampleMixedData,
+    title: "Flux de trésorerie avec solde net",
+    showVerticalGrid: true,
+    showHorizontalGrid: true,
+    height: 500,
+    width: 800,
+    totalsDisplayMode: "simple",
+  },
+  render: (args) => <Chart {...args} />,
+};
 
 export const GroupedBarChart: Story = {
   args: {
