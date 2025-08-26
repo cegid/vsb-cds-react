@@ -154,7 +154,6 @@ const sampleDoughnutData: CustomChartData = {
 const meta = {
   title: "📊 Data Display/Chart",
   component: Chart,
-  decorators: [WarningDecorator],
   parameters: {
     layout: "centered",
   },
