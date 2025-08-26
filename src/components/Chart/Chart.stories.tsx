@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import Chart, { CustomChartData } from "./Chart";
-import Box from "../Box";
 import WarningDecorator from "../../storycomponents/WarningDecorator";
 
 const sampleBarData: CustomChartData = {
