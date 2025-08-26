@@ -18,6 +18,11 @@ import WeekSelector from "./components/WeekSelector";
 
 export type DatePickerGranularity = "day" | "week" | "month" | "year" | "hours";
 
+type OneToThreeGranularities = 
+  | [DatePickerGranularity]
+  | [DatePickerGranularity, DatePickerGranularity] 
+  | [DatePickerGranularity, DatePickerGranularity, DatePickerGranularity];
+
 /**
  * Props for the DatePicker component.
  * @interface DatePickerProps
@@ -44,8 +49,12 @@ export interface DatePickerProps
   utc?: boolean;
   /** Whether to display the date picker in static mode (always visible) */
   static?: boolean;
-  /** Available granularities to display in the segmented control */
-  granularities?: DatePickerGranularity[];
+  /** 
+   * Available granularities to display in the segmented control
+   * @example ["day"], ["day", "week"], ["day", "week", "month"]
+   * @maximum 3 granularities allowed - enforced at TypeScript level
+   */
+  granularities?: OneToThreeGranularities;
 }
 
 const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
@@ -63,7 +72,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       timezone,
       utc = false,
       static: isStatic = false,
-      granularities = ["day"],
+      granularities = ["day"] as const,
       ...textFieldProps
     } = props;
 
@@ -110,11 +119,11 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     const formatDateForDisplay = (
       dateValue: Date | [Date?, Date?] | undefined
     ) => {
-      if (!dateValue) return placeholder;
+      if (!dateValue) return "";
 
       if (isDateRange && Array.isArray(dateValue)) {
         const [startDate, endDate] = dateValue;
-        if (!startDate && !endDate) return placeholder;
+        if (!startDate && !endDate) return "";
 
         const startStr = startDate ? getDateFormat(startDate) : "___";
         const endStr = endDate ? getDateFormat(endDate) : "___";
@@ -139,7 +148,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         return dateStr;
       }
 
-      return placeholder;
+      return "";
     };
 
     const getTopPosition = () => {
@@ -323,6 +332,20 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       });
     };
 
+    const getSelectedMonthRange = (): [number?, number?] | undefined => {
+      if (!isDateRange || !Array.isArray(value) || !value[0] || !value[1]) {
+        return undefined;
+      }
+      return [value[0].getMonth(), value[1].getMonth()];
+    };
+
+    const getSelectedYearRange = (): [number?, number?] | undefined => {
+      if (!isDateRange || !Array.isArray(value) || !value[0] || !value[1]) {
+        return undefined;
+      }
+      return [value[0].getFullYear(), value[1].getFullYear()];
+    };
+
     const handleGranularityMonthSelect = (monthIndex: number) => {
       const monthDate = new Date(
         calendar.currentMonth.getFullYear(),
@@ -379,17 +402,18 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               weekEnd.setDate(weekStart.getDate() + 6);
               if (isDateRange) {
                 datePicker.setTempValue([weekStart, weekEnd]);
-                datePicker.setDisplayValue([weekStart, weekEnd]);
-                onChange?.([weekStart, weekEnd]);
               } else {
                 datePicker.setTempValue(weekStart);
-                datePicker.setDisplayValue(weekStart);
-                onChange?.(weekStart);
               }
-              if (!isStatic) {
+              if (!isDateRange && !isStatic) {
+                datePicker.setDisplayValue([weekStart, weekEnd]);
+                onChange?.([weekStart, weekEnd]);
                 datePicker.setIsOpen(false);
               }
             }}
+            onWeekRangeSelect={datePicker.handleWeekRangeSelect}
+            tempRange={datePicker.tempWeekRange}
+            allowRange={isDateRange}
             isDateDisabled={calendar.isDateDisabled}
             minDate={minDate}
             maxDate={maxDate}
@@ -422,6 +446,14 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                 ? handleGranularityYearSelect
                 : handleYearSelect
             }
+            onMonthRangeSelect={datePicker.handleMonthRangeSelect}
+            onYearRangeSelect={datePicker.handleYearRangeSelect}
+            tempMonthRange={datePicker.tempMonthRange}
+            tempYearRange={datePicker.tempYearRange}
+            selectedMonthRange={getSelectedMonthRange()}
+            selectedYearRange={getSelectedYearRange()}
+            allowRange={isDateRange && (selectedGranularity === "month" || selectedGranularity === "year")}
+            color={color as 'primary' | 'secondary' | 'error' | 'warning' | 'success' | 'info' | 'neutral'}
             onShowYearSelector={() => {
               datePicker.setShowYearSelector(true);
               datePicker.setShowMonthSelector(false);
@@ -516,6 +548,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
           <TextField
             {...textFieldProps}
             value={formatDateForDisplay(datePicker.displayValue)}
+            placeholder={placeholder}
             readOnly
             disabled={disabled}
             onClick={handleButtonClick}

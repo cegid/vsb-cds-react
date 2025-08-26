@@ -36,6 +36,9 @@ export const useDatePicker = ({
   const [rangeSelection, setRangeSelection] = useState<"start" | "end">(
     "start"
   );
+  const [tempWeekRange, setTempWeekRange] = useState<[Date?, Date?]>();
+  const [tempMonthRange, setTempMonthRange] = useState<[number?, number?]>();
+  const [tempYearRange, setTempYearRange] = useState<[number?, number?]>();
 
   const localeLabels = {
     fr: { cancel: "Annuler", ok: "Valider" },
@@ -95,15 +98,77 @@ export const useDatePicker = ({
 
   const handleCancel = () => {
     setTempValue(initialValue);
+    setTempWeekRange(undefined);
+    setTempMonthRange(undefined);
+    setTempYearRange(undefined);
     setIsOpen(false);
   };
 
-  const handleValidate = () => {
-    if (onChange && tempValue) {
-      onChange(tempValue);
+  const handleWeekRangeSelect = (range: [Date?, Date?]) => {
+    setTempWeekRange(range);
+    if (isDateRange && range[0] && range[1]) {
+      setTempValue([range[0], range[1]]);
+    } else if (isDateRange && range[0]) {
+      setTempValue([range[0], undefined]);
+    } else {
+      setTempValue(undefined);
     }
-    setDisplayValue(tempValue);
+  };
+
+  const handleMonthRangeSelect = (range: [number?, number?]) => {
+    setTempMonthRange(range);
+    if (isDateRange && range[0] !== undefined && range[1] !== undefined) {
+      const startMonth = new Date(new Date().getFullYear(), range[0], 1);
+      const endMonth = new Date(new Date().getFullYear(), range[1] + 1, 0);
+      setTempValue([startMonth, endMonth]);
+    } else if (isDateRange && range[0] !== undefined) {
+      const startMonth = new Date(new Date().getFullYear(), range[0], 1);
+      setTempValue([startMonth, undefined]);
+    } else {
+      setTempValue(undefined);
+    }
+  };
+
+  const handleYearRangeSelect = (range: [number?, number?]) => {
+    setTempYearRange(range);
+    if (isDateRange && range[0] !== undefined && range[1] !== undefined) {
+      const startYear = new Date(range[0], 0, 1);
+      const endYear = new Date(range[1], 11, 31);
+      setTempValue([startYear, endYear]);
+    } else if (isDateRange && range[0] !== undefined) {
+      const startYear = new Date(range[0], 0, 1);
+      setTempValue([startYear, undefined]);
+    } else {
+      setTempValue(undefined);
+    }
+  };
+
+  const handleValidate = () => {
+    let finalValue = tempValue;
+
+    // Si nous avons une sélection de plage temporaire, l'utiliser
+    if (tempWeekRange && tempWeekRange[0] && tempWeekRange[1]) {
+      finalValue = tempWeekRange;
+    } else if (tempMonthRange && tempMonthRange[0] !== undefined && tempMonthRange[1] !== undefined) {
+      const startMonth = new Date(new Date().getFullYear(), tempMonthRange[0], 1);
+      const endMonth = new Date(new Date().getFullYear(), tempMonthRange[1] + 1, 0);
+      finalValue = [startMonth, endMonth];
+    } else if (tempYearRange && tempYearRange[0] !== undefined && tempYearRange[1] !== undefined) {
+      const startYear = new Date(tempYearRange[0], 0, 1);
+      const endYear = new Date(tempYearRange[1], 11, 31);
+      finalValue = [startYear, endYear];
+    }
+
+    if (onChange && finalValue) {
+      onChange(finalValue);
+    }
+    setDisplayValue(finalValue);
     setIsOpen(false);
+    
+    // Reset des sélections temporaires
+    setTempWeekRange(undefined);
+    setTempMonthRange(undefined);
+    setTempYearRange(undefined);
   };
 
   return {
@@ -138,5 +203,14 @@ export const useDatePicker = ({
     handleDateSelect,
     handleCancel,
     handleValidate,
+    handleWeekRangeSelect,
+    handleMonthRangeSelect,
+    handleYearRangeSelect,
+    tempWeekRange,
+    setTempWeekRange,
+    tempMonthRange,
+    setTempMonthRange,
+    tempYearRange,
+    setTempYearRange,
   };
 };

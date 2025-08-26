@@ -5,6 +5,7 @@ import DatePicker from "./DatePicker";
 import Box from "../Box";
 import InputAdornment from "../InputAdornment";
 import Icon from "../Icon";
+import { NotificationDecoratorComponent } from "../../storycomponents/NotificationDecorator";
 const endAdornment = (
   <InputAdornment position="end">
     <Icon variant="stroke" size={16} color="neutral/50">
@@ -13,6 +14,24 @@ const endAdornment = (
   </InputAdornment>
 );
 
+const GranularityValidationDecorator = (Story: any, context: any) => {
+  const granularities = context.args.granularities;
+  const hasError = Array.isArray(granularities) && granularities.length > 3;
+
+  if (hasError) {
+    return (
+      <NotificationDecoratorComponent
+        severity="critical"
+        message="Vous ne pouvez pas sélectionner plus de 3 granularités"
+      >
+        <></>
+      </NotificationDecoratorComponent>
+    );
+  }
+
+  return <Story />;
+};
+
 const meta = {
   title: "🎛️ Form Controls/DatePicker",
   component: DatePicker,
@@ -20,6 +39,7 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
+  decorators: [GranularityValidationDecorator],
   argTypes: {
     value: {
       control: { type: "date" },
@@ -77,14 +97,15 @@ const meta = {
     granularities: {
       control: { type: "check" },
       options: ["day", "week", "month", "year", "hours"],
-      description: "Available granularities to display in the segmented control",
+      description:
+        "Available granularities to display in the segmented control (maximum 3)",
     },
   },
   args: {
     disabled: false,
     placeholder: "Select date",
     label: "label",
-    value: new Date(),
+    value: undefined,
     isDateRange: false,
     locale: "fr",
   },
@@ -121,7 +142,7 @@ export const Default: Story = {
 export const DateRangeWithMonthGranularity: Story = {
   args: {
     isDateRange: true,
-    granularities: ["day", "month"],
+    granularities: ["day", "month"] as const,
     label: "Sélection par mois",
   },
   render: (args) => {
@@ -147,7 +168,7 @@ export const DateRangeWithMonthGranularity: Story = {
 export const DateRangeWithYearGranularity: Story = {
   args: {
     isDateRange: true,
-    granularities: ["day", "month", "year"],
+    granularities: ["day", "month", "year"] as const,
     label: "Sélection par année",
   },
   render: (args) => {
@@ -250,7 +271,7 @@ export const WithMinMaxDates: Story = {
 
 export const WithTime: Story = {
   args: {
-    granularities: ["day", "hours"],
+    granularities: ["day", "hours"] as const,
     value: new Date("2024-12-25"),
     label: "Date et heure de rendez-vous",
   },
@@ -303,7 +324,7 @@ export const DateRange: Story = {
 export const DateRangeWithTime: Story = {
   args: {
     isDateRange: true,
-    granularities: ["day"],
+    granularities: ["day"] as const,
     value: [new Date("2024-12-25"), new Date("2024-12-27")],
     label: "Période de dates",
   },
@@ -383,7 +404,34 @@ export const WeekSelection: Story = {
   args: {
     value: new Date("2024-12-25"),
     label: "Sélection de semaine",
-    granularities: ["day", "week", "month"],
+    granularities: ["day", "week", "month"] as const,
+    isDateRange: true,
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
+    return (
+      <Box width={300} height={450}>
+        <DatePicker
+          {...args}
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const MaxThreeGranularities: Story = {
+  args: {
+    value: new Date("2024-12-25"),
+    label: "Maximum 3 granularités",
+    granularities: ["day", "week", "month"] as const,
     isDateRange: true,
   },
   render: (args) => {
