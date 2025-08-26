@@ -16,14 +16,19 @@ export interface SegmentedControlProps {
   actions: SegmentedControlAction[];
   defaultSelected?: number;
   fullwidth?: boolean;
+  selectedIndex?: number;
 }
 
 const SegmentedControl: React.FC<SegmentedControlProps> = ({
   actions,
   defaultSelected = 0,
   fullwidth = false,
+  selectedIndex: controlledSelectedIndex,
 }) => {
-  const [selectedIndex, setSelectedIndex] = useState(defaultSelected);
+  const [internalSelectedIndex, setInternalSelectedIndex] =
+    useState(defaultSelected);
+
+  const selectedIndex = controlledSelectedIndex !== undefined ? controlledSelectedIndex : internalSelectedIndex;
   const [sliderStyle, setSliderStyle] = useState({});
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -57,7 +62,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   };
 
   const handleActionClick = (index: number) => {
-    setSelectedIndex(index);
+    setInternalSelectedIndex(index);
     actions[index].onClick();
   };
 
