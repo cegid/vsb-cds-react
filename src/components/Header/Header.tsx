@@ -107,7 +107,7 @@ const HeaderTitle: React.FC<{
   isMobile: boolean;
   backIcon?: React.ReactElement<typeof Icon>;
 }> = ({ title, backAction, isMobile, backIcon }) => (
-  <Row justifyContent="flex-start" gap="20px" width="100%">
+  <Row justifyContent="flex-start" gap="20px" width="fit-content">
     {backAction && isMobile && (
       <Box pt={1} display="flex" height="fit-content" onClick={backAction}>
         {backIcon}
