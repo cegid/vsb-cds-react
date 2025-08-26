@@ -24,13 +24,13 @@ export interface AlertProps {
    * The main heading text displayed prominently at the top of the alert.
    * Should be concise and clearly communicate the purpose or message.
    */
-  title: string;
+  title: string | React.ReactNode;
 
   /**
    * Optional description text that provides additional context or information.
    * Appears below the title with smaller typography.
    */
-  description?: string;
+  description?: string | React.ReactNode;
 
   /**
    * Optional text label for the action button.

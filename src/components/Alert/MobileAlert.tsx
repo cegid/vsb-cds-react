@@ -52,12 +52,13 @@ const MobileAlert: React.FC<AlertProps> = ({
   };
   const renderImage = (image: AlertImage) => {
     const imageProps = getImageDimensions();
+    const altText = typeof title === 'string' ? title : 'Alert image';
 
     if (typeof image === "string") {
       return (
         <img
           src={image}
-          alt={title}
+          alt={altText}
           style={{
             ...imageProps.style,
             objectFit: "contain" as const,
@@ -104,19 +105,26 @@ const MobileAlert: React.FC<AlertProps> = ({
 
   const renderTitle = () =>
     isMediumSize && (
-      <Typography variant="bodySSemiBold" color="neutral/10">
-        {title}
-      </Typography>
+      typeof title === 'string' ? (
+        <Typography variant="bodySSemiBold" color="neutral/10">
+          {title}
+        </Typography>
+      ) : (
+        title
+      )
     );
 
-  const renderDescription = () => (
-    <Typography
-      variant={isMediumSize ? "captionRegular" : "bodySRegular"}
-      color={getDescriptionColor()}
-    >
-      {description}
-    </Typography>
-  );
+  const renderDescription = () =>
+    typeof description === 'string' ? (
+      <Typography
+        variant={isMediumSize ? "captionRegular" : "bodySRegular"}
+        color={getDescriptionColor()}
+      >
+        {description}
+      </Typography>
+    ) : (
+      description
+    );
 
   const renderActionButton = () =>
     isMediumSize &&

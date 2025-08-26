@@ -41,12 +41,13 @@ const DesktopAlert: React.FC<AlertProps> = ({
       height: 40,
       style: { width: "40px", height: "40px" },
     };
+    const altText = typeof title === 'string' ? title : 'Alert image';
 
     if (typeof image === "string") {
       return (
         <img
           src={image}
-          alt={title}
+          alt={altText}
           style={{
             ...imageProps.style,
             objectFit: "contain" as const,
@@ -64,16 +65,26 @@ const DesktopAlert: React.FC<AlertProps> = ({
   const renderContent = () => (
     <Column>
       {isMediumSize && (
-        <Typography variant="bodySSemiBold" color="neutral/10">
-          {title}
-        </Typography>
+        typeof title === 'string' ? (
+          <Typography variant="bodySSemiBold" color="neutral/10">
+            {title}
+          </Typography>
+        ) : (
+          title
+        )
       )}
-      <Typography
-        variant={isMediumSize ? "captionRegular" : "bodyMRegular"}
-        color={isMediumSize ? "neutral/50" : "neutral/10"}
-      >
-        {description}
-      </Typography>
+      {description && (
+        typeof description === 'string' ? (
+          <Typography
+            variant={isMediumSize ? "captionRegular" : "bodyMRegular"}
+            color={isMediumSize ? "neutral/50" : "neutral/10"}
+          >
+            {description}
+          </Typography>
+        ) : (
+          description
+        )
+      )}
     </Column>
   );
 
