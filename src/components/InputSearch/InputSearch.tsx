@@ -109,12 +109,6 @@ const SearchInput: React.FC<SearchInputProps> = ({
     setHasValue(Boolean(value && value.toString().trim() !== ""));
   }, [value]);
 
-  useEffect(() => {
-    if (size === "long" && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [size]);
-
   const handleClearClick = () => {
     if (onChange) {
       const syntheticEvent = {
@@ -141,7 +135,13 @@ const SearchInput: React.FC<SearchInputProps> = ({
   return (
     <Row gap={4}>
       <Box
-        onClick={() => (size === "short" ? setSize("long") : undefined)}
+        onClick={() => {
+          if (size === "short") {
+            setSize("long");
+            // Focus uniquement quand on passe de short à long
+            setTimeout(() => inputRef.current?.focus(), 0);
+          }
+        }}
         flex={size === "long" ? 1 : 0}
       >
         <CustomTextField
