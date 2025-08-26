@@ -92,7 +92,9 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
     },
     ref
   ) => {
-    const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [isChartModalOpen, setIsChartModalOpen] = React.useState(false);
+    const [currentChartType, setCurrentChartType] = React.useState<ChartType>(chartProps.type);
+
     const [hiddenDatasets, setHiddenDatasets] = React.useState<Set<number>>(
       new Set()
     );
@@ -103,10 +105,11 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       null
     );
     const [isMobileLayout, setIsMobileLayout] = React.useState(false);
+
     const containerRef = React.useRef<HTMLDivElement>(null);
 
     const isPieOrDoughnut =
-      chartProps.type === "pie" || chartProps.type === "doughnut";
+      currentChartType === "pie" || currentChartType === "doughnut";
 
     React.useEffect(() => {
       const checkMobileLayout = () => {
@@ -117,8 +120,8 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       };
 
       checkMobileLayout();
-      window.addEventListener('resize', checkMobileLayout);
-      return () => window.removeEventListener('resize', checkMobileLayout);
+      window.addEventListener("resize", checkMobileLayout);
+      return () => window.removeEventListener("resize", checkMobileLayout);
     }, [isPieOrDoughnut]);
 
     const totalValue = React.useMemo(() => {
@@ -139,7 +142,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
 
     const detailedTotals = React.useMemo(() => {
       if (totalsDisplayMode === "none") return [];
-      
+
       if (isPieOrDoughnut) {
         const dataset = chartProps.data.datasets[0];
         if (!dataset) return [];
@@ -163,8 +166,11 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             .filter(
               (
                 item
-              ): item is { label: string; total: number; datasetIndex: number } =>
-                item !== null
+              ): item is {
+                label: string;
+                total: number;
+                datasetIndex: number;
+              } => item !== null
             );
         }
       }
@@ -196,7 +202,13 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
               item !== null
           );
       }
-    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut, totalsDisplayMode]);
+    }, [
+      chartProps.data,
+      hiddenDatasets,
+      hiddenDataPoints,
+      isPieOrDoughnut,
+      totalsDisplayMode,
+    ]);
 
     const filteredChartData = React.useMemo(() => {
       if (isPieOrDoughnut) {
@@ -244,7 +256,13 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           (_, index) => !hiddenDatasets.has(index)
         ),
       };
-    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut, totalsDisplayMode]);
+    }, [
+      chartProps.data,
+      hiddenDatasets,
+      hiddenDataPoints,
+      isPieOrDoughnut,
+      totalsDisplayMode,
+    ]);
 
     const toggleDataset = (index: number) => {
       if (isPieOrDoughnut) {
@@ -289,15 +307,26 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           },
         }}
       >
-        <Column ref={containerRef} p={6} borderRadius={3} gap={6} backgroundColor="white">
-          <ChartHeader title={title} onModalOpen={() => setIsModalOpen(true)} />
+        <Column
+          ref={containerRef}
+          p={6}
+          borderRadius={3}
+          gap={6}
+          backgroundColor="white"
+        >
+          <ChartHeader
+            title={title}
+            onChartModalOpen={() => setIsChartModalOpen(true)}
+            currentType={currentChartType}
+            onTypeChange={setCurrentChartType}
+          />
 
           {totalsDisplayMode !== "none" && (
             <ChartTotals
               showDetailedTotals={totalsDisplayMode === "detailed"}
               totalValue={totalValue}
               detailedTotals={detailedTotals}
-              chartType={chartProps.type}
+              chartType={currentChartType}
               datasets={chartProps.data.datasets}
               hiddenDatasets={hiddenDatasets}
               hiddenDataPoints={hiddenDataPoints}
@@ -308,16 +337,38 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             />
           )}
 
-          {totalsDisplayMode !== "detailed" && (chartProps.type === "pie" || chartProps.type === "doughnut" ? (
-            !isMobileLayout ? (
-              <Row gap={6} alignItems="center">
-                <Box flex={1}>
-                  <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
-                </Box>
-                <Column gap={2} minWidth="200px" width="auto">
+          {totalsDisplayMode !== "detailed" &&
+            (currentChartType === "pie" || currentChartType === "doughnut" ? (
+              !isMobileLayout ? (
+                <Row gap={6} alignItems="center">
+                  <Box flex={1}>
+                    <ChartCore
+                      ref={ref}
+                      {...chartProps}
+                      type={currentChartType}
+                      data={filteredChartData}
+                    />
+                  </Box>
+                  <Column gap={2} minWidth="200px" width="auto">
+                    <ChartLegend
+                      datasets={chartProps.data.datasets}
+                      chartType={currentChartType}
+                      hiddenDatasets={
+                        isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
+                      }
+                      hoveredDataset={hoveredDataset}
+                      onToggleDataset={toggleDataset}
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                      labels={chartProps.data.labels}
+                    />
+                  </Column>
+                </Row>
+              ) : (
+                <>
                   <ChartLegend
                     datasets={chartProps.data.datasets}
-                    chartType={chartProps.type}
+                    chartType={currentChartType}
                     hiddenDatasets={
                       isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
                     }
@@ -326,14 +377,21 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     labels={chartProps.data.labels}
+                    isMobileLayout={isMobileLayout}
                   />
-                </Column>
-              </Row>
+                  <ChartCore
+                    ref={ref}
+                    {...chartProps}
+                    type={currentChartType}
+                    data={filteredChartData}
+                  />
+                </>
+              )
             ) : (
               <>
                 <ChartLegend
                   datasets={chartProps.data.datasets}
-                  chartType={chartProps.type}
+                  chartType={currentChartType}
                   hiddenDatasets={
                     isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
                   }
@@ -342,39 +400,17 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
                   labels={chartProps.data.labels}
-                  isMobileLayout={isMobileLayout}
                 />
-                <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
+                <ChartCore ref={ref} {...chartProps} type={currentChartType} data={filteredChartData} />
               </>
-            )
-          ) : (
-            <>
-              <ChartLegend
-                datasets={chartProps.data.datasets}
-                chartType={chartProps.type}
-                hiddenDatasets={
-                  isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
-                }
-                hoveredDataset={hoveredDataset}
-                onToggleDataset={toggleDataset}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                labels={chartProps.data.labels}
-              />
-              <ChartCore ref={ref} {...chartProps} data={filteredChartData} />
-            </>
-          ))}
-          
+            ))}
+
           {totalsDisplayMode === "detailed" && (
-            <ChartCore 
-              ref={ref} 
-              {...chartProps} 
-              data={filteredChartData} 
-            />
+            <ChartCore ref={ref} {...chartProps} type={currentChartType} data={filteredChartData} />
           )}
           <ChartModal
-            open={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            open={isChartModalOpen}
+            onClose={() => setIsChartModalOpen(false)}
             chartProps={chartProps}
             title={title}
             totalValue={totalValue}

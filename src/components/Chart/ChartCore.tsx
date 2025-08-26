@@ -177,6 +177,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
     const [tooltipData, setTooltipData] = React.useState<TooltipData | null>(
       null
     );
+    const tooltipTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
     const getChartConfig = () => {
       switch (type) {
@@ -201,14 +202,32 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
     const updateTooltipData = React.useCallback(
       (tooltip: any) => {
         if (tooltip.body) {
-          const dataPoint = tooltip.dataPoints[0];
-          setTooltipData({
-            chartType: type,
-            label: dataPoint.dataset.label,
-            x: dataPoint.label,
-            y: dataPoint.formattedValue,
-            color: dataPoint.dataset.backgroundColor,
-          });
+          if (tooltipTimeoutRef.current) {
+            clearTimeout(tooltipTimeoutRef.current);
+          }
+          
+          tooltipTimeoutRef.current = setTimeout(() => {
+            const dataPoint = tooltip.dataPoints[0];
+            const newTooltipData = {
+              chartType: type,
+              label: dataPoint.dataset.label || '',
+              x: dataPoint.label || '',
+              y: dataPoint.formattedValue || '',
+              color: dataPoint.dataset.backgroundColor || '',
+            };
+            
+            setTooltipData(prevData => {
+              if (!prevData || 
+                  prevData.chartType !== newTooltipData.chartType ||
+                  prevData.label !== newTooltipData.label ||
+                  prevData.x !== newTooltipData.x ||
+                  prevData.y !== newTooltipData.y ||
+                  prevData.color !== newTooltipData.color) {
+                return newTooltipData;
+              }
+              return prevData;
+            });
+          }, 10);
         }
       },
       [type]
@@ -321,7 +340,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         tooltipEl.style.top = finalPosition.top + "px";
       },
       [
-        type,
+        chartType,
         hideTooltip,
         updateTooltipData,
         calculateBarTooltipPosition,
@@ -433,15 +452,23 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             }
           }
 
+          const borderWidth = dataset.borderWidth;
+          
+          convertedDataset.borderWidth = borderWidth;
+          if (type !== "line") {
+            convertedDataset.borderColor = 'transparent';
+          }
+
           convertedDataset.hoverBackgroundColor = convertedDataset.backgroundColor;
-          convertedDataset.hoverBorderColor = convertedDataset.borderColor;
+          convertedDataset.hoverBorderColor = dataset.borderColor;
+          convertedDataset.hoverBorderWidth = borderWidth;
 
           return convertedDataset;
         }),
       };
     }, [data, useTransparency, hiddenDatasets, hiddenDataPoints, type]);
 
-    const defaultOptions: ChartOptions<any> = {
+    const defaultOptions: ChartOptions<any> = React.useMemo(() => ({
       responsive: true,
       maintainAspectRatio: false,
       aspectRatio: window.innerWidth < 480 ? 1 : window.innerWidth < 768 ? 1.2 : 1.5,
@@ -566,7 +593,16 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           }
         : {}),
       ...options,
-    };
+    }), [
+      type,
+      chartType,
+      indexAxis,
+      showVerticalGrid,
+      showHorizontalGrid,
+      showTooltip,
+      externalTooltipHandler,
+      options
+    ]);
 
     const renderChart = () => {
       const commonProps = {

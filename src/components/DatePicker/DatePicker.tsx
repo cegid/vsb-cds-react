@@ -620,7 +620,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                 open={datePicker.isOpen}
                 anchorEl={inputRef.current}
                 placement="bottom-start"
-                role="dialog"
                 style={{ zIndex: 9999 }}
                 modifiers={[
                   {
