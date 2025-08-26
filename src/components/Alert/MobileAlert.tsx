@@ -52,7 +52,7 @@ const MobileAlert: React.FC<AlertProps> = ({
   };
   const renderImage = (image: AlertImage) => {
     const imageProps = getImageDimensions();
-    const altText = typeof title === 'string' ? title : 'Alert image';
+    const altText = typeof title === "string" ? title : "Alert image";
 
     if (typeof image === "string") {
       return (
@@ -74,16 +74,19 @@ const MobileAlert: React.FC<AlertProps> = ({
   };
 
   const renderCloseButton = () => (
-    <Box minWidth="16px">
-      <Box
-        position="absolute"
-        top={0}
-        right={0}
-        sx={{ cursor: "pointer" }}
-        onClick={onClose}
-      >
-        <Icon size={16}>close</Icon>
-      </Box>
+    <Box
+      position="absolute"
+      top={0}
+      right={0}
+      sx={{ cursor: "pointer" }}
+      onClick={onClose}
+      height={16}
+      width={16}
+      display="flex"
+    >
+      <Icon size={16} color="primary/10">
+        cancel-01
+      </Icon>
     </Box>
   );
 
@@ -104,18 +107,17 @@ const MobileAlert: React.FC<AlertProps> = ({
   );
 
   const renderTitle = () =>
-    isMediumSize && (
-      typeof title === 'string' ? (
-        <Typography variant="bodySSemiBold" color="neutral/10">
-          {title}
-        </Typography>
-      ) : (
-        title
-      )
-    );
+    isMediumSize &&
+    (typeof title === "string" ? (
+      <Typography variant="bodySSemiBold" color="neutral/10">
+        {title}
+      </Typography>
+    ) : (
+      title
+    ));
 
   const renderDescription = () =>
-    typeof description === 'string' ? (
+    typeof description === "string" ? (
       <Typography
         variant={isMediumSize ? "captionRegular" : "bodySRegular"}
         color={getDescriptionColor()}
