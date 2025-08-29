@@ -74,6 +74,18 @@ export interface DatePickerProps
    * @maximum 3 granularities allowed - enforced at TypeScript level
    */
   granularities?: OneToThreeGranularities;
+  /** 
+   * Format for displaying dates in the input field
+   * Can specify date format, range separator, and prefix
+   * @example { prefix: "Du ", dateFormat: "dd/MM/yyyy", rangeSeparator: "au" }
+   * @example { prefix: "From ", dateFormat: "shortDate", rangeSeparator: "-" }
+   * @default { dateFormat: "shortDate", rangeSeparator: "-" }
+   */
+  dateDisplayFormat?: {
+    prefix?: string;
+    dateFormat?: string;
+    rangeSeparator?: string;
+  };
 }
 
 const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
@@ -92,6 +104,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       utc = false,
       static: isStatic = false,
       granularities = ["day"] as const,
+      dateDisplayFormat = { dateFormat: "shortDate", rangeSeparator: "-", prefix: "" },
       ...textFieldProps
     } = props;
 
@@ -128,16 +141,16 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     }, [value]);
 
     const getDateFormat = (date: Date) => {
-      if (selectedGranularity === "week") {
-        return calendar.adapter.format(date, "shortDate");
-      }
-      return calendar.adapter.format(date, "shortDate");
+      const format = dateDisplayFormat.dateFormat || "shortDate";
+      return calendar.adapter.format(date, format);
     };
 
     const formatDateForDisplay = (
       dateValue: Date | [Date?, Date?] | undefined
     ) => {
       if (!dateValue) return undefined;
+
+      const prefix = dateDisplayFormat.prefix || "";
 
       if (isDateRange && Array.isArray(dateValue)) {
         const [startDate, endDate] = dateValue;
@@ -146,9 +159,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         const startStr = startDate ? getDateFormat(startDate) : "___";
         const endStr = endDate ? getDateFormat(endDate) : "___";
 
-        return `${startStr} - ${endStr}`;
+        const separator = dateDisplayFormat.rangeSeparator || "-";
+        return `${prefix}${startStr} ${separator} ${endStr}`;
       } else if (!Array.isArray(dateValue)) {
-        const dateStr = calendar.adapter.format(dateValue, "shortDate");
+        const dateStr = getDateFormat(dateValue);
 
         if (
           showTime &&
@@ -160,10 +174,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             .padStart(2, "0")}:${datePicker.minutes
             .toString()
             .padStart(2, "0")}`;
-          return `${dateStr} ${timeStr}`;
+          return `${prefix}${dateStr} ${timeStr}`;
         }
 
-        return dateStr;
+        return `${prefix}${dateStr}`;
       }
 
       return undefined;
