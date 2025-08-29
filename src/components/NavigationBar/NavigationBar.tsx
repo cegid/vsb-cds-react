@@ -189,27 +189,37 @@ const NavigationBar = ({
    ? baseIsSideBarOpen
    : Boolean(hoveredNavItem?.children?.length);
 
-  // Hover timer to delay a little the opening of the sidebar
-  const hoverTimer = useRef<number>();  
+  const hoverTimer = useRef<number>();
+  const closeTimer = useRef<number>();
   
   const navRef = useRef<HTMLDivElement>(null);
   const navWidth = isExpanded ? 204 : 48;
 
   const handleNavMouseEnter = (item: ExtendedNavItem | null) => {
+    window.clearTimeout(closeTimer.current);
     window.clearTimeout(hoverTimer.current);
-    hoverTimer.current = window.setTimeout(() => {
-      setHoveredNavItem(item);
-    }, 400);
+    
+    if (hoveredNavItem !== item) {
+      hoverTimer.current = window.setTimeout(() => {
+        setHoveredNavItem(item);
+      }, 400);
+    }
   };
 
   const handleNavMouseLeave = () => {
     window.clearTimeout(hoverTimer.current);
+    closeTimer.current = window.setTimeout(() => {
+      setHoveredNavItem(null);
+    }, 300);
   };
 
   /**
-   * Cleanup function to clear the hover timer when the component unmounts.
+   * Cleanup function to clear all timers when the component unmounts.
    */
-  useEffect(() => () => window.clearTimeout(hoverTimer.current), []);
+  useEffect(() => () => {
+    window.clearTimeout(hoverTimer.current);
+    window.clearTimeout(closeTimer.current);
+  }, []);
 
   /**
    * Effect to handle the active path based on the current activePath.
@@ -224,12 +234,26 @@ const NavigationBar = ({
 
 
   const handleNavItemClick = (navItem: ExtendedNavItem) => {
+    window.clearTimeout(hoverTimer.current);
+    window.clearTimeout(closeTimer.current);
     setHoveredNavItem(null);
     navItem?.onClick?.();
   };
 
   const handleToggleExpandNavigation = () => {
+    window.clearTimeout(hoverTimer.current);
+    window.clearTimeout(closeTimer.current);
     setIsExpanded(!isExpanded);
+    setHoveredNavItem(null);
+  };
+
+  const handleSidebarMouseEnter = () => {
+    window.clearTimeout(closeTimer.current);
+  };
+
+  const handleSidebarMouseLeave = () => {
+    window.clearTimeout(hoverTimer.current);
+    window.clearTimeout(closeTimer.current);
     setHoveredNavItem(null);
   };
 
@@ -279,8 +303,8 @@ const NavigationBar = ({
         navItems={sidebarNavItems}
         open={isSideBarOpen}
         anchorWidth={navWidth}
-        onMouseEnter={() => window.clearTimeout(hoverTimer.current)}
-        onMouseLeave={() => setHoveredNavItem(null)}
+        onMouseEnter={handleSidebarMouseEnter}
+        onMouseLeave={handleSidebarMouseLeave}
         onNavItemClick={handleNavItemClick}
       />
     </NavContainer>
