@@ -29,6 +29,7 @@ import typography from "../../theme/typography";
 import Column from "../Column";
 import Row from "../Row";
 import { getChartIcon } from "./Chart";
+import OverlayBarChart from "./OverlayBarChart";
 
 ChartJS.register(
   CategoryScale,
@@ -755,7 +756,108 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         case "horizontalBar":
           return <Bar {...commonProps} />;
         case "mixed":
-          return <Bar {...commonProps} />;
+          // Use custom overlay component for gauge effect
+          const hasOverlayBars = data.datasets.some(d => 
+            d.type === 'bar' && d.label?.toLowerCase().includes('prévision')
+          );
+          
+          if (hasOverlayBars) {
+            const handleOverlayHover = (datasetIndex: number, labelIndex: number, event: MouseEvent, barRect?: { x: number, y: number, width: number, height: number }) => {
+              // Simulate Chart.js tooltip structure for mixed charts
+              const fakeTooltip = {
+                opacity: 1,
+                body: ['fake'],
+                dataPoints: [{
+                  datasetIndex: datasetIndex,
+                  dataIndex: labelIndex,
+                  dataset: data.datasets[datasetIndex],
+                  label: data.labels[labelIndex],
+                  formattedValue: data.datasets[datasetIndex].data[labelIndex]?.toLocaleString() || '0'
+                }]
+              };
+              updateTooltipData(fakeTooltip);
+              
+              // Position the tooltip
+              const tooltipEl = tooltipRef.current;
+              if (tooltipEl && barRect) {
+                const chartContainer = tooltipEl.parentElement;
+                if (chartContainer) {
+                  const containerRect = chartContainer.getBoundingClientRect();
+                  
+                  // Get tooltip dimensions
+                  tooltipEl.style.display = "block";
+                  tooltipEl.style.visibility = "hidden"; // Make visible to measure but hide visually
+                  const tooltipRect = tooltipEl.getBoundingClientRect();
+                  const tooltipWidth = tooltipRect.width;
+                  const tooltipHeight = tooltipRect.height;
+                  
+                  // Calculate available space
+                  const containerWidth = containerRect.width;
+                  const containerHeight = containerRect.height;
+                  
+                  // Bar position relative to container
+                  const barCenterX = barRect.x + barRect.width / 2;
+                  const barCenterY = barRect.y + barRect.height / 2;
+                  const barRightX = barRect.x + barRect.width;
+                  const barLeftX = barRect.x;
+                  
+                  let tooltipX, tooltipY;
+                  
+                  // Try to position to the right first
+                  const spaceRight = containerWidth - barRightX;
+                  const spaceLeft = barLeftX;
+                  const spaceTop = barRect.y;
+                  const spaceBottom = containerHeight - (barRect.y + barRect.height);
+                  
+                  if (spaceRight >= tooltipWidth + 10) {
+                    // Position to the right
+                    tooltipX = barRightX + 10;
+                    tooltipY = Math.max(10, Math.min(barCenterY - tooltipHeight / 2, containerHeight - tooltipHeight - 10));
+                    tooltipEl.style.transform = "none";
+                  } else if (spaceLeft >= tooltipWidth + 10) {
+                    // Position to the left
+                    tooltipX = barLeftX - tooltipWidth - 10;
+                    tooltipY = Math.max(10, Math.min(barCenterY - tooltipHeight / 2, containerHeight - tooltipHeight - 10));
+                    tooltipEl.style.transform = "none";
+                  } else if (spaceTop >= tooltipHeight + 10) {
+                    // Position above
+                    tooltipX = barCenterX;
+                    tooltipY = barRect.y - tooltipHeight - 10;
+                    tooltipEl.style.transform = "translateX(-50%)";
+                  } else {
+                    // Position below
+                    tooltipX = barCenterX;
+                    tooltipY = barRect.y + barRect.height + 10;
+                    tooltipEl.style.transform = "translateX(-50%)";
+                  }
+                  
+                  tooltipEl.style.left = `${tooltipX}px`;
+                  tooltipEl.style.top = `${tooltipY}px`;
+                  tooltipEl.style.visibility = "visible"; // Make visible again
+                }
+              }
+            };
+
+            const handleOverlayMouseLeave = () => {
+              const tooltipEl = tooltipRef.current;
+              if (tooltipEl) {
+                hideTooltip(tooltipEl);
+              }
+            };
+
+            return (
+              <OverlayBarChart 
+                data={data}
+                width={width}
+                height={height}
+                showGrid={showHorizontalGrid}
+                onHover={handleOverlayHover}
+                onMouseLeave={handleOverlayMouseLeave}
+              />
+            );
+          } else {
+            return <Bar {...commonProps} />;
+          }
         case "pie":
           return <Pie {...commonProps} plugins={[ChartDataLabels]} />;
         case "doughnut":

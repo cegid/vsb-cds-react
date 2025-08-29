@@ -227,7 +227,7 @@ const sampleMixedData: CustomChartData = {
   datasets: [
     {
       label: "Encaissements",
-      data: [625000, 658000, 582000, 731000, 768000, 694000],
+      data: [600000, 620000, 550000, 700000, 720000, 650000],
       backgroundColor: "primary/60",
       borderColor: "primary/95",
       borderWidth: 0,
@@ -237,7 +237,7 @@ const sampleMixedData: CustomChartData = {
     },
     {
       label: "Prévision Encaissements",
-      data: [640000, 670000, 595000, 745000, 780000, 726000],
+      data: [750000, 780000, 700000, 850000, 900000, 800000],
       backgroundColor: "primary/95",
       borderColor: "primary/95",
       borderWidth: 0,
@@ -247,7 +247,7 @@ const sampleMixedData: CustomChartData = {
     },
     {
       label: "Décaissements",
-      data: [500000, 495000, 510000, 525000, 535000, 533000],
+      data: [450000, 420000, 480000, 500000, 510000, 470000],
       backgroundColor: "secondary/60",
       borderColor: "secondary/95",
       borderWidth: 0,
@@ -257,7 +257,7 @@ const sampleMixedData: CustomChartData = {
     },
     {
       label: "Prévision Décaissements",
-      data: [515000, 505000, 518000, 530000, 540000, 542000],
+      data: [600000, 580000, 620000, 650000, 680000, 630000],
       backgroundColor: "secondary/95",
       borderColor: "secondary/95",
       borderWidth: 0,
@@ -267,7 +267,7 @@ const sampleMixedData: CustomChartData = {
     },
     {
       label: "Solde Net",
-      data: [125000, 163000, 72000, 206000, 233000, 161000],
+      data: [150000, 200000, 70000, 200000, 210000, 180000],
       borderColor: "neutral/60",
       backgroundColor: "white",
       borderWidth: 3,
@@ -355,21 +355,6 @@ export const MixedChart: Story = {
     showHorizontalGrid: true,
     height: 500,
     width: 800,
-    totalsDisplayMode: "simple",
-  },
-  render: (args) => <Chart {...args} />,
-};
-
-export const GroupedBarChart: Story = {
-  args: {
-    type: "verticalBar",
-    backgroundColor: "primary",
-    data: sampleGroupedBarData,
-    title: "Flux de trésorerie",
-    showVerticalGrid: true,
-    showHorizontalGrid: true,
-    height: 500,
-    width: 600,
     totalsDisplayMode: "simple",
   },
   render: (args) => <Chart {...args} />,

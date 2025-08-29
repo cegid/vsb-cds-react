@@ -6,16 +6,29 @@ import Box from "../Box";
 import { neutral } from "../../theme";
 import typography from "../../theme/typography";
 
+/**
+ * Configuration for a single action in the segmented control
+ */
 export interface SegmentedControlAction {
+  /** Optional icon to display in the action */
   icon?: React.ReactNode;
+  /** Optional label text to display in the action */
   label?: React.ReactNode;
+  /** Callback function executed when the action is clicked */
   onClick: () => void;
 }
 
+/**
+ * Props for the SegmentedControl component
+ */
 export interface SegmentedControlProps {
+  /** Array of actions to display in the segmented control */
   actions: SegmentedControlAction[];
+  /** Index of the initially selected action (default: 0) */
   defaultSelected?: number;
+  /** Whether the control should take the full width of its container */
   fullwidth?: boolean;
+  /** Controlled selected index - when provided, overrides internal state */
   selectedIndex?: number;
 }
 
