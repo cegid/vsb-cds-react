@@ -48,28 +48,21 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth();
     
-    // Premier jour du mois
     const firstDayOfMonth = new Date(year, month, 1);
-    // Dernier jour du mois
     const lastDayOfMonth = new Date(year, month + 1, 0);
-    
-    // Trouver le début de la première semaine qui contient des jours du mois
     const firstWeekStart = new Date(firstDayOfMonth);
     const dayOfWeek = firstWeekStart.getDay();
-    // Ajuster pour commencer lundi (1 = lundi, 0 = dimanche)
+  
     const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     firstWeekStart.setDate(firstDayOfMonth.getDate() - daysToSubtract);
     
     let currentWeekStart = new Date(firstWeekStart);
     
-    // Générer les semaines jusqu'à ce qu'on dépasse le mois
     while (currentWeekStart <= lastDayOfMonth || currentWeekStart.getMonth() === month) {
       const weekEnd = new Date(currentWeekStart);
       weekEnd.setDate(currentWeekStart.getDate() + 6);
-      
-      // Inclure la semaine si elle touche le mois courant
+    
       if (weekEnd >= firstDayOfMonth && currentWeekStart <= lastDayOfMonth) {
-        // Vérifier les contraintes minDate/maxDate
         let effectiveStart = new Date(currentWeekStart);
         let effectiveEnd = new Date(weekEnd);
         
@@ -90,7 +83,6 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
       
       currentWeekStart.setDate(currentWeekStart.getDate() + 7);
       
-      // Arrêter si on a dépassé le mois et qu'on n'a plus de jours du mois
       if (currentWeekStart.getMonth() > month || 
           (currentWeekStart.getMonth() < month && currentWeekStart.getFullYear() > year)) {
         break;
@@ -238,12 +230,9 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
       </Stack>
       <Box
         display="grid"
-        sx={{
-          gridTemplateColumns: "1fr 1fr",
-          gap: 2,
-          px: 2,
-          py: 1,
-        }}
+        gridTemplateColumns= "1fr 1fr"
+        rowGap={6}
+        columnGap={4}
       >
         {weeks.map(({ start, end }, index) => {
           const selectionState = getWeekSelectionState(start, end);

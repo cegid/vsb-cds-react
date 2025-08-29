@@ -19,13 +19,21 @@ interface MonthYearSelectorProps {
   onMonthSelect: (monthIndex: number) => void;
   onYearSelect: (year: number) => void;
   onShowYearSelector: () => void;
-  onMonthRangeSelect?: (range: [{month: number, year: number}?, {month: number, year: number}?]) => void;
+  onMonthRangeSelect?: (
+    range: [{ month: number; year: number }?, { month: number; year: number }?]
+  ) => void;
   onYearRangeSelect?: (range: [number?, number?]) => void;
-  tempMonthRange?: [{month: number, year: number}?, {month: number, year: number}?];
+  tempMonthRange?: [
+    { month: number; year: number }?,
+    { month: number; year: number }?
+  ];
   tempYearRange?: [number?, number?];
   selectedMonth?: number;
   selectedYear?: number;
-  selectedMonthRange?: [{month: number, year: number}?, {month: number, year: number}?];
+  selectedMonthRange?: [
+    { month: number; year: number }?,
+    { month: number; year: number }?
+  ];
   selectedYearRange?: [number?, number?];
   isMonthDisabled?: (monthIndex: number, year?: number) => boolean;
   isYearDisabled?: (year: number) => boolean;
@@ -33,7 +41,14 @@ interface MonthYearSelectorProps {
   canSelectYear?: () => boolean;
   canSelectMonth?: (year?: number) => boolean;
   allowRange?: boolean;
-  color?: 'primary' | 'secondary' | 'error' | 'warning' | 'success' | 'info' | 'neutral';
+  color?:
+    | "primary"
+    | "secondary"
+    | "error"
+    | "warning"
+    | "success"
+    | "info"
+    | "neutral";
   onYearNavigate?: (direction: 1 | -1) => void;
   canNavigateToPreviousYear?: () => boolean;
   canNavigateToNextYear?: () => boolean;
@@ -68,77 +83,81 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
 }) => {
   const getMonthSelectionState = (monthIndex: number) => {
     const currentYear = currentMonth.getFullYear();
-    
+
     if (tempMonthRange && allowRange) {
       const [start, end] = tempMonthRange;
-      
+
       if (start && end) {
-        // Comparaison des mois en tenant compte de l'année
         const startMonthValue = start.year * 12 + start.month;
         const endMonthValue = end.year * 12 + end.month;
         const currentMonthValue = currentYear * 12 + monthIndex;
-        
-        const isStart = monthIndex === start.month && currentYear === start.year;
+
+        const isStart =
+          monthIndex === start.month && currentYear === start.year;
         const isEnd = monthIndex === end.month && currentYear === end.year;
-        const isInRange = currentMonthValue >= startMonthValue && currentMonthValue <= endMonthValue;
-        
+        const isInRange =
+          currentMonthValue >= startMonthValue &&
+          currentMonthValue <= endMonthValue;
+
         return {
           isSelected: isStart || isEnd,
           isStart,
           isEnd,
-          isInRange: isInRange && !isStart && !isEnd
+          isInRange: isInRange && !isStart && !isEnd,
         };
       } else if (start) {
         return {
           isSelected: false,
           isStart: monthIndex === start.month && currentYear === start.year,
           isEnd: false,
-          isInRange: false
+          isInRange: false,
         };
       }
     }
 
-    // Si pas de tempRange mais qu'on a une selectedMonthRange existante
     if (selectedMonthRange && allowRange) {
       const [start, end] = selectedMonthRange;
       if (start && end) {
-        // Comparaison des mois en tenant compte de l'année
         const startMonthValue = start.year * 12 + start.month;
         const endMonthValue = end.year * 12 + end.month;
         const currentMonthValue = currentYear * 12 + monthIndex;
-        
-        const isStart = monthIndex === start.month && currentYear === start.year;
+
+        const isStart =
+          monthIndex === start.month && currentYear === start.year;
         const isEnd = monthIndex === end.month && currentYear === end.year;
-        const isInRange = currentMonthValue >= startMonthValue && currentMonthValue <= endMonthValue;
-        
+        const isInRange =
+          currentMonthValue >= startMonthValue &&
+          currentMonthValue <= endMonthValue;
+
         return {
           isSelected: isStart || isEnd,
           isStart,
           isEnd,
-          isInRange: isInRange && !isStart && !isEnd
+          isInRange: isInRange && !isStart && !isEnd,
         };
       }
     }
-    
+
     return {
       isSelected: !allowRange && selectedMonth === monthIndex,
       isStart: false,
       isEnd: false,
-      isInRange: false
+      isInRange: false,
     };
   };
 
   const handleMonthClick = (monthIndex: number) => {
     const currentYear = currentMonth.getFullYear();
     const currentMonthYear = { month: monthIndex, year: currentYear };
-    
+
     if (allowRange && onMonthRangeSelect) {
       if (!tempMonthRange || !tempMonthRange[0]) {
         onMonthRangeSelect([currentMonthYear, undefined]);
       } else if (!tempMonthRange[1]) {
-        const startValue = tempMonthRange[0].year * 12 + tempMonthRange[0].month;
+        const startValue =
+          tempMonthRange[0].year * 12 + tempMonthRange[0].month;
         const currentValue = currentYear * 12 + monthIndex;
-        
+
         if (startValue === currentValue) {
           onMonthRangeSelect([undefined, undefined]);
         } else if (currentValue < startValue) {
@@ -206,7 +225,8 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
           display="grid"
           sx={{
             gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 2,
+            rowGap: 6,
+            columnGap: 4,
           }}
         >
           {months.map((month, index) => {
@@ -252,50 +272,49 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   const getYearSelectionState = (year: number) => {
     if (tempYearRange && allowRange) {
       const [start, end] = tempYearRange;
-      
+
       if (start !== undefined && end !== undefined) {
         const isStart = year === start;
         const isEnd = year === end;
         const isInRange = year >= start && year <= end;
-        
+
         return {
           isSelected: isStart || isEnd,
           isStart,
           isEnd,
-          isInRange: isInRange && !isStart && !isEnd
+          isInRange: isInRange && !isStart && !isEnd,
         };
       } else if (start !== undefined) {
         return {
           isSelected: false,
           isStart: year === start,
           isEnd: false,
-          isInRange: false
+          isInRange: false,
         };
       }
     }
 
-    // Si pas de tempRange mais qu'on a une selectedYearRange existante
     if (selectedYearRange && allowRange) {
       const [start, end] = selectedYearRange;
       if (start !== undefined && end !== undefined) {
         const isStart = year === start;
         const isEnd = year === end;
         const isInRange = year >= start && year <= end;
-        
+
         return {
           isSelected: isStart || isEnd,
           isStart,
           isEnd,
-          isInRange: isInRange && !isStart && !isEnd
+          isInRange: isInRange && !isStart && !isEnd,
         };
       }
     }
-    
+
     return {
       isSelected: !allowRange && selectedYear === year,
       isStart: false,
       isEnd: false,
-      isInRange: false
+      isInRange: false,
     };
   };
 
@@ -320,13 +339,15 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   };
 
   const renderYearSelector = () => {
-    const years = getAvailableYears ? getAvailableYears() : (() => {
-      const currentYear = new Date().getFullYear();
-      return Array.from(
-        { length: currentYear - 1925 + 1 },
-        (_, i) => currentYear - i
-      );
-    })();
+    const years = getAvailableYears
+      ? getAvailableYears()
+      : (() => {
+          const currentYear = new Date().getFullYear();
+          return Array.from(
+            { length: currentYear - 1925 + 1 },
+            (_, i) => currentYear - i
+          );
+        })();
 
     return (
       <Box
@@ -335,7 +356,8 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
           overflowY: "auto",
           display: "grid",
           gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 2,
+          rowGap: 6,
+          columnGap: 4,
         }}
       >
         {years.map((year) => {
