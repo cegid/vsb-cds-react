@@ -30,6 +30,8 @@ export interface SegmentedControlProps {
   fullwidth?: boolean;
   /** Controlled selected index - when provided, overrides internal state */
   selectedIndex?: number;
+  /** Color variant - light or dark theme (default: light) */
+  color?: 'light' | 'dark';
 }
 
 const SegmentedControl: React.FC<SegmentedControlProps> = ({
@@ -37,6 +39,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   defaultSelected = 0,
   fullwidth = false,
   selectedIndex: controlledSelectedIndex,
+  color = 'light',
 }) => {
   const [internalSelectedIndex, setInternalSelectedIndex] =
     useState(defaultSelected);
@@ -82,7 +85,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   const containerStyle: React.CSSProperties = {
     position: "relative",
     display: "flex",
-    backgroundColor: neutral[99],
+    backgroundColor: color === 'dark' ? neutral[30] : neutral[99],
     borderRadius: "12px",
     padding: "2px",
     gap: "4px",
@@ -95,7 +98,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     position: "absolute",
     top: "2px",
     height: "calc(100% - 4px)",
-    backgroundColor: "white",
+    backgroundColor: color === 'dark' ? neutral[50] : "white",
     borderRadius: "10px",
     transition: "all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1)",
     boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
@@ -113,7 +116,9 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     cursor: "pointer",
     borderRadius: "8px",
     transition: "color 0.3s ease",
-    color: selectedIndex === index ? neutral[10] : "#666",
+    color: color === 'dark' 
+      ? "white"
+      : selectedIndex === index ? neutral[10] : "#666",
     fontWeight: selectedIndex === index ? 600 : 400,
     border: "none",
     background: "none",
@@ -142,12 +147,13 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
           style={getButtonStyle(index)}
           onMouseEnter={(e) => {
             if (selectedIndex !== index) {
-              e.currentTarget.style.color = "#333";
+              e.currentTarget.style.color = color === 'dark' ? "#ccc" : "#333";
             }
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color =
-              selectedIndex === index ? (neutral[10] ?? "") : "#666";
+            e.currentTarget.style.color = color === 'dark' 
+              ? "white"
+              : selectedIndex === index ? (neutral[10] ?? "") : "#666";
           }}
         >
           {action.icon && <Box style={iconStyle}>{action.icon}</Box>}
