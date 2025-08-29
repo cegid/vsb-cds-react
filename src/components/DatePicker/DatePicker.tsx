@@ -320,11 +320,14 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       });
     };
 
-    const getSelectedMonthRange = (): [number?, number?] | undefined => {
+    const getSelectedMonthRange = (): [{month: number, year: number}?, {month: number, year: number}?] | undefined => {
       if (!isDateRange || !Array.isArray(value) || !value[0] || !value[1]) {
         return undefined;
       }
-      return [value[0].getMonth(), value[1].getMonth()];
+      return [
+        { month: value[0].getMonth(), year: value[0].getFullYear() },
+        { month: value[1].getMonth(), year: value[1].getFullYear() }
+      ];
     };
 
     const getSelectedYearRange = (): [number?, number?] | undefined => {
@@ -381,7 +384,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       if (selectedGranularity === "week") {
         return (
           <WeekSelector
-            currentYear={calendar.currentMonth.getFullYear()}
+            currentMonth={calendar.currentMonth}
             selectedDate={datePicker.tempValue}
             color={color}
             adapter={calendar.adapter}
@@ -405,6 +408,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             isDateDisabled={calendar.isDateDisabled}
             minDate={minDate}
             maxDate={maxDate}
+            onMonthNavigate={(direction) => calendar.navigateMonth(direction)}
+            canNavigateToPreviousMonth={() => calendar.canNavigateToPreviousMonth()}
+            canNavigateToNextMonth={() => calendar.canNavigateToNextMonth()}
           />
         );
       }
@@ -451,6 +457,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             getAvailableYears={calendar.getAvailableYears}
             canSelectYear={calendar.canSelectYear}
             canSelectMonth={calendar.canSelectMonth}
+            onYearNavigate={(direction) => calendar.navigateYear(direction)}
+            canNavigateToPreviousYear={() => calendar.canNavigateToPreviousYear()}
+            canNavigateToNextYear={() => calendar.canNavigateToNextYear()}
           />
         );
       }

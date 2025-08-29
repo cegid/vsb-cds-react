@@ -126,6 +126,11 @@ export const useCalendar = ({
     setCurrentMonth(newMonth.toDate());
   };
 
+  const navigateYear = (direction: 1 | -1) => {
+    const newMonth = dayjs(currentMonth).add(direction, 'year').startOf('month');
+    setCurrentMonth(newMonth.toDate());
+  };
+
   const goToMonth = (monthIndex: number) => {
     const newMonth = dayjs(currentMonth).month(monthIndex).startOf('month');
     setCurrentMonth(newMonth.toDate());
@@ -157,6 +162,26 @@ export const useCalendar = ({
   const canNavigateToNextMonth = () => {
     const nextMonth = dayjs(currentMonth).add(1, 'month').startOf('month').toDate();
     return hasAvailableDaysInMonth(nextMonth);
+  };
+
+  const hasAvailableMonthsInYear = (targetYear: Date) => {
+    const year = targetYear.getFullYear();
+    for (let month = 0; month < 12; month++) {
+      if (!isMonthDisabled(month, year)) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const canNavigateToPreviousYear = () => {
+    const previousYear = dayjs(currentMonth).subtract(1, 'year').startOf('year').toDate();
+    return hasAvailableMonthsInYear(previousYear);
+  };
+
+  const canNavigateToNextYear = () => {
+    const nextYear = dayjs(currentMonth).add(1, 'year').startOf('year').toDate();
+    return hasAvailableMonthsInYear(nextYear);
   };
 
   const isMonthDisabled = (monthIndex: number, year?: number) => {
@@ -218,10 +243,13 @@ export const useCalendar = ({
     isDateSelected,
     isToday,
     navigateMonth,
+    navigateYear,
     goToMonth,
     goToYear,
     canNavigateToPreviousMonth,
     canNavigateToNextMonth,
+    canNavigateToPreviousYear,
+    canNavigateToNextYear,
     isMonthDisabled,
     isYearDisabled,
     getAvailableYears,

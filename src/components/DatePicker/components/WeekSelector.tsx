@@ -2,26 +2,33 @@ import React from "react";
 import Box from "../../Box";
 import Button from "../../Button";
 import Typography from "../../Typography";
+import IconButton, { CustomColor } from "../../IconButton";
+import Icon from "../../Icon";
+import Stack from "../../Stack";
 import { PaletteNames } from "../../../theme";
 
 interface WeekSelectorProps {
-  currentYear: number;
+  currentMonth: Date;
   selectedDate?: Date | [Date?, Date?];
   color?: PaletteNames;
   adapter: {
     format: (date: Date, formatString: string) => string;
+    formatByString: (date: Date, formatString: string) => string;
   };
   onWeekSelect: (startDate: Date) => void;
-  onWeekRangeSelect?: (range: [Date?, Date?]) => void;
-  tempRange?: [Date?, Date?];
+  onWeekRangeSelect?: (range: [{start: Date, end: Date}?, {start: Date, end: Date}?]) => void;
+  tempRange?: [{start: Date, end: Date}?, {start: Date, end: Date}?];
   isDateDisabled?: (date: Date) => boolean;
   minDate?: Date;
   maxDate?: Date;
   allowRange?: boolean;
+  onMonthNavigate?: (direction: 1 | -1) => void;
+  canNavigateToPreviousMonth?: () => boolean;
+  canNavigateToNextMonth?: () => boolean;
 }
 
 const WeekSelector: React.FC<WeekSelectorProps> = ({
-  currentYear,
+  currentMonth,
   selectedDate,
   color = "primary",
   adapter,
@@ -32,49 +39,64 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
   minDate,
   maxDate,
   allowRange = false,
+  onMonthNavigate,
+  canNavigateToPreviousMonth = () => true,
+  canNavigateToNextMonth = () => true,
 }) => {
-  const getWeeksOfYear = () => {
+  const getWeeksOfMonth = () => {
     const weeks: { start: Date; end: Date }[] = [];
-    let startDate = minDate || new Date(currentYear, 0, 1);
-    let endDate = maxDate || new Date(currentYear, 11, 31);
-
-    if (
-      startDate.getFullYear() > currentYear ||
-      endDate.getFullYear() < currentYear
-    ) {
-      return weeks;
-    }
-
-    if (startDate.getFullYear() < currentYear) {
-      startDate = new Date(currentYear, 0, 1);
-    }
-    if (endDate.getFullYear() > currentYear) {
-      endDate = new Date(currentYear, 11, 31);
-    }
-
-    const firstWeekStart = new Date(startDate);
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    
+    // Premier jour du mois
+    const firstDayOfMonth = new Date(year, month, 1);
+    // Dernier jour du mois
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    
+    // Trouver le début de la première semaine qui contient des jours du mois
+    const firstWeekStart = new Date(firstDayOfMonth);
     const dayOfWeek = firstWeekStart.getDay();
-
-    if (firstWeekStart < startDate) {
-      firstWeekStart.setDate(firstWeekStart.getDate() + 7);
-    }
-
+    // Ajuster pour commencer lundi (1 = lundi, 0 = dimanche)
+    const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    firstWeekStart.setDate(firstDayOfMonth.getDate() - daysToSubtract);
+    
     let currentWeekStart = new Date(firstWeekStart);
-
-    while (currentWeekStart <= endDate) {
+    
+    // Générer les semaines jusqu'à ce qu'on dépasse le mois
+    while (currentWeekStart <= lastDayOfMonth || currentWeekStart.getMonth() === month) {
       const weekEnd = new Date(currentWeekStart);
       weekEnd.setDate(currentWeekStart.getDate() + 6);
-
-      if (weekEnd >= startDate && currentWeekStart <= endDate) {
-        weeks.push({
-          start: new Date(currentWeekStart),
-          end: new Date(weekEnd),
-        });
+      
+      // Inclure la semaine si elle touche le mois courant
+      if (weekEnd >= firstDayOfMonth && currentWeekStart <= lastDayOfMonth) {
+        // Vérifier les contraintes minDate/maxDate
+        let effectiveStart = new Date(currentWeekStart);
+        let effectiveEnd = new Date(weekEnd);
+        
+        if (minDate && effectiveStart < minDate) {
+          effectiveStart = new Date(minDate);
+        }
+        if (maxDate && effectiveEnd > maxDate) {
+          effectiveEnd = new Date(maxDate);
+        }
+        
+        if (effectiveStart <= effectiveEnd) {
+          weeks.push({
+            start: new Date(currentWeekStart),
+            end: new Date(weekEnd),
+          });
+        }
       }
-
+      
       currentWeekStart.setDate(currentWeekStart.getDate() + 7);
+      
+      // Arrêter si on a dépassé le mois et qu'on n'a plus de jours du mois
+      if (currentWeekStart.getMonth() > month || 
+          (currentWeekStart.getMonth() < month && currentWeekStart.getFullYear() > year)) {
+        break;
+      }
     }
-
+    
     return weeks;
   };
 
@@ -83,9 +105,9 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
       const [tempStart, tempEnd] = tempRange;
       
       if (tempStart && tempEnd) {
-        const isStart = weekStart.getTime() === tempStart.getTime();
-        const isEnd = weekEnd.getTime() === tempEnd.getTime();
-        const isInRange = weekStart >= tempStart && weekStart <= tempEnd;
+        const isStart = weekStart.getTime() === tempStart.start.getTime() && weekEnd.getTime() === tempStart.end.getTime();
+        const isEnd = weekStart.getTime() === tempEnd.start.getTime() && weekEnd.getTime() === tempEnd.end.getTime();
+        const isInRange = weekStart >= tempStart.start && weekStart <= tempEnd.start;
         
         return {
           isSelected: isStart || isEnd,
@@ -96,7 +118,7 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
       } else if (tempStart) {
         return {
           isSelected: false,
-          isStart: weekStart.getTime() === tempStart.getTime(),
+          isStart: weekStart.getTime() === tempStart.start.getTime() && weekEnd.getTime() === tempStart.end.getTime(),
           isEnd: false,
           isInRange: false
         };
@@ -134,23 +156,24 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
   };
 
   const handleWeekClick = (weekStart: Date, weekEnd: Date) => {
+    const currentWeek = { start: weekStart, end: weekEnd };
+    
     if (allowRange && onWeekRangeSelect) {
       if (!tempRange || !tempRange[0]) {
-        onWeekRangeSelect([weekStart, undefined]);
+        onWeekRangeSelect([currentWeek, undefined]);
       } else if (!tempRange[1]) {
-        if (weekStart.getTime() === tempRange[0].getTime()) {
+        const firstWeekStartTime = tempRange[0].start.getTime();
+        const currentWeekStartTime = weekStart.getTime();
+        
+        if (currentWeekStartTime === firstWeekStartTime) {
           onWeekRangeSelect([undefined, undefined]);
-        } else if (weekStart < tempRange[0]) {
-          // Calculer la fin de la première semaine sélectionnée
-          const firstWeekEnd = new Date(tempRange[0]);
-          firstWeekEnd.setDate(tempRange[0].getDate() + 6);
-          onWeekRangeSelect([weekStart, firstWeekEnd]);
+        } else if (currentWeekStartTime < firstWeekStartTime) {
+          onWeekRangeSelect([currentWeek, tempRange[0]]);
         } else {
-          // Utiliser la fin de la deuxième semaine sélectionnée
-          onWeekRangeSelect([tempRange[0], weekEnd]);
+          onWeekRangeSelect([tempRange[0], currentWeek]);
         }
       } else {
-        onWeekRangeSelect([weekStart, undefined]);
+        onWeekRangeSelect([currentWeek, undefined]);
       }
     } else {
       onWeekSelect(weekStart);
@@ -170,38 +193,62 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
     return true;
   };
 
-  const weeks = getWeeksOfYear();
+  const weeks = getWeeksOfMonth();
 
   return (
-    <Box height={250} overflow="auto">
-      <Box
-        display="flex"
-        justifyContent="center"
+    <Box maxHeight={250} overflow="auto">
+      <Stack
+        direction="row"
         alignItems="center"
-        mb={2}
-        px={2}
+        justifyContent="space-between"
+        mb={4}
       >
+        <IconButton
+          size="small"
+          color={color as CustomColor}
+          square
+          variant="outlined"
+          disabled={!canNavigateToPreviousMonth()}
+          onClick={() => onMonthNavigate?.(-1)}
+        >
+          <Icon variant="stroke" size={16}>
+            arrow-left-01
+          </Icon>
+        </IconButton>
         <Typography
           variant="bodyMSemiBold"
           sx={{
             textAlign: "center",
           }}
         >
-          {currentYear}
+          {adapter.formatByString(currentMonth, "MMMM YYYY")}
         </Typography>
-      </Box>
+        <IconButton
+          size="small"
+          color={color as CustomColor}
+          square
+          variant="outlined"
+          disabled={!canNavigateToNextMonth()}
+          onClick={() => onMonthNavigate?.(1)}
+        >
+          <Icon variant="stroke" size={16}>
+            arrow-right-01
+          </Icon>
+        </IconButton>
+      </Stack>
       <Box
         display="grid"
         sx={{
-          gridTemplateColumns: "1fr",
+          gridTemplateColumns: "1fr 1fr",
           gap: 2,
           px: 2,
           py: 1,
         }}
       >
-        {weeks.map(({ start, end }) => {
+        {weeks.map(({ start, end }, index) => {
           const selectionState = getWeekSelectionState(start, end);
           const isDisabled = isWeekDisabled(start, end);
+          const isLastWeekAlone = index === weeks.length - 1 && weeks.length % 2 === 1;
 
           const getButtonVariant = () => {
             if (selectionState.isStart || selectionState.isEnd) {
@@ -221,6 +268,10 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
             return "neutral";
           };
 
+          const formatDateWithoutYear = (date: Date) => {
+            return adapter.formatByString(date, "DD/MM");
+          };
+
           return (
             <Button
               key={start.getTime()}
@@ -230,11 +281,9 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
               disabled={isDisabled}
               onClick={() => !isDisabled && handleWeekClick(start, end)}
               fullWidth
+              sx={isLastWeekAlone ? { gridColumn: "1 / -1" } : {}}
             >
-              {`${adapter.format(start, "shortDate")} - ${adapter.format(
-                end,
-                "shortDate"
-              )}`}
+              {`Du ${formatDateWithoutYear(start)} au ${formatDateWithoutYear(end)}`}
             </Button>
           );
         })}

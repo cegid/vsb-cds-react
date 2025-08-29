@@ -2,6 +2,9 @@ import React from "react";
 import Box from "../../Box";
 import Button from "../../Button";
 import Typography from "../../Typography";
+import IconButton, { CustomColor } from "../../IconButton";
+import Icon from "../../Icon";
+import Stack from "../../Stack";
 
 interface DayJsAdapter {
   format: (date: Date, formatString: string) => string;
@@ -16,13 +19,13 @@ interface MonthYearSelectorProps {
   onMonthSelect: (monthIndex: number) => void;
   onYearSelect: (year: number) => void;
   onShowYearSelector: () => void;
-  onMonthRangeSelect?: (range: [number?, number?]) => void;
+  onMonthRangeSelect?: (range: [{month: number, year: number}?, {month: number, year: number}?]) => void;
   onYearRangeSelect?: (range: [number?, number?]) => void;
-  tempMonthRange?: [number?, number?];
+  tempMonthRange?: [{month: number, year: number}?, {month: number, year: number}?];
   tempYearRange?: [number?, number?];
   selectedMonth?: number;
   selectedYear?: number;
-  selectedMonthRange?: [number?, number?];
+  selectedMonthRange?: [{month: number, year: number}?, {month: number, year: number}?];
   selectedYearRange?: [number?, number?];
   isMonthDisabled?: (monthIndex: number, year?: number) => boolean;
   isYearDisabled?: (year: number) => boolean;
@@ -31,6 +34,9 @@ interface MonthYearSelectorProps {
   canSelectMonth?: (year?: number) => boolean;
   allowRange?: boolean;
   color?: 'primary' | 'secondary' | 'error' | 'warning' | 'success' | 'info' | 'neutral';
+  onYearNavigate?: (direction: 1 | -1) => void;
+  canNavigateToPreviousYear?: () => boolean;
+  canNavigateToNextYear?: () => boolean;
 }
 
 const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
@@ -56,15 +62,25 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   canSelectMonth = () => true,
   allowRange = false,
   color = "neutral",
+  onYearNavigate,
+  canNavigateToPreviousYear = () => true,
+  canNavigateToNextYear = () => true,
 }) => {
   const getMonthSelectionState = (monthIndex: number) => {
+    const currentYear = currentMonth.getFullYear();
+    
     if (tempMonthRange && allowRange) {
       const [start, end] = tempMonthRange;
       
-      if (start !== undefined && end !== undefined) {
-        const isStart = monthIndex === start;
-        const isEnd = monthIndex === end;
-        const isInRange = monthIndex >= start && monthIndex <= end;
+      if (start && end) {
+        // Comparaison des mois en tenant compte de l'année
+        const startMonthValue = start.year * 12 + start.month;
+        const endMonthValue = end.year * 12 + end.month;
+        const currentMonthValue = currentYear * 12 + monthIndex;
+        
+        const isStart = monthIndex === start.month && currentYear === start.year;
+        const isEnd = monthIndex === end.month && currentYear === end.year;
+        const isInRange = currentMonthValue >= startMonthValue && currentMonthValue <= endMonthValue;
         
         return {
           isSelected: isStart || isEnd,
@@ -72,10 +88,10 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
           isEnd,
           isInRange: isInRange && !isStart && !isEnd
         };
-      } else if (start !== undefined) {
+      } else if (start) {
         return {
           isSelected: false,
-          isStart: monthIndex === start,
+          isStart: monthIndex === start.month && currentYear === start.year,
           isEnd: false,
           isInRange: false
         };
@@ -85,10 +101,15 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
     // Si pas de tempRange mais qu'on a une selectedMonthRange existante
     if (selectedMonthRange && allowRange) {
       const [start, end] = selectedMonthRange;
-      if (start !== undefined && end !== undefined) {
-        const isStart = monthIndex === start;
-        const isEnd = monthIndex === end;
-        const isInRange = monthIndex >= start && monthIndex <= end;
+      if (start && end) {
+        // Comparaison des mois en tenant compte de l'année
+        const startMonthValue = start.year * 12 + start.month;
+        const endMonthValue = end.year * 12 + end.month;
+        const currentMonthValue = currentYear * 12 + monthIndex;
+        
+        const isStart = monthIndex === start.month && currentYear === start.year;
+        const isEnd = monthIndex === end.month && currentYear === end.year;
+        const isInRange = currentMonthValue >= startMonthValue && currentMonthValue <= endMonthValue;
         
         return {
           isSelected: isStart || isEnd,
@@ -108,19 +129,25 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   };
 
   const handleMonthClick = (monthIndex: number) => {
+    const currentYear = currentMonth.getFullYear();
+    const currentMonthYear = { month: monthIndex, year: currentYear };
+    
     if (allowRange && onMonthRangeSelect) {
-      if (!tempMonthRange || tempMonthRange[0] === undefined) {
-        onMonthRangeSelect([monthIndex, undefined]);
-      } else if (tempMonthRange[1] === undefined) {
-        if (monthIndex === tempMonthRange[0]) {
+      if (!tempMonthRange || !tempMonthRange[0]) {
+        onMonthRangeSelect([currentMonthYear, undefined]);
+      } else if (!tempMonthRange[1]) {
+        const startValue = tempMonthRange[0].year * 12 + tempMonthRange[0].month;
+        const currentValue = currentYear * 12 + monthIndex;
+        
+        if (startValue === currentValue) {
           onMonthRangeSelect([undefined, undefined]);
-        } else if (monthIndex < tempMonthRange[0]) {
-          onMonthRangeSelect([monthIndex, tempMonthRange[0]]);
+        } else if (currentValue < startValue) {
+          onMonthRangeSelect([currentMonthYear, tempMonthRange[0]]);
         } else {
-          onMonthRangeSelect([tempMonthRange[0], monthIndex]);
+          onMonthRangeSelect([tempMonthRange[0], currentMonthYear]);
         }
       } else {
-        onMonthRangeSelect([monthIndex, undefined]);
+        onMonthRangeSelect([currentMonthYear, undefined]);
       }
     } else {
       onMonthSelect(monthIndex);
@@ -134,17 +161,47 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
 
     return (
       <>
-        <Typography
-          variant="bodyMSemiBold"
-          sx={{
-            cursor: canSelectYear() ? "pointer" : "default",
-            textAlign: "center",
-            mb: 2,
-          }}
-          onClick={() => canSelectYear() && onShowYearSelector()}
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ mb: 2 }}
         >
-          {currentMonth.getFullYear()}
-        </Typography>
+          <IconButton
+            size="small"
+            color={color as CustomColor}
+            square
+            variant="outlined"
+            disabled={!canNavigateToPreviousYear()}
+            onClick={() => onYearNavigate?.(-1)}
+          >
+            <Icon variant="stroke" size={16}>
+              arrow-left-01
+            </Icon>
+          </IconButton>
+          <Typography
+            variant="bodyMSemiBold"
+            sx={{
+              cursor: canSelectYear() ? "pointer" : "default",
+              textAlign: "center",
+            }}
+            onClick={() => canSelectYear() && onShowYearSelector()}
+          >
+            {currentMonth.getFullYear()}
+          </Typography>
+          <IconButton
+            size="small"
+            color={color as CustomColor}
+            square
+            variant="outlined"
+            disabled={!canNavigateToNextYear()}
+            onClick={() => onYearNavigate?.(1)}
+          >
+            <Icon variant="stroke" size={16}>
+              arrow-right-01
+            </Icon>
+          </IconButton>
+        </Stack>
         <Box
           display="grid"
           sx={{
