@@ -130,15 +130,64 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     });
 
     useEffect(() => {
+      const isValueInRange = (date: Date | undefined) => {
+        if (!date) return true;
+        if (minDate && date < minDate) return false;
+        if (maxDate && date > maxDate) return false;
+        return true;
+      };
+
+      const getValidNavigationDate = () => {
+        const now = new Date();
+        const currentDate = utc 
+          ? new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()))
+          : new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        
+        // Si minDate existe et que la date actuelle est avant minDate, utiliser minDate
+        if (minDate && currentDate < minDate) {
+          return minDate;
+        }
+        
+        // Si maxDate existe et que la date actuelle est après maxDate, utiliser maxDate
+        if (maxDate && currentDate > maxDate) {
+          return maxDate;
+        }
+        
+        return currentDate;
+      };
+
+      // Toujours garder la valeur originale pour l'affichage
       datePicker.setTempValue(value);
       datePicker.setDisplayValue(value);
-      const dateToUse = Array.isArray(value) ? value[0] : value;
-      if (dateToUse) {
+      
+      // Déterminer sur quel mois naviguer
+      let navigationDate: Date | undefined;
+      
+      if (Array.isArray(value)) {
+        const [startDate, endDate] = value;
+        if (isValueInRange(startDate)) {
+          navigationDate = startDate;
+        } else if (isValueInRange(endDate)) {
+          navigationDate = endDate;
+        } else {
+          navigationDate = getValidNavigationDate();
+        }
+      } else if (value) {
+        if (isValueInRange(value)) {
+          navigationDate = value;
+        } else {
+          navigationDate = getValidNavigationDate();
+        }
+      } else {
+        navigationDate = getValidNavigationDate();
+      }
+
+      if (navigationDate) {
         calendar.setCurrentMonth(
-          new Date(dateToUse.getFullYear(), dateToUse.getMonth(), 1)
+          new Date(navigationDate.getFullYear(), navigationDate.getMonth(), 1)
         );
       }
-    }, [value]);
+    }, [value, minDate, maxDate, utc, isDateRange]);
 
     const getDateFormat = (date: Date) => {
       const format = dateDisplayFormat.dateFormat || "shortDate";
@@ -189,14 +238,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
     const handleButtonClick = () => {
       if (!disabled) {
-        if (!datePicker.isOpen && value) {
-          const dateToUse = Array.isArray(value) ? value[0] : value;
-          if (dateToUse) {
-            calendar.setCurrentMonth(
-              new Date(dateToUse.getFullYear(), dateToUse.getMonth(), 1)
-            );
-          }
-        }
         datePicker.handleOpen();
       }
     };
