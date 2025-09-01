@@ -149,13 +149,26 @@ export const useDatePicker = ({
     // Si nous avons une sélection de plage temporaire, l'utiliser
     if (tempWeekRange && tempWeekRange[0] && tempWeekRange[1]) {
       finalValue = [tempWeekRange[0].start, tempWeekRange[1].end];
+    } else if (tempWeekRange && tempWeekRange[0] && !tempWeekRange[1]) {
+      // Sélection unique de semaine : créer une range du début à la fin de la semaine
+      finalValue = [tempWeekRange[0].start, tempWeekRange[0].end];
     } else if (tempMonthRange && tempMonthRange[0] && tempMonthRange[1]) {
       const startMonth = new Date(tempMonthRange[0].year, tempMonthRange[0].month, 1);
       const endMonth = new Date(tempMonthRange[1].year, tempMonthRange[1].month + 1, 0);
       finalValue = [startMonth, endMonth];
+    } else if (tempMonthRange && tempMonthRange[0] && !tempMonthRange[1]) {
+      // Sélection unique de mois : créer une range du 1er au dernier jour du mois
+      const startMonth = new Date(tempMonthRange[0].year, tempMonthRange[0].month, 1);
+      const endMonth = new Date(tempMonthRange[0].year, tempMonthRange[0].month + 1, 0);
+      finalValue = [startMonth, endMonth];
     } else if (tempYearRange && tempYearRange[0] !== undefined && tempYearRange[1] !== undefined) {
       const startYear = new Date(tempYearRange[0], 0, 1);
       const endYear = new Date(tempYearRange[1], 11, 31);
+      finalValue = [startYear, endYear];
+    } else if (tempYearRange && tempYearRange[0] !== undefined && tempYearRange[1] === undefined) {
+      // Sélection unique d'année : créer une range du 1er janvier au 31 décembre
+      const startYear = new Date(tempYearRange[0], 0, 1);
+      const endYear = new Date(tempYearRange[0], 11, 31);
       finalValue = [startYear, endYear];
     }
 
