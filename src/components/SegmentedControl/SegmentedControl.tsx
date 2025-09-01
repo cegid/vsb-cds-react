@@ -16,6 +16,8 @@ export interface SegmentedControlAction {
   label?: React.ReactNode;
   /** Callback function executed when the action is clicked */
   onClick: () => void;
+  /** Whether this action is disabled (default: false) */
+  disabled?: boolean;
 }
 
 /**
@@ -78,8 +80,12 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   };
 
   const handleActionClick = (index: number) => {
+    const action = actions[index];
+    if (action.disabled) {
+      return;
+    }
     setInternalSelectedIndex(index);
-    actions[index].onClick();
+    action.onClick();
   };
 
   const containerStyle: React.CSSProperties = {
@@ -106,27 +112,35 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     ...sliderStyle,
   };
 
-  const getButtonStyle = (index: number): React.CSSProperties => ({
-    position: "relative",
-    zIndex: 2,
-    display: "flex",
-    alignItems: "center",
-    gap: isIconOnly ? "0" : "8px",
-    padding: isIconOnly ? "0 8px" : "0 16px",
-    cursor: "pointer",
-    borderRadius: "8px",
-    transition: "color 0.3s ease",
-    color: color === 'dark' 
-      ? "white"
-      : selectedIndex === index ? neutral[10] : "#666",
-    fontWeight: selectedIndex === index ? 600 : 400,
-    border: "none",
-    background: "none",
-    fontSize: "14px",
-    height: isMobile ? "36px" : "28px",
-    minWidth: isIconOnly ? (isMobile ? "36px" : "28px") : "auto",
-    justifyContent: "center",
-  });
+  const getButtonStyle = (index: number): React.CSSProperties => {
+    const action = actions[index];
+    const isDisabled = action.disabled || false;
+    
+    return {
+      position: "relative",
+      zIndex: 2,
+      display: "flex",
+      alignItems: "center",
+      gap: isIconOnly ? "0" : "8px",
+      padding: isIconOnly ? "0 8px" : "0 16px",
+      cursor: isDisabled ? "not-allowed" : "pointer",
+      borderRadius: "8px",
+      transition: "color 0.3s ease",
+      color: isDisabled 
+        ? (color === 'dark' ? "#666" : "#999")
+        : color === 'dark' 
+          ? "white"
+          : selectedIndex === index ? neutral[10] : "#666",
+      fontWeight: selectedIndex === index ? 600 : 400,
+      border: "none",
+      background: "none",
+      fontSize: "14px",
+      height: isMobile ? "36px" : "28px",
+      minWidth: isIconOnly ? (isMobile ? "36px" : "28px") : "auto",
+      justifyContent: "center",
+      opacity: isDisabled ? 0.5 : 1,
+    };
+  };
 
   const iconStyle: React.CSSProperties = {
     display: "flex",
@@ -146,14 +160,18 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
           onClick={() => handleActionClick(index)}
           style={getButtonStyle(index)}
           onMouseEnter={(e) => {
-            if (selectedIndex !== index) {
+            const action = actions[index];
+            if (!action.disabled && selectedIndex !== index) {
               e.currentTarget.style.color = color === 'dark' ? "#ccc" : "#333";
             }
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = color === 'dark' 
-              ? "white"
-              : selectedIndex === index ? (neutral[10] ?? "") : "#666";
+            const action = actions[index];
+            if (!action.disabled) {
+              e.currentTarget.style.color = color === 'dark' 
+                ? "white"
+                : selectedIndex === index ? (neutral[10] ?? "") : "#666";
+            }
           }}
         >
           {action.icon && <Box style={iconStyle}>{action.icon}</Box>}

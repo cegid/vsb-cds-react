@@ -56,3 +56,23 @@ export const IconOnly: Story = {
     ],
   },
 };
+
+export const WithDisabledActions: Story = {
+  args: {
+    actions: [
+      {
+        label: "Enabled",
+        onClick: () => console.log("Enabled action clicked"),
+      },
+      {
+        label: "Disabled",
+        onClick: () => console.log("This won't be called"),
+        disabled: true,
+      },
+      {
+        label: "Also Enabled",
+        onClick: () => console.log("Another enabled action clicked"),
+      },
+    ],
+  },
+};
