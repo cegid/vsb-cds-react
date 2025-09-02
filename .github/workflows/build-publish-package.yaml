@@ -75,8 +75,8 @@ jobs:
           
       - name: Install dependencies
         env:
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-          NPM_AUTH_EMAIL: ${{ secrets.NPM_AUTH_EMAIL }}
+          NPM_AUTH_TOKEN: ${{ secrets.VSB_NPM_AUTH_TOKEN }}
+          NPM_AUTH_EMAIL: ${{ secrets.VSB_NPM_AUTH_EMAIL }}
         run: |
           echo "email=${NPM_AUTH_EMAIL}" > .npmrc
           echo "always-auth=true" >> .npmrc
