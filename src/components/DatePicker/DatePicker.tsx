@@ -209,7 +209,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         const endStr = endDate ? getDateFormat(endDate) : "___";
 
         const separator = dateDisplayFormat.rangeSeparator || "-";
-        return `${prefix}${startStr} ${separator} ${endStr}`;
+        return `${prefix}${prefix ? " " : ""}${startStr} ${separator} ${endStr}`;
       } else if (!Array.isArray(dateValue)) {
         const dateStr = getDateFormat(dateValue);
 
@@ -223,10 +223,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             .padStart(2, "0")}:${datePicker.minutes
             .toString()
             .padStart(2, "0")}`;
-          return `${prefix}${dateStr} ${timeStr}`;
+          return `${prefix}${prefix ? " " : ""}${dateStr} ${timeStr}`;
         }
 
-        return `${prefix}${dateStr}`;
+        return `${prefix}${prefix ? " " : ""}${dateStr}`;
       }
 
       return undefined;
