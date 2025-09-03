@@ -46,7 +46,7 @@ const StyledTab = styled(CegidTab, {
     minHeight: "auto",
     position: "relative",
     overflow: "visible",
-    flex: "0 0 auto",
+    flex: "1",
     border: "solid 1px transparent",
     cursor: disabled ? "not-allowed" : "pointer",
     ...(!hideBottomLine && {
