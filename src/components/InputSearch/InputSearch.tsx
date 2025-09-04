@@ -76,6 +76,7 @@ const CustomTextField = styled(TextField)<{ $size?: SearchInputSize }>(
       minWidth: $size === "short" ? "0" : "auto",
       opacity: $size === "short" ? 0 : 1,
       transition: "opacity 0.2s ease-in-out",
+      flex: 1,
 
       "&::placeholder": {
         color: neutral[50],
