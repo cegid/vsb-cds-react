@@ -29,7 +29,7 @@ export interface CustomSwitchProps {
    * Color theme for the switch when active
    * @default "primary"
    */
-  color: PaletteNames;
+  color?: PaletteNames;
 }
 
 const Switch: React.FC<CustomSwitchProps> = ({
