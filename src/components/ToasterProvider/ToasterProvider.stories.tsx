@@ -43,7 +43,7 @@ const ToasterDemo = () => {
 };
 
 const meta = {
-  title: "💬 Feedback/ToasterProvider",
+  title: "💬 Messaging/ToasterProvider",
   component: ToasterProvider,
   parameters: {
     layout: "centered",

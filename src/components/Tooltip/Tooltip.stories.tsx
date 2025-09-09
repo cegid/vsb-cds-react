@@ -12,7 +12,7 @@ const defaultChildren = (
 );
 
 const meta = {
-  title: "💬 Feedback/Tooltip",
+  title: "💬 Messaging/Tooltip",
   component: Tooltip,
   parameters: {
     layout: "centered",

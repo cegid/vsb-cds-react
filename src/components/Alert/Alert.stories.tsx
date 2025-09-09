@@ -1,15 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import Alert from "./Alert";
 import { TestIcon } from "./test";
-import React from "react";
 import Column from "../Column";
 
 const meta = {
-  title: "💬 Feedback/Alert",
+  title: "💬 Messaging/Alert",
   component: Alert,
-  parameters: {
-    layout: "centered",
-  },
   tags: ["autodocs"],
   argTypes: {
     variant: {

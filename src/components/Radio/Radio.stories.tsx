@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import {
   FormControl,
-  FormLabel,
   RadioGroup,
   FormControlLabel,
   Box,
@@ -11,7 +10,7 @@ import {
 import Radio from "./Radio";
 
 const meta = {
-  title: "🎛️ Form Controls/Radio",
+  title: "🎛️ Inputs and selection/Radio",
   component: Radio,
   parameters: {
     layout: "centered",

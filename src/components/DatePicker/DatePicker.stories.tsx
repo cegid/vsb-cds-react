@@ -33,7 +33,7 @@ const GranularityValidationDecorator = (Story: any, context: any) => {
 };
 
 const meta = {
-  title: "🎛️ Form Controls/DatePicker",
+  title: "🎛️ Inputs and selection/DatePicker",
   component: DatePicker,
   parameters: {
     layout: "centered",
@@ -112,7 +112,7 @@ const meta = {
     value: undefined,
     isDateRange: false,
     locale: "fr",
-    selectedIndex: 1
+    selectedIndex: 1,
   },
 } satisfies Meta<typeof DatePicker>;
 

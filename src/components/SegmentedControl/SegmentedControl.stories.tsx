@@ -3,7 +3,7 @@ import SegmentedControl from "./SegmentedControl";
 import Icon from "../Icon";
 
 const meta = {
-  title: "🎛️ Form Controls/SegmentedControl",
+  title: "🎛️ Inputs and selection/SegmentedControl",
   component: SegmentedControl,
   parameters: {
     layout: "centered",
