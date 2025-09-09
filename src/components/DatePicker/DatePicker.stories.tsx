@@ -100,6 +100,10 @@ const meta = {
       description:
         "Available granularities to display in the segmented control (maximum 3)",
     },
+    selectedIndex: {
+      control: { type: "number", min: 0, max: 2 },
+      description: "Index of the selected item in the segmented control",
+    },
   },
   args: {
     disabled: false,
@@ -433,6 +437,34 @@ export const MaxThreeGranularities: Story = {
     label: "Maximum 3 granularités",
     granularities: ["day", "week", "month"] as const,
     isDateRange: true,
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
+      args.value
+    );
+
+    return (
+      <Box width={300} height={450}>
+        <DatePicker
+          {...args}
+          value={value}
+          onChange={(date) => {
+            setValue(date || undefined);
+            args.onChange?.(date);
+          }}
+        />
+      </Box>
+    );
+  },
+};
+
+export const WithSelectedIndex: Story = {
+  args: {
+    value: new Date("2024-12-25"),
+    label: "Contrôle de l'index sélectionné",
+    granularities: ["day", "week", "month"] as const,
+    isDateRange: true,
+    selectedIndex: 1, // Pré-sélectionne "Semaine" (index 1)
   },
   render: (args) => {
     const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(

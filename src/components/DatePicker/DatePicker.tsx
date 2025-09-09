@@ -30,16 +30,16 @@ const StyledTextField = styled(TextField)(() => ({
       "&.Mui-focused": {
         outline: `2px solid ${primary[70]}`,
         outlineOffset: "1px",
-      }
-    }
-  }
+      },
+    },
+  },
 }));
 
 export type DatePickerGranularity = "day" | "week" | "month" | "year" | "hours";
 
-type OneToThreeGranularities = 
+type OneToThreeGranularities =
   | [DatePickerGranularity]
-  | [DatePickerGranularity, DatePickerGranularity] 
+  | [DatePickerGranularity, DatePickerGranularity]
   | [DatePickerGranularity, DatePickerGranularity, DatePickerGranularity];
 
 /**
@@ -68,13 +68,13 @@ export interface DatePickerProps
   utc?: boolean;
   /** Whether to display the date picker in static mode (always visible) */
   static?: boolean;
-  /** 
+  /**
    * Available granularities to display in the segmented control
    * @example ["day"], ["day", "week"], ["day", "week", "month"]
    * @maximum 3 granularities allowed - enforced at TypeScript level
    */
   granularities?: OneToThreeGranularities;
-  /** 
+  /**
    * Format for displaying dates in the input field
    * Can specify date format, range separator, and prefix
    * @example { prefix: "Du ", dateFormat: "dd/MM/yyyy", rangeSeparator: "au" }
@@ -86,6 +86,11 @@ export interface DatePickerProps
     dateFormat?: string;
     rangeSeparator?: string;
   };
+  /**
+   * Index of the selected item in the segmented control
+   * If provided, overrides the automatic selection based on selectedGranularity
+   */
+  selectedIndex?: number;
 }
 
 const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
@@ -104,7 +109,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       utc = false,
       static: isStatic = false,
       granularities = ["day"] as const,
-      dateDisplayFormat = { dateFormat: "shortDate", rangeSeparator: "-", prefix: "" },
+      dateDisplayFormat = {
+        dateFormat: "shortDate",
+        rangeSeparator: "-",
+        prefix: "",
+      },
+      selectedIndex,
       ...textFieldProps
     } = props;
 
@@ -139,30 +149,26 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
       const getValidNavigationDate = () => {
         const now = new Date();
-        const currentDate = utc 
+        const currentDate = utc
           ? new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()))
           : new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        
-        // Si minDate existe et que la date actuelle est avant minDate, utiliser minDate
+
         if (minDate && currentDate < minDate) {
           return minDate;
         }
-        
-        // Si maxDate existe et que la date actuelle est après maxDate, utiliser maxDate
+
         if (maxDate && currentDate > maxDate) {
           return maxDate;
         }
-        
+
         return currentDate;
       };
 
-      // Toujours garder la valeur originale pour l'affichage
       datePicker.setTempValue(value);
       datePicker.setDisplayValue(value);
-      
-      // Déterminer sur quel mois naviguer
+
       let navigationDate: Date | undefined;
-      
+
       if (Array.isArray(value)) {
         const [startDate, endDate] = value;
         if (isValueInRange(startDate)) {
@@ -231,10 +237,6 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
       return undefined;
     };
-
-
-
-
 
     const handleButtonClick = () => {
       if (!disabled) {
@@ -375,13 +377,15 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       });
     };
 
-    const getSelectedMonthRange = (): [{month: number, year: number}?, {month: number, year: number}?] | undefined => {
+    const getSelectedMonthRange = ():
+      | [{ month: number; year: number }?, { month: number; year: number }?]
+      | undefined => {
       if (!isDateRange || !Array.isArray(value) || !value[0] || !value[1]) {
         return undefined;
       }
       return [
         { month: value[0].getMonth(), year: value[0].getFullYear() },
-        { month: value[1].getMonth(), year: value[1].getFullYear() }
+        { month: value[1].getMonth(), year: value[1].getFullYear() },
       ];
     };
 
@@ -464,7 +468,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             minDate={minDate}
             maxDate={maxDate}
             onMonthNavigate={(direction) => calendar.navigateMonth(direction)}
-            canNavigateToPreviousMonth={() => calendar.canNavigateToPreviousMonth()}
+            canNavigateToPreviousMonth={() =>
+              calendar.canNavigateToPreviousMonth()
+            }
             canNavigateToNextMonth={() => calendar.canNavigateToNextMonth()}
           />
         );
@@ -501,8 +507,21 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             tempYearRange={datePicker.tempYearRange}
             selectedMonthRange={getSelectedMonthRange()}
             selectedYearRange={getSelectedYearRange()}
-            allowRange={isDateRange && (selectedGranularity === "month" || selectedGranularity === "year")}
-            color={color as 'primary' | 'secondary' | 'error' | 'warning' | 'success' | 'info' | 'neutral'}
+            allowRange={
+              isDateRange &&
+              (selectedGranularity === "month" ||
+                selectedGranularity === "year")
+            }
+            color={
+              color as
+                | "primary"
+                | "secondary"
+                | "error"
+                | "warning"
+                | "success"
+                | "info"
+                | "neutral"
+            }
             onShowYearSelector={() => {
               datePicker.setShowYearSelector(true);
               datePicker.setShowMonthSelector(false);
@@ -513,7 +532,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             canSelectYear={calendar.canSelectYear}
             canSelectMonth={calendar.canSelectMonth}
             onYearNavigate={(direction) => calendar.navigateYear(direction)}
-            canNavigateToPreviousYear={() => calendar.canNavigateToPreviousYear()}
+            canNavigateToPreviousYear={() =>
+              calendar.canNavigateToPreviousYear()
+            }
             canNavigateToNextYear={() => calendar.canNavigateToNextYear()}
           />
         );
@@ -602,7 +623,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               <SegmentedControl
                 fullwidth
                 actions={getGranularityOptions()}
-                defaultSelected={getSelectedGranularityIndex()}
+                defaultSelected={selectedIndex !== undefined ? selectedIndex : getSelectedGranularityIndex()}
               />
             </Box>
           ) : null}
@@ -653,7 +674,11 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         <Box position="relative" ref={inputRef}>
           <StyledTextField
             {...textFieldProps}
-            value={datePicker.displayValue ? formatDateForDisplay(datePicker.displayValue) : ""}
+            value={
+              datePicker.displayValue
+                ? formatDateForDisplay(datePicker.displayValue)
+                : ""
+            }
             readOnly
             placeholder={placeholder}
             disabled={disabled}
@@ -687,7 +712,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                 style={{ zIndex: 9999 }}
                 modifiers={[
                   {
-                    name: 'offset',
+                    name: "offset",
                     options: {
                       offset: [0, 8],
                     },
