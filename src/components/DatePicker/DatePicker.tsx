@@ -91,7 +91,7 @@ export interface DatePickerProps
    * Note: `fullwidth` and `actions` props will always be controlled by the DatePicker and cannot be overridden.
    * @example { color: "primary", variant: "outlined" }
    */
-  segmentedControlProps?: SegmentedControlProps;
+  segmentedControlProps?: Omit<SegmentedControlProps, "actions">;
   /**
    * Callback fired when the granularity selection changes.
    * @param datePickerGranularity The newly selected granularity
@@ -127,8 +127,20 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     } = props;
 
     const inputRef = useRef<HTMLDivElement>(null);
+
+    const getInitialGranularity = (): DatePickerGranularity => {
+      const defaultSelectedIndex = segmentedControlProps?.defaultSelected;
+      if (
+        defaultSelectedIndex !== undefined &&
+        defaultSelectedIndex < granularities.length
+      ) {
+        return granularities[defaultSelectedIndex];
+      }
+      return granularities[0];
+    };
+
     const [selectedGranularity, setSelectedGranularity] =
-      useState<DatePickerGranularity>(granularities[0]);
+      useState<DatePickerGranularity>(getInitialGranularity());
 
     const showTime = selectedGranularity === "hours" && !isDateRange;
 
@@ -146,6 +158,16 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       isDateRange,
       locale,
     });
+
+    // Reset granularity when picker opens only if defaultSelected is explicitly set
+    useEffect(() => {
+      if (
+        datePicker.isOpen &&
+        segmentedControlProps?.defaultSelected !== undefined
+      ) {
+        setSelectedGranularity(getInitialGranularity());
+      }
+    }, [datePicker.isOpen]);
 
     useEffect(() => {
       const isValueInRange = (date: Date | undefined) => {
@@ -632,8 +654,12 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
           {granularities.length > 1 || showTime ? (
             <Box mb={2}>
               <SegmentedControl
-                defaultSelected={getSelectedGranularityIndex()}
-                {...segmentedControlProps}
+                selectedIndex={segmentedControlProps?.selectedIndex}
+                defaultSelected={
+                  segmentedControlProps?.defaultSelected !== undefined
+                    ? segmentedControlProps?.defaultSelected
+                    : getSelectedGranularityIndex()
+                }
                 fullwidth
                 actions={getGranularityOptions()}
               />
