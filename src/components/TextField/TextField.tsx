@@ -13,6 +13,7 @@ import Row from "../Row";
 import Icon from "../Icon";
 import Typography from "../Typography";
 import Box from "../Box";
+import { color } from "chart.js/helpers";
 
 export interface TextFieldProps extends CegidTextFieldProps {}
 
@@ -37,6 +38,7 @@ const StyledTextField = styled(CegidTextField)(
       "&.Mui-focused": {
         outline: `2px solid ${primary[70]}`,
         outlineOffset: "1px",
+        color: neutral[50],
       },
       "&.Mui-readOnly": {
         backgroundColor: neutral[99],
