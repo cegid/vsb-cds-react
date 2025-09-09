@@ -38,11 +38,21 @@ const meta = {
                 type: { summary: '() => void' },
             },
         },
+        color: {
+            control: 'select',
+            options: ['primary', 'secondary', 'success', 'yellow', 'banana', 'critical', 'pink', 'purple', 'plum', 'beige', 'info'],
+            description: 'Color theme for the switch when active',
+            table: {
+                type: { summary: 'PaletteNames' },
+                defaultValue: { summary: 'primary' },
+            },
+        },
     },
     args: {
         disabled: false,
         isActive: true,
         onClick: fn(),
+        color: 'primary',
     },
 } satisfies Meta<typeof Switch>;
 
