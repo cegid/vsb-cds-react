@@ -100,10 +100,6 @@ const meta = {
       description:
         "Available granularities to display in the segmented control (maximum 3)",
     },
-    selectedIndex: {
-      control: { type: "number", min: 0, max: 2 },
-      description: "Index of the selected item in the segmented control",
-    },
   },
   args: {
     disabled: false,
@@ -112,7 +108,6 @@ const meta = {
     value: undefined,
     isDateRange: false,
     locale: "fr",
-    selectedIndex: 1,
   },
 } satisfies Meta<typeof DatePicker>;
 

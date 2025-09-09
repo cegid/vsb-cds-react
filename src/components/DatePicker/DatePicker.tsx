@@ -9,7 +9,7 @@ import Stack from "../Stack";
 
 const { primary, neutral } = colorPalettes;
 import Button, { ButtonColor } from "../Button";
-import SegmentedControl from "../SegmentedControl";
+import SegmentedControl, { SegmentedControlProps } from "../SegmentedControl";
 import Column from "../Column";
 import TextField, { TextFieldProps } from "../TextField";
 import { useCalendar, Locale } from "./hooks/useCalendar";
@@ -87,10 +87,17 @@ export interface DatePickerProps
     rangeSeparator?: string;
   };
   /**
-   * Index of the selected item in the segmented control
-   * If provided, overrides the automatic selection based on selectedGranularity
+   * Props to pass to the SegmentedControl component used for granularity selection.
+   * Note: `fullwidth` and `actions` props will always be controlled by the DatePicker and cannot be overridden.
+   * @example { color: "primary", variant: "outlined" }
    */
-  selectedIndex?: number;
+  segmentedControlProps?: SegmentedControlProps;
+  /**
+   * Callback fired when the granularity selection changes.
+   * @param datePickerGranularity The newly selected granularity
+   * @example (granularity) => console.log('Selected granularity:', granularity)
+   */
+  onGranularityChange?: (datePickerGranularity: DatePickerGranularity) => void;
 }
 
 const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
@@ -114,7 +121,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         rangeSeparator: "-",
         prefix: "",
       },
-      selectedIndex,
+      segmentedControlProps,
+      onGranularityChange,
       ...textFieldProps
     } = props;
 
@@ -260,6 +268,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       granularityType: DatePickerGranularity
     ) => {
       setSelectedGranularity(granularityType);
+      if (onGranularityChange) {
+        onGranularityChange(granularityType);
+      }
     };
 
     const createDateRangeFromMonth = (month: Date): [Date, Date] => {
@@ -621,10 +632,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
           {granularities.length > 1 || showTime ? (
             <Box mb={2}>
               <SegmentedControl
+                defaultSelected={getSelectedGranularityIndex()}
+                {...segmentedControlProps}
                 fullwidth
                 actions={getGranularityOptions()}
-                defaultSelected={getSelectedGranularityIndex()}
-                selectedIndex={selectedIndex}
               />
             </Box>
           ) : null}
