@@ -623,7 +623,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               <SegmentedControl
                 fullwidth
                 actions={getGranularityOptions()}
-                defaultSelected={selectedIndex !== undefined ? selectedIndex : getSelectedGranularityIndex()}
+                defaultSelected={getSelectedGranularityIndex()}
+                selectedIndex={selectedIndex}
               />
             </Box>
           ) : null}

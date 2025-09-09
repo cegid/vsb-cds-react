@@ -112,6 +112,7 @@ const meta = {
     value: undefined,
     isDateRange: false,
     locale: "fr",
+    selectedIndex: 1
   },
 } satisfies Meta<typeof DatePicker>;
 
