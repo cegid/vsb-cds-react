@@ -92,7 +92,10 @@ export const useDatePicker = ({
         setRangeSelection("start");
       }
     } else {
-      setTempValue(date);
+      const dateWithCurrentTime = new Date(date);
+      const now = new Date();
+      dateWithCurrentTime.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+      setTempValue(dateWithCurrentTime);
     }
   };
 

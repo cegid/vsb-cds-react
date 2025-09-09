@@ -460,9 +460,6 @@ export const WithSelectedIndex: Story = {
     label: "Contrôle de l'index sélectionné",
     granularities: ["day", "week", "month"] as const,
     isDateRange: true,
-    segmentedControlProps: {
-      selectedIndex: 1, // Pré-sélectionne "Semaine" (index 1)
-    },
   },
   render: (args) => {
     const [value, setValue] = useState<Date | [Date?, Date?] | undefined>(
