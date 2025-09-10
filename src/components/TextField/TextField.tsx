@@ -52,6 +52,7 @@ const StyledTextField = styled(CegidTextField)(
       },
       "&.MuiInputBase-multiline": {
         paddingLeft: "12px",
+        color: neutral[50],
       },
       [theme.breakpoints.down("sm")]: {
         ".MuiInputLabel-shrink + .CdsFormItem-inputWrapper &": {
