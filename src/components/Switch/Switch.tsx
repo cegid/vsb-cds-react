@@ -16,15 +16,22 @@ export interface CustomSwitchProps {
    */
   disabled: boolean;
   /**
-   * Initial active state of the switch
+   * Initial active state of the switch (used only when controlled is false)
    * @default true
    */
   isActive: boolean;
   /**
-   * Callback function called when the switch is clicked
-   * Triggered before the internal state change of the component
+   * Controlled state value - when provided, the component becomes controlled
+   * and ignores internal state management
    */
-  onClick: () => void;
+  value?: boolean;
+  /**
+   * Callback function called when the switch is clicked
+   * For controlled components, you should update the value prop in this callback
+   * For uncontrolled components, this is called before internal state change
+   * @param newValue - The new state value after the toggle
+   */
+  onClick: (newValue?: boolean) => void;
   /**
    * Color theme for the switch when active
    * @default "primary"
@@ -35,26 +42,39 @@ export interface CustomSwitchProps {
 const Switch: React.FC<CustomSwitchProps> = ({
   disabled = false,
   isActive = true,
+  value,
   onClick,
   color = "primary",
 }) => {
   const [isSwitched, setisSwitched] = useState(isActive);
+  
+  // Determine if the component is controlled (value prop is provided)
+  const isControlled = value !== undefined;
+  
+  // Use controlled value if provided, otherwise use internal state
+  const currentState = isControlled ? value : isSwitched;
 
   const handleToggle = () => {
     if (!disabled) {
+      const newValue = isControlled ? !value : !isSwitched;
+      
       if (onClick) {
-        onClick();
+        onClick(newValue);
       }
-      setisSwitched(!isSwitched);
+      
+      // Only update internal state if component is uncontrolled
+      if (!isControlled) {
+        setisSwitched(newValue);
+      }
     }
   };
 
   const getBackgroundColor = () => {
     const selectedPalette = colorPalettes[color];
     if (disabled) {
-      return isSwitched ? selectedPalette[60] : neutral[90];
+      return currentState ? selectedPalette[60] : neutral[90];
     }
-    return isSwitched ? selectedPalette[60] : neutral[80];
+    return currentState ? selectedPalette[60] : neutral[80];
   };
 
   return (
@@ -71,10 +91,10 @@ const Switch: React.FC<CustomSwitchProps> = ({
         backgroundColor: getBackgroundColor(),
         ...(!disabled && {
           "&:hover": {
-            backgroundColor: isSwitched ? colorPalettes[color][50] : neutral[70],
+            backgroundColor: currentState ? colorPalettes[color][50] : neutral[70],
           },
           "&:active": {
-            backgroundColor: isSwitched ? colorPalettes[color][40] : neutral[60],
+            backgroundColor: currentState ? colorPalettes[color][40] : neutral[60],
           },
         }),
       }}
@@ -86,10 +106,10 @@ const Switch: React.FC<CustomSwitchProps> = ({
           backgroundColor: "white",
           borderRadius: "50%",
           border: "1px solid",
-          borderColor: isSwitched ? colorPalettes[color][60] : neutral[90],
+          borderColor: currentState ? colorPalettes[color][60] : neutral[90],
           boxShadow:
             "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
-          transform: isSwitched ? "translateX(12px)" : "translateX(0px)",
+          transform: currentState ? "translateX(12px)" : "translateX(0px)",
           transition: "transform 0.3s ease-in-out",
         }}
       />

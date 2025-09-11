@@ -25,17 +25,24 @@ const meta = {
         },
         isActive: {
             control: 'boolean',
-            description: 'Initial active state of the switch',
+            description: 'Initial active state of the switch (used only when controlled is false)',
             table: {
                 type: { summary: 'boolean' },
                 defaultValue: { summary: 'true' },
+            },
+        },
+        value: {
+            control: 'boolean',
+            description: 'Controlled state value - when provided, the component becomes controlled',
+            table: {
+                type: { summary: 'boolean | undefined' },
             },
         },
         onClick: {
             action: 'clicked',
             description: 'Callback function called when the switch is clicked',
             table: {
-                type: { summary: '() => void' },
+                type: { summary: '(newValue?: boolean) => void' },
             },
         },
         color: {
@@ -51,6 +58,7 @@ const meta = {
     args: {
         disabled: false,
         isActive: true,
+        value: undefined,
         onClick: fn(),
         color: 'primary',
     },
