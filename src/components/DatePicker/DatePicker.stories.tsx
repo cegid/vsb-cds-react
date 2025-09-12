@@ -122,21 +122,17 @@ export const Default: Story = {
     );
 
     return (
-      <Box width={300} height={450}>
-        <DatePicker
-          {...args}
-          InputProps={{
-            endAdornment,
-          }}
-          value={value}
-          onChange={(date) => {
-            setValue(date || undefined);
-            args.onChange?.(date);
-          }}
-          isDateRange
-          granularities={["day", "month", "week"]}
-        />
-      </Box>
+      <DatePicker
+        {...args}
+        InputProps={{
+          endAdornment,
+        }}
+        value={value}
+        onChange={(date) => {
+          setValue(date || undefined);
+          args.onChange?.(date);
+        }}
+      />
     );
   },
 };

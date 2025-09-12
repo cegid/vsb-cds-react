@@ -763,7 +763,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                   backgroundColor="white"
                   border={{ color: "neutral/90", width: 1, style: "solid" }}
                   borderRadius="6px"
-                  width={338}
+                  width={{ xs: "calc(100vw - 32px)", sm: 338 }}
+                  maxWidth={338}
                   sx={{
                     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
                   }}
