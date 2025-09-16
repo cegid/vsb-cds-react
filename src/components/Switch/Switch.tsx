@@ -14,7 +14,7 @@ export interface CustomSwitchProps {
    * Determines if the switch is disabled
    * @default false
    */
-  disabled: boolean;
+  disabled?: boolean;
   /**
    * Initial active state of the switch (used only when controlled is false)
    * @default true
