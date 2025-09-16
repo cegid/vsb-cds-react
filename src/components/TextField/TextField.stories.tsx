@@ -88,7 +88,6 @@ export const WithIcons: Story = {
     <Column gap={3}>
       <TextField
         {...args}
-        label="With Start Icon"
         placeholder="Search something..."
         InputProps={{
           startAdornment,

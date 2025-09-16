@@ -62,10 +62,14 @@ const StyledTextField = styled(CegidTextField)(
     },
 
     "& .MuiInputAdornment-positionStart": {
-      [theme.breakpoints.down("sm")]: { paddingTop: "18px" },
+      [theme.breakpoints.down("sm")]: {
+        paddingTop: label ? "18px" : "0"
+      },
     },
     "& .MuiInputAdornment-positionEnd": {
-      [theme.breakpoints.down("sm")]: { paddingTop: "18px" },
+      [theme.breakpoints.down("sm")]: {
+        paddingTop: label ? "18px" : "0"
+      },
     },
 
     "& .MuiInputBase-input": {
@@ -131,7 +135,7 @@ const StyledTextField = styled(CegidTextField)(
 
 const TextField = (props: CegidTextFieldProps) => {
   return (
-    <Box>
+    <Box width={props.fullWidth ? "100%" : "fit-content"}>
       <StyledTextField {...props} />
       {props.errorText && (
         <Row gap={2} mt={4}>
