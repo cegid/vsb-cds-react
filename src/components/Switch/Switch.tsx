@@ -19,7 +19,7 @@ export interface CustomSwitchProps {
    * Initial active state of the switch (used only when controlled is false)
    * @default true
    */
-  isActive: boolean;
+  isActive?: boolean;
   /**
    * Controlled state value - when provided, the component becomes controlled
    * and ignores internal state management
