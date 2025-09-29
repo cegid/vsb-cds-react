@@ -189,7 +189,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
       showVerticalGrid = false,
       showHorizontalGrid = true,
       showTooltip = true,
-      title = "Titre",
+      title = "Title",
       hiddenDatasets = new Set(),
       hiddenDataPoints = new Set(),
       useTransparency = false,
@@ -203,7 +203,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
     );
     const tooltipTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
-    // Plugin pour la ligne verticale au hover et les shadows des points
+    // Plugin for vertical hover line and point shadows
     const hoverLinePlugin = React.useMemo(() => ({
       id: 'hoverLineAndShadow',
       beforeDraw: (chart: any) => {
@@ -211,7 +211,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         
         const { ctx, chartArea: { top, bottom } } = chart;
         
-        // Dessine la ligne verticale au hover
+        // Draw vertical line on hover
         if (chart._active && chart._active.length > 0) {
           const activePoint = chart._active[0];
           const xPosition = activePoint.element.x;
@@ -231,7 +231,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
         
         const { ctx } = chart;
         
-        // Dessine les shadows pour tous les points
+        // Draw shadows for all points
         chart.data.datasets.forEach((dataset: any, datasetIndex: number) => {
           if (dataset.type === 'line' || type === 'line') {
             const meta = chart.getDatasetMeta(datasetIndex);
@@ -239,12 +239,12 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             
             meta.data.forEach((point: any) => {
               ctx.save();
-              ctx.shadowColor = 'rgba(10, 34, 92, 0.2)'; // #0A225C33
+              ctx.shadowColor = 'rgba(10, 34, 92, 0.2)';
               ctx.shadowBlur = 3;
               ctx.shadowOffsetX = 0;
               ctx.shadowOffsetY = 0;
               
-              // Dessine un cercle invisible pour créer juste l'ombre
+              // Draw invisible circle to create shadow only
               ctx.beginPath();
               ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI);
               ctx.fillStyle = 'transparent';
@@ -292,12 +292,12 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             let newTooltipData;
             
             if (type === "mixed" || (type === "line" && tooltip.dataPoints.length > 1)) {
-              // Pour les graphiques mixtes ou line avec plusieurs points, récupère toutes les valeurs du même label
+              // For mixed charts or line charts with multiple points, get all values from the same label
               const labelIndex = dataPoint.dataIndex;
               
               let allValues;
               if (type === "line" && tooltip.dataPoints.length > 1) {
-                // Pour les graphiques line avec plusieurs points au même index
+                // For line charts with multiple points at the same index
                 allValues = tooltip.dataPoints.map((point: any) => {
                   let color: string;
                   const colorSource = point.dataset.borderColor || point.dataset.backgroundColor || '#666666';
@@ -318,7 +318,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                   };
                 });
               } else {
-                // Pour les graphiques mixtes
+                // For mixed charts
                 allValues = data.datasets.map((dataset, index) => {
                   let color: string;
                   const colorSource = dataset.type === "line" 
@@ -343,7 +343,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
               }
 
               if (type === "line") {
-                // Pour les graphiques line, tous les éléments sont équivalents
+                // For line charts, all elements are equivalent
                 newTooltipData = {
                   chartType: type,
                   label: dataPoint.dataset.label || '',
@@ -354,18 +354,17 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                   otherItems: allValues
                 };
               } else {
-                // Pour les graphiques mixtes, trouve le type le moins utilisé
-                const typeCounts = allValues.reduce((acc, item) => {
+                // For mixed charts, find the least used type
+                const typeCounts = allValues.reduce((acc: { [x: string]: any; }, item: { type: string | number; }) => {
                   acc[item.type] = (acc[item.type] || 0) + 1;
                   return acc;
                 }, {} as Record<string, number>);
                 
                 const leastUsedType = Object.entries(typeCounts)
-                  .sort(([,a], [,b]) => a - b)[0]?.[0];
+                  .sort(([,a], [,b]) => (a as number) - (b as number))[0]?.[0];
                 
-                // Sépare l'élément principal des autres
-                const mainItem = allValues.find(item => item.type === leastUsedType);
-                const otherItems = allValues.filter(item => item.type !== leastUsedType);
+                const mainItem = allValues.find((item: { type: string; }) => item.type === leastUsedType);
+                const otherItems = allValues.filter((item: { type: string; }) => item.type !== leastUsedType);
                 
                 newTooltipData = {
                   chartType: type,
@@ -543,11 +542,11 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             convertedDataset.pointBorderWidth = 2;
             convertedDataset.pointBorderColor = dataset.borderColor || dataset.backgroundColor;
             convertedDataset.pointHoverBackgroundColor = 'white';
-            convertedDataset.order = 0; // Place les lignes au premier plan
+            convertedDataset.order = 0; // Place lines in foreground
           }
           
           if (convertedDataset.type === "bar") {
-            convertedDataset.order = 1; // Place les barres en arrière-plan
+            convertedDataset.order = 1; // Place bars in background
           }
 
           if (dataset.backgroundColor) {
@@ -652,7 +651,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           const borderWidth = dataset.borderWidth;
           
           if (type !== "line" && convertedDataset.type !== "line") {
-            // Calcule l'épaisseur de bordure en fonction du nombre total de barres individuelles visibles
+            // Calculate border width based on total number of visible individual bars
             const visibleBarDatasets = data.datasets.filter((ds, index) => ds.type !== "line" && !hiddenDatasets.has(index));
             const totalVisibleBars = visibleBarDatasets.reduce((total, dataset) => {
               return total + dataset.data.length;
@@ -668,7 +667,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           }
 
           convertedDataset.hoverBackgroundColor = convertedDataset.backgroundColor;
-          convertedDataset.hoverBorderColor = dataset.borderColor ? parseCustomColor(dataset.borderColor) || dataset.borderColor : dataset.borderColor;
+          convertedDataset.hoverBorderColor = dataset.borderColor ? parseCustomColor(dataset.borderColor.toString()) || dataset.borderColor : dataset.borderColor;
 
           return convertedDataset;
         }),
