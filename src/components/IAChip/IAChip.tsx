@@ -27,7 +27,7 @@ export interface IAChipProps {
    * Must be a React element of Typography type
    * @example <Typography variant="body2">My label</Typography>
    */
-  label: React.ReactElement<typeof Typography>;
+  label: React.ReactElement<typeof Typography> | string;
 
   /**
    * Optional icon to display in the chip

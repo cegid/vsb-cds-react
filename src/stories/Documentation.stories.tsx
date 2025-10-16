@@ -41,9 +41,20 @@ const DocumentationContent = () => {
       error: "Failed to copy to clipboard",
     };
 
-    toaster[`display${type.charAt(0).toUpperCase() + type.slice(1)}`](
-      messages[type]
-    );
+    switch (type) {
+      case "success":
+        toaster.displaySuccess(messages[type]);
+        break;
+      case "info":
+        toaster.displayInfo(messages[type]);
+        break;
+      case "warning":
+        toaster.displayWarning(messages[type]);
+        break;
+      case "error":
+        toaster.displayError(messages[type]);
+        break;
+    }
   };
 
   return (
@@ -121,6 +132,11 @@ const DocumentationContent = () => {
             label={<Typography>Architecture</Typography>}
             icon={<Icon size={16}>building-01</Icon>}
             onClick={() => scrollToSection("architecture", 2)}
+          />
+          <Tab
+            label={<Typography>Release Notes</Typography>}
+            icon={<Icon size={16}>file-02</Icon>}
+            onClick={() => scrollToSection("release-notes", 3)}
           />
         </Tabs>
       </Box>
@@ -435,6 +451,35 @@ function App() {
               </Typography>
             </Box>
           </Column>
+        </Stack>
+      </Box>
+
+      {/* Release Notes Section */}
+      <Box id="release-notes" mb={6}>
+        <Stack spacing={4}>
+          <Box>
+            <Stack direction="row" spacing={2} alignItems="center" mb={2}>
+              <Icon size={24} color="neutral/10">
+                file-02
+              </Icon>
+              <Typography
+                variant="headLineMSemiBold"
+                component="h2"
+                color="neutral/10"
+              >
+                Release Notes
+              </Typography>
+            </Stack>
+            <Typography variant="bodyMRegular" color="neutral/70" paragraph>
+              Consultez l'historique complet des versions et des modifications du design system.
+            </Typography>
+          </Box>
+
+          <Alert
+            variant="info"
+            title="Historique des versions"
+            description={`Version actuelle: ${version}. Consultez la page Release Notes pour voir toutes les modifications apportées au fil des versions.`}
+          />
         </Stack>
       </Box>
 
