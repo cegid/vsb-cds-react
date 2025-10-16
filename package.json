@@ -51,7 +51,11 @@
     "storybook": "storybook dev -p 6006",
     "extract-icons": "node scripts/extract-icons.js",
     "build-storybook": "npm run extract-icons && storybook build",
-    "analyze": "npm run build && npx vite-bundle-analyzer dist"
+    "analyze": "npm run build && npx vite-bundle-analyzer dist",
+    "generate-release-notes": "node scripts/generate-release-notes.js",
+    "update-release-notes": "node scripts/update-release-notes-story.js",
+    "release-notes": "npm run generate-release-notes && npm run update-release-notes",
+    "prepare": "husky"
   },
   "keywords": [
     "design-system",
@@ -81,6 +85,8 @@
   "devDependencies": {
     "@cegid/cds-react": "^3.26.1",
     "@chromatic-com/storybook": "^4.0.1",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@date-io/date-fns": "^3.2.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -94,6 +100,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "date-fns": "^4.1.0",
     "glob": "^11.0.0",
+    "husky": "^9.1.7",
     "path": "^0.12.7",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",

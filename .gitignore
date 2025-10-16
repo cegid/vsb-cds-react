@@ -49,3 +49,6 @@ public/invoice_data.json
 
 # tools
 /.claude/*
+
+# release notes temp file
+release-notes.json

@@ -1,0 +1,23 @@
+{
+  "1.19.1": [
+    {
+      "type": "fix",
+      "component": "Button",
+      "description": "Fix button loading state animation"
+    },
+    {
+      "type": "enhancement",
+      "component": "TextField",
+      "description": "Add clearable prop to allow clearing input"
+    },
+    {
+      "type": "new",
+      "description": "Add new Skeleton component for loading states"
+    },
+    {
+      "type": "style",
+      "component": "Alert",
+      "description": "Update icon colors for better contrast"
+    }
+  ]
+}

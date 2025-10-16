@@ -271,6 +271,75 @@ Visit `http://localhost:6006` to see:
 4. Run build to ensure no TypeScript errors
 5. Submit a pull request
 
+### Commit Conventions
+
+This project follows [Conventional Commits](https://www.conventionalcommits.org/) specification. All commit messages are validated and will be automatically used to generate release notes.
+
+#### Commit Message Format
+
+```
+<type>(<scope>): <description>
+
+[optional body]
+[optional footer]
+```
+
+#### Types
+
+- **feat**: New feature or enhancement to an existing component
+- **fix**: Bug fix
+- **style**: Style changes (CSS, design, visual updates)
+- **refactor**: Code refactoring without functional changes
+- **perf**: Performance improvements
+- **test**: Adding or updating tests
+- **docs**: Documentation changes
+- **build**: Build system changes
+- **ci**: CI/CD changes
+- **chore**: Other changes (maintenance, dependencies)
+
+#### Scope (Optional)
+
+The scope should be the name of the component affected in **PascalCase**:
+
+- `Button`, `TextField`, `DatePicker`, `NavigationBar`, etc.
+- For global changes, omit the scope
+
+#### Examples
+
+```bash
+# New feature for a component
+feat(Button): add loading props to display loader
+
+# Bug fix for a specific component
+fix(Switch): remove required on isActive props
+
+# Style changes
+style(Alert): update error icon color
+
+# Global changes (no scope)
+feat: use tokens package
+fix: improve build performance
+
+# Multiple paragraphs
+feat(DatePicker): add week granularity support
+
+This allows users to select dates by week in addition
+to day, month, and year granularities.
+
+Closes #123
+```
+
+#### Benefits
+
+- **Automated Release Notes**: Commits are automatically parsed and added to Storybook release notes
+- **Clear History**: Easy to understand what changed and why
+- **Semantic Versioning**: Helps determine version bumps
+- **Better Collaboration**: Consistent format across the team
+
+#### Validation
+
+Commits are validated using `commitlint` with a git hook. Invalid commits will be rejected with a helpful error message.
+
 ### Component Guidelines
 
 - Follow existing patterns and naming conventions
@@ -278,6 +347,32 @@ Visit `http://localhost:6006` to see:
 - Add Storybook stories with multiple variants
 - Ensure accessibility compliance
 - Follow the VSB design system tokens
+
+### Generating Release Notes
+
+When preparing a new release:
+
+```bash
+# 1. Update version in package.json
+npm version patch  # or minor/major
+
+# 2. Generate release notes from commits
+npm run release-notes
+
+# 3. Review the generated changes
+# Check src/stories/ReleaseNotes.stories.tsx
+
+# 4. Commit and tag
+git add .
+git commit -m "chore: release v1.x.x"
+git tag v1.x.x
+git push origin main --tags
+```
+
+The `release-notes` script will:
+1. Parse all commits since the last tag
+2. Group changes by type and component
+3. Automatically update the Storybook Release Notes page
 
 ## 🔧 Technical Details
 
