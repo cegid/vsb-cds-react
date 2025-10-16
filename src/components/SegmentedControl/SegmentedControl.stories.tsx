@@ -76,3 +76,78 @@ export const WithDisabledActions: Story = {
     ],
   },
 };
+
+export const WithGroupedActions: Story = {
+  args: {
+    actions: [
+      {
+        label: "View",
+        icon: <Icon size={16}>view</Icon>,
+        onClick: () => console.log("View action clicked"),
+      },
+      {
+        label: "Edit",
+        icon: <Icon size={16}>edit-02</Icon>,
+        onClick: () => console.log("Edit action clicked"),
+      },
+      [
+        {
+          label: "Export PDF",
+          icon: <Icon size={16}>file-download-02</Icon>,
+          onClick: () => console.log("Export PDF clicked"),
+        },
+        {
+          label: "Export CSV",
+          icon: <Icon size={16}>file-download-02</Icon>,
+          onClick: () => console.log("Export CSV clicked"),
+        },
+        {
+          label: "Export Excel",
+          icon: <Icon size={16}>file-download-02</Icon>,
+          onClick: () => console.log("Export Excel clicked"),
+        },
+      ],
+    ],
+  },
+};
+
+export const MultipleGroupedActions: Story = {
+  args: {
+    actions: [
+      [
+        {
+          label: "Save",
+          icon: <Icon size={16}>save-01</Icon>,
+          onClick: () => console.log("Save clicked"),
+        },
+        {
+          label: "Save As",
+          icon: <Icon size={16}>save-02</Icon>,
+          onClick: () => console.log("Save As clicked"),
+        },
+        {
+          label: "Save All",
+          icon: <Icon size={16}>save-01</Icon>,
+          onClick: () => console.log("Save All clicked"),
+        },
+      ],
+      [
+        {
+          label: "Print",
+          icon: <Icon size={16}>printer</Icon>,
+          onClick: () => console.log("Print clicked"),
+        },
+        {
+          label: "Print Preview",
+          icon: <Icon size={16}>view</Icon>,
+          onClick: () => console.log("Print Preview clicked"),
+        },
+      ],
+      {
+        label: "Share",
+        icon: <Icon size={16}>share-07</Icon>,
+        onClick: () => console.log("Share clicked"),
+      },
+    ],
+  },
+};

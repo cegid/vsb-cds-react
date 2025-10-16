@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useTheme, useMediaQuery } from "@mui/material";
+import { useTheme, useMediaQuery, Popper, ClickAwayListener, Paper } from "@mui/material";
 import Box from "../Box";
 import Typography from "../Typography";
+import Icon from "../Icon";
 import { neutral } from "../../theme";
 import typography from "../../theme/typography";
 
@@ -26,7 +27,7 @@ export interface SegmentedControlAction {
  */
 export interface SegmentedControlProps {
   /** Array of actions to display in the segmented control */
-  actions: SegmentedControlAction[];
+  actions: Array<SegmentedControlAction | SegmentedControlAction[]>;
   /** Index of the initially selected action (default: 0) */
   defaultSelected?: number;
   /** Whether the control should take the full width of its container */
@@ -56,17 +57,34 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  const [selectedGroupActions, setSelectedGroupActions] = useState<Map<number, number>>(new Map());
+  const [popperAnchor, setPopperAnchor] = useState<HTMLElement | null>(null);
+  const [openPopperIndex, setOpenPopperIndex] = useState<number | null>(null);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const isIconOnly = actions.every((action) => !action.label);
+
+   const isActionGroup = (action: SegmentedControlAction | SegmentedControlAction[]): action is SegmentedControlAction[] => {
+    return Array.isArray(action);
+  };
+
+  const getCurrentAction = (index: number): SegmentedControlAction => {
+    const action = actions[index];
+    if (isActionGroup(action)) {
+      const selectedSubIndex = selectedGroupActions.get(index) ?? 0;
+      return action[selectedSubIndex];
+    }
+    return action;
+  };
+
+  const displayActions = actions.map((_, index) => getCurrentAction(index));
+  const isIconOnly = displayActions.every((action) => !action.label);
 
   useEffect(() => {
     updateSliderPosition();
   }, [selectedIndex]);
   
-  // Delay slider position calculation to ensure DOM elements have rendered
-  // and have their correct dimensions before calculating the slider width/position
-  useEffect(() => {
+   useEffect(() => {
     const tooltipRenderTimer = setTimeout(updateSliderPosition, 200);
     return () => {
       clearTimeout(tooltipRenderTimer);
@@ -91,13 +109,45 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     }
   };
 
-  const handleActionClick = (index: number) => {
+  const handleActionClick = (index: number, event: React.MouseEvent<HTMLDivElement>) => {
     const action = actions[index];
-    if (action.disabled) {
+    const currentAction = getCurrentAction(index);
+
+    if (currentAction.disabled) {
       return;
     }
-    setInternalSelectedIndex(index);
-    action.onClick();
+
+    if (isActionGroup(action)) {
+      setPopperAnchor(event.currentTarget);
+      setOpenPopperIndex(index);
+    } else {
+      setInternalSelectedIndex(index);
+      currentAction.onClick();
+    }
+  };
+
+  const handleGroupActionSelect = (groupIndex: number, actionIndex: number) => {
+    const action = actions[groupIndex] as SegmentedControlAction[];
+    const selectedAction = action[actionIndex];
+
+    setSelectedGroupActions(prev => {
+      const newMap = new Map(prev);
+      newMap.set(groupIndex, actionIndex);
+      return newMap;
+    });
+
+    setPopperAnchor(null);
+    setOpenPopperIndex(null);
+
+    setInternalSelectedIndex(groupIndex);
+    selectedAction.onClick();
+
+    setTimeout(updateSliderPosition, 0);
+  };
+
+  const handleClosePopper = () => {
+    setPopperAnchor(null);
+    setOpenPopperIndex(null);
   };
 
   const containerStyle: React.CSSProperties = {
@@ -130,8 +180,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   };
 
   const getButtonStyle = (index: number): React.CSSProperties => {
-    const action = actions[index];
-    const isDisabled = action.disabled || false;
+    const currentAction = getCurrentAction(index);
+    const isDisabled = currentAction.disabled || false;
 
     return {
       position: "relative",
@@ -160,78 +210,167 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   };
 
   return (
-    <Box ref={containerRef} style={containerStyle}>
-      <Box style={sliderBaseStyle} />
+    <>
+      <Box ref={containerRef} style={containerStyle}>
+        <Box style={sliderBaseStyle} />
 
-      {actions.map((action, index) => (
-        <Box
-          {...(fullwidth && { flex: 1 })}
-          key={index}
-          ref={(el) => (buttonRefs.current[index] = el)}
-          onClick={() => handleActionClick(index)}
-          style={getButtonStyle(index)}
-        >
-          {action.icon && (
+        {actions.map((action, index) => {
+          const currentAction = getCurrentAction(index);
+          const isGroup = isActionGroup(action);
+
+          return (
             <Box
-              style={iconStyle}
-              color={
-                color === "dark"
-                  ? "white"
-                  : selectedIndex === index
-                    ? "neutral/10"
-                    : "neutral/50"
-              }
-              onMouseEnter={(e) => {
-                const action = actions[index];
-                if (!action.disabled && selectedIndex !== index) {
-                  e.currentTarget.style.color = (
-                    color === "dark" ? "white" : neutral[10]
-                  ) as string;
-                }
-              }}
-              onMouseLeave={(e) => {
-                const action = actions[index];
-                if (!action.disabled && selectedIndex !== index) {
-                  e.currentTarget.style.color =
-                    color === "light" ? neutral[50] : "white";
-                }
-              }}
+              {...(fullwidth && { flex: 1 })}
+              key={index}
+              ref={(el) => (buttonRefs.current[index] = el)}
+              onClick={(e) => handleActionClick(index, e)}
+              style={getButtonStyle(index)}
             >
-              {action.icon}
+              {currentAction.icon && (
+                <Box
+                  style={iconStyle}
+                  color={
+                    color === "dark"
+                      ? "white"
+                      : selectedIndex === index
+                        ? "neutral/10"
+                        : "neutral/50"
+                  }
+                  onMouseEnter={(e) => {
+                    if (!currentAction.disabled && selectedIndex !== index) {
+                      e.currentTarget.style.color = (
+                        color === "dark" ? "white" : neutral[10]
+                      ) as string;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!currentAction.disabled && selectedIndex !== index) {
+                      e.currentTarget.style.color =
+                        color === "light" ? neutral[50] : "white";
+                    }
+                  }}
+                >
+                  {currentAction.icon}
+                </Box>
+              )}
+              {currentAction.label && (
+                <Typography
+                  variant="bodySSemiBold"
+                  color={
+                    color === "dark"
+                      ? "white"
+                      : selectedIndex === index
+                        ? "neutral/10"
+                        : "neutral/50"
+                  }
+                  onMouseEnter={(e) => {
+                    if (!currentAction.disabled && selectedIndex !== index) {
+                      e.currentTarget.style.color = (
+                        color === "dark" ? "white" : neutral[10]
+                      ) as string;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!currentAction.disabled && selectedIndex !== index) {
+                      e.currentTarget.style.color =
+                        color === "light" ? neutral[50] : "white";
+                    }
+                  }}
+                >
+                  {currentAction.label}
+                </Typography>
+              )}
+              {isGroup && (
+                <Icon
+                  size={16}
+                  color={
+                    color === "dark"
+                      ? "white"
+                      : selectedIndex === index
+                        ? "neutral/10"
+                        : "neutral/50"
+                  }
+                >
+                  arrow-down-01
+                </Icon>
+              )}
             </Box>
-          )}
-          {action.label && (
-            <Typography
-              variant="bodySSemiBold"
-              color={
-                color === "dark"
-                  ? "white"
-                  : selectedIndex === index
-                    ? "neutral/10"
-                    : "neutral/50"
-              }
-              onMouseEnter={(e) => {
-                const action = actions[index];
-                if (!action.disabled && selectedIndex !== index) {
-                  e.currentTarget.style.color = (
-                    color === "dark" ? "white" : neutral[10]
-                  ) as string;
-                }
-              }}
-              onMouseLeave={(e) => {
-                const action = actions[index];
-                if (!action.disabled && selectedIndex !== index) {
-                  e.currentTarget.style.color =
-                    color === "light" ? neutral[50] : "white";
-                }
-              }}
-            >
-              {action.label}
-            </Typography>
-          )}
-        </Box>
-      ))}
-    </Box>
+          );
+        })}
+      </Box>
+
+      <Popper
+        open={Boolean(popperAnchor) && openPopperIndex !== null}
+        anchorEl={popperAnchor}
+        placement="bottom"
+        style={{ zIndex: 1300 }}
+      >
+        <ClickAwayListener onClickAway={handleClosePopper}>
+          <Paper
+            elevation={3}
+            style={{
+              marginTop: "4px",
+              borderRadius: "8px",
+              overflow: "hidden",
+              minWidth: popperAnchor?.offsetWidth || "auto",
+            }}
+          >
+            {openPopperIndex !== null &&
+              isActionGroup(actions[openPopperIndex]) &&
+              (actions[openPopperIndex] as SegmentedControlAction[]).map(
+                (groupAction, actionIndex) => (
+                  <Box
+                    key={actionIndex}
+                    onClick={() =>
+                      handleGroupActionSelect(openPopperIndex, actionIndex)
+                    }
+                    style={{
+                      padding: "8px 16px",
+                      cursor: groupAction.disabled ? "not-allowed" : "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      opacity: groupAction.disabled ? 0.5 : 1,
+                      backgroundColor:
+                        selectedGroupActions.get(openPopperIndex) === actionIndex
+                          ? color === "dark"
+                            ? neutral[30]
+                            : neutral[95]
+                          : "transparent",
+                      transition: "background-color 0.2s ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!groupAction.disabled) {
+                        e.currentTarget.style.backgroundColor =
+                          color === "dark" ? neutral[40] : neutral[90];
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!groupAction.disabled) {
+                        e.currentTarget.style.backgroundColor =
+                          selectedGroupActions.get(openPopperIndex) === actionIndex
+                            ? color === "dark"
+                              ? neutral[30]
+                              : neutral[95]
+                            : "transparent";
+                      }
+                    }}
+                  >
+                    {groupAction.icon && (
+                      <Box style={iconStyle}>{groupAction.icon}</Box>
+                    )}
+                    {groupAction.label && (
+                      <Typography variant="bodySSemiBold" color="neutral/10">
+                        {groupAction.label}
+                      </Typography>
+                    )}
+                  </Box>
+                )
+              )}
+          </Paper>
+        </ClickAwayListener>
+      </Popper>
+    </>
   );
 };
 
