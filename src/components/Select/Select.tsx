@@ -14,15 +14,28 @@ import Typography from "../Typography";
 
 const { primary, neutral, critical } = colorPalettes;
 
-const StyledSelect = styled(CegidSelect)(({ theme }) => ({
+interface StyledSelectProps {
+  outlined?: boolean;
+}
+
+const StyledSelect = styled(CegidSelect)<StyledSelectProps>(({ theme, outlined = true }) => ({
   "& .MuiInputBase-root": {
     caretColor: "transparent",
     padding: "8px 8px 8px 16px",
+    ...(outlined === false && {
+      border: "none !important",
+      "&::before": {
+        border: "none !important",
+      },
+      "&::after": {
+        border: "none !important",
+      },
+    }),
     "& .MuiInputAdornment-root": {
       left: "8px",
     },
     "&.Mui-error": {
-      borderColor: critical[80],
+      borderColor: outlined ? critical[80] : "transparent",
       backgroundColor: critical[99],
       "&:hover": {
         backgroundColor: critical[90],
@@ -47,11 +60,11 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
       display: "none",
     },
     "&.Mui-focused:not(.Mui-error)::before": {
-      borderColor: neutral[90],
+      borderColor: outlined ? neutral[90] : "transparent",
     },
     ":hover": {
       backgroundColor: neutral[99],
-      borderColor: neutral[90],
+      borderColor: outlined ? neutral[90] : "transparent",
     },
   },
   "& .MuiSelect-select": {
@@ -146,13 +159,18 @@ const StyledSelect = styled(CegidSelect)(({ theme }) => ({
   },
 }));
 
-function Select(props: Readonly<CegidSelectProps>) {
-  const { errorText, ...otherProps } = props;
+export interface SelectProps extends CegidSelectProps {
+  outlined?: boolean;
+}
+
+function Select(props: Readonly<SelectProps>) {
+  const { errorText, outlined = true, ...otherProps } = props;
 
   return (
     <>
       <StyledSelect
         {...otherProps}
+        outlined={outlined}
         SelectProps={{
           MenuProps: {
             anchorOrigin: {

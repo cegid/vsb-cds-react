@@ -17,6 +17,7 @@ const meta = {
     error: { control: "boolean" },
     errorText: { control: "text" },
     multiple: { control: "boolean" },
+    outlined: { control: "boolean" },
   },
   args: {
     label: "Label",
@@ -82,6 +83,13 @@ export const MultipleSelect: Story = {
 export const Required: Story = {
   args: {
     required: true,
+  },
+  render: (args) => <Select {...args}>{selectOptions}</Select>,
+};
+
+export const WithoutOutline: Story = {
+  args: {
+    outlined: false,
   },
   render: (args) => <Select {...args}>{selectOptions}</Select>,
 };
