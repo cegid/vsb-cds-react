@@ -7,7 +7,7 @@ import typography from "../../theme/typography";
 import Badge, { BadgeProps } from "../Badge";
 import Box from "../Box";
 
-export interface TabProps {
+export interface TabProps extends React.HTMLAttributes<HTMLDivElement> {
   /**
    * The label content for the tab
    */
