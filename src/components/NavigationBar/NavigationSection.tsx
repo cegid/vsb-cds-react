@@ -4,16 +4,51 @@ import type { ComponentWithExpandedProp, ExtendedNavItem } from './NavigationBar
 import { MenuItemType, NavList } from './NavigationBar';
 import NavItemButton from './NavItemButton';
 
+/**
+ * Props for the NavigationSection component.
+ * This component displays a section of navigation items (header, body, or footer).
+ */
 interface NavSectionProps {
+  /**
+   * The type of navigation section (header, body, or footer).
+   * Determines the styling and positioning of the section.
+   */
   type: MenuItemType;
+  /**
+   * Array of navigation items to display in this section.
+   */
   navItems: ExtendedNavItem[];
+  /**
+   * Whether the navigation bar is expanded (showing labels) or collapsed (icons only).
+   */
   isExpanded: boolean;
+  /**
+   * Callback fired when a navigation item is clicked.
+   * @param item - The clicked navigation item
+   */
   onNavItemClick: (item: ExtendedNavItem) => void;
+  /**
+   * Callback fired when the mouse enters a navigation item.
+   * Used to open the sidebar with children items or close it if item has no children.
+   * @param item - The hovered navigation item, or null to close the sidebar
+   */
   onNavMouseEnter: (item: ExtendedNavItem | null) => void;
+  /**
+   * Callback fired when the mouse leaves a navigation item.
+   * Used to trigger the sidebar closing animation after a delay.
+   */
   onNavMouseLeave: () => void;
 }
 
+/**
+ * Props for the styled navigation section container.
+ * @internal
+ */
 interface NavSectionContainerProps extends ComponentWithExpandedProp {
+  /**
+   * The type of navigation section.
+   * Body sections have flex: 1 to take up available space.
+   */
   sectiontype: MenuItemType;
 }
 

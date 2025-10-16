@@ -69,18 +69,62 @@ const IconButtonProfile = styled(IconButton)(() => ({
     width:  'auto',
 }));
 
+/**
+ * Props for the NavigationHeader component.
+ * This component displays the header section of the navigation bar including
+ * the logo, user profile, and header navigation items.
+ */
 interface NavHeaderProps {
-  headerNavItems:  ExtendedNavItem[];
+  /**
+   * Array of navigation items to display in the header section.
+   */
+  headerNavItems: ExtendedNavItem[];
+  /**
+   * Whether the navigation bar is expanded (showing labels) or collapsed (icons only).
+   */
   isExpanded: boolean;
+  /**
+   * URL or import source for the logo image displayed in the profile area.
+   */
   logoSrc: string;
+  /**
+   * Array of menu items to display in the user profile dropdown menu.
+   */
   profileMenuItems: ProfileMenuItem[];
+  /**
+   * First name of the current user, displayed in the profile greeting.
+   */
   userFirstName: string;
+  /**
+   * Last name of the current user, displayed in the profile menu.
+   */
   userLastName: string;
+  /**
+   * Trigram (3-letter abbreviation) of the current user, displayed in the profile menu.
+   */
   userTrigram: string;
+  /**
+   * Callback function to handle logout action.
+   */
   onLogOut: () => void;
+  /**
+   * Callback fired when the mouse enters the header area.
+   * Used to close any open sidebar when hovering over the header.
+   */
   onMouseEnter?: () => void;
+  /**
+   * Callback fired when the mouse leaves the header area.
+   */
   onMouseLeave?: () => void;
+  /**
+   * Callback fired when a navigation item in the header is clicked.
+   * @param navItem - The clicked navigation item
+   */
   onNavItemClick: (navItem: ExtendedNavItem) => void;
+  /**
+   * Callback fired when the expand/collapse toggle button is clicked.
+   * Toggles between expanded and collapsed states of the navigation bar.
+   */
   onToggleExpandNavigation: () => void;
 };
 

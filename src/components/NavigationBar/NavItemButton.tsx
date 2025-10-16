@@ -16,11 +16,32 @@ import { useState, useRef, useEffect } from "react";
 import Tooltip from "../Tooltip";
 import IconButton from "../IconButton";
 
+/**
+ * Props for the styled navigation list item button.
+ * @internal
+ */
 export interface NavListItemButtonProp {
+  /**
+   * Whether this navigation item is currently active/selected.
+   */
   active: boolean;
+  /**
+   * Whether this button is displayed in the sidebar (second level menu).
+   */
   sidebar: boolean;
+  /**
+   * Whether the navigation bar is expanded (showing labels) or collapsed (icons only).
+   */
   expanded: boolean;
+  /**
+   * Whether this button is for the user profile item.
+   * Profile items have special styling.
+   */
   profile?: boolean;
+  /**
+   * Whether this navigation item has children.
+   * Items with children have different background colors when active.
+   */
   haschildren?: boolean;
 }
 
@@ -72,7 +93,15 @@ export const MenuIcon = styled(Icon, {
   transition: "all 0.2s ease-in-out",
 }));
 
+/**
+ * Props for the collapse/expand icon in sidebar items with children.
+ * @internal
+ */
 interface CollapseIconProps {
+  /**
+   * Whether the navigation item is currently expanded to show its children.
+   * When true, the icon rotates 180 degrees.
+   */
   expandednavitem?: boolean;
 }
 
@@ -94,13 +123,42 @@ export const NavListItemIcon = styled(ListItemIcon)(() => ({
   justifyContent: "center",
 }));
 
+/**
+ * Props for the NavItemButton component.
+ * This component renders a single navigation item with icon, label, and interactive states.
+ */
 interface NavItemButtonProps {
+  /**
+   * The navigation item data to display.
+   */
   navItem: ExtendedNavItem;
+  /**
+   * Whether the navigation bar is expanded (showing labels) or collapsed (icons only).
+   * @default true
+   */
   isExpanded?: boolean;
+  /**
+   * Whether this navigation item is currently expanded in the sidebar to show its children.
+   * Only relevant for items with children in the sidebar.
+   * @default false
+   */
   isExpandedNavItem?: boolean;
+  /**
+   * Whether this button is displayed in the sidebar (second level menu).
+   * @default false
+   */
   isSideBar?: boolean;
+  /**
+   * Callback fired when the navigation item is clicked.
+   */
   onClick: () => void;
+  /**
+   * Callback fired when the mouse enters the navigation item area.
+   */
   onMouseEnter?: () => void;
+  /**
+   * Callback fired when the mouse leaves the navigation item area.
+   */
   onMouseLeave?: () => void;
 }
 

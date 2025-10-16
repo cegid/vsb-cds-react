@@ -7,12 +7,23 @@ import NavItemButton from "./NavItemButton";
 import { ExtendedNavItem, NavList } from "./NavigationBar";
 import NavigationHelpers from "./NavigationHelpers";
 
+/**
+ * Props for the styled sidebar panel component.
+ * @internal
+ */
 interface SidebarPanelProps {
+  /**
+   * Whether the sidebar is currently open and visible.
+   */
   open: boolean;
+  /**
+   * Width of the anchor element (navigation panel) in pixels.
+   * Used to position the sidebar correctly next to the navigation bar.
+   */
   anchorWidth: number;
 }
 
-export const SIDEBAR_WIDTH = '225px';
+export const SIDEBAR_WIDTH = 'fit-content';
 
 const SidebarPanel = styled(Paper, {
   shouldForwardProp: prop => prop !== 'open' && prop !== 'anchorWidth',
@@ -55,24 +66,72 @@ const SidebarPanel = styled(Paper, {
   },
 }));
 
-interface NavigationSideBarProps {
+/**
+ * Props for the NavigationSideBar component.
+ * This component displays the second-level navigation items in a sidebar panel.
+ */
+export interface NavigationSideBarProps {
+  /**
+   * Width of the anchor element (navigation panel) in pixels.
+   * Used to position the sidebar correctly next to the navigation bar.
+   */
   anchorWidth: number;
+  /**
+   * Array of navigation items to display in the sidebar.
+   * These are the children of the currently hovered or selected parent item.
+   */
   navItems: NonNullable<ExtendedNavItem['children']>;
+  /**
+   * Whether the sidebar is currently open and visible.
+   */
   open: boolean;
+  /**
+   * The parent navigation item whose children are being displayed.
+   * Used to show the parent's label as the sidebar title.
+   */
   parent: ExtendedNavItem;
+  /**
+   * Callback fired when the mouse enters the sidebar area.
+   * Used to prevent the sidebar from closing when hovering over it.
+   */
   onMouseEnter: () => void;
+  /**
+   * Callback fired when the mouse leaves the sidebar area.
+   * Used to trigger the closing animation after a delay.
+   */
   onMouseLeave: () => void;
+  /**
+   * Callback fired when a navigation item in the sidebar is clicked.
+   * @param navItem - The clicked navigation item
+   */
   onNavItemClick: (navItem: ExtendedNavItem) => void;
+  /**
+   * Optional custom renderer for the entire sidebar content.
+   * When provided, this function will replace the default sidebar content entirely.
+   * @param parent - The parent navigation item that triggered the sidebar
+   * @param navItems - The navigation items to display in the sidebar
+   * @example
+   * ```tsx
+   * renderSidebarContent: (parent, navItems) => (
+   *   <CustomSidebarContent
+   *     title={parent?.label}
+   *     items={navItems}
+   *   />
+   * )
+   * ```
+   */
+  renderSidebarContent?: (parent: ExtendedNavItem | null, navItems: ExtendedNavItem[]) => React.ReactNode;
 }
 
-const NavigationSideBar = ({ 
+const NavigationSideBar = ({
   anchorWidth,
   navItems,
   open,
   parent,
   onMouseEnter,
   onMouseLeave,
-  onNavItemClick
+  onNavItemClick,
+  renderSidebarContent
 }: NavigationSideBarProps) => {
 
   /**
@@ -94,92 +153,99 @@ const NavigationSideBar = ({
   };
 
   return (
-    <SidebarPanel 
+    <SidebarPanel
       anchorWidth={anchorWidth}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      open={open} 
-      square  
+      open={open}
+      square
     >
-      {/* Title */}
-      <Box
-        alignItems="center"
-        display="flex"
-        height="40px"
-        justifyContent="space-between"
-        width="100%"
-      >
-        <Box display="flex" alignItems="center" gap={4}>
-          <Fade
-            key={parent?.label || ''}
-            in
-            timeout={800}
-            mountOnEnter
-            unmountOnExit
+      {/* If custom renderer is provided, use it instead of default content */}
+      {renderSidebarContent ? (
+        renderSidebarContent(parent, navItems)
+      ) : (
+        <>
+          {/* Title */}
+          <Box
+            alignItems="center"
+            display="flex"
+            height="40px"
+            justifyContent="space-between"
+            width="100%"
           >
-            <Typography variant="bodyMMedium" color="primary/10">
-              {parent?.label || ''}
-            </Typography>
-          </Fade>
-        </Box>
-      </Box>
-
-      {/* Listing */}
-      <Box
-        display="flex"
-        flexDirection="column"
-        gap={2}
-        padding="8px 0 16px"
-        width="100%"
-      >
-        <Fade
-          key={parent?.label || ''}
-          in
-          timeout={800}
-          mountOnEnter
-          unmountOnExit
-        >
-          <Box>
-            <NavList dense expanded={true}>
-              {navItems.map((navItem) => {
-                const hasChildren = !!navItem.children?.length;
-                const isExpandedNavItem = expandedNavItems.has(navItem.key);
-
-                return (
-                  <Fragment key={navItem.key}>
-                      <NavItemButton
-                        navItem={navItem}
-                        onClick={() => {
-                          if (hasChildren) {
-                            toggleNavItemExpansion(navItem.key);
-                          } else {
-                            onNavItemClick(navItem);
-                          }
-                        }}
-                        isSideBar
-                        isExpandedNavItem={isExpandedNavItem}
-                      />
-                      {/* Handle here navItems under a parentNavItem in the sideBar */}
-                      {hasChildren && isExpandedNavItem && (
-                        <Box ml={5}>
-                          {navItem.children!.map((childNavItem) => (
-                            <NavItemButton
-                              key={childNavItem.key}
-                              navItem={childNavItem}
-                              isSideBar
-                              isExpandedNavItem={expandedNavItems.has(childNavItem.key)}
-                              onClick={() => onNavItemClick(childNavItem)}
-                            />
-                          ))}
-                        </Box>
-                      )}
-                  </Fragment>
-                )
-              })}
-            </NavList>
+            <Box display="flex" alignItems="center" gap={4}>
+              <Fade
+                key={parent?.label || ''}
+                in
+                timeout={800}
+                mountOnEnter
+                unmountOnExit
+              >
+                <Typography variant="bodyMMedium" color="primary/10">
+                  {parent?.label || ''}
+                </Typography>
+              </Fade>
+            </Box>
           </Box>
-        </Fade>
-      </Box>
+
+          {/* Listing */}
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            padding="8px 0 16px"
+            width="100%"
+          >
+            <Fade
+              key={parent?.label || ''}
+              in
+              timeout={800}
+              mountOnEnter
+              unmountOnExit
+            >
+              <Box>
+                <NavList dense expanded={true}>
+                  {navItems.map((navItem) => {
+                    const hasChildren = !!navItem.children?.length;
+                    const isExpandedNavItem = expandedNavItems.has(navItem.key);
+
+                    return (
+                      <Fragment key={navItem.key}>
+                        <NavItemButton
+                          navItem={navItem}
+                          onClick={() => {
+                            if (hasChildren) {
+                              toggleNavItemExpansion(navItem.key);
+                            } else {
+                              onNavItemClick(navItem);
+                            }
+                          }}
+                          isSideBar
+                          isExpandedNavItem={isExpandedNavItem}
+                        />
+                        {/* Handle here navItems under a parentNavItem in the sideBar */}
+                        {hasChildren && isExpandedNavItem && (
+                          <Box ml={5}>
+                            {navItem.children!.map((childNavItem) => (
+                              <NavItemButton
+                                key={childNavItem.key}
+                                navItem={childNavItem}
+                                isSideBar
+                                isExpandedNavItem={expandedNavItems.has(childNavItem.key)}
+                                onClick={() => onNavItemClick(childNavItem)}
+                              />
+                            ))}
+                          </Box>
+                        )}
+                      </Fragment>
+                    )
+                  })}
+                </NavList>
+              </Box>
+            </Fade>
+          </Box>
+        </>
+      )}
     </SidebarPanel>
   )
 };
