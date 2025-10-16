@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.19.1",
+    changes: [
+      {
+        component: "Select",
+        type: "enhancement",
+        description: "add outlined prop to control border visibility",
+      }
+    ],
+  },
+  {
     version: "1.19.0",
     changes: [
       {

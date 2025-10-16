@@ -70,11 +70,13 @@ function updateReleaseNotesStory() {
   console.log(newReleaseNotes);
 
   // Find the releaseNotes array in the file
-  const arrayStartRegex = /const releaseNotes: ReleaseNote\[\] = \[\n/;
+  // More flexible regex to handle different formatting
+  const arrayStartRegex = /const releaseNotes: ReleaseNote\[\]\s*=\s*\[\s*\n/;
   const match = storyContent.match(arrayStartRegex);
 
   if (!match) {
     console.error('❌ Error: Could not find releaseNotes array in the story file!');
+    console.error('Expected pattern: const releaseNotes: ReleaseNote[] = [');
     process.exit(1);
   }
 
