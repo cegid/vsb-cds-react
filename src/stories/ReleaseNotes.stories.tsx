@@ -32,6 +32,36 @@ const releaseNotes: ReleaseNote[] = [
     version: "1.19.1",
     changes: [
       {
+        component: "Tab",
+        type: "style",
+        description: "change background on hover",
+      },
+      {
+        component: "Tabs",
+        type: "fix",
+        description: "adjust tab width to content size and fix bottom line width",
+      },
+      {
+        component: "SegmentedControl",
+        type: "enhancement",
+        description: "add grouped actions support with dropdown menu",
+      },
+      {
+        component: "NavigationBar",
+        type: "enhancement",
+        description: "add renderSidebarContent prop for custom sidebar rendering",
+      },
+      {
+        component: "Select",
+        type: "enhancement",
+        description: "add outlined prop to control border visibility",
+      }
+    ],
+  },
+  {
+    version: "1.19.1",
+    changes: [
+      {
         component: "Select",
         type: "enhancement",
         description: "add outlined prop to control border visibility",
