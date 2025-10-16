@@ -52,57 +52,55 @@ export const WithBadgeExamples: Story = {
     };
 
     return (
-      <Box width={600}>
-        <Tabs value={value} onChange={handleChange}>
-          <Tab
-            label="Messages"
-            badge={{
-              children: (
-                <Typography variant="captionRegular" color="inherit">
-                  5
-                </Typography>
-              ),
-              variant: "tonal",
-              color: "primary",
-            }}
-          />
-          <Tab
-            label="Notifications"
-            startBadge={{
-              size: "small",
-              color: "success",
-            }}
-            badge={{
-              children: (
-                <Typography variant="captionRegular" color="inherit">
-                  12
-                </Typography>
-              ),
-              variant: "outlined",
-              color: "critical",
-            }}
-          />
-          <Tab
-            label="Status"
-            badge={{
-              size: "small",
-              color: "success",
-            }}
-          />
-          <Tab
-            label="Archive"
-            badge={{
-              children: (
-                <Typography variant="captionRegular" color="inherit">
-                  99+
-                </Typography>
-              ),
-              variant: "tonal",
-              color: "neutral",
-            }}
-          />
-        </Tabs>
-      </Box>
+      <Tabs value={value} onChange={handleChange}>
+        <Tab
+          label="Messages"
+          badge={{
+            children: (
+              <Typography variant="captionRegular" color="inherit">
+                5
+              </Typography>
+            ),
+            variant: "tonal",
+            color: "primary",
+          }}
+        />
+        <Tab
+          label="Notifications"
+          startBadge={{
+            size: "small",
+            color: "success",
+          }}
+          badge={{
+            children: (
+              <Typography variant="captionRegular" color="inherit">
+                12
+              </Typography>
+            ),
+            variant: "outlined",
+            color: "critical",
+          }}
+        />
+        <Tab
+          label="Status"
+          badge={{
+            size: "small",
+            color: "success",
+          }}
+        />
+        <Tab
+          label="Archive"
+          badge={{
+            children: (
+              <Typography variant="captionRegular" color="inherit">
+                99+
+              </Typography>
+            ),
+            variant: "tonal",
+            color: "neutral",
+          }}
+        />
+      </Tabs>
     );
   },
 };
@@ -116,13 +114,11 @@ export const Disabled: Story = {
     };
 
     return (
-      <Box width={600}>
-        <Tabs value={value} onChange={handleChange}>
-          <Tab label="Actif" />
-          <Tab label="Désactivé" disabled />
-          <Tab label="Autre actif" />
-        </Tabs>
-      </Box>
+      <Tabs value={value} onChange={handleChange}>
+        <Tab label="Actif" />
+        <Tab label="Désactivé" disabled />
+        <Tab label="Autre actif" />
+      </Tabs>
     );
   },
 };
