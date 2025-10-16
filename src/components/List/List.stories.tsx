@@ -6,7 +6,7 @@ import ListItemButton from "../ListItemButton";
 import Typography from "../Typography";
 
 const meta = {
-  title: "📊 Data Display/List",
+  title: "📃 Content display/List",
   component: List,
   parameters: {
     layout: "centered",

@@ -535,7 +535,7 @@ export const SpacingDetailedGuide: StoryObj = {
 };
 
 export default {
-  title: '🎨 Theme/Spacing',
+  title: '🎨 Styles/Spacing',
   parameters: {
     layout: 'padded',
   },

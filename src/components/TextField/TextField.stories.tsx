@@ -6,7 +6,7 @@ import Icon from "../Icon";
 import InputAdornment from "../InputAdornment";
 
 const meta = {
-  title: "🎛️ Form Controls/TextField",
+  title: "🎛️ Inputs and selection/TextField",
   component: TextField,
   parameters: {
     layout: "centered",
@@ -88,7 +88,6 @@ export const WithIcons: Story = {
     <Column gap={3}>
       <TextField
         {...args}
-        label="With Start Icon"
         placeholder="Search something..."
         InputProps={{
           startAdornment,

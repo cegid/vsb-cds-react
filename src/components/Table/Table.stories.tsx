@@ -16,7 +16,7 @@ import Chip from "../Chip";
 import { useState } from "react";
 
 const meta = {
-  title: "📊 Data Display/Table",
+  title: "📊 Data and table/Table",
   component: Table,
   parameters: {
     layout: "centered",

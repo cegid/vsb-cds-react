@@ -15,7 +15,7 @@ import FormControl from '../FormControl';
 import FormGroup from '../FormGroup';
 
 const meta = {
-  title: '🎛️ Form Controls/Checkbox',
+  title: '🎛️ Inputs and selection/Checkbox',
   component: Checkbox,
   parameters: {
     layout: 'centered',

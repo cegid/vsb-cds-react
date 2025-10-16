@@ -4,7 +4,7 @@ import { useState } from "react";
 import InputSearch from "./InputSearch";
 
 const meta = {
-  title: "🎛️ Form Controls/InputSearch",
+  title: "🎛️ Inputs and selection/InputSearch",
   component: InputSearch,
   parameters: {
     layout: "centered",

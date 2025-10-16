@@ -1,10 +1,9 @@
-import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import NavigationBar from "./NavigationBar";
 import { HEADER_ITEMS, NAV_ITEMS, FOOTER_ITEMS, PROFILE_MENU_ITEMS } from "./constants";
 
 const meta = {
-  title: "🧭 Navigation & Layout/NavigationBar",
+  title: "🧭 Navigation/NavigationBar",
   component: NavigationBar,
   parameters: {
     layout: "start",

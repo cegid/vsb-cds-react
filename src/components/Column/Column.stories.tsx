@@ -5,7 +5,7 @@ import Box from "../Box";
 import Typography from "../Typography";
 
 const meta = {
-  title: "🧭 Navigation & Layout/Column",
+  title: "📁 Container & Layout/Column",
   component: Column,
   parameters: {
     layout: "centered",

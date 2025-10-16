@@ -13,6 +13,7 @@ import Row from "../Row";
 import Icon from "../Icon";
 import Typography from "../Typography";
 import Box from "../Box";
+import { color } from "chart.js/helpers";
 
 export interface TextFieldProps extends CegidTextFieldProps {}
 
@@ -37,6 +38,7 @@ const StyledTextField = styled(CegidTextField)(
       "&.Mui-focused": {
         outline: `2px solid ${primary[70]}`,
         outlineOffset: "1px",
+        color: neutral[50],
       },
       "&.Mui-readOnly": {
         backgroundColor: neutral[99],
@@ -50,6 +52,7 @@ const StyledTextField = styled(CegidTextField)(
       },
       "&.MuiInputBase-multiline": {
         paddingLeft: "12px",
+        color: neutral[50],
       },
       [theme.breakpoints.down("sm")]: {
         ".MuiInputLabel-shrink + .CdsFormItem-inputWrapper &": {
@@ -59,10 +62,14 @@ const StyledTextField = styled(CegidTextField)(
     },
 
     "& .MuiInputAdornment-positionStart": {
-      [theme.breakpoints.down("sm")]: { paddingTop: "18px" },
+      [theme.breakpoints.down("sm")]: {
+        paddingTop: label ? "18px" : "0"
+      },
     },
     "& .MuiInputAdornment-positionEnd": {
-      [theme.breakpoints.down("sm")]: { paddingTop: "18px" },
+      [theme.breakpoints.down("sm")]: {
+        paddingTop: label ? "18px" : "0"
+      },
     },
 
     "& .MuiInputBase-input": {
@@ -128,7 +135,7 @@ const StyledTextField = styled(CegidTextField)(
 
 const TextField = (props: CegidTextFieldProps) => {
   return (
-    <Box>
+    <Box width={props.fullWidth ? "100%" : "fit-content"}>
       <StyledTextField {...props} />
       {props.errorText && (
         <Row gap={2} mt={4}>

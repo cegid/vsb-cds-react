@@ -379,6 +379,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       variant,
       color,
       square,
+      size,
       ...restProps,
     };
 

@@ -183,7 +183,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         sx={{
           cursor: "pointer",
           flexShrink: isInModal ? 1 : 0,
-          border: isInModal || isVerticalLayout ? "none" : "1px solid #E6E7EA",
+          border: isInModal || (isVerticalLayout && !isMobileLayout) ? "none" : "1px solid #E6E7EA",
           display: "inline-flex",
         }}
       >
