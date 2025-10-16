@@ -1,63 +1,167 @@
 "use client";
 
-import {
-  Tabs as CegidTabs,
-  TabsProps as CegidTabsProps,
-  styled,
-} from "@cegid/cds-react";
 import React from "react";
+import { styled } from "@cegid/cds-react";
+import { neutral } from "../../theme";
+import Box from "../Box";
 
-export interface TabsProps extends CegidTabsProps {
+export interface TabsProps {
+  /**
+   * The currently selected tab index
+   */
+  value?: number;
+  /**
+   * Callback fired when the value changes
+   */
+  onChange?: (event: React.SyntheticEvent, newValue: number) => void;
+  /**
+   * The content of the component (Tab elements)
+   */
+  children?: React.ReactNode;
+  /**
+   * If true, the tabs will take up the full width of its container
+   */
   fullwidth?: boolean;
+  /**
+   * If true, displays a bottom line indicator under tabs
+   */
   bottomLine?: boolean;
+  /**
+   * Centered tabs
+   */
+  centered?: boolean;
 }
 
-const StyledTabs = styled(CegidTabs, {
-  shouldForwardProp: (prop: string) => prop !== 'fullwidth',
-})<{ fullwidth: boolean }>(
-  ({ fullwidth }) => ({
-    "& .MuiTabs-indicator": {
-      display: "none",
-    },
-    minHeight: "34px",
-    ...(fullwidth && { width: "100%" }),
-    "& .MuiTabs-root": {
-      minHeight: "34px",
-    },
+const TabsRoot = styled(Box)<{ fullwidth?: boolean }>(({ fullwidth }) => ({
+  display: "flex",
+  alignItems: "center",
+  position: "relative",
+  justifyContent: "space-between",
+  minHeight: "34px",
+  gap: 8,
+  ...(fullwidth && { width: "100%" }),
+}));
+
+const BottomLineContainer = styled(Box)({
+  position: "relative",
+  height: "1px",
+  marginTop: "4px",
+});
+
+const BottomLine = styled(Box)<{ width: number }>(({ width }) => ({
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: `${width}px`,
+  height: "1px",
+  backgroundColor: neutral[95],
+}));
+
+const ActiveBottomLine = styled(Box)<{ left: number; width: number }>(
+  ({ left, width }) => ({
+    position: "absolute",
+    top: 0,
+    left: `${left}px`,
+    width: `${width}px`,
+    height: "1px",
+    backgroundColor: neutral[10],
+    transition: "all 0.3s ease",
+    borderRadius: "1px",
   })
 );
 
-const Tabs: React.FC<TabsProps> = (props) => {
-  const { children, fullwidth = false, bottomLine = true, onChange, ...otherProps } = props;
+const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
+  (
+    {
+      value = 0,
+      onChange,
+      children,
+      fullwidth = false,
+      bottomLine = true,
+      centered = false,
+      ...props
+    },
+    ref
+  ) => {
+    const [activeLinePosition, setActiveLinePosition] = React.useState({
+      left: 0,
+      width: 0,
+    });
+    const [tabsContainerWidth, setTabsContainerWidth] = React.useState(0);
+    const tabRefs = React.useRef<(HTMLDivElement | null)[]>([]);
+    const containerRef = React.useRef<HTMLDivElement>(null);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    // Vérifier si le tab sélectionné est disabled
-    const tabElements = React.Children.toArray(children);
-    const selectedTab = tabElements[newValue];
-    
-    if (React.isValidElement(selectedTab) && selectedTab.props.disabled) {
-      // Empêcher la sélection d'un tab disabled
-      return;
-    }
-    
-    onChange?.(event, newValue);
-  };
+    // Update active line position and container width when value changes
+    React.useEffect(() => {
+      const activeTab = tabRefs.current[value];
+      const container = containerRef.current;
 
-  const modifiedChildren = React.Children.map(children, (child) => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, {
-        ...child.props,
-        hideBottomLine: !bottomLine,
-      });
-    }
-    return child;
-  });
+      if (activeTab && container) {
+        const containerRect = container.getBoundingClientRect();
+        const tabRect = activeTab.getBoundingClientRect();
 
-  return (
-    <StyledTabs fullwidth={fullwidth} onChange={handleChange} {...otherProps}>
-      {modifiedChildren}
-    </StyledTabs>
-  );
-};
+        setActiveLinePosition({
+          left: tabRect.left - containerRect.left,
+          width: tabRect.width,
+        });
+
+        // Calculate total width of tabs container
+        setTabsContainerWidth(containerRect.width);
+      }
+    }, [value, children]);
+
+    const handleTabClick =
+      (
+        index: number,
+        tabOnClick?: (event: React.MouseEvent<HTMLDivElement>) => void
+      ) =>
+      (event: React.MouseEvent<HTMLDivElement>) => {
+        // Check if tab is disabled
+        const childArray = React.Children.toArray(children);
+        const clickedTab = childArray[index];
+
+        if (React.isValidElement(clickedTab) && clickedTab.props.disabled) {
+          return;
+        }
+
+        onChange?.(event, index);
+        tabOnClick?.(event);
+      };
+
+    const modifiedChildren = React.Children.map(children, (child, index) => {
+      if (React.isValidElement(child)) {
+        return React.cloneElement(child, {
+          ...child.props,
+          selected: value === index,
+          onClick: handleTabClick(index, child.props.onClick),
+          hideBottomLine: !bottomLine,
+          ref: (el: HTMLDivElement | null) => {
+            tabRefs.current[index] = el;
+          },
+        } as any);
+      }
+      return child;
+    });
+
+    return (
+      <Box ref={ref} {...props}>
+        <TabsRoot ref={containerRef} fullwidth={fullwidth}>
+          {modifiedChildren}
+        </TabsRoot>
+        {bottomLine && (
+          <BottomLineContainer>
+            <BottomLine width={tabsContainerWidth} />
+            <ActiveBottomLine
+              left={activeLinePosition.left}
+              width={activeLinePosition.width}
+            />
+          </BottomLineContainer>
+        )}
+      </Box>
+    );
+  }
+);
+
+Tabs.displayName = "Tabs";
 
 export default Tabs;

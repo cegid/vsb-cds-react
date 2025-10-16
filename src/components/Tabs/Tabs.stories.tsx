@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import Tabs from "./Tabs";
 import Tab from "../Tab";
+import Box from "../Box";
 
 const meta = {
   title: "🧭 Navigation/Tabs",
@@ -45,7 +46,12 @@ export const Default: Story = {
     };
 
     return (
-      <Tabs {...args} aria-label="Customer tabs" value={value} onChange={handleChange}>
+      <Tabs
+        {...args}
+        aria-label="Customer tabs"
+        value={value}
+        onChange={handleChange}
+      >
         <Tab
           aria-controls="simple-tabpanel-0"
           id="individual-tab"
@@ -99,7 +105,12 @@ export const Preselected: Story = {
     };
 
     return (
-      <Tabs {...args} aria-label="Customer tabs" value={value} onChange={handleChange}>
+      <Tabs
+        {...args}
+        aria-label="Customer tabs"
+        value={value}
+        onChange={handleChange}
+      >
         <Tab label="Particulier" />
         <Tab label="Professionnel" />
       </Tabs>
@@ -119,11 +130,18 @@ export const Fullwidth: Story = {
     };
 
     return (
-      <Tabs {...args} aria-label="Full width tabs" value={value} onChange={handleChange}>
-        <Tab label="Particulier" />
-        <Tab label="Professionnel" />
-        <Tab label="Entreprise" />
-      </Tabs>
+      <Box width={600}>
+        <Tabs
+          {...args}
+          aria-label="Full width tabs"
+          value={value}
+          onChange={handleChange}
+        >
+          <Tab label="Particulier" />
+          <Tab label="Professionnel" />
+          <Tab label="Entreprise" />
+        </Tabs>
+      </Box>
     );
   },
 };
