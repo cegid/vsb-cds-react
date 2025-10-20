@@ -108,14 +108,16 @@ interface NavHeaderProps {
    */
   onLogOut: () => void;
   /**
-   * Callback fired when the mouse enters the header area.
-   * Used to close any open sidebar when hovering over the header.
+   * Callback fired when the mouse enters a navigation item.
+   * Used to open the sidebar with children items or close it if item has no children.
+   * @param item - The hovered navigation item, or null to close the sidebar
    */
-  onMouseEnter?: () => void;
+  onNavMouseEnter: (item: ExtendedNavItem | null) => void;
   /**
-   * Callback fired when the mouse leaves the header area.
+   * Callback fired when the mouse leaves a navigation item.
+   * Used to trigger the sidebar closing animation after a delay.
    */
-  onMouseLeave?: () => void;
+  onNavMouseLeave: () => void;
   /**
    * Callback fired when a navigation item in the header is clicked.
    * @param navItem - The clicked navigation item
@@ -137,8 +139,8 @@ const NavHeader = ({
   userLastName,
   userTrigram,
   onLogOut,
-  onMouseEnter,
-  onMouseLeave,
+  onNavMouseEnter,
+  onNavMouseLeave,
   onNavItemClick,
   onToggleExpandNavigation,
 }: NavHeaderProps) => {
@@ -164,7 +166,7 @@ const NavHeader = ({
         </MenuToggleWrapper>
       </MenuControlSection>
       <NavList expanded={isExpanded}>
-        <ListItem disablePadding onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+        <ListItem disablePadding onMouseEnter={() => onNavMouseEnter(null)} onMouseLeave={onNavMouseLeave}>
           <NavListItemButton onClick={handleProfileClick} title="Accès au profil" active={open} profile={true} sidebar={false} expanded={isExpanded}>
               <NavListItemIcon>
                 <img
@@ -205,16 +207,22 @@ const NavHeader = ({
       <NavList expanded={isExpanded}>
         { headerNavItems
           .filter(navItem => navItem.isVisible ?? true)
-          .map((navItem) => (
+          .map((navItem) => {
+            const hasChildren = Boolean(navItem.children);
+            return (
               <NavItemButton
                 key={navItem.key}
                 navItem={navItem}
                 isExpanded={isExpanded}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
+                onMouseEnter={() => hasChildren
+                  ? onNavMouseEnter(navItem)
+                  : onNavMouseEnter(null)
+                }
+                onMouseLeave={onNavMouseLeave}
                 onClick={() => onNavItemClick(navItem)}
               />
-        ))}
+            );
+          })}
         {/* <ListItem
             key="recherche"
             disablePadding

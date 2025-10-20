@@ -69,6 +69,19 @@ export interface NavItem {
    * Only used when createPath is provided.
    */
   onCreateClick?: () => void;
+  /**
+   * Optional custom renderer for the sidebar content of this specific navigation item.
+   * When provided, this function will replace the default sidebar content for this item only.
+   * @param parent - The current navigation item (parent)
+   * @param navItems - The children items of this navigation item
+   * @example
+   * ```tsx
+   * renderSidebarContent: (parent, navItems) => (
+   *   <CustomNotificationPanel parent={parent} items={navItems} />
+   * )
+   * ```
+   */
+  renderSidebarContent?: (parent: NavItem | null, navItems: NavItem[]) => React.ReactNode;
 }
 
 /**
@@ -314,6 +327,13 @@ const NavigationBar = ({
    ? baseIsSideBarOpen
    : Boolean(hoveredNavItem?.children?.length);
 
+  // Determine which renderSidebarContent to use: item-specific or global
+  const currentParent = hoveredNavItem ?? activeNavItem;
+  const currentRenderSidebarContent = currentParent?.renderSidebarContent
+    ? (parent: ExtendedNavItem | null, navItems: ExtendedNavItem[]) =>
+        currentParent.renderSidebarContent!(parent, navItems)
+    : renderSidebarContent;
+
   const hoverTimer = useRef<number>();
   const closeTimer = useRef<number>();
   
@@ -323,11 +343,11 @@ const NavigationBar = ({
   const handleNavMouseEnter = (item: ExtendedNavItem | null) => {
     window.clearTimeout(closeTimer.current);
     window.clearTimeout(hoverTimer.current);
-    
+
     if (hoveredNavItem !== item) {
       hoverTimer.current = window.setTimeout(() => {
         setHoveredNavItem(item);
-      }, 400);
+      }, 100);
     }
   };
 
@@ -378,8 +398,9 @@ const NavigationBar = ({
 
   const handleSidebarMouseLeave = () => {
     window.clearTimeout(hoverTimer.current);
-    window.clearTimeout(closeTimer.current);
-    setHoveredNavItem(null);
+    closeTimer.current = window.setTimeout(() => {
+      setHoveredNavItem(null);
+    }, 300);
   };
 
   return (
@@ -399,7 +420,8 @@ const NavigationBar = ({
           profileMenuItems={profileMenuItems}
           onLogOut={onLogOut}
           onNavItemClick={handleNavItemClick}
-          onMouseEnter={() => setHoveredNavItem(null)}
+          onNavMouseEnter={handleNavMouseEnter}
+          onNavMouseLeave={handleNavMouseLeave}
           onToggleExpandNavigation={handleToggleExpandNavigation}
         />
 
@@ -431,7 +453,7 @@ const NavigationBar = ({
         onMouseEnter={handleSidebarMouseEnter}
         onMouseLeave={handleSidebarMouseLeave}
         onNavItemClick={handleNavItemClick}
-        renderSidebarContent={renderSidebarContent}
+        renderSidebarContent={currentRenderSidebarContent}
       />
     </NavContainer>
   );

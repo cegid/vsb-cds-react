@@ -20,31 +20,31 @@ export const useSidebarState = (navItems: ExtendedNavItem[], hoveredNavItem: Ext
     navItems.find((navItem) => navItem.isActive) ?? null
   ), [navItems]);
 
+  const parentOfActiveChild = useMemo(() => (
+    navItems.find((navItem) => navItem.children?.some((childNavItem) => childNavItem.isActive)) ?? null
+  ), [navItems]);
+
   const sidebarNavItems = useMemo(() => {
-
-    const parentOfActiveChild = navItems.find((navItem) => navItem.children?.some((childNavItem) => childNavItem.isActive)
-    ) ?? null;
-
     /**
      * By order of priority:
      * 1. If hoveredNavItem has children, return them
-     * 2. If activeNavItem has children, return them
-     * 3. If activeNavItem is a childNavItem, return its parent chidren
+     * 2. If activeNavItem is a childNavItem, return its parent children (for context)
      */
 
     return hoveredNavItem?.children
-      ?? activeNavItem?.children
       ?? parentOfActiveChild?.children
       ?? [];
-  }, [navItems, hoveredNavItem, activeNavItem]);
+  }, [hoveredNavItem, parentOfActiveChild]);
 
   useEffect(() => {
-    if (sidebarNavItems.length > 0) {
+    // Only open sidebar if we're hovering over an item with children
+    // Do not auto-open just because we're on an active child path
+    if (hoveredNavItem?.children && hoveredNavItem.children.length > 0) {
       setIsSideBarOpen(true);
     } else {
       setIsSideBarOpen(false);
     }
-  }, [sidebarNavItems]);
+  }, [hoveredNavItem]);
 
     return { sidebarNavItems, isSideBarOpen, activeNavItem };
 };

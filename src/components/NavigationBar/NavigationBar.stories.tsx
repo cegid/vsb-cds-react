@@ -134,16 +134,7 @@ export const WithCustomNotifications: Story = {
             path: '/notifications/all',
           },
         ],
-      },
-    ],
-    bodyNavItems: NAV_ITEMS,
-    footerNavItems: FOOTER_ITEMS,
-    userFirstName: "John",
-    userLastName: "Doe",
-    userTrigram: "JD",
-    activePath: "/notifications",
-    onLogOut: () => console.log("logOut clicked!"),
-    renderSidebarContent: (parent, navItems) => (
+        renderSidebarContent: (parent, navItems) => (
       <Box width="350px">
         {/* Header */}
         <Box
@@ -319,7 +310,16 @@ export const WithCustomNotifications: Story = {
           </Fade>
         </Column>
       </Box>
-    ),
+        ),
+      },
+    ],
+    bodyNavItems: NAV_ITEMS,
+    footerNavItems: FOOTER_ITEMS,
+    userFirstName: "John",
+    userLastName: "Doe",
+    userTrigram: "JD",
+    activePath: "/ventes/clients",
+    onLogOut: () => console.log("logOut clicked!"),
   },
   render: (args) => (
     <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f0f0f0', }}>
