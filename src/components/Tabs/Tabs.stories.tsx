@@ -3,7 +3,6 @@ import { useState } from "react";
 
 import Tabs from "./Tabs";
 import Tab from "../Tab";
-import Box from "../Box";
 
 const meta = {
   title: "🧭 Navigation/Tabs",
@@ -114,34 +113,6 @@ export const Preselected: Story = {
         <Tab label="Particulier" />
         <Tab label="Professionnel" />
       </Tabs>
-    );
-  },
-};
-
-export const Fullwidth: Story = {
-  args: {
-    fullwidth: true,
-  },
-  render: (args) => {
-    const [value, setValue] = useState(args.value || 0);
-
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-      setValue(newValue);
-    };
-
-    return (
-      <Box width={600}>
-        <Tabs
-          {...args}
-          aria-label="Full width tabs"
-          value={value}
-          onChange={handleChange}
-        >
-          <Tab label="Particulier" />
-          <Tab label="Professionnel" />
-          <Tab label="Entreprise" />
-        </Tabs>
-      </Box>
     );
   },
 };

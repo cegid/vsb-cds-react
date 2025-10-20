@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { styled } from "@cegid/cds-react";
+import { styled, TabsProps as CegidTabsProps } from "@cegid/cds-react";
 import { neutral } from "../../theme";
 import Box from "../Box";
 
-export interface TabsProps {
+export interface TabsProps extends CegidTabsProps {
   /**
    * The currently selected tab index
    */
@@ -36,7 +36,7 @@ const TabsRoot = styled(Box)<{ fullwidth?: boolean }>(({ fullwidth }) => ({
   display: "flex",
   alignItems: "center",
   position: "relative",
-  justifyContent: "space-between",
+  justifyContent: "flex-start",
   minHeight: "34px",
   gap: 8,
   ...(fullwidth && { width: "100%" }),
@@ -91,7 +91,6 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
     const tabRefs = React.useRef<(HTMLDivElement | null)[]>([]);
     const containerRef = React.useRef<HTMLDivElement>(null);
 
-    // Update active line position and container width when value changes
     React.useEffect(() => {
       const activeTab = tabRefs.current[value];
       const container = containerRef.current;
@@ -105,7 +104,6 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
           width: tabRect.width,
         });
 
-        // Calculate total width of tabs container
         setTabsContainerWidth(containerRect.width);
       }
     }, [value, children]);
@@ -116,7 +114,6 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
         tabOnClick?: (event: React.MouseEvent<HTMLDivElement>) => void
       ) =>
       (event: React.MouseEvent<HTMLDivElement>) => {
-        // Check if tab is disabled
         const childArray = React.Children.toArray(children);
         const clickedTab = childArray[index];
 

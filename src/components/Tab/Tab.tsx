@@ -1,17 +1,13 @@
 "use client";
 
 import React from "react";
-import { styled } from "@cegid/cds-react";
+import { styled, TabProps as CegidTabProps } from "@cegid/cds-react";
 import { neutral } from "../../theme";
 import typography from "../../theme/typography";
 import Badge, { BadgeProps } from "../Badge";
 import Box from "../Box";
 
-export interface TabProps extends React.HTMLAttributes<HTMLDivElement> {
-  /**
-   * The label content for the tab
-   */
-  label?: React.ReactNode;
+export interface TabProps extends Omit<CegidTabProps, 'children' | 'selected' | 'disabled' | 'onClick'> {
   /**
    * Alternative to label, can use children
    */
@@ -40,18 +36,13 @@ export interface TabProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   /**
-   * Value associated with this tab (used by parent Tabs component)
-   */
-  value?: any;
-  /**
    * Internal prop set by Tabs component to hide bottom line
    */
   hideBottomLine?: boolean;
 }
 
 const TabRoot = styled(Box)<{ selected?: boolean; disabled?: boolean }>(
-  ({ selected, disabled }) => ({
-    color: disabled ? neutral[80] : selected ? neutral[10] : neutral[50],
+  ({ disabled }) => ({
     opacity: 1,
     minHeight: "auto",
     position: "relative",
@@ -60,12 +51,7 @@ const TabRoot = styled(Box)<{ selected?: boolean; disabled?: boolean }>(
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    transition: "all 0.2s ease",
     userSelect: "none",
-    ...typography.bodyMRegular,
-    ...(selected && {
-      ...typography.bodyMSemiBold,
-    }),
   })
 );
 
@@ -74,22 +60,49 @@ const TabContent = styled(Box)<{
   disabled?: boolean;
   isHovered?: boolean;
 }>(({ selected, disabled, isHovered }) => ({
-  display: "flex",
+  display: "inline-flex",
   alignItems: "center",
   justifyContent: "center",
   gap: 4,
   border: "solid 1px transparent",
   borderRadius: "8px",
   padding: "4px 8px",
-  transition: "all 0.2s ease",
+  transition: "color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease",
+  position: "relative",
+  color: neutral[50],
+  ...typography.bodyMRegular,
   ...(selected && {
+    color: neutral[10],
+    ...typography.bodyMSemiBold,
     backgroundColor: disabled ? "transparent" : neutral[99],
     border: disabled ? "solid 1px transparent" : `solid 1px ${neutral[95]}`,
   }),
-  ...(isHovered &&
-    !selected && {
-      border: disabled ? "solid 1px transparent" : `solid 1px ${neutral[95]}`,
-    }),
+
+  ...(isHovered && !selected && !disabled && {
+    color: neutral[10],
+    ...typography.bodyMMedium,
+    border: `solid 1px ${neutral[95]}`,
+  }),
+
+  ...(disabled && {
+    color: neutral[80],
+  }),
+}));
+
+const TabLabel = styled("span")(() => ({
+  position: "relative",
+  display: "inline-block",
+
+  "&::before": {
+    content: "attr(data-text)",
+    ...typography.bodyMSemiBold,
+    height: 0,
+    visibility: "hidden",
+    overflow: "hidden",
+    userSelect: "none",
+    pointerEvents: "none",
+    display: "block",
+  },
 }));
 
 const Tab = React.forwardRef<HTMLDivElement, TabProps>(
@@ -119,6 +132,9 @@ const Tab = React.forwardRef<HTMLDivElement, TabProps>(
       onClick?.(event);
     };
 
+    const textContent = label || children;
+    const textString = typeof textContent === 'string' ? textContent : '';
+
     const tabContent = (
       <TabContent
         selected={selected}
@@ -128,7 +144,13 @@ const Tab = React.forwardRef<HTMLDivElement, TabProps>(
         onMouseLeave={() => setIsHovered(false)}
       >
         {startBadge && <Badge {...startBadge} />}
-        {label || children}
+        {textString ? (
+          <TabLabel data-text={textString}>
+            {textContent}
+          </TabLabel>
+        ) : (
+          textContent
+        )}
         {badge && <Badge {...badge} />}
       </TabContent>
     );
