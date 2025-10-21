@@ -7,10 +7,6 @@ import Box from "../Box";
 
 export interface TabsProps extends CegidTabsProps {
   /**
-   * The currently selected tab index
-   */
-  value?: number;
-  /**
    * Callback fired when the value changes
    */
   onChange?: (event: React.SyntheticEvent, newValue: number) => void;

@@ -54,6 +54,31 @@ const releaseNotes: ReleaseNote[] = [
     ],
   },
   {
+    version: "1.19.2",
+    changes: [
+      {
+        component: "Tab",
+        type: "fix",
+        description: "prevent layout shift when changing font weight",
+      },
+      {
+        component: "NavigationBar",
+        type: "fix",
+        description: "sidenav do not close",
+      },
+      {
+        component: "Tab",
+        type: "fix",
+        description: "add support for HTML attributes including id and aria props",
+      },
+      {
+        component: "ListItem",
+        type: "fix",
+        description: "set divider border color to #E6E7EA",
+      }
+    ],
+  },
+  {
     version: "1.19.1",
     changes: [
       {
