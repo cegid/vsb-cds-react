@@ -36,6 +36,8 @@ export interface SegmentedControlProps {
   selectedIndex?: number;
   /** Color variant - light or dark theme (default: light) */
   color?: "light" | "dark";
+  /** Size of the control - auto adapts to screen size, small is 32px, large is 40px (default: auto) */
+  size?: "auto" | "small" | "large";
 }
 
 const SegmentedControl: React.FC<SegmentedControlProps> = ({
@@ -44,6 +46,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   fullwidth = false,
   selectedIndex: controlledSelectedIndex,
   color = "light",
+  size = "auto",
 }) => {
   const [internalSelectedIndex, setInternalSelectedIndex] =
     useState(defaultSelected);
@@ -63,6 +66,14 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const getHeight = () => {
+    if (size === "small") return "32px";
+    if (size === "large") return "40px";
+    return isMobile ? "40px" : "32px";
+  };
+
+  const height = getHeight();
 
    const isActionGroup = (action: SegmentedControlAction | SegmentedControlAction[]): action is SegmentedControlAction[] => {
     return Array.isArray(action);
@@ -158,7 +169,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     padding: "2px",
     gap: "4px",
     width: fullwidth ? "100%" : "fit-content",
-    height: isMobile ? "40px" : "32px",
+    height: height,
     ...typography.bodySSemiBold,
     "--slider-transform": sliderTransform,
     "--slider-width": sliderWidth,
@@ -183,6 +194,9 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
     const currentAction = getCurrentAction(index);
     const isDisabled = currentAction.disabled || false;
 
+    const buttonHeight = `calc(${height} - 4px)`;
+    const buttonMinWidth = height === "40px" ? "36px" : "28px";
+
     return {
       position: "relative",
       zIndex: 2,
@@ -196,8 +210,8 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
       border: "none",
       background: "none",
       fontSize: "14px",
-      height: isMobile ? "36px" : "28px",
-      minWidth: isIconOnly ? (isMobile ? "36px" : "28px") : "auto",
+      height: buttonHeight,
+      minWidth: isIconOnly ? buttonMinWidth : "auto",
       justifyContent: "center",
       opacity: isDisabled ? 0.5 : 1,
     };

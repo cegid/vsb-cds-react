@@ -9,7 +9,14 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
-  argTypes: {},
+  argTypes: {
+    size: {
+      control: "select",
+      options: ["auto", "small", "large"],
+      description: "Size of the control - auto adapts to screen size, small is 32px, large is 40px",
+      defaultValue: "auto",
+    },
+  },
   args: {
     actions: [
       {
@@ -149,5 +156,23 @@ export const MultipleGroupedActions: Story = {
         onClick: () => console.log("Share clicked"),
       },
     ],
+  },
+};
+
+export const SizeSmall: Story = {
+  args: {
+    size: "small",
+  },
+};
+
+export const SizeLarge: Story = {
+  args: {
+    size: "large",
+  },
+};
+
+export const SizeAuto: Story = {
+  args: {
+    size: "auto",
   },
 };

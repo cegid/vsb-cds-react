@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.19.4",
+    changes: [
+      {
+        component: "SegmentedControl",
+        type: "enhancement",
+        description: "add size props",
+      }
+    ],
+  },
+  {
     version: "1.19.2",
     changes: [
       {
