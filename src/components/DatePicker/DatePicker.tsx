@@ -661,6 +661,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                     : getSelectedGranularityIndex()
                 }
                 fullwidth
+                size="large"
                 actions={getGranularityOptions()}
               />
             </Box>

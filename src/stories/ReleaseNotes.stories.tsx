@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.19.5",
+    changes: [
+      {
+        component: "DatePicker",
+        type: "fix",
+        description: "change segmented control size to large",
+      }
+    ],
+  },
+  {
     version: "1.19.4",
     changes: [
       {
