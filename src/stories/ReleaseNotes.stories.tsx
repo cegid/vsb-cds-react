@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.19.6",
+    changes: [
+      {
+        component: "Tokens",
+        type: "enhancement",
+        description: "add borderNeutral color",
+      }
+    ],
+  },
+  {
     version: "1.19.5",
     changes: [
       {
