@@ -94,7 +94,7 @@ const useIsObjectMessage = (
 
 const CloseButton = ({ onClose }: { onClose: () => void }) => (
   <Box
-    p={4}
+    p="8px"
     onClick={onClose}
     display="flex"
     sx={{
@@ -109,7 +109,7 @@ const CloseButton = ({ onClose }: { onClose: () => void }) => (
 
 const ActionButton = ({ action }: { action: SnackbarAction }) => (
   <Box
-    p={4}
+    p="8px"
     display="flex"
     alignItems="center"
     sx={{
@@ -184,11 +184,11 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>(
       <Row
         ref={ref}
         backgroundColor="neutral/10"
-        px={4}
-        py={5}
+        px="8px"
+        py="12px"
         borderRadius={2}
         maxWidth={350}
-        gap={4}
+        gap="8px"
         alignItems="center"
         boxShadow="0 0 3px 2px #23252926"
       >

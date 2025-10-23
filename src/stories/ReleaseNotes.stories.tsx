@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.19.10",
+    changes: [
+      {
+        component: "SnackBar",
+        type: "enhancement",
+        description: "use string padding values",
+      }
+    ],
+  },
+  {
     version: "1.19.9",
     changes: [
       {
