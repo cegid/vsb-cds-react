@@ -29,6 +29,15 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.19.7",
+    changes: [
+      {
+        type: "fix",
+        description: "export color borderNeutral",
+      }
+    ],
+  },
+  {
     version: "1.19.6",
     changes: [
       {

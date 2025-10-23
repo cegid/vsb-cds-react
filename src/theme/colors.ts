@@ -12,15 +12,16 @@ export {
   beige,
   info,
   white,
+  borderNeutral,
   colorPalettes,
   parseCustomColor,
   opacityToHex,
-} from '@cegid/vsb-cds-tokens/colors';
+} from "@cegid/vsb-cds-tokens/colors";
 
 export type {
   IColorPalettes,
   PaletteNames,
   CustomColorString,
-} from '@cegid/vsb-cds-tokens/colors';
+} from "@cegid/vsb-cds-tokens/colors";
 
-export { default } from '@cegid/vsb-cds-tokens/colors';
+export { default } from "@cegid/vsb-cds-tokens/colors";
