@@ -7,7 +7,7 @@ import Stack from "../Stack";
 import Typography from "../Typography";
 import Avatar from "../Avatar";
 
-const colorNames = Object.keys(colorPalettes);
+const colorNames = [...Object.keys(colorPalettes), "white"];
 
 const meta = {
   title: "🌡 Indicators and status/Status",
@@ -24,7 +24,7 @@ const meta = {
     },
     color: {
       control: "select",
-      options: colorNames,
+      options: colorNames as (PaletteNames | "white")[],
       description: "La couleur du Status",
     },
     variant: {

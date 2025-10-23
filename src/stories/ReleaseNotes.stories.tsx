@@ -32,6 +32,16 @@ const releaseNotes: ReleaseNote[] = [
     version: "1.19.7",
     changes: [
       {
+        component: "Status",
+        type: "enhancement",
+        description: "add white color",
+      }
+    ],
+  },
+  {
+    version: "1.19.7",
+    changes: [
+      {
         type: "fix",
         description: "export color borderNeutral",
       }

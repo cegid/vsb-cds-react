@@ -4,7 +4,7 @@ import React from "react";
 
 import { OverridableComponent, SvgIconTypeMap } from "@cegid/cds-react";
 
-import colorPalettes, { PaletteNames, white } from "../../theme/colors";
+import colorPalettes, { PaletteNames, white, neutral } from "../../theme/colors";
 import spacing from "../../theme/spacing";
 import Typography from "../Typography/Typography";
 import Box from "../Box";
@@ -33,7 +33,7 @@ export interface StatusProps {
    * Falls back to 'primary' if an invalid color is provided.
    * @default 'primary'
    */
-  color?: PaletteNames;
+  color?: PaletteNames | "white";
 
   /**
    * Controls the visual style of the status badge.
@@ -90,11 +90,13 @@ const Status: React.FC<StatusProps> = ({
   className,
   avatar,
 }) => {
-  if (!colorPalettes[color]) {
+  const isWhiteColor = color === "white";
+
+  if (!isWhiteColor && !colorPalettes[color as PaletteNames]) {
     color = "primary";
   }
 
-  const palette = colorPalettes[color];
+  const palette = !isWhiteColor ? colorPalettes[color as PaletteNames] : colorPalettes.primary;
 
   const height = size === "small" ? 20 : 24;
   const paddingLeft = size === "small" ? 6 : 8;
@@ -118,6 +120,13 @@ const Status: React.FC<StatusProps> = ({
     color: palette[60],
     border: "1px solid",
     borderColor: `${palette[40]}4D`,
+  };
+
+  const whiteStyle = {
+    backgroundColor: white,
+    color: neutral[10],
+    border: "1px solid",
+    borderColor: "#636C774D",
   };
 
   const getLightStyle = () => {
@@ -147,6 +156,10 @@ const Status: React.FC<StatusProps> = ({
   };
 
   const getStyle = () => {
+    if (color === "white") {
+      return whiteStyle;
+    }
+
     switch (variant) {
       case "dark":
         return darkStyle;
