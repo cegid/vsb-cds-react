@@ -29,7 +29,7 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
-    version: "1.19.7",
+    version: "1.19.8",
     changes: [
       {
         component: "Status",
