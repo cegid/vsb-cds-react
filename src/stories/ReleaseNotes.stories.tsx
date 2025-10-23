@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.19.9",
+    changes: [
+      {
+        component: "SnackBar",
+        type: "enhancement",
+        description: "change snackbar style",
+      }
+    ],
+  },
+  {
     version: "1.19.8",
     changes: [
       {

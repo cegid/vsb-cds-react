@@ -2,10 +2,7 @@
 
 import React, { useMemo } from "react";
 import Box from "../Box";
-import Button from "../Button";
-import Column from "../Column";
 import Icon from "../Icon";
-import IconButton from "../IconButton";
 import Row from "../Row";
 import Typography from "../Typography";
 
@@ -33,8 +30,11 @@ export type SnackbarSize = "small" | "large";
  * Object structure for complex messages with title and content
  */
 export interface SnackbarObjectMessage {
-  /** Primary title text displayed prominently */
-  title: string;
+  /**
+   * Primary title text displayed prominently
+   * @deprecated This field is no longer used
+   */
+  title?: string;
   /** Secondary message content, can be any React node */
   message: React.ReactNode;
 }
@@ -63,27 +63,19 @@ export interface SnackbarProps {
 const SEVERITY_CONFIG = {
   error: {
     iconName: "spam",
-    backgroundColor: "critical/99",
-    borderColor: "critical/30",
-    iconColor: "critical/50",
+    iconColor: "critical/60",
   },
   success: {
     iconName: "checkmark-circle-02",
-    backgroundColor: "success/99",
-    borderColor: "success/30",
-    iconColor: "success/50",
+    iconColor: "success/60",
   },
   info: {
     iconName: "information-circle",
-    backgroundColor: "primary/99",
-    borderColor: "primary/30",
     iconColor: "primary/60",
   },
   warning: {
     iconName: "alert-02",
-    backgroundColor: "yellow/99",
-    borderColor: "yellow/30",
-    iconColor: "yellow/50",
+    iconColor: "yellow/60",
   },
 } as const;
 
@@ -101,43 +93,40 @@ const useIsObjectMessage = (
 };
 
 const CloseButton = ({ onClose }: { onClose: () => void }) => (
-  <IconButton
-    variant="tonal"
-    square
-    color="neutral"
-    size="small"
+  <Box
+    p={4}
     onClick={onClose}
+    display="flex"
+    sx={{
+      cursor: "pointer",
+    }}
   >
-    <Icon size={14}>cancel-01</Icon>
-  </IconButton>
+    <Icon color="white" size={14}>
+      cancel-01
+    </Icon>
+  </Box>
 );
 
 const ActionButton = ({ action }: { action: SnackbarAction }) => (
-  <Button
-    variant="tonal"
-    color="neutral"
+  <Box
+    p={4}
+    display="flex"
+    alignItems="center"
+    sx={{
+      cursor: "pointer",
+    }}
     onClick={action.onClick}
-    size="medium"
   >
-    {action.label}
-  </Button>
+    <Typography variant="bodySSemiBold" color="white">
+      {action.label}
+    </Typography>
+  </Box>
 );
 
 const SeverityIcon = ({ severity }: { severity: SnackbarSeverity }) => {
   const config = SEVERITY_CONFIG[severity];
-
   return (
-    <Box
-      width={24}
-      height={24}
-      backgroundColor={config.backgroundColor}
-      borderRadius={2}
-      border={{ color: config.borderColor, opacity: 30 }}
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      flexShrink={0}
-    >
+    <Box display="flex">
       <Icon size={16} variant="solid" color={config.iconColor}>
         {config.iconName}
       </Icon>
@@ -148,20 +137,45 @@ const SeverityIcon = ({ severity }: { severity: SnackbarSeverity }) => {
 const MessageContent = ({ message }: { message: SnackbarMessage }) => {
   const isObjectMessage = useIsObjectMessage(message);
 
+  const ellipsisStyles = {
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical" as const,
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  };
+
   if (isObjectMessage) {
     return (
-      <Column>
-        <Typography color="neutral/50" variant="bodySMedium">
-          {message.title}
-        </Typography>
-        <Typography color="neutral/50" variant="captionRegular">
-          {message.message}
-        </Typography>
-      </Column>
+      <Typography
+        color="white"
+        variant="captionRegular"
+        sx={ellipsisStyles}
+      >
+        {message.message}
+      </Typography>
     );
   }
 
-  return <>{message}</>;
+  // Si le message est une string simple, l'envelopper dans un Typography
+  if (typeof message === "string") {
+    return (
+      <Typography
+        color="white"
+        variant="bodySMedium"
+        sx={ellipsisStyles}
+      >
+        {message}
+      </Typography>
+    );
+  }
+
+  // Pour les autres React nodes (Typography, etc.), les envelopper dans une Box
+  return (
+    <Box sx={ellipsisStyles}>
+      {message}
+    </Box>
+  );
 };
 
 const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>(
@@ -169,31 +183,21 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>(
     return (
       <Row
         ref={ref}
-        backgroundColor="white"
-        flexWrap="wrap"
+        backgroundColor="neutral/10"
         px={4}
-        py={4}
+        py={5}
         borderRadius={2}
         maxWidth={350}
         gap={4}
         alignItems="center"
         boxShadow="0 0 3px 2px #23252926"
-        sx={{
-          whiteSpace: "normal",
-          wordBreak: "break-word",
-        }}
       >
-        <Row gap={4} alignItems="center" width="fit-content">
-          <Box height="100%" display="flex" alignSelf="flex-start">
-            <SeverityIcon severity={severity} />
-          </Box>
+        <SeverityIcon severity={severity} />
+        <Box sx={{ flex: 1, minWidth: 0 }}>
           <MessageContent message={message} />
-        </Row>
-
-        <Row justifyContent="flex-end" width="fit-content" gap={4} flex={1}>
-          {action && <ActionButton action={action} />}
-          {onClose && <CloseButton onClose={onClose} />}
-        </Row>
+        </Box>
+        {action && <ActionButton action={action} />}
+        {onClose && <CloseButton onClose={onClose} />}
       </Row>
     );
   }

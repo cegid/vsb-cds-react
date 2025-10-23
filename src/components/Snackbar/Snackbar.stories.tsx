@@ -14,13 +14,24 @@ const meta = {
     severity: {
       control: { type: "select" },
       options: ["error", "success", "warning", "info"],
+      description: "Visual severity level affecting icon and colors",
     },
     size: {
       control: { type: "select" },
       options: ["small", "large"],
+      description: "Size variant of the snackbar",
     },
     message: {
       control: { type: "text" },
+      description: "Message content - can be a string, React node, or object with message property",
+    },
+    action: {
+      control: { type: "object" },
+      description: "Optional action button configuration with label and onClick",
+    },
+    onClose: {
+      control: false,
+      description: "Optional close button handler",
     },
   },
   args: {
@@ -35,7 +46,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     message: (
-      <Typography variant="bodySMedium" color="neutral/50" width="100%">
+      <Typography variant="bodySMedium" color="white">
         Message
       </Typography>
     ),
@@ -48,7 +59,7 @@ export const SuccessSnackbar: Story = {
   args: {
     severity: "success",
     message: (
-      <Typography variant="bodySMedium" color="neutral/50">
+      <Typography variant="bodySMedium" color="white">
         Votre fichier a été sauvegardé avec succès
       </Typography>
     ),
@@ -60,7 +71,7 @@ export const ErrorSnackbar: Story = {
   args: {
     severity: "error",
     message: (
-      <Typography variant="bodySMedium" color="neutral/50">
+      <Typography variant="bodySMedium" color="white">
         Une erreur s'est produite lors de la sauvegarde
       </Typography>
     ),
@@ -73,7 +84,7 @@ export const WarningSnackbar: Story = {
   args: {
     severity: "warning",
     message: (
-      <Typography variant="bodySMedium" color="neutral/50">
+      <Typography variant="bodySMedium" color="white">
         Attention, cette action est irréversible
       </Typography>
     ),
@@ -89,7 +100,7 @@ export const InfoSnackbar: Story = {
   args: {
     severity: "info",
     message: (
-      <Typography variant="bodySMedium" color="neutral/50">
+      <Typography variant="bodySMedium" color="white">
         Nouvelle fonctionnalité disponible
       </Typography>
     ),
@@ -103,53 +114,42 @@ export const InfoSnackbar: Story = {
 
 export const WithObjectMessage: Story = {
   args: {
-    severity: "success",
+    severity: "warning",
     message: {
-      title: "Téléchargement terminé",
-      message: "Le fichier document.pdf a été téléchargé avec succès",
+      message: (
+        <Typography variant="bodySMedium" color="white">
+          Attention, cette action nécessite une confirmation
+        </Typography>
+      ),
     },
-    action: { label: "Ouvrir", onClick: () => console.log("Open clicked") },
+    action: {
+      label: "Confirmer",
+      onClick: () => console.log("Confirm clicked"),
+    },
     onClose: () => console.log("Close clicked"),
   },
 };
 
-export const WithoutAction: Story = {
-  args: {
-    severity: "info",
-    message: (
-      <Typography variant="bodySMedium" color="neutral/50">
-        Message d'information simple
-      </Typography>
-    ),
-    onClose: () => console.log("Close clicked"),
-  },
-};
-
-export const WithoutCloseButton: Story = {
+export const LongTextWithEllipsis: Story = {
   args: {
     severity: "success",
     message: (
-      <Typography variant="bodySMedium" color="neutral/50">
-        Message sans bouton de fermeture
+      <Typography variant="bodySMedium" color="white">
+        Ceci est un message très long qui devrait être tronqué avec des points de suspension lorsqu'il dépasse la largeur maximale du snackbar
       </Typography>
     ),
     action: { label: "Action", onClick: () => console.log("Action clicked") },
+    onClose: () => console.log("Close clicked"),
   },
 };
 
-export const LongMessage: Story = {
+export const WithoutActions: Story = {
   args: {
-    severity: "warning",
+    severity: "info",
     message: (
-      <Typography variant="bodySMedium" color="neutral/50">
-        Ceci est un message très long qui permet de tester comment le composant
-        Snackbar se comporte avec du contenu textuel étendu
+      <Typography variant="bodySMedium" color="white">
+        Message sans action ni bouton de fermeture
       </Typography>
     ),
-    action: {
-      label: "Comprendre",
-      onClick: () => console.log("Understand clicked"),
-    },
-    onClose: () => console.log("Close clicked"),
   },
 };
