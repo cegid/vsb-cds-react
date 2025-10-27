@@ -385,7 +385,7 @@ const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
 
 const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
   (props, ref) => {
-    const { size = "auto", isLoading = false, onClick, ...restProps } = props;
+    const { size = "auto", isLoading = false, onClick, sx, ...restProps } = props;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (isLoading) {
@@ -445,6 +445,7 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
           p={1}
           backgroundColor={getContainedBackgroundColor() as CustomColorString}
           borderRadius={3}
+          sx={sx}
         >
           <StyledButton
             {...{ disableRipple: true, disableElevation: true, ...restProps }}
@@ -467,6 +468,7 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
           buttonsize={size}
           onClick={handleClick}
           ref={ref}
+          sx={sx}
         >
           {isLoading ? (
             <ProgressBar shape="circle" size={16} color={getProgressBarColor()} />
