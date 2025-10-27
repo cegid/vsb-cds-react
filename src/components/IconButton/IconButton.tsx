@@ -177,7 +177,10 @@ const getSizeStyles = (size: IconButtonSize, isContained = false) => {
   }
 };
 
-const getRadius = (square: boolean, isContained: boolean) => {
+const getRadius = (square: boolean, isContained: boolean, size?: IconButtonSize) => {
+  if (square && size === "small") {
+    return 8;
+  }
   if (isContained && square) {
     return 10;
   }
@@ -198,7 +201,7 @@ const IconButtonRoot = styled(CegidIconButton, {
 })<{ ownerState: IconButtonProps }>(({ theme, ownerState }) => {
   const isContained = ownerState.variant === "contained";
   const baseStyles = {
-    borderRadius: getRadius(ownerState?.square ?? false, isContained),
+    borderRadius: getRadius(ownerState?.square ?? false, isContained, ownerState?.size),
     boxShadow: "none",
     ...getSizeStyles(ownerState?.size ?? "auto", isContained),
     padding: "8px",
