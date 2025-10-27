@@ -83,6 +83,12 @@ export interface ChipProps
    * <Chip onClick={() => handleClick()}>Label</Chip>
    */
   clickable?: boolean;
+  /**
+   * Controls the clicked state of the chip. When true, the chip displays in its active/clicked state.
+   * Use this for controlled components where you want to manage the clicked state externally.
+   * @default undefined (uncontrolled)
+   */
+  clicked?: boolean;
 }
 
 const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
@@ -97,14 +103,21 @@ const Chip = React.forwardRef<HTMLDivElement, ChipProps>((props, ref) => {
     disabled = false,
     color = "primary",
     clickable,
+    clicked: clickedProp,
     ...restProps
   } = props;
-  const [clicked, setClicked] = React.useState(false);
+  const [internalClicked, setInternalClicked] = React.useState(false);
   const isClickable = onClick !== undefined;
+
+  // Use controlled value if provided, otherwise use internal state
+  const clicked = clickedProp !== undefined ? clickedProp : internalClicked;
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (onClick) {
-      setClicked(!clicked);
+      // Only update internal state if not controlled
+      if (clickedProp === undefined) {
+        setInternalClicked(!internalClicked);
+      }
       onClick(event);
     }
   };
