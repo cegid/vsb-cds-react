@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.19.12",
+    changes: [
+      {
+        component: "NavigationBar",
+        type: "fix",
+        description: "remove padding on custom side bar content",
+      }
+    ],
+  },
+  {
     version: "1.19.11",
     changes: [
       {
