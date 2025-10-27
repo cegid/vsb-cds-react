@@ -347,6 +347,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       elevation = 0,
       isLoading = false,
       onClick,
+      sx,
       ...restProps
     } = props;
 
@@ -426,6 +427,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           p={1}
           backgroundColor={getContainedBackgroundColor() as CustomColorString}
           borderRadius={square ? 3 : RADIUS.FULL}
+          sx={sx}
         >
           <IconButtonRoot
             ownerState={ownerState}
@@ -468,7 +470,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         disableRipple
         disableTouchRipple
         disableFocusRipple
-        sx={{ boxShadow: shadows[elevation] }}
+        sx={{ boxShadow: shadows[elevation], ...sx }}
       >
         {isLoading ? (
           <ProgressBar shape="circle" size={16} color={getProgressBarColor()} />
