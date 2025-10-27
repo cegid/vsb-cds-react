@@ -29,6 +29,31 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.19.11",
+    changes: [
+      {
+        component: "IconButton",
+        type: "enhancement",
+        description: "add tooltip to IconButton",
+      },
+      {
+        component: "IconButton",
+        type: "fix",
+        description: "apply sx",
+      },
+      {
+        component: "Button",
+        type: "fix",
+        description: "apply sx",
+      },
+      {
+        component: "IconButton",
+        type: "fix",
+        description: "radius 8px on small square",
+      }
+    ],
+  },
+  {
     version: "1.19.10",
     changes: [
       {
