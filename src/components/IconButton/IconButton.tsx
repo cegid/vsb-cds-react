@@ -19,6 +19,7 @@ import Box from "../Box";
 import shadows from "../../theme/shadows";
 import theme from "@cegid/cds-react/styles/defaultTheme";
 import ProgressBar from "../ProgressBar";
+import Tooltip, { CustomTooltipProps } from "../Tooltip/Tooltip";
 
 const { primary, secondary, success, critical, yellow, neutral } =
   colorPalettes;
@@ -51,6 +52,11 @@ interface IconButtonOwnProps {
    * @default false
    */
   isLoading?: boolean;
+  /**
+   * Tooltip content to display on hover after 1 second.
+   * Can be a string or a Tooltip props object for more control.
+   */
+  tooltip?: string | Omit<CustomTooltipProps, "children">;
 }
 
 export type IconButtonProps = Omit<
@@ -348,6 +354,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       isLoading = false,
       onClick,
       sx,
+      tooltip,
       ...restProps
     } = props;
 
@@ -420,8 +427,25 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       }
     };
 
-    if (variant === "contained") {
+    const wrapWithTooltip = (element: React.ReactElement) => {
+      if (!tooltip) return element;
+
+      const tooltipProps = typeof tooltip === "string"
+        ? { title: tooltip }
+        : tooltip;
+
       return (
+        <Tooltip
+          {...tooltipProps}
+          enterDelay={1000}
+        >
+          {element}
+        </Tooltip>
+      );
+    };
+
+    if (variant === "contained") {
+      const buttonElement = (
         <Box
           maxWidth="fit-content"
           p={1}
@@ -457,9 +481,11 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           </IconButtonRoot>
         </Box>
       );
+
+      return wrapWithTooltip(buttonElement);
     }
 
-    return (
+    const buttonElement = (
       <IconButtonRoot
         ownerState={ownerState}
         {...restProps}
@@ -479,6 +505,8 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         )}
       </IconButtonRoot>
     );
+
+    return wrapWithTooltip(buttonElement);
   }
 );
 

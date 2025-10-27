@@ -273,3 +273,50 @@ export const AllColors: Story = {
     </Stack>
   ),
 };
+
+export const WithTooltip: Story = {
+  render: (args) => (
+    <Stack direction="column" spacing={4}>
+      <Stack direction="row" spacing={2} flexWrap="wrap" alignItems="center">
+        <IconButton {...args} tooltip="Ajouter un élément">
+          <Icon size={16}>add-01</Icon>
+        </IconButton>
+        <IconButton {...args} tooltip="Éditer" color="secondary">
+          <Icon size={16}>edit-01</Icon>
+        </IconButton>
+        <IconButton {...args} tooltip="Ajouter aux favoris" color="success">
+          <Icon size={16}>favourite</Icon>
+        </IconButton>
+        <IconButton {...args} tooltip="Supprimer" color="error">
+          <Icon size={16}>delete-01</Icon>
+        </IconButton>
+      </Stack>
+
+      <Stack direction="row" spacing={2} flexWrap="wrap" alignItems="center">
+        <IconButton
+          {...args}
+          variant="iconOnly"
+          tooltip={{ title: "Paramètres", color: "dark", placement: "top" }}
+        >
+          <Icon size={16}>settings-01</Icon>
+        </IconButton>
+        <IconButton
+          {...args}
+          variant="outlined"
+          tooltip={{ title: "Rechercher", color: "light", placement: "bottom" }}
+          color="info"
+        >
+          <Icon size={16}>search-01</Icon>
+        </IconButton>
+        <IconButton
+          {...args}
+          variant="tonal"
+          tooltip={{ title: "Télécharger le fichier", placement: "right" }}
+          color="warning"
+        >
+          <Icon size={16}>download-01</Icon>
+        </IconButton>
+      </Stack>
+    </Stack>
+  ),
+};
