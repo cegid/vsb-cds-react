@@ -2,7 +2,7 @@ import React from "react";
 import Box from "../../Box";
 import Button from "../../Button";
 import Typography from "../../Typography";
-import IconButton, { CustomColor } from "../../IconButton";
+import IconButton from "../../IconButton";
 import Icon from "../../Icon";
 import Stack from "../../Stack";
 
