@@ -372,12 +372,10 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             });
             break;
           case "year":
-            if (isDateRange) {
-              options.push({
-                label: "Année",
-                onClick: () => handleGranularityChange("year"),
-              });
-            }
+            options.push({
+              label: "Année",
+              onClick: () => handleGranularityChange("year"),
+            });
             break;
           case "hours":
             if (!isDateRange) {
