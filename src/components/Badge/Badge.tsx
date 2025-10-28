@@ -1,7 +1,8 @@
 "use client";
 
-import { CustomColorString, PaletteNames } from "../../theme";
+import { CustomColorString, PaletteNames, RADIUS } from "../../theme";
 import Box, { BorderProps } from "../Box";
+import Typography from "../Typography";
 
 /**
  * Visual style variants for the Badge component.
@@ -12,10 +13,11 @@ export type BadgeVariant = "tonal" | "outlined";
 
 /**
  * Size variants for the Badge component.
- * - "small": 8x8px circular indicator (no content displayed)
- * - "medium": Rectangular badge with padding (displays content)
+ * - "dot": Circular badge with optional content
+ * - "medium": Badge with full radius and 4px/3px padding
+ * - "large": Badge with 8px radius and 4px/2px padding
  */
-export type BadgeSize = "small" | "medium";
+export type BadgeSize = "dot" | "medium" | "large";
 
 export interface BadgeProps {
   /**
@@ -45,7 +47,7 @@ export interface BadgeProps {
    * This affects the border color and background color based on the variant.
    * @default "primary"
    */
-  color?: PaletteNames;
+  color?: PaletteNames | "white";
 
   /**
    * Custom background color that overrides the default color theme.
@@ -73,11 +75,12 @@ const Badge: React.FC<BadgeProps> = ({
       return backgroundColor;
     }
 
-    if (size === "small") {
-      if (color === "neutral") {
-        return `${color}/99`;
-      }
-      return `${color}/60`;
+    if (size === "dot") {
+      return `${color}/60` as CustomColorString;
+    }
+
+    if (color === "white") {
+      return "transparent";
     }
 
     if (variant === "outlined") {
@@ -85,39 +88,97 @@ const Badge: React.FC<BadgeProps> = ({
     }
 
     if (variant === "tonal") {
-      return `${color}/99`;
+      return `${color}/99` as CustomColorString;
     }
 
     return "transparent";
   };
 
-  const getBorderProps = (): BorderProps => {
+  const getdotBorderColor = (): CustomColorString => {
+    switch (color) {
+      case "white":
+      case "neutral":
+        return "borderNeutral";
+      default:
+        return "white";
+    }
+  };
+
+  const getBorderProps = (): BorderProps | undefined => {
     if (border) {
       return border;
     }
-    if (size === "small") {
-      if (color === "neutral") {
-        return { width: 1, color: "neutral/95", style: "solid" };
-      }
-      return { width: 1, color: "white", style: "solid" };
-    }
-    return { width: 1, color: `${color}/60`, style: "solid", opacity: 30 };
-  };
 
-  const getSizeProps = () => {
-    if (size === "small") {
+    if (size === "dot" && !children) {
+      return { width: 1, color: getdotBorderColor(), style: "solid" };
+    }
+
+    if (size === "medium" || size === "large") {
       return {
-        width: "8px",
-        height: "8px",
+        width: 1,
+        color: color === "white" ? "white" : `${color}/60`,
+        style: "solid",
+        opacity: 30,
       };
     }
 
-    return {
-      px: "4px",
-      py: "2px",
-      minWidth: "25px",
-      minHeight: "22px",
-    };
+    return undefined;
+  };
+
+  const getSizeProps = () => {
+    if (size === "dot") {
+      return {
+        borderRadius: RADIUS.FULL,
+        width: children ? "16px" : "8px",
+        height: children ? "16px" : "8px",
+      };
+    }
+
+    if (size === "medium") {
+      return {
+        borderRadius: RADIUS.FULL,
+        px: "4px",
+      };
+    }
+
+    if (size === "large") {
+      return {
+        borderRadius: "8px",
+        px: "4px",
+      };
+    }
+
+    return {};
+  };
+
+  const renderContent = () => {
+    if (!children) {
+      return null;
+    }
+
+    if (typeof children !== "string" && typeof children !== "number") {
+      return children;
+    }
+
+    if (size === "dot") {
+      return (
+        <Typography
+          variant="captionRegular"
+          color={color === "white" ? "neutral/50" : "white"}
+        >
+          {children}
+        </Typography>
+      );
+    }
+
+    return (
+      <Typography
+        variant="captionRegular"
+        color={color === "white" ? "neutral/50" : `${color}/60`}
+      >
+        {children}
+      </Typography>
+    );
   };
 
   return (
@@ -125,12 +186,11 @@ const Badge: React.FC<BadgeProps> = ({
       {...getSizeProps()}
       border={getBorderProps()}
       backgroundColor={getBackgroundColor()}
-      borderRadius={2}
       display="flex"
       alignItems="center"
       justifyContent="center"
     >
-      {size !== "small" && children}
+      {renderContent()}
     </Box>
   );
 };

@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import Badge from "./Badge";
+import Box from "../Box";
 import Row from "../Row";
+import Column from "../Column";
 import Typography from "../Typography";
 import Icon from "../Icon";
 
@@ -18,11 +20,19 @@ const meta = {
     },
     size: {
       control: "select",
-      options: ["small", "medium"],
+      options: ["dot", "medium", "large"],
     },
     color: {
       control: "select",
-      options: ["primary", "secondary", "success", "warning", "critical", "neutral"],
+      options: [
+        "primary",
+        "secondary",
+        "success",
+        "yellow",
+        "critical",
+        "neutral",
+        "white",
+      ],
     },
   },
   args: {
@@ -36,86 +46,192 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {},
-  render: (args) => (
-    <Badge {...args}>
-      <Row gap={1}>
-        <Icon size={12}>add-01</Icon>
-        <Typography variant="captionRegular">3</Typography>
-      </Row>
-    </Badge>
-  ),
-};
-
-export const tonal: Story = {
   args: {
-    variant: "tonal",
+    children: "Badge",
   },
-  render: (args) => (
-    <Badge {...args}>
-      <Row gap={1}>
-        <Icon size={12}>add-01</Icon>
-        <Typography variant="captionRegular">3</Typography>
-      </Row>
-    </Badge>
-  ),
 };
 
-export const Small: Story = {
-  args: {
-    size: "small",
-    variant: "tonal",
-  },
-  render: (args) => <Badge {...args} />,
-};
-
-export const SmallOutlined: Story = {
-  args: {
-    size: "small",
-    variant: "outlined",
-  },
-  render: (args) => <Badge {...args} />,
-};
-
-export const AllVariants: Story = {
+export const Sizes: Story = {
   render: () => (
-    <Row gap={2}>
-      <Badge variant="outlined" size="medium">
-        <Row gap={1}>
-          <Icon size={12}>add-01</Icon>
-          <Typography variant="captionRegular">Medium Outlined</Typography>
+    <Column gap={20}>
+      <Box>
+        <Box marginBottom={6}>
+          <Typography variant="bodyMSemiBold">Dot</Typography>
+        </Box>
+        <Row gap={6} alignItems="center" flexWrap="wrap">
+          <Badge size="dot" color="primary" />
+          <Badge size="dot" color="primary">
+            1
+          </Badge>
+          <Badge size="dot" color="primary">
+            9
+          </Badge>
+          <Badge size="dot" color="secondary" />
+          <Badge size="dot" color="success">
+            !
+          </Badge>
+          <Badge size="dot" color="yellow">
+            5
+          </Badge>
+          <Badge size="dot" color="critical">
+            X
+          </Badge>
+          <Badge size="dot" color="white" />
+          <Badge size="dot" color="white">
+            9
+          </Badge>
         </Row>
-      </Badge>
-      <Badge variant="tonal" size="medium">
-        <Row gap={1}>
-          <Icon size={12}>add-01</Icon>
-          <Typography variant="captionRegular">Medium tonal</Typography>
+      </Box>
+      <Box>
+        <Box marginBottom={6}>
+          <Typography variant="bodyMSemiBold">Medium (Full radius)</Typography>
+        </Box>
+        <Row gap={6} alignItems="center" flexWrap="wrap">
+          <Badge size="medium" variant="outlined" color="primary">
+            Badge
+          </Badge>
+          <Badge size="medium" variant="tonal" color="primary">
+            Badge
+          </Badge>
+          <Badge size="medium" variant="outlined" color="secondary">
+            <Row gap={1}>
+              <Icon size={10}>add-01</Icon>
+              <Typography variant="captionRegular" color="neutral/10">
+                3
+              </Typography>
+            </Row>
+          </Badge>
+          <Badge size="medium" variant="tonal" color="success">
+            Active
+          </Badge>
+          <Badge size="medium" variant="outlined" color="white">
+            White
+          </Badge>
         </Row>
-      </Badge>
-      <Badge variant="outlined" size="small" />
-      <Badge variant="tonal" size="small" />
-    </Row>
+      </Box>
+      <Box>
+        <Box marginBottom={6}>
+          <Typography variant="bodyMSemiBold">Large (8px radius)</Typography>
+        </Box>
+        <Row gap={6} alignItems="center" flexWrap="wrap">
+          <Badge size="large" variant="outlined" color="primary">
+            Badge
+          </Badge>
+          <Badge size="large" variant="tonal" color="primary">
+            Badge
+          </Badge>
+          <Badge size="large" variant="outlined" color="secondary">
+            <Row gap={1}>
+              <Icon size={10}>add-01</Icon>
+              <Typography variant="captionRegular" color="neutral/10">
+                New
+              </Typography>
+            </Row>
+          </Badge>
+          <Badge size="large" variant="tonal" color="critical">
+            Error
+          </Badge>
+          <Badge size="large" variant="outlined" color="white">
+            White
+          </Badge>
+        </Row>
+      </Box>
+    </Column>
   ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "All available sizes: dot (circular), medium (full radius), and large (8px radius).",
+      },
+    },
+  },
 };
 
-export const AllColors: Story = {
+export const Colors: Story = {
   render: () => (
-    <Row gap={2}>
-      <Badge variant="tonal" color="primary">
-        <Typography variant="captionRegular">Primary</Typography>
-      </Badge>
-      <Badge variant="tonal" color="secondary">
-        <Typography variant="captionRegular">Secondary</Typography>
-      </Badge>
-      <Badge variant="tonal" color="success">
-        <Typography variant="captionRegular">Success</Typography>
-      </Badge>
-      <Badge variant="tonal" color="yellow">
-        <Typography variant="captionRegular">Warning</Typography>
-      </Badge>
-      <Badge variant="tonal" color="critical">
-        <Typography variant="captionRegular">Error</Typography>
-      </Badge>
-    </Row>
+    <Column gap={20}>
+      <Box>
+        <Box marginBottom={6}>
+          <Typography variant="bodyMSemiBold">Outlined</Typography>
+        </Box>
+        <Row gap={6} alignItems="center" flexWrap="wrap">
+          <Badge variant="outlined" color="primary">
+            <Typography variant="captionRegular">Primary</Typography>
+          </Badge>
+          <Badge variant="outlined" color="secondary">
+            <Typography variant="captionRegular">Secondary</Typography>
+          </Badge>
+          <Badge variant="outlined" color="success">
+            <Typography variant="captionRegular">Success</Typography>
+          </Badge>
+          <Badge variant="outlined" color="yellow">
+            <Typography variant="captionRegular">Warning</Typography>
+          </Badge>
+          <Badge variant="outlined" color="critical">
+            <Typography variant="captionRegular">Error</Typography>
+          </Badge>
+          <Badge variant="outlined" color="neutral">
+            <Typography variant="captionRegular">Neutral</Typography>
+          </Badge>
+          <Badge variant="outlined" color="white">
+            <Typography variant="captionRegular">White</Typography>
+          </Badge>
+        </Row>
+      </Box>
+      <Box>
+        <Box marginBottom={6}>
+          <Typography variant="bodyMSemiBold">Tonal</Typography>
+        </Box>
+        <Row gap={6} alignItems="center" flexWrap="wrap">
+          <Badge variant="tonal" color="primary">
+            <Typography variant="captionRegular">Primary</Typography>
+          </Badge>
+          <Badge variant="tonal" color="secondary">
+            <Typography variant="captionRegular">Secondary</Typography>
+          </Badge>
+          <Badge variant="tonal" color="success">
+            <Typography variant="captionRegular">Success</Typography>
+          </Badge>
+          <Badge variant="tonal" color="yellow">
+            <Typography variant="captionRegular">Warning</Typography>
+          </Badge>
+          <Badge variant="tonal" color="critical">
+            <Typography variant="captionRegular">Error</Typography>
+          </Badge>
+          <Badge variant="tonal" color="neutral">
+            <Typography variant="captionRegular">Neutral</Typography>
+          </Badge>
+          <Badge variant="outlined" color="white">
+            <Typography variant="captionRegular">White</Typography>
+          </Badge>
+        </Row>
+      </Box>
+      <Box>
+        <Box marginBottom={6}>
+          <Typography variant="bodyMSemiBold">Dot colors</Typography>
+        </Box>
+        <Row gap={6} alignItems="center" flexWrap="wrap">
+          <Badge size="dot" color="primary" />
+          <Badge size="dot" color="secondary" />
+          <Badge size="dot" color="success" />
+          <Badge size="dot" color="yellow" />
+          <Badge size="dot" color="critical" />
+          <Badge size="dot" color="neutral" />
+          <Badge size="dot" color="white" />
+          <Badge size="dot" color="white">
+            1
+          </Badge>
+        </Row>
+      </Box>
+    </Column>
   ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "All available color variants for outlined, tonal, and dot badges.",
+      },
+    },
+  },
 };
