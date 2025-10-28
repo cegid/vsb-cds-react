@@ -6,10 +6,19 @@ import Typography, { ExtendedVariant } from "../Typography";
 import { CustomColorString, PaletteNames, RADIUS } from "../../theme";
 
 export type CustomAvatarSize = "extraSmall" | "small" | "medium" | "large";
+export type CustomAvatarShape =
+  | "circle"
+  | "square"
+  | "starburst"
+  | "flower"
+  | "hexagon";
 
 export interface CustomAvatarProps {
   /** Avatar size */
   size: CustomAvatarSize;
+
+  /** Avatar shape */
+  shape?: CustomAvatarShape;
 
   /** Icon component to display (Icon component instance) */
   icon?: React.ReactElement;
@@ -26,6 +35,7 @@ export interface CustomAvatarProps {
 
 const Avatar: React.FC<CustomAvatarProps> = ({
   size = "medium",
+  shape = "circle",
   icon,
   imageUrl,
   trigram,
@@ -90,6 +100,47 @@ const Avatar: React.FC<CustomAvatarProps> = ({
     };
   };
 
+  const getRadiusBySize = (size: CustomAvatarSize): string => {
+    switch (size) {
+      case "extraSmall":
+        return "6px";
+      case "small":
+        return "8px";
+      case "medium":
+        return "10x";
+      case "large":
+        return "12px";
+      default:
+        return "10px";
+    }
+  };
+
+  const getShapeStyles = (): { borderRadius?: string | number; clipPath?: string } => {
+    switch (shape) {
+      case "circle":
+        return { borderRadius: RADIUS.FULL };
+      case "square":
+        return { borderRadius: getRadiusBySize(size) };
+      case "hexagon":
+        return {
+          clipPath:
+            "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
+        };
+      case "starburst":
+        return {
+          clipPath:
+            "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
+        };
+      case "flower":
+        return {
+          clipPath:
+            "polygon(50% 0%, 69% 28%, 100% 25%, 78% 50%, 100% 75%, 69% 72%, 50% 100%, 31% 72%, 0% 75%, 22% 50%, 0% 25%, 31% 28%)",
+        };
+      default:
+        return { borderRadius: RADIUS.FULL };
+    }
+  };
+
   const renderContent = () => {
     if (imageUrl) {
       return (
@@ -138,17 +189,23 @@ const Avatar: React.FC<CustomAvatarProps> = ({
     return null;
   };
 
+  const shapeStyles = getShapeStyles();
+  const hasClipPath = !!shapeStyles.clipPath;
+
   return (
     <Box
-      border={imageUrl ? undefined : getBorderColor()}
+      border={imageUrl || hasClipPath ? undefined : getBorderColor()}
       backgroundColor={imageUrl ? undefined : getBackgroundColor()}
-      borderRadius={RADIUS.FULL}
+      borderRadius={shapeStyles.borderRadius}
       width={getSize()}
       height={getSize()}
       display="flex"
       justifyContent="center"
       alignItems="center"
       overflow="hidden"
+      sx={{
+        clipPath: shapeStyles.clipPath,
+      }}
     >
       {renderContent()}
     </Box>
