@@ -20,7 +20,7 @@ const meta = {
     },
     size: {
       control: "select",
-      options: ["dot", "medium", "large"],
+      options: ["small", "medium", "large"],
     },
     color: {
       control: "select",
@@ -56,28 +56,28 @@ export const Sizes: Story = {
     <Column gap={20}>
       <Box>
         <Box marginBottom={6}>
-          <Typography variant="bodyMSemiBold">Dot</Typography>
+          <Typography variant="bodyMSemiBold">small</Typography>
         </Box>
         <Row gap={6} alignItems="center" flexWrap="wrap">
-          <Badge size="dot" color="primary" />
-          <Badge size="dot" color="primary">
+          <Badge size="small" color="primary" />
+          <Badge size="small" color="primary">
             1
           </Badge>
-          <Badge size="dot" color="primary">
+          <Badge size="small" color="primary">
             9
           </Badge>
-          <Badge size="dot" color="secondary" />
-          <Badge size="dot" color="success">
+          <Badge size="small" color="secondary" />
+          <Badge size="small" color="success">
             !
           </Badge>
-          <Badge size="dot" color="yellow">
+          <Badge size="small" color="yellow">
             5
           </Badge>
-          <Badge size="dot" color="critical">
+          <Badge size="small" color="critical">
             X
           </Badge>
-          <Badge size="dot" color="white" />
-          <Badge size="dot" color="white">
+          <Badge size="small" color="white" />
+          <Badge size="small" color="white">
             9
           </Badge>
         </Row>
@@ -142,7 +142,7 @@ export const Sizes: Story = {
     docs: {
       description: {
         story:
-          "All available sizes: dot (circular), medium (full radius), and large (8px radius).",
+          "All available sizes: small (circular), medium (full radius), and large (8px radius).",
       },
     },
   },
@@ -209,17 +209,17 @@ export const Colors: Story = {
       </Box>
       <Box>
         <Box marginBottom={6}>
-          <Typography variant="bodyMSemiBold">Dot colors</Typography>
+          <Typography variant="bodyMSemiBold">small colors</Typography>
         </Box>
         <Row gap={6} alignItems="center" flexWrap="wrap">
-          <Badge size="dot" color="primary" />
-          <Badge size="dot" color="secondary" />
-          <Badge size="dot" color="success" />
-          <Badge size="dot" color="yellow" />
-          <Badge size="dot" color="critical" />
-          <Badge size="dot" color="neutral" />
-          <Badge size="dot" color="white" />
-          <Badge size="dot" color="white">
+          <Badge size="small" color="primary" />
+          <Badge size="small" color="secondary" />
+          <Badge size="small" color="success" />
+          <Badge size="small" color="yellow" />
+          <Badge size="small" color="critical" />
+          <Badge size="small" color="neutral" />
+          <Badge size="small" color="white" />
+          <Badge size="small" color="white">
             1
           </Badge>
         </Row>
@@ -230,7 +230,7 @@ export const Colors: Story = {
     docs: {
       description: {
         story:
-          "All available color variants for outlined, tonal, and dot badges.",
+          "All available color variants for outlined, tonal, and small badges.",
       },
     },
   },

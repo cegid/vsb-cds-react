@@ -17,7 +17,7 @@ export type BadgeVariant = "tonal" | "outlined";
  * - "medium": Badge with full radius and 4px/3px padding
  * - "large": Badge with 8px radius and 4px/2px padding
  */
-export type BadgeSize = "dot" | "medium" | "large";
+export type BadgeSize = "small" | "medium" | "large";
 
 export interface BadgeProps {
   /**
@@ -75,7 +75,7 @@ const Badge: React.FC<BadgeProps> = ({
       return backgroundColor;
     }
 
-    if (size === "dot") {
+    if (size === "small") {
       return `${color}/60` as CustomColorString;
     }
 
@@ -109,7 +109,7 @@ const Badge: React.FC<BadgeProps> = ({
       return border;
     }
 
-    if (size === "dot" && !children) {
+    if (size === "small" && !children) {
       return { width: 1, color: getdotBorderColor(), style: "solid" };
     }
 
@@ -126,7 +126,7 @@ const Badge: React.FC<BadgeProps> = ({
   };
 
   const getSizeProps = () => {
-    if (size === "dot") {
+    if (size === "small") {
       return {
         borderRadius: RADIUS.FULL,
         width: children ? "16px" : "8px",
@@ -160,7 +160,7 @@ const Badge: React.FC<BadgeProps> = ({
       return children;
     }
 
-    if (size === "dot") {
+    if (size === "small") {
       return (
         <Typography
           variant="captionRegular"
