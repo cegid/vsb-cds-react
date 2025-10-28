@@ -23,11 +23,49 @@ interface ReleaseNote {
   changes: {
     component?: string;
     type: "new" | "fix" | "enhancement" | "style" | "breaking";
-    description: string;
+    description: string | string[];
   }[];
 }
 
 const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.19.13",
+    changes: [
+      {
+        component: "DatePicker",
+        type: "fix",
+        description: [
+          "Selected month is now color primary",
+          "Granularity year appears even if not range mode",
+          "allow range granularities to be selected even if it's not in range mode"
+        ],
+      }
+    ],
+  },
+  {
+    version: "1.19.13",
+    changes: [
+      {
+        component: "DatePicker",
+        type: "fix",
+        description: "Selected month is now color primary",
+      },
+      {
+        component: "DatePicker",
+        type: "fix",
+        description: "Granularity year appears even if not range mode",
+      },
+      {
+        component: "DatePicker",
+        type: "fix",
+        description: "allow range granularities to be selected even if it's not in range mode",
+      },
+      {
+        type: "enhancement",
+        description: "remove unused code",
+      }
+    ],
+  },
   {
     version: "1.19.12",
     changes: [
@@ -1566,12 +1604,15 @@ const ReleaseNotesContent = () => {
       }
 
       // Search in changes
-      return release.changes.some(
-        (change) =>
-          change.component?.toLowerCase().includes(lowerSearch) ||
-          change.description.toLowerCase().includes(lowerSearch) ||
-          change.type.toLowerCase().includes(lowerSearch)
-      );
+      return release.changes.some((change) => {
+        const matchesComponent = change.component?.toLowerCase().includes(lowerSearch);
+        const matchesType = change.type.toLowerCase().includes(lowerSearch);
+        const matchesDescription = Array.isArray(change.description)
+          ? change.description.some((desc) => desc.toLowerCase().includes(lowerSearch))
+          : change.description.toLowerCase().includes(lowerSearch);
+
+        return matchesComponent || matchesType || matchesDescription;
+      });
     });
   }, [searchTerm]);
 
@@ -1783,7 +1824,7 @@ const ReleaseNotesContent = () => {
                       icon={<Icon size={12}>{getTypeIcon(change.type)}</Icon>}
                     />
 
-                    <Row gap={2} flex={1}>
+                    <Column gap={2} flex={1}>
                       {change.component && (
                         <Typography
                           variant="bodyMSemiBold"
@@ -1793,10 +1834,22 @@ const ReleaseNotesContent = () => {
                           {change.component}:
                         </Typography>
                       )}
-                      <Typography variant="bodyMRegular" color="neutral/70">
-                        {change.description}
-                      </Typography>
-                    </Row>
+                      {Array.isArray(change.description) ? (
+                        <Box component="ul" m={0} pl={5}>
+                          {change.description.map((desc, descIndex) => (
+                            <Box component="li" key={descIndex}>
+                              <Typography variant="bodyMRegular" color="neutral/70">
+                                {desc}
+                              </Typography>
+                            </Box>
+                          ))}
+                        </Box>
+                      ) : (
+                        <Typography variant="bodyMRegular" color="neutral/70">
+                          {change.description}
+                        </Typography>
+                      )}
+                    </Column>
                   </Column>
                 </Box>
               ))}
