@@ -25,14 +25,14 @@ interface MonthYearSelectorProps {
   onYearRangeSelect?: (range: [number?, number?]) => void;
   tempMonthRange?: [
     { month: number; year: number }?,
-    { month: number; year: number }?
+    { month: number; year: number }?,
   ];
   tempYearRange?: [number?, number?];
   selectedMonth?: number;
   selectedYear?: number;
   selectedMonthRange?: [
     { month: number; year: number }?,
-    { month: number; year: number }?
+    { month: number; year: number }?,
   ];
   selectedYearRange?: [number?, number?];
   isMonthDisabled?: (monthIndex: number, year?: number) => boolean;
@@ -84,31 +84,42 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   const getMonthSelectionState = (monthIndex: number) => {
     const currentYear = currentMonth.getFullYear();
 
-    if (tempMonthRange && allowRange) {
+    if (tempMonthRange) {
       const [start, end] = tempMonthRange;
 
-      if (start && end) {
-        const startMonthValue = start.year * 12 + start.month;
-        const endMonthValue = end.year * 12 + end.month;
-        const currentMonthValue = currentYear * 12 + monthIndex;
+      if (allowRange) {
+        if (start && end) {
+          const startMonthValue = start.year * 12 + start.month;
+          const endMonthValue = end.year * 12 + end.month;
+          const currentMonthValue = currentYear * 12 + monthIndex;
 
-        const isStart =
-          monthIndex === start.month && currentYear === start.year;
-        const isEnd = monthIndex === end.month && currentYear === end.year;
-        const isInRange =
-          currentMonthValue >= startMonthValue &&
-          currentMonthValue <= endMonthValue;
+          const isStart =
+            monthIndex === start.month && currentYear === start.year;
+          const isEnd = monthIndex === end.month && currentYear === end.year;
+          const isInRange =
+            currentMonthValue >= startMonthValue &&
+            currentMonthValue <= endMonthValue;
 
-        return {
-          isSelected: isStart || isEnd,
-          isStart,
-          isEnd,
-          isInRange: isInRange && !isStart && !isEnd,
-        };
+          return {
+            isSelected: isStart || isEnd,
+            isStart,
+            isEnd,
+            isInRange: isInRange && !isStart && !isEnd,
+          };
+        } else if (start) {
+          return {
+            isSelected: false,
+            isStart: monthIndex === start.month && currentYear === start.year,
+            isEnd: false,
+            isInRange: false,
+          };
+        }
       } else if (start) {
+        const isSameMonth =
+          monthIndex === start.month && currentYear === start.year;
         return {
-          isSelected: false,
-          isStart: monthIndex === start.month && currentYear === start.year,
+          isSelected: isSameMonth,
+          isStart: false,
           isEnd: false,
           isInRange: false,
         };
@@ -188,9 +199,9 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
         >
           <IconButton
             size="small"
-            color={color as CustomColor}
+            color="neutral"
             square
-            variant="outlined"
+            variant="iconOnly"
             disabled={!canNavigateToPreviousYear()}
             onClick={() => onYearNavigate?.(-1)}
           >
@@ -210,9 +221,9 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
           </Typography>
           <IconButton
             size="small"
-            color={color as CustomColor}
+            color="neutral"
             square
-            variant="outlined"
+            variant="iconOnly"
             disabled={!canNavigateToNextYear()}
             onClick={() => onYearNavigate?.(1)}
           >
@@ -234,7 +245,11 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
             const selectionState = getMonthSelectionState(index);
 
             const getButtonVariant = () => {
-              if (selectionState.isStart || selectionState.isEnd) {
+              if (
+                selectionState.isSelected ||
+                selectionState.isStart ||
+                selectionState.isEnd
+              ) {
                 return "tonal";
               } else if (selectionState.isInRange) {
                 return "tonal";
@@ -260,7 +275,8 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
                 disabled={disabled}
                 onClick={() => !disabled && handleMonthClick(index)}
               >
-                {adapter.format(month, "monthLong")}
+                {adapter.format(month, "monthLong").charAt(0).toUpperCase() +
+                  adapter.format(month, "monthLong").slice(1)}
               </Button>
             );
           })}
@@ -270,24 +286,34 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
   };
 
   const getYearSelectionState = (year: number) => {
-    if (tempYearRange && allowRange) {
+    if (tempYearRange) {
       const [start, end] = tempYearRange;
 
-      if (start !== undefined && end !== undefined) {
-        const isStart = year === start;
-        const isEnd = year === end;
-        const isInRange = year >= start && year <= end;
+      if (allowRange) {
+        if (start !== undefined && end !== undefined) {
+          const isStart = year === start;
+          const isEnd = year === end;
+          const isInRange = year >= start && year <= end;
 
-        return {
-          isSelected: isStart || isEnd,
-          isStart,
-          isEnd,
-          isInRange: isInRange && !isStart && !isEnd,
-        };
+          return {
+            isSelected: isStart || isEnd,
+            isStart,
+            isEnd,
+            isInRange: isInRange && !isStart && !isEnd,
+          };
+        } else if (start !== undefined) {
+          return {
+            isSelected: false,
+            isStart: year === start,
+            isEnd: false,
+            isInRange: false,
+          };
+        }
       } else if (start !== undefined) {
+        const isSameYear = year === start;
         return {
-          isSelected: false,
-          isStart: year === start,
+          isSelected: isSameYear,
+          isStart: false,
           isEnd: false,
           isInRange: false,
         };
@@ -365,7 +391,11 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
           const selectionState = getYearSelectionState(year);
 
           const getButtonVariant = () => {
-            if (selectionState.isStart || selectionState.isEnd) {
+            if (
+              selectionState.isSelected ||
+              selectionState.isStart ||
+              selectionState.isEnd
+            ) {
               return "tonal";
             } else if (selectionState.isInRange) {
               return "tonal";
@@ -374,7 +404,11 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
           };
 
           const getButtonColor = () => {
-            if (selectionState.isStart || selectionState.isEnd) {
+            if (
+              selectionState.isSelected ||
+              selectionState.isStart ||
+              selectionState.isEnd
+            ) {
               return color;
             } else if (selectionState.isInRange) {
               return "neutral";

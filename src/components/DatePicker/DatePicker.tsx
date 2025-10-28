@@ -237,7 +237,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
       const prefix = dateDisplayFormat.prefix || "";
 
-      if (isDateRange && Array.isArray(dateValue)) {
+      if (Array.isArray(dateValue)) {
         const [startDate, endDate] = dateValue;
         if (!startDate && !endDate) return undefined;
 
@@ -308,16 +308,29 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     };
 
     const handleSpecialDateSelect = (date: Date) => {
-      if (!isDateRange || !onChange) return;
+      if (!onChange) return;
 
       if (selectedGranularity === "month") {
         const dateRange = createDateRangeFromMonth(date);
-        onChange(dateRange);
-        datePicker.setIsOpen(false);
+        if (isDateRange) {
+          onChange(dateRange);
+          datePicker.setIsOpen(false);
+        } else {
+          datePicker.setTempMonthRange([
+            { month: date.getMonth(), year: date.getFullYear() },
+            undefined
+          ]);
+          datePicker.setTempValue(dateRange);
+        }
       } else if (selectedGranularity === "year") {
         const dateRange = createDateRangeFromYear(date);
-        onChange(dateRange);
-        datePicker.setIsOpen(false);
+        if (isDateRange) {
+          onChange(dateRange);
+          datePicker.setIsOpen(false);
+        } else {
+          datePicker.setTempYearRange([date.getFullYear(), undefined]);
+          datePicker.setTempValue(dateRange);
+        }
       }
     };
 
@@ -486,12 +499,8 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               if (isDateRange) {
                 datePicker.setTempValue([weekStart, weekEnd]);
               } else {
-                datePicker.setTempValue(weekStart);
-              }
-              if (!isDateRange && !isStatic) {
-                datePicker.setDisplayValue([weekStart, weekEnd]);
-                onChange?.([weekStart, weekEnd]);
-                datePicker.setIsOpen(false);
+                datePicker.setTempWeekRange([{ start: weekStart, end: weekEnd }, undefined]);
+                datePicker.setTempValue([weekStart, weekEnd]);
               }
             }}
             onWeekRangeSelect={datePicker.handleWeekRangeSelect}
@@ -582,9 +591,9 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
           >
             <IconButton
               size="small"
-              color={color as CustomColor}
+              color="neutral"
               square
-              variant="outlined"
+              variant="iconOnly"
               disabled={!calendar.canNavigateToPreviousMonth()}
               onClick={() => calendar.navigateMonth(-1)}
             >
@@ -607,15 +616,15 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                 }
               }}
             >
-              {calendar.adapter.formatByString(
-                calendar.currentMonth,
-                "MMMM YYYY"
-              )}
+              {(() => {
+                const formatted = calendar.adapter.formatByString(calendar.currentMonth, "MMMM YYYY");
+                return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+              })()}
             </Typography>
             <IconButton
               size="small"
-              color={color as CustomColor}
-              variant="outlined"
+              color="neutral"
+              variant="iconOnly"
               disabled={!calendar.canNavigateToNextMonth()}
               onClick={() => calendar.navigateMonth(1)}
               square
