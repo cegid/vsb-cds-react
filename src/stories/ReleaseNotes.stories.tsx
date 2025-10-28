@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.20.0",
+    changes: [
+      {
+        component: "SystemBanner",
+        type: "enhancement",
+        description: "Add Component",
+      }
+    ],
+  },
+  {
     version: "1.19.13",
     changes: [
       {
