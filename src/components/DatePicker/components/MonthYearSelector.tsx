@@ -258,7 +258,7 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
             };
 
             const getButtonColor = () => {
-              if (selectionState.isStart || selectionState.isEnd) {
+              if (selectionState.isSelected || selectionState.isStart || selectionState.isEnd) {
                 return color;
               } else if (selectionState.isInRange) {
                 return "neutral";
