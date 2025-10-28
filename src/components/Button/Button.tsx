@@ -125,6 +125,9 @@ const createContainedButtonStyle = (
   "&:active": {
     backgroundColor: color[activeIndex],
   },
+  "&.Mui-disabled": {
+    boxShadow: "none",
+  },
 });
 
 const getSizeStyles = (size: ButtonSize, isContained = false) => {
@@ -385,7 +388,13 @@ const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
 
 const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
   (props, ref) => {
-    const { size = "auto", isLoading = false, onClick, sx, ...restProps } = props;
+    const {
+      size = "auto",
+      isLoading = false,
+      onClick,
+      sx,
+      ...restProps
+    } = props;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (isLoading) {
@@ -454,7 +463,11 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
             ref={ref}
           >
             {isLoading ? (
-              <ProgressBar shape="circle" size={16} color={getProgressBarColor()} />
+              <ProgressBar
+                shape="circle"
+                size={16}
+                color={getProgressBarColor()}
+              />
             ) : (
               restProps.children
             )}
@@ -471,7 +484,11 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
           sx={sx}
         >
           {isLoading ? (
-            <ProgressBar shape="circle" size={16} color={getProgressBarColor()} />
+            <ProgressBar
+              shape="circle"
+              size={16}
+              color={getProgressBarColor()}
+            />
           ) : (
             restProps.children
           )}
