@@ -112,24 +112,6 @@ export const InfoSnackbar: Story = {
   },
 };
 
-export const WithObjectMessage: Story = {
-  args: {
-    severity: "warning",
-    message: {
-      message: (
-        <Typography variant="bodySMedium" color="white">
-          Attention, cette action nécessite une confirmation
-        </Typography>
-      ),
-    },
-    action: {
-      label: "Confirmer",
-      onClick: () => console.log("Confirm clicked"),
-    },
-    onClose: () => console.log("Close clicked"),
-  },
-};
-
 export const LongTextWithEllipsis: Story = {
   args: {
     severity: "success",
