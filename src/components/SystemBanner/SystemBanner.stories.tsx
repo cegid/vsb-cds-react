@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import SystemBanner from "./SystemBanner";
 
 const meta: Meta<typeof SystemBanner> = {
-  title: "🚧 WIP/SystemBanner",
+  title: "💬 Messaging/SystemBanner",
   component: SystemBanner,
   parameters: {
     layout: "padded",
