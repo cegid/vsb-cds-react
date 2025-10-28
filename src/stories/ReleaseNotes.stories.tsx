@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.20.2",
+    changes: [
+      {
+        component: "Button",
+        type: "fix",
+        description: "remove bow shadow if disabled",
+      }
+    ],
+  },
+  {
     version: "1.20.1",
     changes: [
       {
