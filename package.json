@@ -1,6 +1,6 @@
 {
   "name": "@cegid/vsb-cds-react",
-  "version": "1.20.0",
+  "version": "1.20.1",
   "description": "BAAM! Design System by Cegid - React component library",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",

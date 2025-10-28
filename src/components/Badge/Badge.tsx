@@ -145,6 +145,7 @@ const Badge: React.FC<BadgeProps> = ({
       return {
         borderRadius: "8px",
         px: "4px",
+        py: "1px",
       };
     }
 

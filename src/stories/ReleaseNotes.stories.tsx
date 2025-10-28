@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.20.1",
+    changes: [
+      {
+        component: "Badge",
+        type: "enhancement",
+        description: "update design and add large size",
+      }
+    ],
+  },
+  {
     version: "1.20.0",
     changes: [
       {
