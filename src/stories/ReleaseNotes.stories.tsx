@@ -29,6 +29,22 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.21.0",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: [
+          "icon color on legend with mixed chart type",
+          "remove word \"total\" on totalsDisplayMode detailed",
+          "close popper on click outside",
+          "add actions to more actions buttons",
+          "add currency and number format"
+        ],
+      }
+    ],
+  },
+  {
     version: "1.20.2",
     changes: [
       {
