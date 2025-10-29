@@ -275,9 +275,6 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
                   width="fit-content"
                   sx={{ flexShrink: 0 }}
                 >
-                  <Typography variant="bodyMMedium" color="neutral/30">
-                    Total
-                  </Typography>
                   <Typography variant="displaySSemiBold" color="neutral/10">
                     {formatTotal(item.total)}
                   </Typography>
