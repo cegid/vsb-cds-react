@@ -5,14 +5,22 @@ import IconButton from "../IconButton";
 import Icon from "../Icon";
 import { useTheme, useMediaQuery } from "@mui/material";
 import ChartTypeModal from "./ChartTypeModal";
+import ChartMoreActionsPopper from "./ChartMoreActionsPopper";
 import Box from "../Box";
 import { ChartType } from "./ChartCore";
+
+export interface ChartAction {
+  label: string;
+  onClick: () => void;
+  icon?: string;
+}
 
 interface ChartHeaderProps {
   title: string;
   onChartModalOpen: () => void;
   currentType: ChartType;
   onTypeChange: (type: ChartType) => void;
+  moreActions?: ChartAction[];
 }
 
 const ChartHeader: React.FC<ChartHeaderProps> = ({
@@ -20,13 +28,16 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
   onChartModalOpen,
   currentType,
   onTypeChange,
+  moreActions = [],
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [isChartTypeModalOpen, setIsChartTypeModalOpen] = React.useState(false);
+  const [isMoreActionsOpen, setIsMoreActionsOpen] = React.useState(false);
 
   const chartTypeSelectionButtonRef = React.useRef<HTMLDivElement>(null);
+  const moreActionsButtonRef = React.useRef<HTMLDivElement>(null);
 
   const getAvailableTypesCount = (baseType: ChartType) => {
     if (baseType === "pie" || baseType === "doughnut") {
@@ -57,9 +68,18 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
           </IconButton>
         </Box>
       )}
-      <IconButton square color="neutral" variant="tonal">
-        <Icon size={16}>more-horizontal</Icon>
-      </IconButton>
+      {moreActions.length > 0 && (
+        <Box ref={moreActionsButtonRef}>
+          <IconButton
+            square
+            color="neutral"
+            variant="tonal"
+            onClick={() => setIsMoreActionsOpen(!isMoreActionsOpen)}
+          >
+            <Icon size={16}>more-horizontal</Icon>
+          </IconButton>
+        </Box>
+      )}
       {!isMobile && (
         <IconButton
           square
@@ -77,6 +97,14 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
           onClose={() => setIsChartTypeModalOpen(false)}
           currentType={currentType}
           onTypeSelect={onTypeChange}
+        />
+      )}
+      {moreActions.length > 0 && (
+        <ChartMoreActionsPopper
+          open={isMoreActionsOpen}
+          anchorEl={moreActionsButtonRef.current}
+          onClose={() => setIsMoreActionsOpen(false)}
+          actions={moreActions}
         />
       )}
     </Row>

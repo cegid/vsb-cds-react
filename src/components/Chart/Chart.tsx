@@ -4,7 +4,7 @@ import React from "react";
 import Column from "../Column";
 import ChartModal from "./ChartModal";
 import ChartCore, { ChartCoreProps, ChartType } from "./ChartCore";
-import ChartHeader from "./ChartHeader";
+import ChartHeader, { ChartAction } from "./ChartHeader";
 import ChartTotals from "./ChartTotals";
 import ChartLegend from "./ChartLegend";
 import Box from "../Box";
@@ -12,6 +12,7 @@ import { PaletteNames, parseCustomColor } from "../../theme";
 import Row from "../Row";
 
 export type { ChartType, ChartDataset, CustomChartData } from "./ChartCore";
+export type { ChartAction } from "./ChartHeader";
 
 export type TotalsDisplayMode = "simple" | "detailed" | "none";
 
@@ -95,6 +96,10 @@ export interface ChartProps extends ChartCoreProps {
    * @default false
    */
   compactDisplay?: boolean;
+  /**
+   * Additional actions displayed in the more menu
+   */
+  moreActions?: ChartAction[];
 }
 
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
@@ -106,12 +111,15 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       totalSymbol,
       decimalPlaces,
       compactDisplay,
+      moreActions,
       ...chartProps
     },
     ref
   ) => {
     const [isChartModalOpen, setIsChartModalOpen] = React.useState(false);
-    const [currentChartType, setCurrentChartType] = React.useState<ChartType>(chartProps.type);
+    const [currentChartType, setCurrentChartType] = React.useState<ChartType>(
+      chartProps.type
+    );
 
     const [hiddenDatasets, setHiddenDatasets] = React.useState<Set<number>>(
       new Set()
@@ -318,6 +326,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       <Box
         p={2}
         borderRadius={4}
+        border={{ color: "borderNeutral" }}
         sx={{
           transition: "background-color 0.2s ease-in-out",
           "&:hover": {
@@ -337,6 +346,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             onChartModalOpen={() => setIsChartModalOpen(true)}
             currentType={currentChartType}
             onTypeChange={setCurrentChartType}
+            moreActions={moreActions}
           />
 
           {totalsDisplayMode !== "none" && (
@@ -422,12 +432,22 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                   onMouseLeave={handleMouseLeave}
                   labels={chartProps.data.labels}
                 />
-                <ChartCore ref={ref} {...chartProps} type={currentChartType} data={filteredChartData} />
+                <ChartCore
+                  ref={ref}
+                  {...chartProps}
+                  type={currentChartType}
+                  data={filteredChartData}
+                />
               </>
             ))}
 
           {totalsDisplayMode === "detailed" && (
-            <ChartCore ref={ref} {...chartProps} type={currentChartType} data={filteredChartData} />
+            <ChartCore
+              ref={ref}
+              {...chartProps}
+              type={currentChartType}
+              data={filteredChartData}
+            />
           )}
           <ChartModal
             open={isChartModalOpen}

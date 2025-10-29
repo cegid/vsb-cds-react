@@ -1,6 +1,29 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import Chart, { CustomChartData } from "./Chart";
+import Chart, { CustomChartData, ChartAction } from "./Chart";
+
+const sampleActions: ChartAction[] = [
+  {
+    label: "Exporter en PDF",
+    icon: "file-download-02",
+    onClick: () => alert("Export PDF clicked"),
+  },
+  {
+    label: "Copier les données",
+    icon: "copy-01",
+    onClick: () => alert("Copy data clicked"),
+  },
+  {
+    label: "Partager",
+    icon: "share-06",
+    onClick: () => alert("Share clicked"),
+  },
+  {
+    label: "Imprimer",
+    icon: "printer",
+    onClick: () => alert("Print clicked"),
+  },
+];
 
 const sampleBarData: CustomChartData = {
   labels: ["Q1", "Q2", "Q3", "Q4"],
@@ -300,6 +323,7 @@ const meta = {
     title: "Titre",
     data: sampleBarData,
     totalsDisplayMode: "simple",
+    moreActions: sampleActions,
   },
 } satisfies Meta<typeof Chart>;
 
@@ -401,6 +425,70 @@ export const LineChart: Story = {
     height: 400,
     width: 700,
     totalsDisplayMode: "simple",
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const ChartWithActions: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "primary",
+    data: sampleBarData,
+    title: "Chart avec actions personnalisées",
+    totalsDisplayMode: "detailed",
+    moreActions: [
+      {
+        label: "Exporter en Excel",
+        icon: "file-06",
+        onClick: () => console.log("Export to Excel"),
+      },
+      {
+        label: "Télécharger en CSV",
+        icon: "download-01",
+        onClick: () => console.log("Download CSV"),
+      },
+      {
+        label: "Envoyer par email",
+        icon: "mail-01",
+        onClick: () => console.log("Send by email"),
+      },
+      {
+        label: "Créer un rapport",
+        icon: "file-05",
+        onClick: () => console.log("Create report"),
+      },
+      {
+        label: "Configurer",
+        icon: "settings-01",
+        onClick: () => console.log("Configure"),
+      },
+    ],
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const ChartWithFormattedTotals: Story = {
+  args: {
+    type: "pie",
+    backgroundColor: "success",
+    data: samplePieData,
+    title: "Ventes par région",
+    totalsDisplayMode: "simple",
+    totalSymbol: "€",
+    decimalPlaces: 2,
+    compactDisplay: true,
+    moreActions: [
+      {
+        label: "Voir les détails",
+        icon: "bar-chart-square-02",
+        onClick: () => console.log("View details"),
+      },
+      {
+        label: "Comparer",
+        icon: "git-compare",
+        onClick: () => console.log("Compare"),
+      },
+    ],
   },
   render: (args) => <Chart {...args} />,
 };
