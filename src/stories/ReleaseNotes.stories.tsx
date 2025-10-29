@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.21.1",
+    changes: [
+      {
+        component: "Tabs",
+        type: "fix",
+        description: "use tab value for selected style detection",
+      }
+    ],
+  },
+  {
     version: "1.21.0",
     changes: [
       {
