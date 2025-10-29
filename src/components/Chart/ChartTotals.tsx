@@ -64,36 +64,31 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
     let formattedNumber: string;
 
     if (compactDisplay) {
-      // Compact notation: afficher maximum 4 chiffres avant la virgule
       const absValue = Math.abs(value);
       let scaledValue = absValue;
       let suffix = "";
 
       if (absValue >= 1_000_000_000) {
-        // Milliards
         scaledValue = absValue / 1_000_000_000;
         suffix = "B";
       } else if (absValue >= 1_000_000) {
-        // Millions
         scaledValue = absValue / 1_000_000;
         suffix = "M";
       } else if (absValue >= 10_000) {
-        // Milliers (à partir de 10 000 pour avoir max 4 chiffres)
         scaledValue = absValue / 1_000;
         suffix = "k";
       }
 
-      // Déterminer le nombre de décimales en fonction de la taille du nombre
       let decimals = decimalPlaces;
       if (decimals === undefined) {
         if (scaledValue >= 1000) {
-          decimals = 0; // 1234B -> pas de décimale
+          decimals = 0;
         } else if (scaledValue >= 100) {
-          decimals = 1; // 123.4M -> 1 décimale
+          decimals = 1;
         } else if (scaledValue >= 10) {
-          decimals = 1; // 12.3k -> 1 décimale
+          decimals = 1;
         } else {
-          decimals = 2; // 1.23k -> 2 décimales
+          decimals = 2;
         }
       }
 
@@ -106,7 +101,6 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
         }) +
         suffix;
     } else {
-      // Format standard
       formattedNumber =
         decimalPlaces !== undefined
           ? value.toLocaleString(undefined, {
@@ -241,7 +235,6 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
               let datasetColor = "#666666";
               
               if (isPieOrDoughnut) {
-                // Pour pie/doughnut, il n'y a qu'un dataset mais plusieurs couleurs
                 const dataset = datasets[0];
                 if (dataset?.backgroundColor && Array.isArray(dataset.backgroundColor)) {
                   const colorAtIndex = dataset.backgroundColor[item.datasetIndex];
@@ -250,7 +243,6 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
                   }
                 }
               } else {
-                // Pour les autres charts, chaque dataset a sa couleur
                 const dataset = datasets[item.datasetIndex];
                 if (dataset?.backgroundColor) {
                   if (typeof dataset.backgroundColor === "string") {

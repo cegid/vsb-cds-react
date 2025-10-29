@@ -26,6 +26,7 @@ export const getChartIcon = (
     case "bar":
     case "verticalBar":
     case "horizontalBar":
+    case "mixed":
       return (
         <svg
           width="12"
@@ -66,6 +67,20 @@ export const getChartIcon = (
             d="M0 1.33333C0 0.596954 0.596954 0 1.33333 0C7.22437 0 12 4.77563 12 10.6667C12 11.403 11.403 12 10.6667 12H2C0.895431 12 0 11.1046 0 10V1.33333Z"
             fill={color || "#666666"}
           />
+        </svg>
+      );
+    default:
+      // Fallback: retourne une icône de barre par défaut
+      return (
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={iconStyle}
+        >
+          <rect width="12" height="12" rx="4" fill={color || "#666666"} />
         </svg>
       );
   }
