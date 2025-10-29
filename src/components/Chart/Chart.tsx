@@ -4,7 +4,7 @@ import React from "react";
 import Column from "../Column";
 import ChartModal from "./ChartModal";
 import ChartCore, { ChartCoreProps, ChartType } from "./ChartCore";
-import ChartHeader from "./ChartHeader";
+import ChartHeader, { ChartAction } from "./ChartHeader";
 import ChartTotals from "./ChartTotals";
 import ChartLegend from "./ChartLegend";
 import Box from "../Box";
@@ -12,6 +12,7 @@ import { PaletteNames, parseCustomColor } from "../../theme";
 import Row from "../Row";
 
 export type { ChartType, ChartDataset, CustomChartData } from "./ChartCore";
+export type { ChartAction } from "./ChartHeader";
 
 export type TotalsDisplayMode = "simple" | "detailed" | "none";
 
@@ -19,12 +20,13 @@ export const getChartIcon = (
   chartType: ChartType,
   color?: string
 ): React.ReactNode => {
-  const iconStyle = { width: 12, height: 12, fill: "white" };
+  const iconStyle = { width: 12, height: 12, display: "block" };
 
   switch (chartType) {
     case "bar":
     case "verticalBar":
     case "horizontalBar":
+    case "mixed":
       return (
         <svg
           width="12"
@@ -34,7 +36,7 @@ export const getChartIcon = (
           xmlns="http://www.w3.org/2000/svg"
           style={iconStyle}
         >
-          <rect width="12" height="12" rx="4" fill={color} />
+          <rect width="12" height="12" rx="4" fill={color || "#666666"} />
         </svg>
       );
     case "line":
@@ -47,7 +49,7 @@ export const getChartIcon = (
           xmlns="http://www.w3.org/2000/svg"
           style={iconStyle}
         >
-          <rect width="12" height="4" rx="2" fill={color} />
+          <rect width="12" height="4" rx="2" fill={color || "#666666"} />
         </svg>
       );
     case "pie":
@@ -63,8 +65,22 @@ export const getChartIcon = (
         >
           <path
             d="M0 1.33333C0 0.596954 0.596954 0 1.33333 0C7.22437 0 12 4.77563 12 10.6667C12 11.403 11.403 12 10.6667 12H2C0.895431 12 0 11.1046 0 10V1.33333Z"
-            fill={color}
+            fill={color || "#666666"}
           />
+        </svg>
+      );
+    default:
+      // Fallback: retourne une icône de barre par défaut
+      return (
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 12 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={iconStyle}
+        >
+          <rect width="12" height="12" rx="4" fill={color || "#666666"} />
         </svg>
       );
   }
@@ -80,6 +96,25 @@ export interface ChartProps extends ChartCoreProps {
    * Display mode for totals: "simple" (default), "detailed", or "none"
    */
   totalsDisplayMode?: TotalsDisplayMode;
+  /**
+   * Symbol to display after the total value (e.g., "€", "$", "%")
+   */
+  totalSymbol?: string;
+  /**
+   * Number of decimal places to display for totals
+   * @default undefined (uses default toLocaleString behavior)
+   */
+  decimalPlaces?: number;
+  /**
+   * Enable compact display for large numbers (1000 -> 1k, 1000000 -> 1M, etc.)
+   * Maximum 4 digits before decimal point
+   * @default false
+   */
+  compactDisplay?: boolean;
+  /**
+   * Additional actions displayed in the more menu
+   */
+  moreActions?: ChartAction[];
 }
 
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
@@ -88,12 +123,18 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       title = "Titre",
       totalsDisplayMode = "simple",
       backgroundColor,
+      totalSymbol,
+      decimalPlaces,
+      compactDisplay,
+      moreActions,
       ...chartProps
     },
     ref
   ) => {
     const [isChartModalOpen, setIsChartModalOpen] = React.useState(false);
-    const [currentChartType, setCurrentChartType] = React.useState<ChartType>(chartProps.type);
+    const [currentChartType, setCurrentChartType] = React.useState<ChartType>(
+      chartProps.type
+    );
 
     const [hiddenDatasets, setHiddenDatasets] = React.useState<Set<number>>(
       new Set()
@@ -300,6 +341,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       <Box
         p={2}
         borderRadius={4}
+        border={{ color: "borderNeutral" }}
         sx={{
           transition: "background-color 0.2s ease-in-out",
           "&:hover": {
@@ -319,6 +361,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             onChartModalOpen={() => setIsChartModalOpen(true)}
             currentType={currentChartType}
             onTypeChange={setCurrentChartType}
+            moreActions={moreActions}
           />
 
           {totalsDisplayMode !== "none" && (
@@ -334,6 +377,9 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
               onToggleDataset={toggleDataset}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
+              totalSymbol={totalSymbol}
+              decimalPlaces={decimalPlaces}
+              compactDisplay={compactDisplay}
             />
           )}
 
@@ -401,12 +447,22 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                   onMouseLeave={handleMouseLeave}
                   labels={chartProps.data.labels}
                 />
-                <ChartCore ref={ref} {...chartProps} type={currentChartType} data={filteredChartData} />
+                <ChartCore
+                  ref={ref}
+                  {...chartProps}
+                  type={currentChartType}
+                  data={filteredChartData}
+                />
               </>
             ))}
 
           {totalsDisplayMode === "detailed" && (
-            <ChartCore ref={ref} {...chartProps} type={currentChartType} data={filteredChartData} />
+            <ChartCore
+              ref={ref}
+              {...chartProps}
+              type={currentChartType}
+              data={filteredChartData}
+            />
           )}
           <ChartModal
             open={isChartModalOpen}
@@ -424,6 +480,9 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             onToggleDataset={toggleDataset}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            totalSymbol={totalSymbol}
+            decimalPlaces={decimalPlaces}
+            compactDisplay={compactDisplay}
           />
         </Column>
       </Box>

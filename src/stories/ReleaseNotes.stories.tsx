@@ -29,6 +29,22 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.21.0",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: [
+          "icon color on legend with mixed chart type",
+          "remove word \"total\" on totalsDisplayMode detailed",
+          "close popper on click outside",
+          "add actions to more actions buttons",
+          "add currency and number format"
+        ],
+      }
+    ],
+  },
+  {
     version: "1.20.2",
     changes: [
       {
@@ -69,30 +85,6 @@ const releaseNotes: ReleaseNote[] = [
           "Granularity year appears even if not range mode",
           "allow range granularities to be selected even if it's not in range mode"
         ],
-      }
-    ],
-  },
-  {
-    version: "1.19.13",
-    changes: [
-      {
-        component: "DatePicker",
-        type: "fix",
-        description: "Selected month is now color primary",
-      },
-      {
-        component: "DatePicker",
-        type: "fix",
-        description: "Granularity year appears even if not range mode",
-      },
-      {
-        component: "DatePicker",
-        type: "fix",
-        description: "allow range granularities to be selected even if it's not in range mode",
-      },
-      {
-        type: "enhancement",
-        description: "remove unused code",
       }
     ],
   },
