@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.21.2",
+    changes: [
+      {
+        component: "Tabs",
+        type: "fix",
+        description: "fullwidth props",
+      }
+    ],
+  },
+  {
     version: "1.21.1",
     changes: [
       {

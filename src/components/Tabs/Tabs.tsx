@@ -156,7 +156,7 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
     });
 
     return (
-      <Box ref={ref} {...props}>
+      <Box ref={ref} {...props} width={fullwidth ? "100%" : "fit-content"}>
         <TabsRoot ref={containerRef} fullwidth={fullwidth}>
           {modifiedChildren}
         </TabsRoot>
