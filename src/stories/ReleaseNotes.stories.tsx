@@ -73,30 +73,6 @@ const releaseNotes: ReleaseNote[] = [
     ],
   },
   {
-    version: "1.19.13",
-    changes: [
-      {
-        component: "DatePicker",
-        type: "fix",
-        description: "Selected month is now color primary",
-      },
-      {
-        component: "DatePicker",
-        type: "fix",
-        description: "Granularity year appears even if not range mode",
-      },
-      {
-        component: "DatePicker",
-        type: "fix",
-        description: "allow range granularities to be selected even if it's not in range mode",
-      },
-      {
-        type: "enhancement",
-        description: "remove unused code",
-      }
-    ],
-  },
-  {
     version: "1.19.12",
     changes: [
       {
