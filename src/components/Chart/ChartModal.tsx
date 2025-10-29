@@ -35,6 +35,9 @@ interface ChartModalProps {
   onToggleDataset: (index: number) => void;
   onMouseEnter: (index: number) => void;
   onMouseLeave: () => void;
+  totalSymbol?: string;
+  decimalPlaces?: number;
+  compactDisplay?: boolean;
 }
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -76,6 +79,9 @@ const ChartModal: React.FC<ChartModalProps> = ({
   onToggleDataset,
   onMouseEnter,
   onMouseLeave,
+  totalSymbol,
+  decimalPlaces,
+  compactDisplay,
 }) => {
   const isPieOrDoughnut =
     chartProps.type === "pie" || chartProps.type === "doughnut";
@@ -135,6 +141,9 @@ const ChartModal: React.FC<ChartModalProps> = ({
                 onToggleDataset={onToggleDataset}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
+                totalSymbol={totalSymbol}
+                decimalPlaces={decimalPlaces}
+                compactDisplay={compactDisplay}
               />
             )}
 

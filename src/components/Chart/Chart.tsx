@@ -19,7 +19,7 @@ export const getChartIcon = (
   chartType: ChartType,
   color?: string
 ): React.ReactNode => {
-  const iconStyle = { width: 12, height: 12, fill: "white" };
+  const iconStyle = { width: 12, height: 12, display: "block" };
 
   switch (chartType) {
     case "bar":
@@ -34,7 +34,7 @@ export const getChartIcon = (
           xmlns="http://www.w3.org/2000/svg"
           style={iconStyle}
         >
-          <rect width="12" height="12" rx="4" fill={color} />
+          <rect width="12" height="12" rx="4" fill={color || "#666666"} />
         </svg>
       );
     case "line":
@@ -47,7 +47,7 @@ export const getChartIcon = (
           xmlns="http://www.w3.org/2000/svg"
           style={iconStyle}
         >
-          <rect width="12" height="4" rx="2" fill={color} />
+          <rect width="12" height="4" rx="2" fill={color || "#666666"} />
         </svg>
       );
     case "pie":
@@ -63,7 +63,7 @@ export const getChartIcon = (
         >
           <path
             d="M0 1.33333C0 0.596954 0.596954 0 1.33333 0C7.22437 0 12 4.77563 12 10.6667C12 11.403 11.403 12 10.6667 12H2C0.895431 12 0 11.1046 0 10V1.33333Z"
-            fill={color}
+            fill={color || "#666666"}
           />
         </svg>
       );
@@ -80,6 +80,21 @@ export interface ChartProps extends ChartCoreProps {
    * Display mode for totals: "simple" (default), "detailed", or "none"
    */
   totalsDisplayMode?: TotalsDisplayMode;
+  /**
+   * Symbol to display after the total value (e.g., "€", "$", "%")
+   */
+  totalSymbol?: string;
+  /**
+   * Number of decimal places to display for totals
+   * @default undefined (uses default toLocaleString behavior)
+   */
+  decimalPlaces?: number;
+  /**
+   * Enable compact display for large numbers (1000 -> 1k, 1000000 -> 1M, etc.)
+   * Maximum 4 digits before decimal point
+   * @default false
+   */
+  compactDisplay?: boolean;
 }
 
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
@@ -88,6 +103,9 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       title = "Titre",
       totalsDisplayMode = "simple",
       backgroundColor,
+      totalSymbol,
+      decimalPlaces,
+      compactDisplay,
       ...chartProps
     },
     ref
@@ -334,6 +352,9 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
               onToggleDataset={toggleDataset}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
+              totalSymbol={totalSymbol}
+              decimalPlaces={decimalPlaces}
+              compactDisplay={compactDisplay}
             />
           )}
 
@@ -424,6 +445,9 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             onToggleDataset={toggleDataset}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            totalSymbol={totalSymbol}
+            decimalPlaces={decimalPlaces}
+            compactDisplay={compactDisplay}
           />
         </Column>
       </Box>

@@ -27,6 +27,21 @@ interface ChartTotalsProps {
   onToggleDataset?: (index: number) => void;
   onMouseEnter?: (index: number) => void;
   onMouseLeave?: () => void;
+  /**
+   * Symbol to display after the total value (e.g., "€", "$", "%")
+   */
+  totalSymbol?: string;
+  /**
+   * Number of decimal places to display for totals
+   * @default undefined (uses default toLocaleString behavior)
+   */
+  decimalPlaces?: number;
+  /**
+   * Enable compact display for large numbers (1000 -> 1k, 1000000 -> 1M, etc.)
+   * Maximum 4 digits before decimal point
+   * @default false
+   */
+  compactDisplay?: boolean;
 }
 
 const ChartTotals: React.FC<ChartTotalsProps> = ({
@@ -41,7 +56,68 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
   onToggleDataset = () => {},
   onMouseEnter = () => {},
   onMouseLeave = () => {},
+  totalSymbol,
+  decimalPlaces,
+  compactDisplay = false,
 }) => {
+  const formatTotal = (value: number): string => {
+    let formattedNumber: string;
+
+    if (compactDisplay) {
+      // Compact notation: afficher maximum 4 chiffres avant la virgule
+      const absValue = Math.abs(value);
+      let scaledValue = absValue;
+      let suffix = "";
+
+      if (absValue >= 1_000_000_000) {
+        // Milliards
+        scaledValue = absValue / 1_000_000_000;
+        suffix = "B";
+      } else if (absValue >= 1_000_000) {
+        // Millions
+        scaledValue = absValue / 1_000_000;
+        suffix = "M";
+      } else if (absValue >= 10_000) {
+        // Milliers (à partir de 10 000 pour avoir max 4 chiffres)
+        scaledValue = absValue / 1_000;
+        suffix = "k";
+      }
+
+      // Déterminer le nombre de décimales en fonction de la taille du nombre
+      let decimals = decimalPlaces;
+      if (decimals === undefined) {
+        if (scaledValue >= 1000) {
+          decimals = 0; // 1234B -> pas de décimale
+        } else if (scaledValue >= 100) {
+          decimals = 1; // 123.4M -> 1 décimale
+        } else if (scaledValue >= 10) {
+          decimals = 1; // 12.3k -> 1 décimale
+        } else {
+          decimals = 2; // 1.23k -> 2 décimales
+        }
+      }
+
+      const sign = value < 0 ? "-" : "";
+      formattedNumber =
+        sign +
+        scaledValue.toLocaleString(undefined, {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }) +
+        suffix;
+    } else {
+      // Format standard
+      formattedNumber =
+        decimalPlaces !== undefined
+          ? value.toLocaleString(undefined, {
+              minimumFractionDigits: decimalPlaces,
+              maximumFractionDigits: decimalPlaces,
+            })
+          : value.toLocaleString();
+    }
+
+    return totalSymbol ? `${formattedNumber} ${totalSymbol}` : formattedNumber;
+  };
   const isPieOrDoughnut = chartType === "pie" || chartType === "doughnut";
   const currentHiddenDatasets = isPieOrDoughnut
     ? hiddenDataPoints
@@ -203,7 +279,7 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
                     Total
                   </Typography>
                   <Typography variant="displaySSemiBold" color="neutral/10">
-                    {item.total.toLocaleString()}
+                    {formatTotal(item.total)}
                   </Typography>
                   <Row
                     alignItems="center"
@@ -292,7 +368,7 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
         Total Value
       </Typography>
       <Typography variant="displaySSemiBold" color="neutral/10">
-        {totalValue.toLocaleString()}
+        {formatTotal(totalValue)}
       </Typography>
     </Column>
   );
