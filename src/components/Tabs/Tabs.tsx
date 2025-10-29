@@ -88,7 +88,20 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
     const containerRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-      const activeTab = tabRefs.current[value];
+      const childArray = React.Children.toArray(children);
+      let activeIndex = 0;
+
+      childArray.forEach((child, index) => {
+        if (React.isValidElement(child) && child.props.value !== undefined) {
+          if (child.props.value === value) {
+            activeIndex = index;
+          }
+        } else if (index === value) {
+          activeIndex = index;
+        }
+      });
+
+      const activeTab = tabRefs.current[activeIndex];
       const container = containerRef.current;
 
       if (activeTab && container) {
@@ -107,6 +120,7 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
     const handleTabClick =
       (
         index: number,
+        tabValue: any,
         tabOnClick?: (event: React.MouseEvent<HTMLDivElement>) => void
       ) =>
       (event: React.MouseEvent<HTMLDivElement>) => {
@@ -117,16 +131,21 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
           return;
         }
 
-        onChange?.(event, index);
+        const valueToPass = tabValue !== undefined ? tabValue : index;
+        onChange?.(event, valueToPass);
         tabOnClick?.(event);
       };
 
     const modifiedChildren = React.Children.map(children, (child, index) => {
       if (React.isValidElement(child)) {
+        const childValue = child.props.value;
+        const isSelected =
+          childValue !== undefined ? value === childValue : value === index;
+
         return React.cloneElement(child, {
           ...child.props,
-          selected: value === index,
-          onClick: handleTabClick(index, child.props.onClick),
+          selected: isSelected,
+          onClick: handleTabClick(index, childValue, child.props.onClick),
           hideBottomLine: !bottomLine,
           ref: (el: HTMLDivElement | null) => {
             tabRefs.current[index] = el;
