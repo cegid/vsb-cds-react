@@ -83,6 +83,7 @@
     "react-chartjs-2": "^5.3.0"
   },
   "devDependencies": {
+    "@cegid/vsb-cds-illustrations": "1.0.3",
     "@cegid/cds-react": "^3.26.1",
     "@chromatic-com/storybook": "^4.0.1",
     "@commitlint/cli": "^20.1.0",
