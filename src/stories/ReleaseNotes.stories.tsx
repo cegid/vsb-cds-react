@@ -29,6 +29,31 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.21.3",
+    changes: [
+      {
+        component: "SegmentedControl",
+        type: "fix",
+        description: "fix padding",
+      },
+      {
+        component: "Chart",
+        type: "enhancement",
+        description: "allow custom badges for totals",
+      },
+      {
+        component: "DatePicker",
+        type: "enhancement",
+        description: "add icon on date picker segmented control",
+      },
+      {
+        component: "Badge",
+        type: "fix",
+        description: "border and background colors",
+      }
+    ],
+  },
+  {
     version: "1.21.2",
     changes: [
       {
