@@ -75,6 +75,7 @@
   },
   "dependencies": {
     "@cegid/vsb-cds-tokens": "1.0.8",
+    "@cegid/vsb-cds-illustrations": "1.0.0",
     "@mui/x-date-pickers": "8.9.0",
     "chart.js": "^4.5.0",
     "chartjs-plugin-datalabels": "^2.2.0",
