@@ -5,6 +5,7 @@ import Row from "../Row";
 import Box from "../Box";
 import Icon from "../Icon";
 import IconButton from "../IconButton";
+import Badge, { BadgeProps } from "../Badge";
 import { ChartType } from "./ChartCore";
 import { parseCustomColor } from "../../theme";
 import { getChartIcon } from "./Chart";
@@ -42,6 +43,10 @@ interface ChartTotalsProps {
    * @default false
    */
   compactDisplay?: boolean;
+  /**
+   * Badges to display next to totals
+   */
+  totalBadges?: Record<string, BadgeProps>;
 }
 
 const ChartTotals: React.FC<ChartTotalsProps> = ({
@@ -59,6 +64,7 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
   totalSymbol,
   decimalPlaces,
   compactDisplay = false,
+  totalBadges,
 }) => {
   const formatTotal = (value: number): string => {
     let formattedNumber: string;
@@ -267,9 +273,14 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
                   width="fit-content"
                   sx={{ flexShrink: 0 }}
                 >
-                  <Typography variant="displaySSemiBold" color="neutral/10">
-                    {formatTotal(item.total)}
-                  </Typography>
+                  <Row alignItems="center" gap={2}>
+                    <Typography variant="displaySSemiBold" color="neutral/10">
+                      {formatTotal(item.total)}
+                    </Typography>
+                    {totalBadges && totalBadges[item.label] && (
+                      <Badge {...totalBadges[item.label]} />
+                    )}
+                  </Row>
                   <Row
                     alignItems="center"
                     gap={4}
@@ -356,9 +367,14 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
       <Typography variant="bodyMMedium" color="neutral/50">
         Total Value
       </Typography>
-      <Typography variant="displaySSemiBold" color="neutral/10">
-        {formatTotal(totalValue)}
-      </Typography>
+      <Row alignItems="center" gap={2}>
+        <Typography variant="displaySSemiBold" color="neutral/10">
+          {formatTotal(totalValue)}
+        </Typography>
+        {totalBadges && totalBadges["total"] && (
+          <Badge {...totalBadges["total"]} />
+        )}
+      </Row>
     </Column>
   );
 };
