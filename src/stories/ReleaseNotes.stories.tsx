@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.21.4",
+    changes: [
+      {
+        component: "SegmentedControl",
+        type: "fix",
+        description: "click not detected on grouped options",
+      }
+    ],
+  },
+  {
     version: "1.21.3",
     changes: [
       {
