@@ -76,6 +76,14 @@ const Badge: React.FC<BadgeProps> = ({
     }
 
     if (size === "small") {
+      if (!children) {
+        if (color === "primary") {
+          return "primary/50" as CustomColorString;
+        }
+        if (color === "neutral") {
+          return "neutral/70" as CustomColorString;
+        }
+      }
       return `${color}/60` as CustomColorString;
     }
 
@@ -114,11 +122,17 @@ const Badge: React.FC<BadgeProps> = ({
     }
 
     if (size === "medium" || size === "large") {
+      if (color === "neutral") {
+        return {
+          width: 1,
+          color: "borderNeutral",
+          style: "solid",
+        };
+      }
       return {
         width: 1,
-        color: color === "white" ? "white" : `${color}/60`,
+        color: color === "white" ? "white" : `${color}/90`,
         style: "solid",
-        opacity: 30,
       };
     }
 

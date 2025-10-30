@@ -346,11 +346,11 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
           case "day":
             options.push({
               label: showTime ? "Date" : "Jour",
-              icon: showTime ? (
+              icon: (
                 <Icon size={16} color="neutral/10">
-                  calendar-03
+                  calendar-01
                 </Icon>
-              ) : undefined,
+              ),
               onClick: () => {
                 handleGranularityChange("day");
                 if (showTime) {
@@ -362,18 +362,33 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
           case "week":
             options.push({
               label: "Semaine",
+              icon: (
+                <Icon size={16}>
+                  calendar-02
+                </Icon>
+              ),
               onClick: () => handleGranularityChange("week"),
             });
             break;
           case "month":
             options.push({
               label: "Mois",
+              icon: (
+                <Icon size={16}>
+                  calendar-03
+                </Icon>
+              ),
               onClick: () => handleGranularityChange("month"),
             });
             break;
           case "year":
             options.push({
               label: "Année",
+              icon: (
+                <Icon size={16}>
+                  calendar-04
+                </Icon>
+              ),
               onClick: () => handleGranularityChange("year"),
             });
             break;
@@ -382,7 +397,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               options.push({
                 label: "Heure",
                 icon: (
-                  <Icon size={16} color="neutral/10">
+                  <Icon size={16}>
                     time-quarter-02
                   </Icon>
                 ),

@@ -10,6 +10,7 @@ import ChartLegend from "./ChartLegend";
 import Box from "../Box";
 import { PaletteNames, parseCustomColor } from "../../theme";
 import Row from "../Row";
+import { BadgeProps } from "../Badge";
 
 export type { ChartType, ChartDataset, CustomChartData } from "./ChartCore";
 export type { ChartAction } from "./ChartHeader";
@@ -115,6 +116,26 @@ export interface ChartProps extends ChartCoreProps {
    * Additional actions displayed in the more menu
    */
   moreActions?: ChartAction[];
+  /**
+   * Badges to display next to totals. In simple mode, use a special key like "total" for the global total.
+   * In detailed mode, use dataset labels as keys to assign badges to specific datasets.
+   *
+   * @example
+   * // Simple mode - single badge for the total
+   * <Chart totalBadges={{ "total": { children: "+12%", color: "success" } }} />
+   *
+   * @example
+   * // Detailed mode - badges per dataset
+   * <Chart
+   *   totalsDisplayMode="detailed"
+   *   totalBadges={{
+   *     "Sales": { children: "+15%", color: "success" },
+   *     "Target": { children: "New", color: "primary" },
+   *     "Marketing": { children: "-5%", color: "critical" }
+   *   }}
+   * />
+   */
+  totalBadges?: Record<string, BadgeProps>;
 }
 
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
@@ -127,6 +148,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       decimalPlaces,
       compactDisplay,
       moreActions,
+      totalBadges,
       ...chartProps
     },
     ref
@@ -380,6 +402,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
               totalSymbol={totalSymbol}
               decimalPlaces={decimalPlaces}
               compactDisplay={compactDisplay}
+              totalBadges={totalBadges}
             />
           )}
 
@@ -483,6 +506,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             totalSymbol={totalSymbol}
             decimalPlaces={decimalPlaces}
             compactDisplay={compactDisplay}
+            totalBadges={totalBadges}
           />
         </Column>
       </Box>

@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import Chart, { CustomChartData, ChartAction } from "./Chart";
+import Row from "../Row";
+import Icon from "../Icon";
+import Typography from "../Typography";
 
 const sampleActions: ChartAction[] = [
   {
@@ -275,7 +278,14 @@ const meta = {
   argTypes: {
     type: {
       control: "select",
-      options: ["verticalBar", "horizontalBar", "pie", "doughnut", "line", "mixed"],
+      options: [
+        "verticalBar",
+        "horizontalBar",
+        "pie",
+        "doughnut",
+        "line",
+        "mixed",
+      ],
       description: "The type of chart to display",
     },
     width: {
@@ -489,6 +499,111 @@ export const ChartWithFormattedTotals: Story = {
         onClick: () => console.log("Compare"),
       },
     ],
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const ChartWithBadgesSimpleMode: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "primary",
+    data: sampleBarData,
+    title: "Chart avec badge en mode simple",
+    totalsDisplayMode: "simple",
+    totalSymbol: "€",
+    compactDisplay: true,
+    totalBadges: {
+      total: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="primary/60">
+              arrow-up-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="primary/60">
+              45%
+            </Typography>
+          </Row>
+        ),
+        color: "primary",
+        variant: "tonal",
+        size: "medium",
+      },
+    },
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const ChartWithBadgesDetailedMode: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "primary",
+    data: sampleBarData,
+    title: "Chart avec badges en mode detailed",
+    totalsDisplayMode: "detailed",
+    totalSymbol: "€",
+    compactDisplay: true,
+    totalBadges: {
+      Sales: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="critical/60">
+              arrow-down-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="critical/60">
+              -45%
+            </Typography>
+          </Row>
+        ),
+        color: "critical",
+        variant: "tonal",
+        size: "medium",
+      },
+      Target: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="critical/60">
+              arrow-down-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="critical/60">
+              -45%
+            </Typography>
+          </Row>
+        ),
+        color: "critical",
+        variant: "tonal",
+        size: "medium",
+      },
+      Marketing: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="primary/60">
+              arrow-up-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="primary/60">
+              45%
+            </Typography>
+          </Row>
+        ),
+        color: "primary",
+        variant: "tonal",
+        size: "medium",
+      },
+      Support: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="critical/60">
+              arrow-down-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="critical/60">
+              -45%
+            </Typography>
+          </Row>
+        ),
+        color: "critical",
+        variant: "tonal",
+        size: "medium",
+      },
+    },
   },
   render: (args) => <Chart {...args} />,
 };
