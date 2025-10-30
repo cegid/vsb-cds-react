@@ -178,7 +178,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   const sliderBaseStyle: React.CSSProperties = {
     position: "absolute",
     top: "2px",
-    left: "2px",
+    left: "0px",
     height: "calc(100% - 4px)",
     width: "var(--slider-width)",
     backgroundColor: color === "dark" ? neutral[50] : "white",
