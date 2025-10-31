@@ -268,7 +268,7 @@ const releaseNotes: ReleaseNote[] = [
       {
         component: "ListItem",
         type: "fix",
-        description: "set divider border color to #E6E7EA",
+        description: "set divider border color to borderNeutral",
       }
     ],
   },
@@ -293,7 +293,7 @@ const releaseNotes: ReleaseNote[] = [
       {
         component: "ListItem",
         type: "fix",
-        description: "set divider border color to #E6E7EA",
+        description: "set divider border color to borderNeutral",
       }
     ],
   },
