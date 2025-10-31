@@ -24,15 +24,7 @@ const meta = {
     },
     color: {
       control: "select",
-      options: [
-        "primary",
-        "secondary",
-        "success",
-        "yellow",
-        "critical",
-        "neutral",
-        "white",
-      ],
+      options: ["primary", "critical", "neutral", "white"],
     },
   },
   args: {
@@ -51,12 +43,14 @@ export const Default: Story = {
   },
 };
 
-export const Sizes: Story = {
+export const Variants: Story = {
   render: () => (
-    <Column gap={20}>
+    <Column gap={20} p={6} backgroundColor="primary/10" borderRadius={4}>
       <Box>
         <Box marginBottom={6}>
-          <Typography variant="bodyMSemiBold">small</Typography>
+          <Typography variant="bodyMSemiBold" color="white">
+            small
+          </Typography>
         </Box>
         <Row gap={6} alignItems="center" flexWrap="wrap">
           <Badge size="small" color="primary" />
@@ -64,27 +58,44 @@ export const Sizes: Story = {
             1
           </Badge>
           <Badge size="small" color="primary">
-            9
+            <Icon size={10} color="white">
+              add-01
+            </Icon>
           </Badge>
-          <Badge size="small" color="secondary" />
-          <Badge size="small" color="success">
-            !
-          </Badge>
-          <Badge size="small" color="yellow">
-            5
+          <Badge size="small" color="critical"></Badge>
+          <Badge size="small" color="critical">
+            8
           </Badge>
           <Badge size="small" color="critical">
-            X
+            <Icon size={10} color="white">
+              alert-02
+            </Icon>
+          </Badge>
+          <Badge size="small" color="neutral" />
+          <Badge size="small" color="neutral">
+            9
+          </Badge>
+          <Badge size="small" color="neutral">
+            <Icon size={10} color="white">
+              settings-01
+            </Icon>
           </Badge>
           <Badge size="small" color="white" />
           <Badge size="small" color="white">
             9
           </Badge>
+          <Badge size="small" color="white">
+            <Icon size={10} color="neutral/50">
+              checkmark-circle-02
+            </Icon>
+          </Badge>
         </Row>
       </Box>
       <Box>
         <Box marginBottom={6}>
-          <Typography variant="bodyMSemiBold">Medium (Full radius)</Typography>
+          <Typography variant="bodyMSemiBold" color="white">
+            Medium (Full radius)
+          </Typography>
         </Box>
         <Row gap={6} alignItems="center" flexWrap="wrap">
           <Badge size="medium" variant="outlined" color="primary">
@@ -93,25 +104,71 @@ export const Sizes: Story = {
           <Badge size="medium" variant="tonal" color="primary">
             Badge
           </Badge>
-          <Badge size="medium" variant="outlined" color="secondary">
-            <Row gap={1}>
-              <Icon size={10}>add-01</Icon>
-              <Typography variant="captionRegular" color="neutral/10">
-                3
+          <Badge size="medium" variant="outlined" color="primary">
+            <Row gap={2} alignItems="center">
+              <Icon size={10} color="primary/60">
+                add-01
+              </Icon>
+              <Typography variant="captionRegular" color="primary/60">
+                Badge
               </Typography>
             </Row>
           </Badge>
-          <Badge size="medium" variant="tonal" color="success">
-            Active
+          <Badge size="medium" variant="outlined" color="neutral">
+            Badge
+          </Badge>
+          <Badge size="medium" variant="tonal" color="neutral">
+            Badge
+          </Badge>
+          <Badge size="medium" variant="outlined" color="neutral">
+            <Row gap={2} alignItems="center">
+              <Icon size={10} color="neutral/50">
+                settings-01
+              </Icon>
+              <Typography variant="captionRegular" color="neutral/50">
+                Badge
+              </Typography>
+            </Row>
+          </Badge>
+          <Badge size="medium" variant="outlined" color="critical">
+            Badge
+          </Badge>
+          <Badge size="medium" variant="tonal" color="critical">
+            Badge
+          </Badge>
+          <Badge size="medium" variant="outlined" color="critical">
+            <Row gap={2} alignItems="center">
+              <Icon size={10} color="critical/60">
+                alert-02
+              </Icon>
+              <Typography variant="captionRegular" color="critical/60">
+                Badge
+              </Typography>
+            </Row>
           </Badge>
           <Badge size="medium" variant="outlined" color="white">
-            White
+            Badge
+          </Badge>
+          <Badge size="medium" variant="tonal" color="white">
+            Badge
+          </Badge>
+          <Badge size="medium" variant="outlined" color="white">
+            <Row gap={2} alignItems="center">
+              <Icon size={10} color="white">
+                checkmark-circle-02
+              </Icon>
+              <Typography variant="captionRegular" color="white">
+                Badge
+              </Typography>
+            </Row>
           </Badge>
         </Row>
       </Box>
       <Box>
         <Box marginBottom={6}>
-          <Typography variant="bodyMSemiBold">Large (8px radius)</Typography>
+          <Typography variant="bodyMSemiBold" color="white">
+            Large (8px radius)
+          </Typography>
         </Box>
         <Row gap={6} alignItems="center" flexWrap="wrap">
           <Badge size="large" variant="outlined" color="primary">
@@ -120,19 +177,63 @@ export const Sizes: Story = {
           <Badge size="large" variant="tonal" color="primary">
             Badge
           </Badge>
-          <Badge size="large" variant="outlined" color="secondary">
-            <Row gap={1}>
-              <Icon size={10}>add-01</Icon>
-              <Typography variant="captionRegular" color="neutral/10">
-                New
+          <Badge size="large" variant="outlined" color="primary">
+            <Row gap={2} alignItems="center">
+              <Icon size={10} color="primary/60">
+                add-01
+              </Icon>
+              <Typography variant="captionRegular" color="primary/60">
+                Badge
               </Typography>
             </Row>
           </Badge>
+          <Badge size="large" variant="outlined" color="neutral">
+            Badge
+          </Badge>
+          <Badge size="large" variant="tonal" color="neutral">
+            Badge
+          </Badge>
+          <Badge size="large" variant="outlined" color="neutral">
+            <Row gap={2} alignItems="center">
+              <Icon size={10} color="neutral/50">
+                settings-01
+              </Icon>
+              <Typography variant="captionRegular" color="neutral/50">
+                Badge
+              </Typography>
+            </Row>
+          </Badge>
+          <Badge size="large" variant="outlined" color="critical">
+            Badge
+          </Badge>
           <Badge size="large" variant="tonal" color="critical">
-            Error
+            Badge
+          </Badge>
+          <Badge size="large" variant="outlined" color="critical">
+            <Row gap={2} alignItems="center">
+              <Icon size={10} color="critical/60">
+                alert-02
+              </Icon>
+              <Typography variant="captionRegular" color="critical/60">
+                Badge
+              </Typography>
+            </Row>
           </Badge>
           <Badge size="large" variant="outlined" color="white">
-            White
+            Badge
+          </Badge>
+          <Badge size="large" variant="tonal" color="white">
+            Badge
+          </Badge>
+          <Badge size="large" variant="outlined" color="white">
+            <Row gap={2} alignItems="center">
+              <Icon size={10} color="white">
+                checkmark-circle-02
+              </Icon>
+              <Typography variant="captionRegular" color="white">
+                Badge
+              </Typography>
+            </Row>
           </Badge>
         </Row>
       </Box>
@@ -143,94 +244,6 @@ export const Sizes: Story = {
       description: {
         story:
           "All available sizes: small (circular), medium (full radius), and large (8px radius).",
-      },
-    },
-  },
-};
-
-export const Colors: Story = {
-  render: () => (
-    <Column gap={20}>
-      <Box>
-        <Box marginBottom={6}>
-          <Typography variant="bodyMSemiBold">Outlined</Typography>
-        </Box>
-        <Row gap={6} alignItems="center" flexWrap="wrap">
-          <Badge variant="outlined" color="primary">
-            <Typography variant="captionRegular">Primary</Typography>
-          </Badge>
-          <Badge variant="outlined" color="secondary">
-            <Typography variant="captionRegular">Secondary</Typography>
-          </Badge>
-          <Badge variant="outlined" color="success">
-            <Typography variant="captionRegular">Success</Typography>
-          </Badge>
-          <Badge variant="outlined" color="yellow">
-            <Typography variant="captionRegular">Warning</Typography>
-          </Badge>
-          <Badge variant="outlined" color="critical">
-            <Typography variant="captionRegular">Error</Typography>
-          </Badge>
-          <Badge variant="outlined" color="neutral">
-            <Typography variant="captionRegular">Neutral</Typography>
-          </Badge>
-          <Badge variant="outlined" color="white">
-            <Typography variant="captionRegular">White</Typography>
-          </Badge>
-        </Row>
-      </Box>
-      <Box>
-        <Box marginBottom={6}>
-          <Typography variant="bodyMSemiBold">Tonal</Typography>
-        </Box>
-        <Row gap={6} alignItems="center" flexWrap="wrap">
-          <Badge variant="tonal" color="primary">
-            <Typography variant="captionRegular">Primary</Typography>
-          </Badge>
-          <Badge variant="tonal" color="secondary">
-            <Typography variant="captionRegular">Secondary</Typography>
-          </Badge>
-          <Badge variant="tonal" color="success">
-            <Typography variant="captionRegular">Success</Typography>
-          </Badge>
-          <Badge variant="tonal" color="yellow">
-            <Typography variant="captionRegular">Warning</Typography>
-          </Badge>
-          <Badge variant="tonal" color="critical">
-            <Typography variant="captionRegular">Error</Typography>
-          </Badge>
-          <Badge variant="tonal" color="neutral">
-            <Typography variant="captionRegular">Neutral</Typography>
-          </Badge>
-          <Badge variant="outlined" color="white">
-            <Typography variant="captionRegular">White</Typography>
-          </Badge>
-        </Row>
-      </Box>
-      <Box>
-        <Box marginBottom={6}>
-          <Typography variant="bodyMSemiBold">small colors</Typography>
-        </Box>
-        <Row gap={6} alignItems="center" flexWrap="wrap">
-          <Badge size="small" color="primary" />
-          <Badge size="small" color="secondary" />
-          <Badge size="small" color="success" />
-          <Badge size="small" color="yellow" />
-          <Badge size="small" color="critical" />
-          <Badge size="small" color="neutral" />
-          <Badge size="small" color="white" />
-          <Badge size="small" color="white">
-            1
-          </Badge>
-        </Row>
-      </Box>
-    </Column>
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "All available color variants for outlined, tonal, and small badges.",
       },
     },
   },
