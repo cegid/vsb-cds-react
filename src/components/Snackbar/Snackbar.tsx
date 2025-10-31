@@ -5,6 +5,7 @@ import Box from "../Box";
 import Icon from "../Icon";
 import Row from "../Row";
 import Typography from "../Typography";
+import { neutral } from "@cegid/vsb-cds-tokens";
 
 /**
  * Represents an action button that can be displayed in the snackbar
@@ -97,6 +98,7 @@ const CloseButton = ({ onClose }: { onClose: () => void }) => (
     p="8px"
     onClick={onClose}
     display="flex"
+    alignItems="center"
     sx={{
       cursor: "pointer",
     }}
@@ -114,10 +116,11 @@ const ActionButton = ({ action }: { action: SnackbarAction }) => (
     alignItems="center"
     sx={{
       cursor: "pointer",
+      lineHeight: 1,
     }}
     onClick={action.onClick}
   >
-    <Typography variant="bodySSemiBold" color="white">
+    <Typography variant="bodySSemiBold" color="white" pt={"1px"}>
       {action.label}
     </Typography>
   </Box>
@@ -157,7 +160,6 @@ const MessageContent = ({ message }: { message: SnackbarMessage }) => {
     );
   }
 
-  // Si le message est une string simple, l'envelopper dans un Typography
   if (typeof message === "string") {
     return (
       <Typography
@@ -170,7 +172,6 @@ const MessageContent = ({ message }: { message: SnackbarMessage }) => {
     );
   }
 
-  // Pour les autres React nodes (Typography, etc.), les envelopper dans une Box
   return (
     <Box sx={ellipsisStyles}>
       {message}
@@ -190,7 +191,7 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>(
         maxWidth={350}
         gap="8px"
         alignItems="center"
-        boxShadow="0 0 3px 2px #23252926"
+        boxShadow={`0 0 25px 0 ${neutral[95]}`}
       >
         <SeverityIcon severity={severity} />
         <Box sx={{ flex: 1, minWidth: 0 }}>
