@@ -29,6 +29,34 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.22.0",
+    changes: [
+      {
+        component: "Storybook",
+        type: "enhancement",
+        description: [
+          "add Jira story",
+          "add dash line chart exemple"
+        ],
+      },
+      {
+        component: "SnackBar",
+        type: "fix",
+        description: "fix shadow and button center align",
+      },
+      {
+        component: "SystemBanner",
+        type: "fix",
+        description: "center texte left",
+      },
+      {
+        component: "Badge",
+        type: "fix",
+        description: "many design fixes",
+      }
+    ],
+  },
+  {
     version: "1.21.4",
     changes: [
       {
