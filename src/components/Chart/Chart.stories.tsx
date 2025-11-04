@@ -607,3 +607,64 @@ export const ChartWithBadgesDetailedMode: Story = {
   },
   render: (args) => <Chart {...args} />,
 };
+
+const dashedLineData: CustomChartData = {
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+  datasets: [
+    {
+      label: "Actual Sales",
+      data: [65000, 59000, 80000, 81000, 76000, 85000],
+      borderColor: "primary/50",
+      backgroundColor: "primary/20",
+      borderWidth: 2,
+      fill: true,
+      tension: 0.4,
+    },
+    {
+      label: "Forecast",
+      data: [70000, 65000, 75000, 85000, 80000, 90000],
+      borderColor: "success/50",
+      backgroundColor: "transparent",
+      borderWidth: 2,
+      fill: false,
+      tension: 0.4,
+      borderDash: [5, 5],
+    },
+    {
+      label: "Target",
+      data: [75000, 75000, 75000, 75000, 75000, 75000],
+      borderColor: "yellow/50",
+      backgroundColor: "transparent",
+      borderWidth: 2,
+      fill: false,
+      tension: 0,
+      borderDash: [10, 5],
+    },
+    {
+      label: "Minimum",
+      data: [50000, 50000, 50000, 50000, 50000, 50000],
+      borderColor: "critical/50",
+      backgroundColor: "transparent",
+      borderWidth: 2,
+      fill: false,
+      tension: 0,
+      borderDash: [2, 2],
+    },
+  ],
+};
+
+export const DashedLines: Story = {
+  args: {
+    type: "line",
+    data: dashedLineData,
+    width: 900,
+    height: 400,
+    backgroundColor: "neutral",
+    title: "Sales with Dashed Lines",
+    totalsDisplayMode: "detailed",
+    totalSymbol: "€",
+    compactDisplay: true,
+    moreActions: sampleActions,
+  },
+  render: (args) => <Chart {...args} />,
+};
