@@ -28,6 +28,18 @@ const config = {
       ...config.resolve.alias,
       'sb-original/image-context': path.resolve(__dirname, 'empty-module.js'),
     };
+
+    // Configure proxy for Jira API to avoid CORS issues
+    config.server = config.server || {};
+    config.server.proxy = {
+      '/api/jira': {
+        target: 'https://jira-internal-api.boby.tech',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/jira/, '/v1/api/issue'),
+        secure: false,
+      }
+    };
+
     return config;
   }
 };
