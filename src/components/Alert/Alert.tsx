@@ -6,7 +6,7 @@ import MobileAlert from "./MobileAlert";
 import { useTheme } from "@mui/material/styles";
 import DesktopAlert from "./DesktopAlert";
 
-export type AlertVariants = "warning" | "error" | "info" | "success";
+export type AlertVariants = "warning" | "error" | "info" | "success" | "white";
 export type AlertImage = React.ReactElement | string;
 export type AlertSize = "M" | "XS";
 
@@ -99,6 +99,10 @@ export const VARIANT_CONFIG = {
     background: "success/99",
     border: "success/30",
   },
+  white: {
+    background: "white",
+    border: "white",
+  },
 } as const;
 
 export const getButtonColor = (variant: AlertVariants) => {
@@ -106,6 +110,8 @@ export const getButtonColor = (variant: AlertVariants) => {
     case "warning":
       return "neutral";
     case "info":
+      return "primary";
+    case "white":
       return "primary";
     default:
       return variant;
