@@ -47,7 +47,7 @@ export interface BadgeProps {
    * This affects the border color and background color based on the variant.
    * @default "primary"
    */
-  color?: PaletteNames | "white";
+  color?: "primary" | "neutral" | "white" | "critical";
 
   /**
    * Custom background color that overrides the default color theme.
@@ -83,11 +83,20 @@ const Badge: React.FC<BadgeProps> = ({
         if (color === "neutral") {
           return "neutral/70" as CustomColorString;
         }
+        if (color === "white") {
+          return "white";
+        }
+      }
+      if (color === "white") {
+        return "white";
       }
       return `${color}/60` as CustomColorString;
     }
 
     if (color === "white") {
+      if (variant === "tonal") {
+        return "#FFFFFF14" as CustomColorString;
+      }
       return "transparent";
     }
 
@@ -152,6 +161,7 @@ const Badge: React.FC<BadgeProps> = ({
       return {
         borderRadius: RADIUS.FULL,
         px: "4px",
+        height: "16px",
       };
     }
 
@@ -159,11 +169,28 @@ const Badge: React.FC<BadgeProps> = ({
       return {
         borderRadius: "8px",
         px: "4px",
-        py: "1px",
+        py: "2px",
+        height: "20px",
       };
     }
 
     return {};
+  };
+
+  const getTextColor = (): CustomColorString => {
+    if (size === "small") {
+      return color === "white" ? "neutral/50" as CustomColorString : "white";
+    }
+
+    if (color === "white") {
+      return "white";
+    }
+
+    if (color === "critical") {
+      return "critical/60" as CustomColorString;
+    }
+
+    return `${color}/60` as CustomColorString;
   };
 
   const renderContent = () => {
@@ -175,22 +202,8 @@ const Badge: React.FC<BadgeProps> = ({
       return children;
     }
 
-    if (size === "small") {
-      return (
-        <Typography
-          variant="captionRegular"
-          color={color === "white" ? "neutral/50" : "white"}
-        >
-          {children}
-        </Typography>
-      );
-    }
-
     return (
-      <Typography
-        variant="captionRegular"
-        color={color === "white" ? "neutral/50" : `${color}/60`}
-      >
+      <Typography variant="captionRegular" color={getTextColor()}>
         {children}
       </Typography>
     );

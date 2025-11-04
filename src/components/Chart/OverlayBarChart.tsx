@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect } from 'react';
-import { parseCustomColor } from '../../theme';
+import { borderNeutral, parseCustomColor } from '../../theme';
 import { CustomChartData } from './ChartCore';
 
 interface OverlayBarChartProps {
@@ -101,7 +101,7 @@ const OverlayBarChart: React.FC<OverlayBarChartProps> = ({
     );
     
     if (showGrid) {
-      ctx.strokeStyle = '#E6E7EA';
+      ctx.strokeStyle = borderNeutral;
       ctx.lineWidth = 1;
       
       for (let i = 0; i <= 5; i++) {

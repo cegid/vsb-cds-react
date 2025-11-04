@@ -25,14 +25,17 @@ const SystemBanner: React.FC<SystemBannerProps> = (props) => {
       backgroundColor={`${paletteColor}/99` as CustomColorString}
       justifyContent="space-between"
     >
-      <Icon
-        color={`${paletteColor}/50` as CustomColorString}
-        variant="solid"
-        size={16}
-      >
-        {color === "warning" ? "alert-02" : "alert-circle"}
-      </Icon>
-      {children}
+      <Row gap={4}>
+        <Icon
+          color={`${paletteColor}/50` as CustomColorString}
+          variant="solid"
+          size={16}
+        >
+          {color === "warning" ? "alert-02" : "alert-circle"}
+        </Icon>
+        {children}
+      </Row>
+
       <IconButton variant="iconOnly" color="neutral" onClick={onClose}>
         <Icon size={16} variant="solid">
           cancel-01

@@ -24,6 +24,7 @@ import {
   neutral,
   CustomColorString,
   parseCustomColor,
+  borderNeutral,
 } from "../../theme";
 import typography from "../../theme/typography";
 import Column from "../Column";
@@ -708,7 +709,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                 display: true,
                 color: neutral[10],
                 backgroundColor: neutral[99],
-                borderColor: "#E6E7EA",
+                borderColor: borderNeutral,
                 borderWidth: 1,
                 borderRadius: 8,
                 padding: {
@@ -740,7 +741,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
               x: {
                 grid: {
                   display: showVerticalGrid,
-                  color: "#E6E7EA",
+                  color: borderNeutral,
                 },
                 ticks: {
                   padding: 10,
@@ -754,7 +755,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
               y: {
                 grid: {
                   display: showHorizontalGrid,
-                  color: "#E6E7EA",
+                  color: borderNeutral,
                 },
                 ticks: {
                   padding: 10,
@@ -812,7 +813,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           x: {
             grid: {
               display: showVerticalGrid,
-              color: "#E6E7EA",
+              color: borderNeutral,
             },
             ticks: {
               padding: 10,
@@ -829,7 +830,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             position: 'left',
             grid: {
               display: showHorizontalGrid,
-              color: "#E6E7EA",
+              color: borderNeutral,
             },
             ticks: {
               padding: 10,
