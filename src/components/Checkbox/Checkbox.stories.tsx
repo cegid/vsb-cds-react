@@ -1,45 +1,41 @@
-import {
-  Divider,
-  FormHelperText,
-  FormLabel,
-} from '@mui/material';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import React, { useState } from 'react';
+import { Divider, FormHelperText, FormLabel } from "@mui/material";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import React, { useState } from "react";
 
-import Checkbox from './Checkbox';
-import Box from '../Box';
-import Stack from '../Stack';
-import Typography from '../Typography';
-import FormControlLabel from '../FormControlLabel';
-import FormControl from '../FormControl';
-import FormGroup from '../FormGroup';
+import Checkbox from "./Checkbox";
+import Box from "../Box";
+import Stack from "../Stack";
+import Typography from "../Typography";
+import FormControlLabel from "../FormControlLabel";
+import FormControl from "../FormControl";
+import FormGroup from "../FormGroup";
 
 const meta = {
-  title: '🎛️ Inputs and selection/Checkbox',
+  title: "🎛️ Inputs and selection/Checkbox",
   component: Checkbox,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     disabled: {
-      control: 'boolean',
-      description: 'If the component is disabled',
+      control: "boolean",
+      description: "If the component is disabled",
     },
     size: {
-      control: 'select',
-      options: ['S', 'L'],
-      description: 'The size of the component',
+      control: "select",
+      options: ["S", "L"],
+      description: "The size of the component",
     },
     undetermined: {
-      control: 'boolean',
-      description: 'If the checkbox is in an undetermined state',
+      control: "boolean",
+      description: "If the checkbox is in an undetermined state",
     },
-    onChange: { action: 'changed' },
+    onChange: { action: "changed" },
   },
   args: {
     disabled: false,
-    size: 'L',
+    size: "L",
     undetermined: false,
   },
 } satisfies Meta<typeof Checkbox>;
@@ -50,11 +46,11 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     checked: false,
-    name: 'default',
-    onChange: () => { },
+    name: "default",
+    onChange: () => {},
   },
   render: (args) => (
-    <Box p={2} >
+    <Box p={2}>
       <Checkbox {...args} />
     </Box>
   ),
@@ -63,12 +59,17 @@ export const Default: Story = {
 export const WithLabel: Story = {
   args: {
     checked: false,
-    name: 'withLabel',
-    onChange: () => { },
+    name: "withLabel",
+    onChange: () => {},
   },
   render: (args) => (
     <Box p={2}>
-      <FormControlLabel control={<Checkbox {...args} />} label="I accept the terms" />
+      <FormControlLabel
+        control={<Checkbox {...args} />}
+        label={
+          <Typography variant="bodySMedium">"I accept the terms"</Typography>
+        }
+      />
     </Box>
   ),
 };
@@ -76,14 +77,17 @@ export const WithLabel: Story = {
 export const Sizes: Story = {
   args: {
     checked: true,
-    name: 'sizes',
-    onChange: () => { },
+    name: "sizes",
+    onChange: () => {},
   },
   render: (args) => (
     <Box p={2}>
       <Stack direction="row" spacing={2} flexWrap="wrap">
         <FormControlLabel control={<Checkbox {...args} size="S" />} label="S" />
-        <FormControlLabel control={<Checkbox {...args} />} label="L (default)" />
+        <FormControlLabel
+          control={<Checkbox {...args} />}
+          label="L (default)"
+        />
       </Stack>
     </Box>
   ),
@@ -92,18 +96,24 @@ export const Sizes: Story = {
 export const States: Story = {
   args: {
     checked: false,
-    name: 'states',
-    onChange: () => { },
+    name: "states",
+    onChange: () => {},
   },
   render: (args) => (
     <Box p={3}>
       <Stack direction="row" spacing={2} flexWrap="wrap" mb={2}>
         <FormControlLabel control={<Checkbox {...args} />} label="Unchecked" />
-        <FormControlLabel control={<Checkbox {...args} checked />} label="Checked" />
+        <FormControlLabel
+          control={<Checkbox {...args} checked />}
+          label="Checked"
+        />
       </Stack>
       <Divider sx={{ my: 2 }} />
       <Stack direction="row" spacing={2} flexWrap="wrap" mb={2}>
-        <FormControlLabel control={<Checkbox {...args} disabled />} label="Disabled" />
+        <FormControlLabel
+          control={<Checkbox {...args} disabled />}
+          label="Disabled"
+        />
         <FormControlLabel
           control={<Checkbox {...args} disabled checked />}
           label="Disabled and checked"
@@ -111,7 +121,10 @@ export const States: Story = {
       </Stack>
       <Divider sx={{ my: 2 }} />
       <Stack direction="row" spacing={2} flexWrap="wrap" mb={2}>
-        <FormControlLabel control={<Checkbox {...args} undetermined />} label="Undetermined" />
+        <FormControlLabel
+          control={<Checkbox {...args} undetermined />}
+          label="Undetermined"
+        />
       </Stack>
     </Box>
   ),
@@ -120,8 +133,8 @@ export const States: Story = {
 export const CheckboxGroup: Story = {
   args: {
     checked: false,
-    name: 'checkboxGroup',
-    onChange: () => { },
+    name: "checkboxGroup",
+    onChange: () => {},
   },
   render: () => {
     const [state, setState] = useState({
@@ -141,29 +154,53 @@ export const CheckboxGroup: Story = {
 
     return (
       <Box p={3}>
-        <FormControl component="fieldset" variant="standard" sx={{ width: '100%' }}>
+        <FormControl
+          component="fieldset"
+          variant="standard"
+          sx={{ width: "100%" }}
+        >
           <FormLabel component="legend" sx={{ mb: 2 }}>
             <Typography variant="subtitle1" fontWeight="medium">
               Assign responsibility
             </Typography>
           </FormLabel>
           <FormGroup>
-            <Box display='flex' flexDirection="column" gap={1}>
+            <Box display="flex" flexDirection="column" gap={1}>
               <FormControlLabel
-                control={<Checkbox checked={Karadoc} onChange={handleChange} name="Karadoc" />}
+                control={
+                  <Checkbox
+                    checked={Karadoc}
+                    onChange={handleChange}
+                    name="Karadoc"
+                  />
+                }
                 label="Karadoc"
               />
               <FormControlLabel
-                control={<Checkbox checked={Leodagan} onChange={handleChange} name="Leodagan" />}
+                control={
+                  <Checkbox
+                    checked={Leodagan}
+                    onChange={handleChange}
+                    name="Leodagan"
+                  />
+                }
                 label="Leodagan"
               />
               <FormControlLabel
-                control={<Checkbox checked={Perceval} onChange={handleChange} name="Perceval" />}
+                control={
+                  <Checkbox
+                    checked={Perceval}
+                    onChange={handleChange}
+                    name="Perceval"
+                  />
+                }
                 label="Perceval"
               />
             </Box>
           </FormGroup>
-          <FormHelperText sx={{ mt: 2 }}>You can display a help message here</FormHelperText>
+          <FormHelperText sx={{ mt: 2 }}>
+            You can display a help message here
+          </FormHelperText>
         </FormControl>
       </Box>
     );
@@ -173,8 +210,8 @@ export const CheckboxGroup: Story = {
 export const LabelPlacement: Story = {
   args: {
     checked: true,
-    name: 'labelPlacement',
-    onChange: () => { },
+    name: "labelPlacement",
+    onChange: () => {},
   },
   render: (args) => (
     <Box p={3}>

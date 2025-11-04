@@ -11,6 +11,7 @@ import Typography from "../Typography";
 import Row from "../Row";
 import Box, { BorderProps } from "../Box";
 import Icon from "../Icon";
+import { neutral } from "../../theme/colors";
 
 const DesktopAlert: React.FC<AlertProps> = ({
   title,
@@ -28,12 +29,15 @@ const DesktopAlert: React.FC<AlertProps> = ({
   const isMediumSize = size === "M";
   const isExtraSmallSize = size === "XS";
 
-  const borderStyle: BorderProps = {
-    style: "solid",
-    width: 1.5,
-    color: config.border,
-    opacity: 30,
-  };
+  const borderStyle: BorderProps | undefined =
+    variant === "white"
+      ? undefined
+      : {
+          style: "solid",
+          width: 1,
+          color: config.border,
+          opacity: 30,
+        };
 
   const renderImage = (image: AlertImage) => {
     const imageProps = {
@@ -41,7 +45,7 @@ const DesktopAlert: React.FC<AlertProps> = ({
       height: 40,
       style: { width: "40px", height: "40px" },
     };
-    const altText = typeof title === 'string' ? title : 'Alert image';
+    const altText = typeof title === "string" ? title : "Alert image";
 
     if (typeof image === "string") {
       return (
@@ -64,17 +68,16 @@ const DesktopAlert: React.FC<AlertProps> = ({
 
   const renderContent = () => (
     <Column>
-      {isMediumSize && (
-        typeof title === 'string' ? (
-          <Typography variant="bodySSemiBold" color="neutral/10">
+      {isMediumSize &&
+        (typeof title === "string" ? (
+          <Typography variant="bodyMSemiBold" color="neutral/10">
             {title}
           </Typography>
         ) : (
           title
-        )
-      )}
-      {description && (
-        typeof description === 'string' ? (
+        ))}
+      {description &&
+        (typeof description === "string" ? (
           <Typography
             variant={isMediumSize ? "captionRegular" : "bodyMRegular"}
             color={isMediumSize ? "neutral/50" : "neutral/10"}
@@ -83,8 +86,7 @@ const DesktopAlert: React.FC<AlertProps> = ({
           </Typography>
         ) : (
           description
-        )
-      )}
+        ))}
     </Column>
   );
 
@@ -92,10 +94,17 @@ const DesktopAlert: React.FC<AlertProps> = ({
     <>
       {onActionClick && (
         <Button
-          variant="contained"
+          variant={
+            variant === "white"
+              ? "tonal"
+              : variant === "error"
+                ? "text"
+                : "contained"
+          }
           onClick={onActionClick}
           color={getButtonColor(variant)}
           disabled={actionDisabled}
+          size="large"
         >
           {buttonLabel}
         </Button>
@@ -105,6 +114,7 @@ const DesktopAlert: React.FC<AlertProps> = ({
           variant="outlined"
           onClick={onClose}
           color={getButtonColor(variant)}
+          size="large"
         >
           {onCloseLabel}
         </Button>
@@ -115,18 +125,17 @@ const DesktopAlert: React.FC<AlertProps> = ({
   const renderChevronButton = () => (
     <>
       {onActionClick && (
-            <Box
-            sx={{ cursor: "pointer" }}
-            onClick={onActionClick}
-            display="flex"
-            alignItems="center"
-          >
-            <Icon size={16}>arrow-right-01</Icon>
-          </Box>
+        <Box
+          sx={{ cursor: "pointer" }}
+          onClick={onActionClick}
+          display="flex"
+          alignItems="center"
+        >
+          <Icon size={16}>arrow-right-01</Icon>
+        </Box>
       )}
     </>
   );
-
 
   const renderActions = () => {
     if (isMediumSize) {
@@ -149,6 +158,11 @@ const DesktopAlert: React.FC<AlertProps> = ({
       border={borderStyle}
       gap={5}
       alignItems="center"
+      sx={
+        variant === "white"
+          ? { boxShadow: `0px 0px 25px 0px ${neutral[95]}` }
+          : undefined
+      }
     >
       <Row alignItems="center" gap={5} position="relative">
         {image && renderImage(image)}

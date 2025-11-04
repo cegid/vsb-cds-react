@@ -10,7 +10,7 @@ const meta = {
   argTypes: {
     variant: {
       control: { type: "select" },
-      options: ["warning", "error", "info", "success"],
+      options: ["warning", "error", "info", "success", "white"],
       description: "The variant of the alert",
     },
     title: {
@@ -83,6 +83,13 @@ export const AllVariants: Story = {
         image={TestIcon}
         buttonLabel="Retry"
       />
+      <Alert
+        variant="white"
+        title="White variant"
+        description="This is a white alert with tonal primary button"
+        image={TestIcon}
+        buttonLabel="Action"
+      />
     </Column>
   ),
 };
@@ -154,6 +161,15 @@ export const WithActions: Story = {
         image="https://w7.pngwing.com/pngs/980/712/png-transparent-computer-icons-user-avatar-avatar-heroes-silhouette-50x50.png"
         buttonLabel="View"
         onActionClick={() => alert("View clicked!")}
+      />
+      <Alert
+        variant="white"
+        title="White alert with actions"
+        description="White variant with tonal primary button and close action"
+        image={TestIcon}
+        buttonLabel="Take action"
+        onActionClick={() => alert("Action clicked!")}
+        onClose={() => alert("Close clicked!")}
       />
     </Column>
   ),

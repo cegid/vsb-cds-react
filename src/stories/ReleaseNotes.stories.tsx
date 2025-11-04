@@ -29,6 +29,36 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.22.1",
+    changes: [
+      {
+        component: "Alert",
+        type: "fix",
+        description: "Design fixes",
+      },
+      {
+        component: "Switch",
+        type: "fix",
+        description: "design fixes",
+      },
+      {
+        component: "Checkbox",
+        type: "fix",
+        description: "design fixes",
+      },
+      {
+        component: "IconButton",
+        type: "fix",
+        description: "design fixes",
+      },
+      {
+        component: "Button",
+        type: "fix",
+        description: "Design fixes",
+      }
+    ],
+  },
+  {
     version: "1.22.0",
     changes: [
       {
