@@ -333,6 +333,10 @@ const meta = {
       description:
         "Display mode for totals: 'simple' (default), 'detailed', or 'none'",
     },
+    showTypeSelector: {
+      control: "boolean",
+      description: "Whether to show the chart type selector button (default: true)",
+    },
   },
   args: {
     type: "verticalBar",
@@ -371,7 +375,7 @@ export const VerticalBarChart: Story = {
     backgroundColor: "primary",
     data: sampleBarData,
   },
-  render: (args) => <Chart {...args} />,
+  render: (args) => <Chart showTypeSelector={false} {...args} />,
 };
 
 export const HorizontalBarChart: Story = {

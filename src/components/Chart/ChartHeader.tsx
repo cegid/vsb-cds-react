@@ -21,6 +21,7 @@ interface ChartHeaderProps {
   currentType: ChartType;
   onTypeChange: (type: ChartType) => void;
   moreActions?: ChartAction[];
+  showTypeSelector?: boolean;
 }
 
 const ChartHeader: React.FC<ChartHeaderProps> = ({
@@ -29,6 +30,7 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
   currentType,
   onTypeChange,
   moreActions = [],
+  showTypeSelector = true,
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -49,7 +51,7 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
     return 1;
   };
 
-  const shouldShowTypeButton = getAvailableTypesCount(currentType) > 1;
+  const shouldShowTypeButton = showTypeSelector && getAvailableTypesCount(currentType) > 1;
 
   return (
     <Row gap={4}>

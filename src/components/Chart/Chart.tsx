@@ -136,6 +136,11 @@ export interface ChartProps extends ChartCoreProps {
    * />
    */
   totalBadges?: Record<string, BadgeProps>;
+  /**
+   * Whether to show the chart type selector button
+   * @default true
+   */
+  showTypeSelector?: boolean;
 }
 
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
@@ -149,6 +154,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       compactDisplay,
       moreActions,
       totalBadges,
+      showTypeSelector = true,
       ...chartProps
     },
     ref
@@ -384,6 +390,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             currentType={currentChartType}
             onTypeChange={setCurrentChartType}
             moreActions={moreActions}
+            showTypeSelector={showTypeSelector}
           />
 
           {totalsDisplayMode !== "none" && (
