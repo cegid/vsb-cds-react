@@ -136,6 +136,22 @@ export interface ChartCoreProps {
   showVerticalGrid?: boolean;
   /** Whether to display horizontal grid lines */
   showHorizontalGrid?: boolean;
+  /**
+   * Style of vertical grid lines
+   * - 'solid': Solid line (default)
+   * - 'dashed': Dashed line [5, 5]
+   * - 'dotted': Dotted line [2, 2]
+   * - number[]: Custom dash pattern [dash, gap, dash, gap, ...]
+   */
+  verticalGridStyle?: 'solid' | 'dashed' | 'dotted' | number[];
+  /**
+   * Style of horizontal grid lines
+   * - 'solid': Solid line (default)
+   * - 'dashed': Dashed line [5, 5]
+   * - 'dotted': Dotted line [2, 2]
+   * - number[]: Custom dash pattern [dash, gap, dash, gap, ...]
+   */
+  horizontalGridStyle?: 'solid' | 'dashed' | 'dotted' | number[];
   /** Whether to show interactive tooltips */
   showTooltip?: boolean;
   /** Chart title text */
@@ -178,6 +194,26 @@ const TooltipDivider = styled(Box)(({ theme }) => ({
   width: "calc(100% + 24px)",
 }));
 
+const getGridLineStyle = (
+  style: 'solid' | 'dashed' | 'dotted' | number[] | undefined
+): number[] | undefined => {
+  console.log('🎨 Grid style:', style);
+  if (!style || style === 'solid') {
+    console.log('  → Returning undefined (solid)');
+    return undefined;
+  }
+  if (style === 'dashed') {
+    console.log('  → Returning [5, 5] (dashed)');
+    return [5, 5];
+  }
+  if (style === 'dotted') {
+    console.log('  → Returning [2, 2] (dotted)');
+    return [2, 2];
+  }
+  console.log('  → Returning custom:', style);
+  return style;
+};
+
 const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
   (
     {
@@ -189,6 +225,8 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
       className,
       showVerticalGrid = false,
       showHorizontalGrid = true,
+      verticalGridStyle = 'solid',
+      horizontalGridStyle = 'solid',
       showTooltip = true,
       title = "Title",
       hiddenDatasets = new Set(),
@@ -742,6 +780,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                 grid: {
                   display: showVerticalGrid,
                   color: borderNeutral,
+                  borderDash: (context: any) => {
+                    return getGridLineStyle(verticalGridStyle) || [];
+                  },
                 },
                 ticks: {
                   padding: 10,
@@ -756,6 +797,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                 grid: {
                   display: showHorizontalGrid,
                   color: borderNeutral,
+                  borderDash: (context: any) => {
+                    return getGridLineStyle(horizontalGridStyle) || [];
+                  },
                 },
                 ticks: {
                   padding: 10,
@@ -814,6 +858,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             grid: {
               display: showVerticalGrid,
               color: borderNeutral,
+              borderDash: (context: any) => {
+                return getGridLineStyle(verticalGridStyle) || [];
+              },
             },
             ticks: {
               padding: 10,
@@ -831,6 +878,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             grid: {
               display: showHorizontalGrid,
               color: borderNeutral,
+              borderDash: (context: any) => {
+                return getGridLineStyle(horizontalGridStyle) || [];
+              },
             },
             ticks: {
               padding: 10,
@@ -866,10 +916,15 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
       indexAxis,
       showVerticalGrid,
       showHorizontalGrid,
+      verticalGridStyle,
+      horizontalGridStyle,
       showTooltip,
       externalTooltipHandler,
       options
     ]);
+
+    console.log('📊 Final Chart Options:', defaultOptions);
+    console.log('📊 Scales:', defaultOptions.scales);
 
     const renderChart = () => {
       const commonProps = {
