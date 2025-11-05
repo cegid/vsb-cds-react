@@ -304,6 +304,16 @@ const meta = {
       control: "boolean",
       description: "Whether to show horizontal grid lines (Y-axis)",
     },
+    verticalGridStyle: {
+      control: "select",
+      options: ["solid", "dashed", "dotted"],
+      description: "Style of vertical grid lines: solid (default), dashed [5,5], or dotted [2,2]",
+    },
+    horizontalGridStyle: {
+      control: "select",
+      options: ["solid", "dashed", "dotted"],
+      description: "Style of horizontal grid lines: solid (default), dashed [5,5], or dotted [2,2]",
+    },
     showTooltip: {
       control: "boolean",
       description: "Whether to show tooltips on hover",
@@ -664,6 +674,30 @@ export const DashedLines: Story = {
     totalsDisplayMode: "detailed",
     totalSymbol: "€",
     compactDisplay: true,
+    moreActions: sampleActions,
+    showVerticalGrid: true,
+    showHorizontalGrid: true,
+    verticalGridStyle: "dashed",
+    horizontalGridStyle: "dashed",
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const GridStyles: Story = {
+  args: {
+    type: "line",
+    data: sampleLineData,
+    width: 900,
+    height: 400,
+    backgroundColor: "neutral",
+    title: "Chart with Grid Styles",
+    totalsDisplayMode: "simple",
+    totalSymbol: "€",
+    compactDisplay: true,
+    showVerticalGrid: true,
+    showHorizontalGrid: true,
+    verticalGridStyle: "dashed",
+    horizontalGridStyle: "dotted",
     moreActions: sampleActions,
   },
   render: (args) => <Chart {...args} />,
