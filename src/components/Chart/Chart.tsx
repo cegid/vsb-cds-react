@@ -14,6 +14,7 @@ import { BadgeProps } from "../Badge";
 
 export type { ChartType, ChartDataset, CustomChartData } from "./ChartCore";
 export type { ChartAction } from "./ChartHeader";
+export type { PeriodFilter } from "./ChartPeriodPopper";
 
 export type TotalsDisplayMode = "simple" | "detailed" | "none";
 
@@ -136,6 +137,16 @@ export interface ChartProps extends ChartCoreProps {
    * />
    */
   totalBadges?: Record<string, BadgeProps>;
+  /**
+   * Whether to show the chart type selector button
+   * @default true
+   */
+  showTypeSelector?: boolean;
+  /**
+   * Whether to show the period filter button
+   * @default false
+   */
+  showPeriodFilter?: boolean;
 }
 
 const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
@@ -149,6 +160,8 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       compactDisplay,
       moreActions,
       totalBadges,
+      showTypeSelector = true,
+      showPeriodFilter = false,
       ...chartProps
     },
     ref
@@ -157,6 +170,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
     const [currentChartType, setCurrentChartType] = React.useState<ChartType>(
       chartProps.type
     );
+    const [selectedPeriod, setSelectedPeriod] = React.useState<3 | 6 | 12>(3);
 
     const [hiddenDatasets, setHiddenDatasets] = React.useState<Set<number>>(
       new Set()
@@ -174,6 +188,35 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
     const isPieOrDoughnut =
       currentChartType === "pie" || currentChartType === "doughnut";
 
+    // Filtrage des données selon la période sélectionnée
+    const filteredDataByPeriod = React.useMemo(() => {
+      if (!showPeriodFilter) {
+        return chartProps.data;
+      }
+
+      // Utiliser le dernier label disponible dans les données comme référence
+      const lastLabelIndex = chartProps.data.labels.length - 1;
+
+      // Calculer les indices à garder selon la période
+      // On prend les N derniers mois (selectedPeriod) des données disponibles
+      const startIndex = Math.max(0, lastLabelIndex - selectedPeriod + 1);
+      const endIndex = lastLabelIndex + 1; // +1 car slice est exclusif à la fin
+
+      // Filtrer les labels
+      const filteredLabels = chartProps.data.labels.slice(startIndex, endIndex);
+
+      // Filtrer les datasets
+      const filteredDatasets = chartProps.data.datasets.map(dataset => ({
+        ...dataset,
+        data: dataset.data.slice(startIndex, endIndex)
+      }));
+
+      return {
+        labels: filteredLabels,
+        datasets: filteredDatasets
+      };
+    }, [chartProps.data, showPeriodFilter, selectedPeriod]);
+
     React.useEffect(() => {
       const checkMobileLayout = () => {
         if (containerRef.current && isPieOrDoughnut) {
@@ -189,7 +232,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
 
     const totalValue = React.useMemo(() => {
       if (isPieOrDoughnut) {
-        const dataset = chartProps.data.datasets[0];
+        const dataset = filteredDataByPeriod.datasets[0];
         if (!dataset) return 0;
         return dataset.data.reduce((sum, value, index) => {
           if (hiddenDataPoints.has(index)) return sum;
@@ -197,22 +240,22 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
         }, 0);
       }
 
-      return chartProps.data.datasets.reduce((total, dataset, index) => {
+      return filteredDataByPeriod.datasets.reduce((total, dataset, index) => {
         if (hiddenDatasets.has(index)) return total;
         return total + dataset.data.reduce((sum, value) => sum + value, 0);
       }, 0);
-    }, [chartProps.data, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut]);
+    }, [filteredDataByPeriod, hiddenDatasets, hiddenDataPoints, isPieOrDoughnut]);
 
     const detailedTotals = React.useMemo(() => {
       if (totalsDisplayMode === "none") return [];
 
       if (isPieOrDoughnut) {
-        const dataset = chartProps.data.datasets[0];
+        const dataset = filteredDataByPeriod.datasets[0];
         if (!dataset) return [];
 
         if (totalsDisplayMode === "detailed") {
           return dataset.data.map((value, index) => ({
-            label: chartProps.data.labels[index] || `Item ${index + 1}`,
+            label: filteredDataByPeriod.labels[index] || `Item ${index + 1}`,
             total: value,
             datasetIndex: index,
           }));
@@ -221,7 +264,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             .map((value, index) => {
               if (hiddenDataPoints.has(index)) return null;
               return {
-                label: chartProps.data.labels[index] || `Item ${index + 1}`,
+                label: filteredDataByPeriod.labels[index] || `Item ${index + 1}`,
                 total: value,
                 datasetIndex: index,
               };
@@ -239,7 +282,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       }
 
       if (totalsDisplayMode === "detailed") {
-        return chartProps.data.datasets.map((dataset, datasetIndex) => {
+        return filteredDataByPeriod.datasets.map((dataset, datasetIndex) => {
           const total = dataset.data.reduce((sum, value) => sum + value, 0);
           return {
             label: dataset.label || `Dataset ${datasetIndex + 1}`,
@@ -248,7 +291,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           };
         });
       } else {
-        return chartProps.data.datasets
+        return filteredDataByPeriod.datasets
           .map((dataset, datasetIndex) => {
             if (hiddenDatasets.has(datasetIndex)) return null;
             const total = dataset.data.reduce((sum, value) => sum + value, 0);
@@ -266,7 +309,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
           );
       }
     }, [
-      chartProps.data,
+      filteredDataByPeriod,
       hiddenDatasets,
       hiddenDataPoints,
       isPieOrDoughnut,
@@ -275,13 +318,13 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
 
     const filteredChartData = React.useMemo(() => {
       if (isPieOrDoughnut) {
-        const originalDataset = chartProps.data.datasets[0];
-        if (!originalDataset) return chartProps.data;
+        const originalDataset = filteredDataByPeriod.datasets[0];
+        if (!originalDataset) return filteredDataByPeriod;
 
         const filteredData = originalDataset.data.filter(
           (_, index) => !hiddenDataPoints.has(index)
         );
-        const filteredLabels = chartProps.data.labels.filter(
+        const filteredLabels = filteredDataByPeriod.labels.filter(
           (_, index) => !hiddenDataPoints.has(index)
         );
 
@@ -314,13 +357,13 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
       }
 
       return {
-        ...chartProps.data,
-        datasets: chartProps.data.datasets.filter(
+        ...filteredDataByPeriod,
+        datasets: filteredDataByPeriod.datasets.filter(
           (_, index) => !hiddenDatasets.has(index)
         ),
       };
     }, [
-      chartProps.data,
+      filteredDataByPeriod,
       hiddenDatasets,
       hiddenDataPoints,
       isPieOrDoughnut,
@@ -384,6 +427,10 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             currentType={currentChartType}
             onTypeChange={setCurrentChartType}
             moreActions={moreActions}
+            showTypeSelector={showTypeSelector}
+            showPeriodFilter={showPeriodFilter}
+            selectedPeriod={selectedPeriod}
+            onPeriodChange={setSelectedPeriod}
           />
 
           {totalsDisplayMode !== "none" && (
@@ -420,7 +467,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                   </Box>
                   <Column gap={2} minWidth="200px" width="auto">
                     <ChartLegend
-                      datasets={chartProps.data.datasets}
+                      datasets={filteredDataByPeriod.datasets}
                       chartType={currentChartType}
                       hiddenDatasets={
                         isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
@@ -429,14 +476,14 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                       onToggleDataset={toggleDataset}
                       onMouseEnter={handleMouseEnter}
                       onMouseLeave={handleMouseLeave}
-                      labels={chartProps.data.labels}
+                      labels={filteredDataByPeriod.labels}
                     />
                   </Column>
                 </Row>
               ) : (
                 <>
                   <ChartLegend
-                    datasets={chartProps.data.datasets}
+                    datasets={filteredDataByPeriod.datasets}
                     chartType={currentChartType}
                     hiddenDatasets={
                       isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
@@ -445,7 +492,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                     onToggleDataset={toggleDataset}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
-                    labels={chartProps.data.labels}
+                    labels={filteredDataByPeriod.labels}
                     isMobileLayout={isMobileLayout}
                   />
                   <ChartCore
@@ -459,7 +506,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
             ) : (
               <>
                 <ChartLegend
-                  datasets={chartProps.data.datasets}
+                  datasets={filteredDataByPeriod.datasets}
                   chartType={currentChartType}
                   hiddenDatasets={
                     isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
@@ -468,7 +515,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
                   onToggleDataset={toggleDataset}
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
-                  labels={chartProps.data.labels}
+                  labels={filteredDataByPeriod.labels}
                 />
                 <ChartCore
                   ref={ref}

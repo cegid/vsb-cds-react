@@ -28,6 +28,39 @@ const sampleActions: ChartAction[] = [
   },
 ];
 
+const monthlyData: CustomChartData = {
+  labels: [
+    "Octobre",
+    "Novembre",
+    "Décembre",
+    "Janvier",
+    "Février",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juillet",
+    "Août",
+    "Septembre",
+  ],
+  datasets: [
+    {
+      label: "10/24",
+      data: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200],
+      backgroundColor: "primary/60",
+      borderColor: "primary/50",
+      borderWidth: 1,
+    },
+    {
+      label: "10/25",
+      data: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200],
+      backgroundColor: "success/60",
+      borderColor: "success/50",
+      borderWidth: 1,
+    },
+  ],
+};
+
 const sampleBarData: CustomChartData = {
   labels: ["Q1", "Q2", "Q3", "Q4"],
   datasets: [
@@ -304,6 +337,16 @@ const meta = {
       control: "boolean",
       description: "Whether to show horizontal grid lines (Y-axis)",
     },
+    verticalGridStyle: {
+      control: "select",
+      options: ["solid", "dashed", "dotted"],
+      description: "Style of vertical grid lines: solid (default), dashed [5,5], or dotted [2,2]",
+    },
+    horizontalGridStyle: {
+      control: "select",
+      options: ["solid", "dashed", "dotted"],
+      description: "Style of horizontal grid lines: solid (default), dashed [5,5], or dotted [2,2]",
+    },
     showTooltip: {
       control: "boolean",
       description: "Whether to show tooltips on hover",
@@ -323,6 +366,14 @@ const meta = {
       description:
         "Display mode for totals: 'simple' (default), 'detailed', or 'none'",
     },
+    showTypeSelector: {
+      control: "boolean",
+      description: "Whether to show the chart type selector button (default: true)",
+    },
+    showPeriodFilter: {
+      control: "boolean",
+      description: "Whether to show the period filter button (default: false)",
+    },
   },
   args: {
     type: "verticalBar",
@@ -331,7 +382,7 @@ const meta = {
     showHorizontalGrid: true,
     showTooltip: true,
     title: "Titre",
-    data: sampleBarData,
+    data: monthlyData,
     totalsDisplayMode: "simple",
     moreActions: sampleActions,
   },
@@ -339,6 +390,20 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "primary",
+    data: monthlyData,
+    title: "Données mensuelles",
+    showVerticalGrid: true,
+    showHorizontalGrid: true,
+    totalsDisplayMode: "simple",
+    showPeriodFilter: true,
+  },
+  render: (args) => <Chart width={600} {...args} />,
+};
 
 export const MixedChart: Story = {
   args: {
@@ -361,7 +426,7 @@ export const VerticalBarChart: Story = {
     backgroundColor: "primary",
     data: sampleBarData,
   },
-  render: (args) => <Chart {...args} />,
+  render: (args) => <Chart showTypeSelector={false} {...args} />,
 };
 
 export const HorizontalBarChart: Story = {
@@ -664,6 +729,30 @@ export const DashedLines: Story = {
     totalsDisplayMode: "detailed",
     totalSymbol: "€",
     compactDisplay: true,
+    moreActions: sampleActions,
+    showVerticalGrid: true,
+    showHorizontalGrid: true,
+    verticalGridStyle: "dashed",
+    horizontalGridStyle: "dashed",
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const GridStyles: Story = {
+  args: {
+    type: "line",
+    data: sampleLineData,
+    width: 900,
+    height: 400,
+    backgroundColor: "neutral",
+    title: "Chart with Grid Styles",
+    totalsDisplayMode: "simple",
+    totalSymbol: "€",
+    compactDisplay: true,
+    showVerticalGrid: true,
+    showHorizontalGrid: true,
+    verticalGridStyle: "dashed",
+    horizontalGridStyle: "dotted",
     moreActions: sampleActions,
   },
   render: (args) => <Chart {...args} />,

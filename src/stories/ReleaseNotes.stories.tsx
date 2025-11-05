@@ -29,6 +29,25 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.22.2",
+    changes: [
+      {
+        component: "Chart",
+        type: "enhancement",
+        description: [
+          "add filter date section",
+          "add props to remove chart type selector",
+          "add dash line options"
+        ],
+      },
+      {
+        component: "Select",
+        type: "fix",
+        description: "Design Fixes",
+      }
+    ],
+  },
+  {
     version: "1.22.1",
     changes: [
       {
