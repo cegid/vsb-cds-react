@@ -69,7 +69,7 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
     showTypeSelector && getAvailableTypesCount(currentType) > 1;
 
   const getPeriodLabel = (period: PeriodFilter) => {
-    return `${period} mois`;
+    return `${period}M`;
   };
 
   return (
