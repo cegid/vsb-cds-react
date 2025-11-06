@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.22.5",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: "remove chevron icons on toals detailed display",
+      }
+    ],
+  },
+  {
     version: "1.22.4",
     changes: [
       {
