@@ -13,9 +13,9 @@ interface PeriodOption {
 }
 
 const periodOptions: PeriodOption[] = [
-  { value: 3, label: "3 derniers mois" },
-  { value: 6, label: "6 derniers mois" },
-  { value: 12, label: "12 derniers mois" },
+  { value: 3, label: "3M" },
+  { value: 6, label: "6M" },
+  { value: 12, label: "12M" },
 ];
 
 interface ChartPeriodPopperProps {
