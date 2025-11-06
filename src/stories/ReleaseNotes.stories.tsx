@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.22.4",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: "Chart period popper naming",
+      }
+    ],
+  },
+  {
     version: "1.22.3",
     changes: [
       {
