@@ -209,6 +209,9 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
       currentIndex + itemsPerView
     );
 
+    // Vérifier s'il y a besoin de navigation (plus d'éléments que ce qui peut être affiché)
+    const needsNavigation = detailedTotals.length > itemsPerView;
+
     return (
       <Row alignItems="center" width="100%" gap={2}>
         <Box
@@ -239,7 +242,7 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
           >
             {visibleTotals.map((item, index) => {
               let datasetColor = "#666666";
-              
+
               if (isPieOrDoughnut) {
                 const dataset = datasets[0];
                 if (dataset?.backgroundColor && Array.isArray(dataset.backgroundColor)) {
@@ -336,28 +339,32 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
             })}
           </Row>
         </Box>
-        <IconButton
-          color="neutral"
-          variant="iconOnly"
-          size="small"
-          onClick={handlePrevious}
-          disabled={!canScrollLeft}
-        >
-          <Icon size={16} variant="stroke">
-            arrow-left-01
-          </Icon>
-        </IconButton>
-        <IconButton
-          color="neutral"
-          variant="iconOnly"
-          size="small"
-          onClick={handleNext}
-          disabled={!canScrollRight}
-        >
-          <Icon size={16} variant="stroke">
-            arrow-right-01
-          </Icon>
-        </IconButton>
+        {needsNavigation && (
+          <>
+            <IconButton
+              color="neutral"
+              variant="iconOnly"
+              size="small"
+              onClick={handlePrevious}
+              disabled={!canScrollLeft}
+            >
+              <Icon size={16} variant="stroke">
+                arrow-left-01
+              </Icon>
+            </IconButton>
+            <IconButton
+              color="neutral"
+              variant="iconOnly"
+              size="small"
+              onClick={handleNext}
+              disabled={!canScrollRight}
+            >
+              <Icon size={16} variant="stroke">
+                arrow-right-01
+              </Icon>
+            </IconButton>
+          </>
+        )}
       </Row>
     );
   }
