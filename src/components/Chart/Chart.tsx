@@ -170,7 +170,7 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
     const [currentChartType, setCurrentChartType] = React.useState<ChartType>(
       chartProps.type
     );
-    const [selectedPeriod, setSelectedPeriod] = React.useState<3 | 6 | 12>(3);
+    const [selectedPeriod, setSelectedPeriod] = React.useState<3 | 6 | 12>(12);
 
     const [hiddenDatasets, setHiddenDatasets] = React.useState<Set<number>>(
       new Set()

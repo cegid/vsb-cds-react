@@ -37,7 +37,7 @@ const ChartHeader: React.FC<ChartHeaderProps> = ({
   moreActions = [],
   showTypeSelector = true,
   showPeriodFilter = false,
-  selectedPeriod = 3,
+  selectedPeriod = 12,
   onPeriodChange,
 }) => {
   const theme = useTheme();
