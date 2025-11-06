@@ -1,6 +1,7 @@
 import React from "react";
 import Column from "../Column";
 import { Popper } from "@cegid/cds-react";
+import { ClickAwayListener } from "@mui/material";
 import { ELEVATION_CSS, neutral } from "../../theme";
 import Typography from "../Typography";
 import Row from "../Row";
@@ -32,59 +33,63 @@ const ChartPeriodPopper: React.FC<ChartPeriodPopperProps> = ({
   onPeriodSelect,
   currentPeriod,
 }) => {
+  if (!open) return null;
+
   return (
-    <Popper
-      open={open}
-      anchorEl={anchorEl}
-      placement="bottom-start"
-      style={{ zIndex: 9999 }}
-    >
-      <Column
-        p={4}
-        mt={2}
-        borderRadius={4}
-        backgroundColor="white"
-        border={{ color: "neutral/60", opacity: 30 }}
-        boxShadow={ELEVATION_CSS.LEVEL_6}
-        gap={2}
+    <ClickAwayListener onClickAway={onClose}>
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        placement="bottom-start"
+        style={{ zIndex: 9999 }}
       >
-        {periodOptions.map((option) => (
-          <Row
-            key={option.value}
-            py={2}
-            px={4}
-            borderRadius={4}
-            backgroundColor={
-              currentPeriod === option.value ? "primary/95" : "transparent"
-            }
-            style={{
-              cursor: "pointer",
-              transition: "background-color 0.2s ease"
-            }}
-            onMouseEnter={(e) => {
-              if (currentPeriod !== option.value) {
-                e.currentTarget.style.backgroundColor = neutral[95];
+        <Column
+          p={4}
+          mt={2}
+          borderRadius={4}
+          backgroundColor="white"
+          border={{ color: "neutral/60", opacity: 30 }}
+          boxShadow={ELEVATION_CSS.LEVEL_6}
+          gap={2}
+        >
+          {periodOptions.map((option) => (
+            <Row
+              key={option.value}
+              py={2}
+              px={4}
+              borderRadius={4}
+              backgroundColor={
+                currentPeriod === option.value ? "primary/95" : "transparent"
               }
-            }}
-            onMouseLeave={(e) => {
-              if (currentPeriod !== option.value) {
-                e.currentTarget.style.backgroundColor = "transparent";
-              }
-            }}
-            onClick={() => {
-              onPeriodSelect && onPeriodSelect(option.value);
-              onClose();
-            }}
-            alignItems="center"
-            gap={4}
-          >
-            <Typography variant="bodySMedium" color="neutral/50">
-              {option.label}
-            </Typography>
-          </Row>
-        ))}
-      </Column>
-    </Popper>
+              style={{
+                cursor: "pointer",
+                transition: "background-color 0.2s ease"
+              }}
+              onMouseEnter={(e) => {
+                if (currentPeriod !== option.value) {
+                  e.currentTarget.style.backgroundColor = neutral[95];
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (currentPeriod !== option.value) {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }
+              }}
+              onClick={() => {
+                onPeriodSelect && onPeriodSelect(option.value);
+                onClose();
+              }}
+              alignItems="center"
+              gap={4}
+            >
+              <Typography variant="bodySMedium" color="neutral/50">
+                {option.label}
+              </Typography>
+            </Row>
+          ))}
+        </Column>
+      </Popper>
+    </ClickAwayListener>
   );
 };
 
