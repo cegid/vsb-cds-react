@@ -55,7 +55,9 @@ const TabRoot = styled(Box)<{ selected?: boolean; disabled?: boolean }>(
   })
 );
 
-const TabContent = styled(Box)<{
+const TabContent = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isHovered",
+})<{
   selected?: boolean;
   disabled?: boolean;
   isHovered?: boolean;

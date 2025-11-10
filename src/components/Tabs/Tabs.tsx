@@ -28,7 +28,9 @@ export interface TabsProps extends CegidTabsProps {
   centered?: boolean;
 }
 
-const TabsRoot = styled(Box)<{ fullwidth?: boolean }>(({ fullwidth }) => ({
+const TabsRoot = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "fullwidth",
+})<{ fullwidth?: boolean }>(({ fullwidth }) => ({
   display: "flex",
   alignItems: "center",
   position: "relative",
