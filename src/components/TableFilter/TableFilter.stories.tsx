@@ -11,6 +11,8 @@ import Icon from "../Icon";
 import Box from "../Box";
 import Typography from "../Typography";
 import Column from "../Column";
+import Tabs from "../Tabs";
+import Tab from "../Tab";
 
 import { useState } from "react";
 
@@ -103,6 +105,7 @@ export const Default: Story = {
     const [filterValues, setFilterValues] = useState<
       Partial<Record<keyof ProductData, string>>
     >({});
+    const [tabsValue, setTabsValue] = useState(0);
 
     const handleFilterApply = (
       key: keyof ProductData,
@@ -116,6 +119,10 @@ export const Default: Story = {
         ...prev,
         [key]: value,
       }));
+    };
+
+    const handleTabsChange = (event: React.SyntheticEvent, newValue: number) => {
+      setTabsValue(newValue);
     };
 
     const filteredProducts = products.filter((product) => {
@@ -215,6 +222,17 @@ export const Default: Story = {
           sampleData={sampleProduct}
           onFilterApply={handleFilterApply}
           activeFilters={activeFilters}
+          leftContent={
+            <Tabs
+              value={tabsValue}
+              onChange={handleTabsChange}
+              bottomLine={false}
+            >
+              <Tab label="Particulier" />
+              <Tab label="Professionnel" />
+            </Tabs>
+          }
+          searchPlaceholder="Cherchez par nom, tél, type..."
         />
         <Table aria-label="products table with filters">
           <TableHead>

@@ -47,6 +47,10 @@ export interface TableFilterProps<T = any> {
   ) => void;
   activeFilters?: (keyof T)[];
   sampleData?: T;
+  leftContent?: React.ReactNode;
+  searchValue?: string;
+  onSearchChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  searchPlaceholder?: string;
 }
 
 const TableFilter = <T,>({
@@ -54,13 +58,19 @@ const TableFilter = <T,>({
   onFilterApply,
   activeFilters = [],
   sampleData,
+  leftContent,
+  searchValue,
+  onSearchChange,
+  searchPlaceholder,
 }: TableFilterProps<T>) => {
   const [popperAnchor, setPopperAnchor] = useState<HTMLElement | null>(null);
   const [selectedKey, setSelectedKey] = useState<keyof T | null>(null);
   const [filterValue, setFilterValue] = useState("");
   const [filterButtonAnchor, setFilterButtonAnchor] =
     useState<HTMLElement | null>(null);
-  const [visibleFilters, setVisibleFilters] = useState<Set<keyof T>>(new Set());
+  const [visibleFilters, setVisibleFilters] = useState<Set<keyof T>>(
+    () => new Set(activeFilters)
+  );
   const [filterValues, setFilterValues] = useState<Map<keyof T, string>>(
     new Map()
   );
@@ -197,6 +207,10 @@ const TableFilter = <T,>({
       <FilterHeader
         ref={filterButtonRef}
         onFilterClick={handleFilterButtonClick}
+        leftContent={leftContent}
+        searchValue={searchValue}
+        onSearchChange={onSearchChange}
+        searchPlaceholder={searchPlaceholder}
       />
 
       {visibleFilters.size > 0 && (
