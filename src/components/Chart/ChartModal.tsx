@@ -10,6 +10,7 @@ import Typography from "../Typography";
 import IconButton from "../IconButton";
 import Icon from "../Icon";
 import Box from "../Box";
+import { BadgeProps } from "../Badge";
 import { PaletteNames, parseCustomColor } from "../../theme";
 import { TotalsDisplayMode } from "./Chart";
 
@@ -35,6 +36,10 @@ interface ChartModalProps {
   onToggleDataset: (index: number) => void;
   onMouseEnter: (index: number) => void;
   onMouseLeave: () => void;
+  totalSymbol?: string;
+  decimalPlaces?: number;
+  compactDisplay?: boolean;
+  totalBadges?: Record<string, BadgeProps>;
 }
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -76,6 +81,10 @@ const ChartModal: React.FC<ChartModalProps> = ({
   onToggleDataset,
   onMouseEnter,
   onMouseLeave,
+  totalSymbol,
+  decimalPlaces,
+  compactDisplay,
+  totalBadges,
 }) => {
   const isPieOrDoughnut =
     chartProps.type === "pie" || chartProps.type === "doughnut";
@@ -135,6 +144,10 @@ const ChartModal: React.FC<ChartModalProps> = ({
                 onToggleDataset={onToggleDataset}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
+                totalSymbol={totalSymbol}
+                decimalPlaces={decimalPlaces}
+                compactDisplay={compactDisplay}
+                totalBadges={totalBadges}
               />
             )}
 

@@ -8,6 +8,7 @@ import {
   RADIUS,
   colorPalettes,
 } from "../../theme";
+import { borderNeutral } from "@cegid/vsb-cds-tokens";
 
 export interface CustomSwitchProps {
   /**
@@ -106,11 +107,16 @@ const Switch: React.FC<CustomSwitchProps> = ({
           backgroundColor: "white",
           borderRadius: "50%",
           border: "1px solid",
-          borderColor: currentState ? colorPalettes[color][60] : neutral[90],
+          borderColor: currentState ? colorPalettes[color][60] : borderNeutral,
           boxShadow:
             "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
           transform: currentState ? "translateX(12px)" : "translateX(0px)",
           transition: "transform 0.3s ease-in-out",
+          ...(!disabled && {
+            "&:hover": {
+              borderColor: currentState ? colorPalettes[color][50] : borderNeutral,
+            },
+          }),
         }}
       />
     </Box>

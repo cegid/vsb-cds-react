@@ -41,7 +41,19 @@ function formatNewReleaseNotes(releaseNotesJson) {
         formatted += `        component: "${change.component}",\n`;
       }
       formatted += `        type: "${change.type}",\n`;
-      formatted += `        description: "${change.description.replace(/"/g, '\\"')}",\n`;
+
+      // Handle description as string or array
+      if (Array.isArray(change.description)) {
+        formatted += `        description: [\n`;
+        change.description.forEach((desc, descIndex) => {
+          formatted += `          "${desc.replace(/"/g, '\\"')}"`;
+          formatted += descIndex < change.description.length - 1 ? ',\n' : '\n';
+        });
+        formatted += `        ],\n`;
+      } else {
+        formatted += `        description: "${change.description.replace(/"/g, '\\"')}",\n`;
+      }
+
       formatted += `      }`;
       formatted += index < changes.length - 1 ? ',\n' : '\n';
     });

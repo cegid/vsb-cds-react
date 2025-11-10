@@ -11,6 +11,7 @@ import {
   VARIANT_CONFIG,
 } from "./Alert";
 import Icon from "../Icon";
+import { neutral } from "../../theme/colors";
 
 const MobileAlert: React.FC<AlertProps> = ({
   title,
@@ -27,12 +28,15 @@ const MobileAlert: React.FC<AlertProps> = ({
   const isMediumSize = size === "M";
   const isExtraSmallSize = size === "XS";
 
-  const getBorderStyle = (): BorderProps => ({
-    style: "solid",
-    width: 1,
-    color: config.border,
-    opacity: 30,
-  });
+  const getBorderStyle = (): BorderProps | undefined =>
+    variant === "white"
+      ? undefined
+      : {
+          style: "solid",
+          width: 1,
+          color: config.border,
+          opacity: 30,
+        };
 
   const getImageDimensions = () => ({
     width: isMediumSize ? 50 : 40,
@@ -132,7 +136,7 @@ const MobileAlert: React.FC<AlertProps> = ({
     isMediumSize &&
     onActionClick && (
       <Button
-        variant="contained"
+        variant={variant === "white" ? "tonal" : "contained"}
         onClick={onActionClick}
         color={getButtonColor(variant)}
         disabled={actionDisabled}
@@ -150,6 +154,11 @@ const MobileAlert: React.FC<AlertProps> = ({
       borderRadius={4}
       border={getBorderStyle()}
       gap={5}
+      sx={
+        variant === "white"
+          ? { boxShadow: `0px 0px 25px 0px ${neutral[95]}` }
+          : undefined
+      }
     >
       <Row alignItems="center" gap={5} position="relative">
         {image && renderImage(image)}

@@ -27,8 +27,9 @@ const StyledInput = styled("input")(
     margin: 0,
     width: checkboxSize === "L" ? "20px" : "16px",
     height: checkboxSize === "L" ? "20px" : "16px",
-    borderRadius: checkboxSize === "L" ? "6px" : "3px",
-    border: "1px solid #8095A8",
+    borderRadius: checkboxSize === "L" ? "7px" : "3px",
+    border: "1px solid",
+    borderColor: neutral[70],
     outline: "none",
     cursor: "pointer",
     position: "relative",
@@ -36,7 +37,7 @@ const StyledInput = styled("input")(
     transition: "all 0.2s",
 
     "&:not(:disabled):hover": {
-      borderColor: neutral[70],
+      borderColor: "#0640CD4D",
     },
 
     "&:focus": {

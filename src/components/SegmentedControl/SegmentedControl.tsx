@@ -93,7 +93,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
 
   useEffect(() => {
     updateSliderPosition();
-  }, [selectedIndex]);
+  }, [selectedIndex, selectedGroupActions]);
   
    useEffect(() => {
     const tooltipRenderTimer = setTimeout(updateSliderPosition, 200);
@@ -152,8 +152,6 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
 
     setInternalSelectedIndex(groupIndex);
     selectedAction.onClick();
-
-    setTimeout(updateSliderPosition, 0);
   };
 
   const handleClosePopper = () => {
@@ -178,7 +176,7 @@ const SegmentedControl: React.FC<SegmentedControlProps> = ({
   const sliderBaseStyle: React.CSSProperties = {
     position: "absolute",
     top: "2px",
-    left: "2px",
+    left: "0px",
     height: "calc(100% - 4px)",
     width: "var(--slider-width)",
     backgroundColor: color === "dark" ? neutral[50] : "white",

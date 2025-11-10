@@ -40,8 +40,6 @@ interface CustomTypographyProps
   component?: React.ElementType;
 }
 
-type ShadeKey = keyof IColorPalettes;
-
 const Typography = React.forwardRef<HTMLElement, CustomTypographyProps>(
   (props, ref) => {
     const {

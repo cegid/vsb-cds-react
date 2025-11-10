@@ -36,8 +36,12 @@ export const useDatePicker = ({
   const [rangeSelection, setRangeSelection] = useState<"start" | "end">(
     "start"
   );
-  const [tempWeekRange, setTempWeekRange] = useState<[{start: Date, end: Date}?, {start: Date, end: Date}?]>();
-  const [tempMonthRange, setTempMonthRange] = useState<[{month: number, year: number}?, {month: number, year: number}?]>();
+  const [tempWeekRange, setTempWeekRange] =
+    useState<[{ start: Date; end: Date }?, { start: Date; end: Date }?]>();
+  const [tempMonthRange, setTempMonthRange] =
+    useState<
+      [{ month: number; year: number }?, { month: number; year: number }?]
+    >();
   const [tempYearRange, setTempYearRange] = useState<[number?, number?]>();
 
   const localeLabels = {
@@ -60,9 +64,11 @@ export const useDatePicker = ({
   const handleDateSelect = (date: Date, isWeekMode = false) => {
     if (isWeekMode) {
       const startOfWeek = new Date(date);
-      startOfWeek.setDate(date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1)); // Lundi
+      startOfWeek.setDate(
+        date.getDate() - date.getDay() + (date.getDay() === 0 ? -6 : 1)
+      ); // Monday
       const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 6); // Dimanche
+      endOfWeek.setDate(startOfWeek.getDate() + 6);
 
       if (isDateRange) {
         setTempValue([startOfWeek, endOfWeek]);
@@ -94,7 +100,12 @@ export const useDatePicker = ({
     } else {
       const dateWithCurrentTime = new Date(date);
       const now = new Date();
-      dateWithCurrentTime.setHours(now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+      dateWithCurrentTime.setHours(
+        now.getHours(),
+        now.getMinutes(),
+        now.getSeconds(),
+        now.getMilliseconds()
+      );
       setTempValue(dateWithCurrentTime);
     }
   };
@@ -107,7 +118,9 @@ export const useDatePicker = ({
     setIsOpen(false);
   };
 
-  const handleWeekRangeSelect = (range: [{start: Date, end: Date}?, {start: Date, end: Date}?]) => {
+  const handleWeekRangeSelect = (
+    range: [{ start: Date; end: Date }?, { start: Date; end: Date }?]
+  ) => {
     setTempWeekRange(range);
     if (isDateRange && range[0] && range[1]) {
       setTempValue([range[0].start, range[1].end]);
@@ -118,7 +131,9 @@ export const useDatePicker = ({
     }
   };
 
-  const handleMonthRangeSelect = (range: [{month: number, year: number}?, {month: number, year: number}?]) => {
+  const handleMonthRangeSelect = (
+    range: [{ month: number; year: number }?, { month: number; year: number }?]
+  ) => {
     setTempMonthRange(range);
     if (isDateRange && range[0] && range[1]) {
       const startMonth = new Date(range[0].year, range[0].month, 1);
@@ -149,27 +164,51 @@ export const useDatePicker = ({
   const handleValidate = () => {
     let finalValue = tempValue;
 
-    // Si nous avons une sélection de plage temporaire, l'utiliser
+    // If we have a temporary range selection, use it
     if (tempWeekRange && tempWeekRange[0] && tempWeekRange[1]) {
       finalValue = [tempWeekRange[0].start, tempWeekRange[1].end];
     } else if (tempWeekRange && tempWeekRange[0] && !tempWeekRange[1]) {
-      // Sélection unique de semaine : créer une range du début à la fin de la semaine
+      // Single week selection: create a range from start to end of the week
       finalValue = [tempWeekRange[0].start, tempWeekRange[0].end];
     } else if (tempMonthRange && tempMonthRange[0] && tempMonthRange[1]) {
-      const startMonth = new Date(tempMonthRange[0].year, tempMonthRange[0].month, 1);
-      const endMonth = new Date(tempMonthRange[1].year, tempMonthRange[1].month + 1, 0);
+      const startMonth = new Date(
+        tempMonthRange[0].year,
+        tempMonthRange[0].month,
+        1
+      );
+      const endMonth = new Date(
+        tempMonthRange[1].year,
+        tempMonthRange[1].month + 1,
+        0
+      );
       finalValue = [startMonth, endMonth];
     } else if (tempMonthRange && tempMonthRange[0] && !tempMonthRange[1]) {
-      // Sélection unique de mois : créer une range du 1er au dernier jour du mois
-      const startMonth = new Date(tempMonthRange[0].year, tempMonthRange[0].month, 1);
-      const endMonth = new Date(tempMonthRange[0].year, tempMonthRange[0].month + 1, 0);
+      // Single month selection: create a range from 1st to last day of the month
+      const startMonth = new Date(
+        tempMonthRange[0].year,
+        tempMonthRange[0].month,
+        1
+      );
+      const endMonth = new Date(
+        tempMonthRange[0].year,
+        tempMonthRange[0].month + 1,
+        0
+      );
       finalValue = [startMonth, endMonth];
-    } else if (tempYearRange && tempYearRange[0] !== undefined && tempYearRange[1] !== undefined) {
+    } else if (
+      tempYearRange &&
+      tempYearRange[0] !== undefined &&
+      tempYearRange[1] !== undefined
+    ) {
       const startYear = new Date(tempYearRange[0], 0, 1);
       const endYear = new Date(tempYearRange[1], 11, 31);
       finalValue = [startYear, endYear];
-    } else if (tempYearRange && tempYearRange[0] !== undefined && tempYearRange[1] === undefined) {
-      // Sélection unique d'année : créer une range du 1er janvier au 31 décembre
+    } else if (
+      tempYearRange &&
+      tempYearRange[0] !== undefined &&
+      tempYearRange[1] === undefined
+    ) {
+      // Single year selection: create a range from January 1st to December 31st
       const startYear = new Date(tempYearRange[0], 0, 1);
       const endYear = new Date(tempYearRange[0], 11, 31);
       finalValue = [startYear, endYear];
@@ -180,8 +219,8 @@ export const useDatePicker = ({
     }
     setDisplayValue(finalValue);
     setIsOpen(false);
-    
-    // Reset des sélections temporaires
+
+    // Reset temporary selections
     setTempWeekRange(undefined);
     setTempMonthRange(undefined);
     setTempYearRange(undefined);

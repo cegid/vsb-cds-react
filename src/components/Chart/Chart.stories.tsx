@@ -1,6 +1,65 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
-import Chart, { CustomChartData } from "./Chart";
+import Chart, { CustomChartData, ChartAction } from "./Chart";
+import Row from "../Row";
+import Icon from "../Icon";
+import Typography from "../Typography";
+
+const sampleActions: ChartAction[] = [
+  {
+    label: "Exporter en PDF",
+    icon: "file-download-02",
+    onClick: () => alert("Export PDF clicked"),
+  },
+  {
+    label: "Copier les données",
+    icon: "copy-01",
+    onClick: () => alert("Copy data clicked"),
+  },
+  {
+    label: "Partager",
+    icon: "share-06",
+    onClick: () => alert("Share clicked"),
+  },
+  {
+    label: "Imprimer",
+    icon: "printer",
+    onClick: () => alert("Print clicked"),
+  },
+];
+
+const monthlyData: CustomChartData = {
+  labels: [
+    "Octobre",
+    "Novembre",
+    "Décembre",
+    "Janvier",
+    "Février",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juillet",
+    "Août",
+    "Septembre",
+  ],
+  datasets: [
+    {
+      label: "10/24",
+      data: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200],
+      backgroundColor: "primary/60",
+      borderColor: "primary/50",
+      borderWidth: 1,
+    },
+    {
+      label: "10/25",
+      data: [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200],
+      backgroundColor: "success/60",
+      borderColor: "success/50",
+      borderWidth: 1,
+    },
+  ],
+};
 
 const sampleBarData: CustomChartData = {
   labels: ["Q1", "Q2", "Q3", "Q4"],
@@ -252,7 +311,14 @@ const meta = {
   argTypes: {
     type: {
       control: "select",
-      options: ["verticalBar", "horizontalBar", "pie", "doughnut", "line", "mixed"],
+      options: [
+        "verticalBar",
+        "horizontalBar",
+        "pie",
+        "doughnut",
+        "line",
+        "mixed",
+      ],
       description: "The type of chart to display",
     },
     width: {
@@ -270,6 +336,16 @@ const meta = {
     showHorizontalGrid: {
       control: "boolean",
       description: "Whether to show horizontal grid lines (Y-axis)",
+    },
+    verticalGridStyle: {
+      control: "select",
+      options: ["solid", "dashed", "dotted"],
+      description: "Style of vertical grid lines: solid (default), dashed [5,5], or dotted [2,2]",
+    },
+    horizontalGridStyle: {
+      control: "select",
+      options: ["solid", "dashed", "dotted"],
+      description: "Style of horizontal grid lines: solid (default), dashed [5,5], or dotted [2,2]",
     },
     showTooltip: {
       control: "boolean",
@@ -290,6 +366,14 @@ const meta = {
       description:
         "Display mode for totals: 'simple' (default), 'detailed', or 'none'",
     },
+    showTypeSelector: {
+      control: "boolean",
+      description: "Whether to show the chart type selector button (default: true)",
+    },
+    showPeriodFilter: {
+      control: "boolean",
+      description: "Whether to show the period filter button (default: false)",
+    },
   },
   args: {
     type: "verticalBar",
@@ -298,13 +382,28 @@ const meta = {
     showHorizontalGrid: true,
     showTooltip: true,
     title: "Titre",
-    data: sampleBarData,
+    data: monthlyData,
     totalsDisplayMode: "simple",
+    moreActions: sampleActions,
   },
 } satisfies Meta<typeof Chart>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "primary",
+    data: monthlyData,
+    title: "Données mensuelles",
+    showVerticalGrid: true,
+    showHorizontalGrid: true,
+    totalsDisplayMode: "simple",
+    showPeriodFilter: true,
+  },
+  render: (args) => <Chart width={600} {...args} />,
+};
 
 export const MixedChart: Story = {
   args: {
@@ -327,7 +426,7 @@ export const VerticalBarChart: Story = {
     backgroundColor: "primary",
     data: sampleBarData,
   },
-  render: (args) => <Chart {...args} />,
+  render: (args) => <Chart showTypeSelector={false} {...args} />,
 };
 
 export const HorizontalBarChart: Story = {
@@ -401,6 +500,260 @@ export const LineChart: Story = {
     height: 400,
     width: 700,
     totalsDisplayMode: "simple",
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const ChartWithActions: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "primary",
+    data: sampleBarData,
+    title: "Chart avec actions personnalisées",
+    totalsDisplayMode: "detailed",
+    moreActions: [
+      {
+        label: "Exporter en Excel",
+        icon: "file-06",
+        onClick: () => console.log("Export to Excel"),
+      },
+      {
+        label: "Télécharger en CSV",
+        icon: "download-01",
+        onClick: () => console.log("Download CSV"),
+      },
+      {
+        label: "Envoyer par email",
+        icon: "mail-01",
+        onClick: () => console.log("Send by email"),
+      },
+      {
+        label: "Créer un rapport",
+        icon: "file-05",
+        onClick: () => console.log("Create report"),
+      },
+      {
+        label: "Configurer",
+        icon: "settings-01",
+        onClick: () => console.log("Configure"),
+      },
+    ],
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const ChartWithFormattedTotals: Story = {
+  args: {
+    type: "pie",
+    backgroundColor: "success",
+    data: samplePieData,
+    title: "Ventes par région",
+    totalsDisplayMode: "simple",
+    totalSymbol: "€",
+    decimalPlaces: 2,
+    compactDisplay: true,
+    moreActions: [
+      {
+        label: "Voir les détails",
+        icon: "bar-chart-square-02",
+        onClick: () => console.log("View details"),
+      },
+      {
+        label: "Comparer",
+        icon: "git-compare",
+        onClick: () => console.log("Compare"),
+      },
+    ],
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const ChartWithBadgesSimpleMode: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "primary",
+    data: sampleBarData,
+    title: "Chart avec badge en mode simple",
+    totalsDisplayMode: "simple",
+    totalSymbol: "€",
+    compactDisplay: true,
+    totalBadges: {
+      total: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="primary/60">
+              arrow-up-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="primary/60">
+              45%
+            </Typography>
+          </Row>
+        ),
+        color: "primary",
+        variant: "tonal",
+        size: "medium",
+      },
+    },
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const ChartWithBadgesDetailedMode: Story = {
+  args: {
+    type: "verticalBar",
+    backgroundColor: "primary",
+    data: sampleBarData,
+    title: "Chart avec badges en mode detailed",
+    totalsDisplayMode: "detailed",
+    totalSymbol: "€",
+    compactDisplay: true,
+    totalBadges: {
+      Sales: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="critical/60">
+              arrow-down-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="critical/60">
+              -45%
+            </Typography>
+          </Row>
+        ),
+        color: "critical",
+        variant: "tonal",
+        size: "medium",
+      },
+      Target: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="critical/60">
+              arrow-down-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="critical/60">
+              -45%
+            </Typography>
+          </Row>
+        ),
+        color: "critical",
+        variant: "tonal",
+        size: "medium",
+      },
+      Marketing: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="primary/60">
+              arrow-up-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="primary/60">
+              45%
+            </Typography>
+          </Row>
+        ),
+        color: "primary",
+        variant: "tonal",
+        size: "medium",
+      },
+      Support: {
+        children: (
+          <Row gap={1}>
+            <Icon size={10} color="critical/60">
+              arrow-down-right-01
+            </Icon>
+            <Typography variant="captionRegular" color="critical/60">
+              -45%
+            </Typography>
+          </Row>
+        ),
+        color: "critical",
+        variant: "tonal",
+        size: "medium",
+      },
+    },
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+const dashedLineData: CustomChartData = {
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+  datasets: [
+    {
+      label: "Actual Sales",
+      data: [65000, 59000, 80000, 81000, 76000, 85000],
+      borderColor: "primary/50",
+      backgroundColor: "primary/20",
+      borderWidth: 2,
+      fill: true,
+      tension: 0.4,
+    },
+    {
+      label: "Forecast",
+      data: [70000, 65000, 75000, 85000, 80000, 90000],
+      borderColor: "success/50",
+      backgroundColor: "transparent",
+      borderWidth: 2,
+      fill: false,
+      tension: 0.4,
+      borderDash: [5, 5],
+    },
+    {
+      label: "Target",
+      data: [75000, 75000, 75000, 75000, 75000, 75000],
+      borderColor: "yellow/50",
+      backgroundColor: "transparent",
+      borderWidth: 2,
+      fill: false,
+      tension: 0,
+      borderDash: [10, 5],
+    },
+    {
+      label: "Minimum",
+      data: [50000, 50000, 50000, 50000, 50000, 50000],
+      borderColor: "critical/50",
+      backgroundColor: "transparent",
+      borderWidth: 2,
+      fill: false,
+      tension: 0,
+      borderDash: [2, 2],
+    },
+  ],
+};
+
+export const DashedLines: Story = {
+  args: {
+    type: "line",
+    data: dashedLineData,
+    width: 900,
+    height: 400,
+    backgroundColor: "neutral",
+    title: "Sales with Dashed Lines",
+    totalsDisplayMode: "detailed",
+    totalSymbol: "€",
+    compactDisplay: true,
+    moreActions: sampleActions,
+    showVerticalGrid: true,
+    showHorizontalGrid: true,
+    verticalGridStyle: "dashed",
+    horizontalGridStyle: "dashed",
+  },
+  render: (args) => <Chart {...args} />,
+};
+
+export const GridStyles: Story = {
+  args: {
+    type: "line",
+    data: sampleLineData,
+    width: 900,
+    height: 400,
+    backgroundColor: "neutral",
+    title: "Chart with Grid Styles",
+    totalsDisplayMode: "simple",
+    totalSymbol: "€",
+    compactDisplay: true,
+    showVerticalGrid: true,
+    showHorizontalGrid: true,
+    verticalGridStyle: "dashed",
+    horizontalGridStyle: "dotted",
+    moreActions: sampleActions,
   },
   render: (args) => <Chart {...args} />,
 };

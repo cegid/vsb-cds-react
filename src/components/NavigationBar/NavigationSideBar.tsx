@@ -21,21 +21,26 @@ interface SidebarPanelProps {
    * Used to position the sidebar correctly next to the navigation bar.
    */
   anchorWidth: number;
+  /**
+   * Whether a custom sidebar content renderer is being used.
+   * If true, the sidebar will have no padding.
+   */
+  hasCustomContent?: boolean;
 }
 
 export const SIDEBAR_WIDTH = 'fit-content';
 
 const SidebarPanel = styled(Paper, {
-  shouldForwardProp: prop => prop !== 'open' && prop !== 'anchorWidth',
-})<SidebarPanelProps>(({ theme, open, anchorWidth }) => ({
+  shouldForwardProp: prop => prop !== 'open' && prop !== 'anchorWidth' && prop !== 'hasCustomContent',
+})<SidebarPanelProps>(({ theme, open, anchorWidth, hasCustomContent }) => ({
   alignItems: 'flex-start',
   backgroundColor: primary[99],
-  borderRadius: '0px 16px 16px 0px', 
+  borderRadius: '0px 16px 16px 0px',
   display: 'flex',
   flexDirection: 'column',
   gap: 8,
   height: '100%',
-  padding: 16,
+  padding: hasCustomContent ? 0 : 16,
   pointerEvents: open ? 'auto'  : 'none',
   width: SIDEBAR_WIDTH,
   zIndex: 1190,
@@ -159,6 +164,7 @@ const NavigationSideBar = ({
       onMouseLeave={onMouseLeave}
       open={open}
       square
+      hasCustomContent={!!renderSidebarContent}
     >
       {/* If custom renderer is provided, use it instead of default content */}
       {renderSidebarContent ? (

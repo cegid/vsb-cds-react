@@ -6,7 +6,11 @@ import React from "react";
 import { Button as CegidButton } from "@cegid/cds-react";
 import type { ButtonProps as CegidButtonProps } from "@cegid/cds-react";
 
-import colorPalettes, { CustomColorString, white } from "../../theme/colors";
+import colorPalettes, {
+  borderNeutral,
+  CustomColorString,
+  white,
+} from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
 import Box from "../Box";
 import typography from "../../theme/typography";
@@ -98,8 +102,8 @@ const containedButtonBase = {
   border: "none",
   boxShadow: "none",
   "&.Mui-disabled": {
-    backgroundColor: neutral[90],
-    color: neutral[60],
+    backgroundColor: neutral[99],
+    color: neutral[80],
     border: "none",
     outline: "none",
   },
@@ -111,7 +115,7 @@ const containedButtonBase = {
 const createContainedButtonStyle = (
   color: any,
   backgroundIndex = 60,
-  hoverIndex = 50,
+  hoverIndex = 60,
   activeIndex = 60
 ) => ({
   backgroundColor: color[backgroundIndex],
@@ -125,6 +129,9 @@ const createContainedButtonStyle = (
   "&:active": {
     backgroundColor: color[activeIndex],
   },
+  "&.Mui-disabled": {
+    boxShadow: `0px 0.3px 0.8px 0px ${neutral[90]}`,
+  },
 });
 
 const getSizeStyles = (size: ButtonSize, isContained = false) => {
@@ -134,7 +141,7 @@ const getSizeStyles = (size: ButtonSize, isContained = false) => {
     case "small":
       return {
         height: `${24 - heightReduction}px`,
-        padding: "0px 12px",
+        padding: "0px 8px",
         ...typography.captionSemiBold,
         "& .MuiSvgIcon-root": {
           fontSize: "16px",
@@ -155,7 +162,7 @@ const getSizeStyles = (size: ButtonSize, isContained = false) => {
     case "medium":
       return {
         height: `${32 - heightReduction}px`,
-        padding: "0px 16px",
+        padding: "0px 8px",
         ...typography.bodySSemiBold,
         "& .MuiSvgIcon-root": {
           fontSize: "16px",
@@ -176,7 +183,7 @@ const getSizeStyles = (size: ButtonSize, isContained = false) => {
     case "large":
       return {
         height: `${40 - heightReduction}px`,
-        padding: "0px 16px",
+        padding: "0px 8px",
         ...typography.bodySSemiBold,
         "& .MuiSvgIcon-root": {
           fontSize: "16px",
@@ -198,10 +205,10 @@ const getSizeStyles = (size: ButtonSize, isContained = false) => {
     default:
       return {
         height: `${32 - heightReduction}px`,
-        padding: "0px 16px",
+        padding: "0px 8px",
         "@media (max-width: 600px)": {
           height: `${40 - heightReduction}px`,
-          padding: "1px 16px",
+          padding: "0px 8px",
         },
         ...typography.bodySSemiBold,
         "& .MuiSvgIcon-root": {
@@ -246,7 +253,7 @@ const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
       ...(buttonsize === "auto" && {
         "@media (max-width: 600px)": {
           height: "40px",
-          padding: "1px 16px",
+          padding: "0px 8px",
         },
       }),
     },
@@ -290,20 +297,27 @@ const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
     "&.MuiButton-outlined": {
       ...createOutlinedButtonStyle(primary),
       "&.Mui-disabled": {
-        borderColor: neutral[90],
-        color: neutral[90],
+        borderColor: borderNeutral,
+        color: neutral[80],
       },
       "&.Mui-focused, &:focus:not(:active)": {
         boxShadow: "none",
       },
     },
     "&.MuiButton-outlinedNeutral": {
-      borderColor: neutral[90],
+      borderColor: borderNeutral,
       ...createOutlinedButtonStyle(neutral, 10),
+      "&:hover": {
+        borderColor: neutral[80],
+        backgroundColor: neutral[95],
+        "&:before": {
+          backgroundColor: "transparent",
+        },
+      },
     },
     "&.MuiButton-outlinedSecondary": {
       ...createOutlinedButtonStyle(secondary),
-      borderColor: neutral[90],
+      borderColor: borderNeutral,
     },
     "&.MuiButton-outlinedError": {
       ...createOutlinedButtonStyle(critical, 50),
@@ -325,8 +339,8 @@ const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
     "&.MuiButton-text": {
       ...createTextButtonStyle(primary),
       "&.Mui-disabled": {
-        borderColor: neutral[90],
-        color: neutral[90],
+        borderColor: borderNeutral,
+        color: neutral[80],
       },
       "&.Mui-focused, &:focus:not(:active)": {
         boxShadow: "none",
@@ -356,7 +370,7 @@ const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
       "&.Mui-disabled": {
         borderColor: neutral[90],
         color: neutral[80],
-        backgroundColor: neutral[95],
+        backgroundColor: neutral[99],
       },
       "&.Mui-focused, &:focus:not(:active)": {
         boxShadow: "none",
@@ -385,7 +399,13 @@ const StyledButton = styled(CegidButton)<{ buttonsize?: ButtonSize }>(
 
 const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
   (props, ref) => {
-    const { size = "auto", isLoading = false, onClick, sx, ...restProps } = props;
+    const {
+      size = "auto",
+      isLoading = false,
+      onClick,
+      sx,
+      ...restProps
+    } = props;
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       if (isLoading) {
@@ -436,6 +456,9 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
             return "#236BF0";
         }
       }
+      else {
+        return neutral[99]
+      }
     };
 
     if (props.variant === "contained") {
@@ -454,7 +477,11 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
             ref={ref}
           >
             {isLoading ? (
-              <ProgressBar shape="circle" size={16} color={getProgressBarColor()} />
+              <ProgressBar
+                shape="circle"
+                size={16}
+                color={getProgressBarColor()}
+              />
             ) : (
               restProps.children
             )}
@@ -471,7 +498,11 @@ const Button = React.forwardRef<HTMLButtonElement, ExtendedButtonProps>(
           sx={sx}
         >
           {isLoading ? (
-            <ProgressBar shape="circle" size={16} color={getProgressBarColor()} />
+            <ProgressBar
+              shape="circle"
+              size={16}
+              color={getProgressBarColor()}
+            />
           ) : (
             restProps.children
           )}

@@ -81,7 +81,7 @@ const createIconOnlyButtonStyle = (
     backgroundColor: neutral[99],
   },
   "&.Mui-disabled": {
-    color: neutral[99],
+    color: neutral[80],
   },
 });
 
@@ -125,10 +125,8 @@ const createContainedIconButtonStyle = (
   },
   "&.Mui-disabled": {
     backgroundColor: neutral[99],
-    color: neutral[90],
-    border: "1px solid",
-    borderColor: neutral[90],
-    boxShadow: "none",
+    color: neutral[80],
+    boxShadow: `0px 0.3px 0.8px 0px ${neutral[90]}`,
   },
 });
 
@@ -183,12 +181,16 @@ const getSizeStyles = (size: IconButtonSize, isContained = false) => {
   }
 };
 
-const getRadius = (square: boolean, isContained: boolean, size?: IconButtonSize) => {
+const getRadius = (
+  square: boolean,
+  isContained: boolean,
+  size?: IconButtonSize
+) => {
   if (square && size === "small") {
     return 8;
   }
   if (isContained && square) {
-    return 10;
+    return 11;
   }
   if (square) {
     return 12;
@@ -207,7 +209,11 @@ const IconButtonRoot = styled(CegidIconButton, {
 })<{ ownerState: IconButtonProps }>(({ theme, ownerState }) => {
   const isContained = ownerState.variant === "contained";
   const baseStyles = {
-    borderRadius: getRadius(ownerState?.square ?? false, isContained, ownerState?.size),
+    borderRadius: getRadius(
+      ownerState?.square ?? false,
+      isContained,
+      ownerState?.size
+    ),
     boxShadow: "none",
     ...getSizeStyles(ownerState?.size ?? "auto", isContained),
     padding: "8px",
@@ -265,8 +271,8 @@ const IconButtonRoot = styled(CegidIconButton, {
         border: "1px solid",
         borderColor: neutral[90],
         backgroundColor: white,
-        color: neutral[50],
-        boxShadow: `0px 0.3px 0.8px 0px ${neutral[90]}`,
+        color: neutral[60],
+        boxShadow: `0px 0.3px 0.8px 0px ${neutral[80]}`,
         "&:hover": {
           backgroundColor: neutral[99],
         },
@@ -275,9 +281,7 @@ const IconButtonRoot = styled(CegidIconButton, {
         },
         "&.Mui-disabled": {
           backgroundColor: neutral[99],
-          color: neutral[90],
-          border: "1px solid",
-          borderColor: neutral[90],
+          color: neutral[80]
         },
       };
     } else {
@@ -301,19 +305,17 @@ const IconButtonRoot = styled(CegidIconButton, {
         },
         "&.Mui-disabled": {
           backgroundColor: neutral[99],
-          color: neutral[90],
-          border: "1px solid",
-          borderColor: neutral[99],
+          color: neutral[80]
         },
       };
     } else {
       variantStyles = createContainedIconButtonStyle(colorPalette);
     }
   } else if (variantProp === "outlined") {
-    const colorIndex = isErrorColor ? 40 : 50;
+    const colorIndex = isErrorColor ? 50 : isNeutralColor ? 10 : 60;
     variantStyles = createOutlinedIconButtonStyle(colorPalette, colorIndex);
   } else if (variantProp === "tonal") {
-    const colorIndex = isErrorColor ? 40 : isNeutralColor ? 40 : 50;
+    const colorIndex = isErrorColor ? 50 : isNeutralColor ? 10 : 60;
 
     if (isNeutralColor) {
       variantStyles = {
@@ -424,21 +426,19 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           default:
             return "#236BF0";
         }
+      } else {
+        return neutral[99];
       }
     };
 
     const wrapWithTooltip = (element: React.ReactElement) => {
       if (!tooltip) return element;
 
-      const tooltipProps = typeof tooltip === "string"
-        ? { title: tooltip }
-        : tooltip;
+      const tooltipProps =
+        typeof tooltip === "string" ? { title: tooltip } : tooltip;
 
       return (
-        <Tooltip
-          {...tooltipProps}
-          enterDelay={1000}
-        >
+        <Tooltip {...tooltipProps} enterDelay={1000}>
           {element}
         </Tooltip>
       );
@@ -448,9 +448,9 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
       const buttonElement = (
         <Box
           maxWidth="fit-content"
-          p={1}
+          p={"1px"}
           backgroundColor={getContainedBackgroundColor() as CustomColorString}
-          borderRadius={square ? 3 : RADIUS.FULL}
+          borderRadius={square ? "12px" : RADIUS.FULL}
           sx={sx}
         >
           <IconButtonRoot

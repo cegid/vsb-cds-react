@@ -5,6 +5,7 @@ import Row from "../Row";
 import Box from "../Box";
 import Icon from "../Icon";
 import IconButton from "../IconButton";
+import Badge, { BadgeProps } from "../Badge";
 import { ChartType } from "./ChartCore";
 import { parseCustomColor } from "../../theme";
 import { getChartIcon } from "./Chart";
@@ -27,6 +28,25 @@ interface ChartTotalsProps {
   onToggleDataset?: (index: number) => void;
   onMouseEnter?: (index: number) => void;
   onMouseLeave?: () => void;
+  /**
+   * Symbol to display after the total value (e.g., "€", "$", "%")
+   */
+  totalSymbol?: string;
+  /**
+   * Number of decimal places to display for totals
+   * @default undefined (uses default toLocaleString behavior)
+   */
+  decimalPlaces?: number;
+  /**
+   * Enable compact display for large numbers (1000 -> 1k, 1000000 -> 1M, etc.)
+   * Maximum 4 digits before decimal point
+   * @default false
+   */
+  compactDisplay?: boolean;
+  /**
+   * Badges to display next to totals
+   */
+  totalBadges?: Record<string, BadgeProps>;
 }
 
 const ChartTotals: React.FC<ChartTotalsProps> = ({
@@ -41,7 +61,63 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
   onToggleDataset = () => {},
   onMouseEnter = () => {},
   onMouseLeave = () => {},
+  totalSymbol,
+  decimalPlaces,
+  compactDisplay = false,
+  totalBadges,
 }) => {
+  const formatTotal = (value: number): string => {
+    let formattedNumber: string;
+
+    if (compactDisplay) {
+      const absValue = Math.abs(value);
+      let scaledValue = absValue;
+      let suffix = "";
+
+      if (absValue >= 1_000_000_000) {
+        scaledValue = absValue / 1_000_000_000;
+        suffix = "B";
+      } else if (absValue >= 1_000_000) {
+        scaledValue = absValue / 1_000_000;
+        suffix = "M";
+      } else if (absValue >= 10_000) {
+        scaledValue = absValue / 1_000;
+        suffix = "k";
+      }
+
+      let decimals = decimalPlaces;
+      if (decimals === undefined) {
+        if (scaledValue >= 1000) {
+          decimals = 0;
+        } else if (scaledValue >= 100) {
+          decimals = 1;
+        } else if (scaledValue >= 10) {
+          decimals = 1;
+        } else {
+          decimals = 2;
+        }
+      }
+
+      const sign = value < 0 ? "-" : "";
+      formattedNumber =
+        sign +
+        scaledValue.toLocaleString(undefined, {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }) +
+        suffix;
+    } else {
+      formattedNumber =
+        decimalPlaces !== undefined
+          ? value.toLocaleString(undefined, {
+              minimumFractionDigits: decimalPlaces,
+              maximumFractionDigits: decimalPlaces,
+            })
+          : value.toLocaleString();
+    }
+
+    return totalSymbol ? `${formattedNumber} ${totalSymbol}` : formattedNumber;
+  };
   const isPieOrDoughnut = chartType === "pie" || chartType === "doughnut";
   const currentHiddenDatasets = isPieOrDoughnut
     ? hiddenDataPoints
@@ -133,6 +209,9 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
       currentIndex + itemsPerView
     );
 
+    // Vérifier s'il y a besoin de navigation (plus d'éléments que ce qui peut être affiché)
+    const needsNavigation = detailedTotals.length > itemsPerView;
+
     return (
       <Row alignItems="center" width="100%" gap={2}>
         <Box
@@ -163,9 +242,8 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
           >
             {visibleTotals.map((item, index) => {
               let datasetColor = "#666666";
-              
+
               if (isPieOrDoughnut) {
-                // Pour pie/doughnut, il n'y a qu'un dataset mais plusieurs couleurs
                 const dataset = datasets[0];
                 if (dataset?.backgroundColor && Array.isArray(dataset.backgroundColor)) {
                   const colorAtIndex = dataset.backgroundColor[item.datasetIndex];
@@ -174,7 +252,6 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
                   }
                 }
               } else {
-                // Pour les autres charts, chaque dataset a sa couleur
                 const dataset = datasets[item.datasetIndex];
                 if (dataset?.backgroundColor) {
                   if (typeof dataset.backgroundColor === "string") {
@@ -199,12 +276,14 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
                   width="fit-content"
                   sx={{ flexShrink: 0 }}
                 >
-                  <Typography variant="bodyMMedium" color="neutral/30">
-                    Total
-                  </Typography>
-                  <Typography variant="displaySSemiBold" color="neutral/10">
-                    {item.total.toLocaleString()}
-                  </Typography>
+                  <Row alignItems="center" gap={2}>
+                    <Typography variant="displaySSemiBold" color="neutral/10">
+                      {formatTotal(item.total)}
+                    </Typography>
+                    {totalBadges && totalBadges[item.label] && (
+                      <Badge {...totalBadges[item.label]} />
+                    )}
+                  </Row>
                   <Row
                     alignItems="center"
                     gap={4}
@@ -260,28 +339,32 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
             })}
           </Row>
         </Box>
-        <IconButton
-          color="neutral"
-          variant="iconOnly"
-          size="small"
-          onClick={handlePrevious}
-          disabled={!canScrollLeft}
-        >
-          <Icon size={16} variant="stroke">
-            arrow-left-01
-          </Icon>
-        </IconButton>
-        <IconButton
-          color="neutral"
-          variant="iconOnly"
-          size="small"
-          onClick={handleNext}
-          disabled={!canScrollRight}
-        >
-          <Icon size={16} variant="stroke">
-            arrow-right-01
-          </Icon>
-        </IconButton>
+        {needsNavigation && (
+          <>
+            <IconButton
+              color="neutral"
+              variant="iconOnly"
+              size="small"
+              onClick={handlePrevious}
+              disabled={!canScrollLeft}
+            >
+              <Icon size={16} variant="stroke">
+                arrow-left-01
+              </Icon>
+            </IconButton>
+            <IconButton
+              color="neutral"
+              variant="iconOnly"
+              size="small"
+              onClick={handleNext}
+              disabled={!canScrollRight}
+            >
+              <Icon size={16} variant="stroke">
+                arrow-right-01
+              </Icon>
+            </IconButton>
+          </>
+        )}
       </Row>
     );
   }
@@ -291,9 +374,14 @@ const ChartTotals: React.FC<ChartTotalsProps> = ({
       <Typography variant="bodyMMedium" color="neutral/50">
         Total Value
       </Typography>
-      <Typography variant="displaySSemiBold" color="neutral/10">
-        {totalValue.toLocaleString()}
-      </Typography>
+      <Row alignItems="center" gap={2}>
+        <Typography variant="displaySSemiBold" color="neutral/10">
+          {formatTotal(totalValue)}
+        </Typography>
+        {totalBadges && totalBadges["total"] && (
+          <Badge {...totalBadges["total"]} />
+        )}
+      </Row>
     </Column>
   );
 };

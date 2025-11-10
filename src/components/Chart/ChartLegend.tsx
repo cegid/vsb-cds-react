@@ -4,7 +4,7 @@ import Row from "../Row";
 import Box from "../Box";
 import Icon from "../Icon";
 import { ChartType } from "./ChartCore";
-import { RADIUS, parseCustomColor } from "../../theme";
+import { RADIUS, borderNeutral, parseCustomColor } from "../../theme";
 import { getChartIcon } from "./Chart";
 import Column from "../Column";
 
@@ -183,7 +183,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
         sx={{
           cursor: "pointer",
           flexShrink: isInModal ? 1 : 0,
-          border: isInModal || (isVerticalLayout && !isMobileLayout) ? "none" : "1px solid #E6E7EA",
+          border: isInModal || (isVerticalLayout && !isMobileLayout) ? "none" : `1px solid ${borderNeutral}`,
           display: "inline-flex",
         }}
       >
@@ -286,7 +286,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               px={4}
               minWidth={50}
               sx={{
-                border: "1px solid #E6E7EA",
+                border: `1px solid ${borderNeutral}`,
                 zIndex: 1,
               }}
             />
@@ -300,7 +300,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               px={4}
               minWidth={50}
               sx={{
-                border: "1px solid #E6E7EA",
+                border: `1px solid ${borderNeutral}`,
                 zIndex: 2,
               }}
             />
@@ -314,7 +314,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({
               minWidth={50}
               borderRadius={RADIUS.FULL}
               sx={{
-                border: "1px solid #E6E7EA",
+                border:`1px solid ${borderNeutral}`,
                 zIndex: 3,
                 position: "relative",
               }}

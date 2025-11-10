@@ -1,6 +1,6 @@
 {
   "name": "@cegid/vsb-cds-react",
-  "version": "1.19.11",
+  "version": "1.22.7",
   "description": "BAAM! Design System by Cegid - React component library",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
@@ -74,7 +74,7 @@
     "react-dom": "^18.3.1"
   },
   "dependencies": {
-    "@cegid/vsb-cds-tokens": "1.0.7",
+    "@cegid/vsb-cds-tokens": "1.0.8",
     "@mui/x-date-pickers": "8.9.0",
     "chart.js": "^4.5.0",
     "chartjs-plugin-datalabels": "^2.2.0",
@@ -83,6 +83,7 @@
     "react-chartjs-2": "^5.3.0"
   },
   "devDependencies": {
+    "@cegid/vsb-cds-illustrations": "1.0.3",
     "@cegid/cds-react": "^3.26.1",
     "@chromatic-com/storybook": "^4.0.1",
     "@commitlint/cli": "^20.1.0",

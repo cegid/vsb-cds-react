@@ -93,24 +93,34 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
   };
 
   const getWeekSelectionState = (weekStart: Date, weekEnd: Date) => {
-    if (tempRange && allowRange) {
+    if (tempRange) {
       const [tempStart, tempEnd] = tempRange;
-      
-      if (tempStart && tempEnd) {
-        const isStart = weekStart.getTime() === tempStart.start.getTime() && weekEnd.getTime() === tempStart.end.getTime();
-        const isEnd = weekStart.getTime() === tempEnd.start.getTime() && weekEnd.getTime() === tempEnd.end.getTime();
-        const isInRange = weekStart >= tempStart.start && weekStart <= tempEnd.start;
-        
-        return {
-          isSelected: isStart || isEnd,
-          isStart,
-          isEnd,
-          isInRange: isInRange && !isStart && !isEnd
-        };
+
+      if (allowRange) {
+        if (tempStart && tempEnd) {
+          const isStart = weekStart.getTime() === tempStart.start.getTime() && weekEnd.getTime() === tempStart.end.getTime();
+          const isEnd = weekStart.getTime() === tempEnd.start.getTime() && weekEnd.getTime() === tempEnd.end.getTime();
+          const isInRange = weekStart >= tempStart.start && weekStart <= tempEnd.start;
+
+          return {
+            isSelected: isStart || isEnd,
+            isStart,
+            isEnd,
+            isInRange: isInRange && !isStart && !isEnd
+          };
+        } else if (tempStart) {
+          return {
+            isSelected: false,
+            isStart: weekStart.getTime() === tempStart.start.getTime() && weekEnd.getTime() === tempStart.end.getTime(),
+            isEnd: false,
+            isInRange: false
+          };
+        }
       } else if (tempStart) {
+        const isSameWeek = weekStart.getTime() === tempStart.start.getTime() && weekEnd.getTime() === tempStart.end.getTime();
         return {
-          isSelected: false,
-          isStart: weekStart.getTime() === tempStart.start.getTime() && weekEnd.getTime() === tempStart.end.getTime(),
+          isSelected: isSameWeek,
+          isStart: false,
           isEnd: false,
           isInRange: false
         };
@@ -197,9 +207,9 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
       >
         <IconButton
           size="small"
-          color={color as CustomColor}
+          color="neutral"
           square
-          variant="outlined"
+          variant="iconOnly"
           disabled={!canNavigateToPreviousMonth()}
           onClick={() => onMonthNavigate?.(-1)}
         >
@@ -213,13 +223,16 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
             textAlign: "center",
           }}
         >
-          {adapter.formatByString(currentMonth, "MMMM YYYY")}
+          {(() => {
+            const formatted = adapter.formatByString(currentMonth, "MMMM YYYY");
+            return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+          })()}
         </Typography>
         <IconButton
           size="small"
-          color={color as CustomColor}
+          color="neutral"
           square
-          variant="outlined"
+          variant="iconOnly"
           disabled={!canNavigateToNextMonth()}
           onClick={() => onMonthNavigate?.(1)}
         >
@@ -240,7 +253,7 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
           const isLastWeekAlone = index === weeks.length - 1 && weeks.length % 2 === 1;
 
           const getButtonVariant = () => {
-            if (selectionState.isStart || selectionState.isEnd) {
+            if (selectionState.isSelected || selectionState.isStart || selectionState.isEnd) {
               return "tonal";
             } else if (selectionState.isInRange) {
               return "tonal";
@@ -249,7 +262,7 @@ const WeekSelector: React.FC<WeekSelectorProps> = ({
           };
 
           const getButtonColor = () => {
-            if (selectionState.isStart || selectionState.isEnd) {
+            if (selectionState.isSelected || selectionState.isStart || selectionState.isEnd) {
               return color as 'primary' | 'secondary' | 'error' | 'warning' | 'success' | 'info' | 'neutral';
             } else if (selectionState.isInRange) {
               return "neutral";

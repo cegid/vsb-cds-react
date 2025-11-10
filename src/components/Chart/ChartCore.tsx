@@ -24,6 +24,7 @@ import {
   neutral,
   CustomColorString,
   parseCustomColor,
+  borderNeutral,
 } from "../../theme";
 import typography from "../../theme/typography";
 import Column from "../Column";
@@ -135,6 +136,22 @@ export interface ChartCoreProps {
   showVerticalGrid?: boolean;
   /** Whether to display horizontal grid lines */
   showHorizontalGrid?: boolean;
+  /**
+   * Style of vertical grid lines
+   * - 'solid': Solid line (default)
+   * - 'dashed': Dashed line [5, 5]
+   * - 'dotted': Dotted line [2, 2]
+   * - number[]: Custom dash pattern [dash, gap, dash, gap, ...]
+   */
+  verticalGridStyle?: "solid" | "dashed" | "dotted" | number[];
+  /**
+   * Style of horizontal grid lines
+   * - 'solid': Solid line (default)
+   * - 'dashed': Dashed line [5, 5]
+   * - 'dotted': Dotted line [2, 2]
+   * - number[]: Custom dash pattern [dash, gap, dash, gap, ...]
+   */
+  horizontalGridStyle?: "solid" | "dashed" | "dotted" | number[];
   /** Whether to show interactive tooltips */
   showTooltip?: boolean;
   /** Chart title text */
@@ -156,15 +173,15 @@ const StyledChartContainer = styled(Box)(({ theme }) => ({
     maxWidth: "100%",
     height: "auto !important",
   },
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down("md")]: {
     minWidth: "250px",
     minHeight: "220px",
   },
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down("sm")]: {
     minWidth: "200px",
     minHeight: "200px",
   },
-  '@media (max-width: 480px)': {
+  "@media (max-width: 480px)": {
     minWidth: "180px",
     minHeight: "180px",
   },
@@ -177,6 +194,21 @@ const TooltipDivider = styled(Box)(({ theme }) => ({
   width: "calc(100% + 24px)",
 }));
 
+const getGridLineStyle = (
+  style: "solid" | "dashed" | "dotted" | number[] | undefined
+): number[] | undefined => {
+  if (!style || style === "solid") {
+    return undefined;
+  }
+  if (style === "dashed") {
+    return [5, 5];
+  }
+  if (style === "dotted") {
+    return [2, 2];
+  }
+  return style;
+};
+
 const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
   (
     {
@@ -188,6 +220,8 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
       className,
       showVerticalGrid = false,
       showHorizontalGrid = true,
+      verticalGridStyle = "solid",
+      horizontalGridStyle = "solid",
       showTooltip = true,
       title = "Title",
       hiddenDatasets = new Set(),
@@ -204,58 +238,64 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
     const tooltipTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
     // Plugin for vertical hover line and point shadows
-    const hoverLinePlugin = React.useMemo(() => ({
-      id: 'hoverLineAndShadow',
-      beforeDraw: (chart: any) => {
-        if (type !== "line") return;
-        
-        const { ctx, chartArea: { top, bottom } } = chart;
-        
-        // Draw vertical line on hover
-        if (chart._active && chart._active.length > 0) {
-          const activePoint = chart._active[0];
-          const xPosition = activePoint.element.x;
-          
-          ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(xPosition, top);
-          ctx.lineTo(xPosition, bottom);
-          ctx.lineWidth = 1;
-          ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
-          ctx.stroke();
-          ctx.restore();
-        }
-      },
-      afterDatasetsDraw: (chart: any) => {
-        if (type !== "line") return;
-        
-        const { ctx } = chart;
-        
-        // Draw shadows for all points
-        chart.data.datasets.forEach((dataset: any, datasetIndex: number) => {
-          if (dataset.type === 'line' || type === 'line') {
-            const meta = chart.getDatasetMeta(datasetIndex);
-            if (meta.hidden) return;
-            
-            meta.data.forEach((point: any) => {
-              ctx.save();
-              ctx.shadowColor = 'rgba(10, 34, 92, 0.2)';
-              ctx.shadowBlur = 3;
-              ctx.shadowOffsetX = 0;
-              ctx.shadowOffsetY = 0;
-              
-              // Draw invisible circle to create shadow only
-              ctx.beginPath();
-              ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI);
-              ctx.fillStyle = 'transparent';
-              ctx.fill();
-              
-              ctx.restore();
-            });
+    const hoverLinePlugin = React.useMemo(
+      () => ({
+        id: "hoverLineAndShadow",
+        beforeDraw: (chart: any) => {
+          if (type !== "line") return;
+
+          const {
+            ctx,
+            chartArea: { top, bottom },
+          } = chart;
+
+          // Draw vertical line on hover
+          if (chart._active && chart._active.length > 0) {
+            const activePoint = chart._active[0];
+            const xPosition = activePoint.element.x;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(xPosition, top);
+            ctx.lineTo(xPosition, bottom);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "rgba(0, 0, 0, 0.6)";
+            ctx.stroke();
+            ctx.restore();
           }
-        });
-      }
-    }), [type]);
+        },
+        afterDatasetsDraw: (chart: any) => {
+          if (type !== "line") return;
+
+          const { ctx } = chart;
+
+          // Draw shadows for all points
+          chart.data.datasets.forEach((dataset: any, datasetIndex: number) => {
+            if (dataset.type === "line" || type === "line") {
+              const meta = chart.getDatasetMeta(datasetIndex);
+              if (meta.hidden) return;
+
+              meta.data.forEach((point: any) => {
+                ctx.save();
+                ctx.shadowColor = "rgba(10, 34, 92, 0.2)";
+                ctx.shadowBlur = 3;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+
+                // Draw invisible circle to create shadow only
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, 5, 0, 2 * Math.PI);
+                ctx.fillStyle = "transparent";
+                ctx.fill();
+
+                ctx.restore();
+              });
+            }
+          });
+        },
+      }),
+      [type]
+    );
 
     const getChartConfig = () => {
       switch (type) {
@@ -285,59 +325,76 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           if (tooltipTimeoutRef.current) {
             clearTimeout(tooltipTimeoutRef.current);
           }
-          
+
           tooltipTimeoutRef.current = setTimeout(() => {
             const dataPoint = tooltip.dataPoints[0];
-            
+
             let newTooltipData;
-            
-            if (type === "mixed" || (type === "line" && tooltip.dataPoints.length > 1)) {
+
+            if (
+              type === "mixed" ||
+              (type === "line" && tooltip.dataPoints.length > 1)
+            ) {
               // For mixed charts or line charts with multiple points, get all values from the same label
               const labelIndex = dataPoint.dataIndex;
-              
+
               let allValues;
               if (type === "line" && tooltip.dataPoints.length > 1) {
                 // For line charts with multiple points at the same index
                 allValues = tooltip.dataPoints.map((point: any) => {
                   let color: string;
-                  const colorSource = point.dataset.borderColor || point.dataset.backgroundColor || '#666666';
-                  
-                  if (typeof colorSource === 'string') {
+                  const colorSource =
+                    point.dataset.borderColor ||
+                    point.dataset.backgroundColor ||
+                    "#666666";
+
+                  if (typeof colorSource === "string") {
                     color = colorSource;
-                  } else if (Array.isArray(colorSource) && colorSource.length > 0) {
+                  } else if (
+                    Array.isArray(colorSource) &&
+                    colorSource.length > 0
+                  ) {
                     color = colorSource[0];
                   } else {
-                    color = '#666666';
+                    color = "#666666";
                   }
-                  
+
                   return {
-                    label: point.dataset.label || `Dataset ${point.datasetIndex + 1}`,
-                    value: point.formattedValue || '0',
+                    label:
+                      point.dataset.label ||
+                      `Dataset ${point.datasetIndex + 1}`,
+                    value: point.formattedValue || "0",
                     color: color,
-                    type: 'line'
+                    type: "line",
                   };
                 });
               } else {
                 // For mixed charts
                 allValues = data.datasets.map((dataset, index) => {
                   let color: string;
-                  const colorSource = dataset.type === "line" 
-                    ? (dataset.borderColor || dataset.backgroundColor || '#666666')
-                    : (dataset.backgroundColor || '#666666');
-                  
-                  if (typeof colorSource === 'string') {
+                  const colorSource =
+                    dataset.type === "line"
+                      ? dataset.borderColor ||
+                        dataset.backgroundColor ||
+                        "#666666"
+                      : dataset.backgroundColor || "#666666";
+
+                  if (typeof colorSource === "string") {
                     color = colorSource;
-                  } else if (Array.isArray(colorSource) && colorSource.length > 0) {
+                  } else if (
+                    Array.isArray(colorSource) &&
+                    colorSource.length > 0
+                  ) {
                     color = colorSource[0];
                   } else {
-                    color = '#666666';
+                    color = "#666666";
                   }
-                  
+
                   return {
                     label: dataset.label || `Dataset ${index + 1}`,
-                    value: dataset.data[labelIndex]?.toLocaleString() || '0',
+                    value: dataset.data[labelIndex]?.toLocaleString() || "0",
                     color: color,
-                    type: dataset.type || 'bar'
+                    type: dataset.type || "bar",
                   };
                 });
               }
@@ -346,55 +403,69 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                 // For line charts, all elements are equivalent
                 newTooltipData = {
                   chartType: type,
-                  label: dataPoint.dataset.label || '',
-                  x: dataPoint.label || '',
-                  y: dataPoint.formattedValue || '',
-                  color: dataPoint.dataset.backgroundColor || '',
+                  label: dataPoint.dataset.label || "",
+                  x: dataPoint.label || "",
+                  y: dataPoint.formattedValue || "",
+                  color: dataPoint.dataset.backgroundColor || "",
                   allValues: allValues,
-                  otherItems: allValues
+                  otherItems: allValues,
                 };
               } else {
                 // For mixed charts, find the least used type
-                const typeCounts = allValues.reduce((acc: { [x: string]: any; }, item: { type: string | number; }) => {
-                  acc[item.type] = (acc[item.type] || 0) + 1;
-                  return acc;
-                }, {} as Record<string, number>);
-                
-                const leastUsedType = Object.entries(typeCounts)
-                  .sort(([,a], [,b]) => (a as number) - (b as number))[0]?.[0];
-                
-                const mainItem = allValues.find((item: { type: string; }) => item.type === leastUsedType);
-                const otherItems = allValues.filter((item: { type: string; }) => item.type !== leastUsedType);
-                
+                const typeCounts = allValues.reduce(
+                  (
+                    acc: { [x: string]: any },
+                    item: { type: string | number }
+                  ) => {
+                    acc[item.type] = (acc[item.type] || 0) + 1;
+                    return acc;
+                  },
+                  {} as Record<string, number>
+                );
+
+                const leastUsedType = Object.entries(typeCounts).sort(
+                  ([, a], [, b]) => (a as number) - (b as number)
+                )[0]?.[0];
+
+                const mainItem = allValues.find(
+                  (item: { type: string }) => item.type === leastUsedType
+                );
+                const otherItems = allValues.filter(
+                  (item: { type: string }) => item.type !== leastUsedType
+                );
+
                 newTooltipData = {
                   chartType: type,
-                  label: dataPoint.dataset.label || '',
-                  x: dataPoint.label || '',
-                  y: dataPoint.formattedValue || '',
-                  color: dataPoint.dataset.backgroundColor || '',
+                  label: dataPoint.dataset.label || "",
+                  x: dataPoint.label || "",
+                  y: dataPoint.formattedValue || "",
+                  color: dataPoint.dataset.backgroundColor || "",
                   allValues: allValues,
                   mainItem: mainItem,
-                  otherItems: otherItems
+                  otherItems: otherItems,
                 };
               }
             } else {
               newTooltipData = {
                 chartType: type,
-                label: dataPoint.dataset.label || '',
-                x: dataPoint.label || '',
-                y: dataPoint.formattedValue || '',
-                color: dataPoint.dataset.backgroundColor || '',
+                label: dataPoint.dataset.label || "",
+                x: dataPoint.label || "",
+                y: dataPoint.formattedValue || "",
+                color: dataPoint.dataset.backgroundColor || "",
               };
             }
-            
-            setTooltipData(prevData => {
-              if (!prevData || 
-                  prevData.chartType !== newTooltipData.chartType ||
-                  prevData.label !== newTooltipData.label ||
-                  prevData.x !== newTooltipData.x ||
-                  prevData.y !== newTooltipData.y ||
-                  prevData.color !== newTooltipData.color ||
-                  JSON.stringify(prevData.allValues) !== JSON.stringify(newTooltipData.allValues)) {
+
+            setTooltipData((prevData) => {
+              if (
+                !prevData ||
+                prevData.chartType !== newTooltipData.chartType ||
+                prevData.label !== newTooltipData.label ||
+                prevData.x !== newTooltipData.x ||
+                prevData.y !== newTooltipData.y ||
+                prevData.color !== newTooltipData.color ||
+                JSON.stringify(prevData.allValues) !==
+                  JSON.stringify(newTooltipData.allValues)
+              ) {
                 return newTooltipData;
               }
               return prevData;
@@ -522,7 +593,9 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
 
     const processedData = React.useMemo((): ChartData<any> => {
       const isPieOrDoughnut = type === "pie" || type === "doughnut";
-      const currentHiddenDatasets = isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets;
+      const currentHiddenDatasets = isPieOrDoughnut
+        ? hiddenDataPoints
+        : hiddenDatasets;
 
       return {
         ...data,
@@ -537,53 +610,72 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             convertedDataset.borderWidth = 3;
             convertedDataset.tension = 0.4;
             convertedDataset.pointRadius = convertedDataset.pointRadius ?? 5;
-            convertedDataset.pointHoverRadius = convertedDataset.pointHoverRadius ?? 5;
-            convertedDataset.pointBackgroundColor = 'white';
+            convertedDataset.pointHoverRadius =
+              convertedDataset.pointHoverRadius ?? 5;
+            convertedDataset.pointBackgroundColor = "white";
             convertedDataset.pointBorderWidth = 2;
-            convertedDataset.pointBorderColor = dataset.borderColor || dataset.backgroundColor;
-            convertedDataset.pointHoverBackgroundColor = 'white';
+            convertedDataset.pointBorderColor =
+              dataset.borderColor || dataset.backgroundColor;
+            convertedDataset.pointHoverBackgroundColor = "white";
             convertedDataset.order = 0; // Place lines in foreground
           }
-          
+
           if (convertedDataset.type === "bar") {
             convertedDataset.order = 1; // Place bars in background
           }
 
           if (dataset.backgroundColor) {
             if (Array.isArray(dataset.backgroundColor)) {
-              (convertedDataset as any).backgroundColor = dataset.backgroundColor.map((color, colorIndex) => {
-                const parsedColor = parseCustomColor(color);
-                if (!parsedColor) return color;
-                if (useTransparency && currentHiddenDatasets.has(isPieOrDoughnut ? colorIndex : datasetIndex)) {
-                  if (parsedColor.startsWith('#')) {
-                    const r = parseInt(parsedColor.slice(1, 3), 16);
-                    const g = parseInt(parsedColor.slice(3, 5), 16);
-                    const b = parseInt(parsedColor.slice(5, 7), 16);
-                    return `rgba(${r}, ${g}, ${b}, 0.1)`;
-                  } else if (parsedColor.startsWith('rgb(')) {
-                    return parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
-                  } else if (parsedColor.startsWith('rgba(')) {
-                    return parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+              (convertedDataset as any).backgroundColor =
+                dataset.backgroundColor.map((color, colorIndex) => {
+                  const parsedColor = parseCustomColor(color);
+                  if (!parsedColor) return color;
+                  if (
+                    useTransparency &&
+                    currentHiddenDatasets.has(
+                      isPieOrDoughnut ? colorIndex : datasetIndex
+                    )
+                  ) {
+                    if (parsedColor.startsWith("#")) {
+                      const r = parseInt(parsedColor.slice(1, 3), 16);
+                      const g = parseInt(parsedColor.slice(3, 5), 16);
+                      const b = parseInt(parsedColor.slice(5, 7), 16);
+                      return `rgba(${r}, ${g}, ${b}, 0.1)`;
+                    } else if (parsedColor.startsWith("rgb(")) {
+                      return parsedColor
+                        .replace("rgb(", "rgba(")
+                        .replace(")", ", 0.1)");
+                    } else if (parsedColor.startsWith("rgba(")) {
+                      return parsedColor.replace(/,\s*[\d.]+\)$/, ", 0.1)");
+                    }
+                    return parsedColor;
                   }
                   return parsedColor;
-                }
-                return parsedColor;
-              });
+                });
             } else {
               let parsedColor = parseCustomColor(dataset.backgroundColor);
               if (!parsedColor) {
-                (convertedDataset as any).backgroundColor = dataset.backgroundColor;
+                (convertedDataset as any).backgroundColor =
+                  dataset.backgroundColor;
               } else {
-                if (useTransparency && currentHiddenDatasets.has(datasetIndex)) {
-                  if (parsedColor.startsWith('#')) {
+                if (
+                  useTransparency &&
+                  currentHiddenDatasets.has(datasetIndex)
+                ) {
+                  if (parsedColor.startsWith("#")) {
                     const r = parseInt(parsedColor.slice(1, 3), 16);
                     const g = parseInt(parsedColor.slice(3, 5), 16);
                     const b = parseInt(parsedColor.slice(5, 7), 16);
                     parsedColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
-                  } else if (parsedColor.startsWith('rgb(')) {
-                    parsedColor = parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
-                  } else if (parsedColor.startsWith('rgba(')) {
-                    parsedColor = parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+                  } else if (parsedColor.startsWith("rgb(")) {
+                    parsedColor = parsedColor
+                      .replace("rgb(", "rgba(")
+                      .replace(")", ", 0.1)");
+                  } else if (parsedColor.startsWith("rgba(")) {
+                    parsedColor = parsedColor.replace(
+                      /,\s*[\d.]+\)$/,
+                      ", 0.1)"
+                    );
                   }
                 }
                 (convertedDataset as any).backgroundColor = parsedColor;
@@ -593,28 +685,38 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
 
           if (dataset.borderColor) {
             if (Array.isArray(dataset.borderColor)) {
-              (convertedDataset as any).borderColor = dataset.borderColor.map((color, colorIndex) => {
-                const parsedColor = parseCustomColor(color);
-                if (!parsedColor) return color;
-                if (useTransparency && currentHiddenDatasets.has(isPieOrDoughnut ? colorIndex : datasetIndex)) {
-                  if (parsedColor.startsWith('#')) {
-                    const r = parseInt(parsedColor.slice(1, 3), 16);
-                    const g = parseInt(parsedColor.slice(3, 5), 16);
-                    const b = parseInt(parsedColor.slice(5, 7), 16);
-                    return `rgba(${r}, ${g}, ${b}, 0.1)`;
-                  } else if (parsedColor.startsWith('rgb(')) {
-                    return parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
-                  } else if (parsedColor.startsWith('rgba(')) {
-                    return parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+              (convertedDataset as any).borderColor = dataset.borderColor.map(
+                (color, colorIndex) => {
+                  const parsedColor = parseCustomColor(color);
+                  if (!parsedColor) return color;
+                  if (
+                    useTransparency &&
+                    currentHiddenDatasets.has(
+                      isPieOrDoughnut ? colorIndex : datasetIndex
+                    )
+                  ) {
+                    if (parsedColor.startsWith("#")) {
+                      const r = parseInt(parsedColor.slice(1, 3), 16);
+                      const g = parseInt(parsedColor.slice(3, 5), 16);
+                      const b = parseInt(parsedColor.slice(5, 7), 16);
+                      return `rgba(${r}, ${g}, ${b}, 0.1)`;
+                    } else if (parsedColor.startsWith("rgb(")) {
+                      return parsedColor
+                        .replace("rgb(", "rgba(")
+                        .replace(")", ", 0.1)");
+                    } else if (parsedColor.startsWith("rgba(")) {
+                      return parsedColor.replace(/,\s*[\d.]+\)$/, ", 0.1)");
+                    }
+                    return parsedColor;
                   }
                   return parsedColor;
                 }
-                return parsedColor;
-              });
+              );
               // For line charts, apply the same color to points
               if (type === "line" || convertedDataset.type === "line") {
-                convertedDataset.pointBorderColor = convertedDataset.borderColor;
-                convertedDataset.pointHoverBackgroundColor = 'white';
+                convertedDataset.pointBorderColor =
+                  convertedDataset.borderColor;
+                convertedDataset.pointHoverBackgroundColor = "white";
               }
             } else {
               let parsedColor = parseCustomColor(dataset.borderColor);
@@ -623,252 +725,296 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                 // For line charts, apply the same color to points
                 if (type === "line" || convertedDataset.type === "line") {
                   convertedDataset.pointBorderColor = dataset.borderColor;
-                  convertedDataset.pointHoverBackgroundColor = 'white';
+                  convertedDataset.pointHoverBackgroundColor = "white";
                 }
               } else {
-                if (useTransparency && currentHiddenDatasets.has(datasetIndex)) {
-                  if (parsedColor.startsWith('#')) {
+                if (
+                  useTransparency &&
+                  currentHiddenDatasets.has(datasetIndex)
+                ) {
+                  if (parsedColor.startsWith("#")) {
                     const r = parseInt(parsedColor.slice(1, 3), 16);
                     const g = parseInt(parsedColor.slice(3, 5), 16);
                     const b = parseInt(parsedColor.slice(5, 7), 16);
                     parsedColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
-                  } else if (parsedColor.startsWith('rgb(')) {
-                    parsedColor = parsedColor.replace('rgb(', 'rgba(').replace(')', ', 0.1)');
-                  } else if (parsedColor.startsWith('rgba(')) {
-                    parsedColor = parsedColor.replace(/,\s*[\d.]+\)$/, ', 0.1)');
+                  } else if (parsedColor.startsWith("rgb(")) {
+                    parsedColor = parsedColor
+                      .replace("rgb(", "rgba(")
+                      .replace(")", ", 0.1)");
+                  } else if (parsedColor.startsWith("rgba(")) {
+                    parsedColor = parsedColor.replace(
+                      /,\s*[\d.]+\)$/,
+                      ", 0.1)"
+                    );
                   }
                 }
                 (convertedDataset as any).borderColor = parsedColor;
                 // For line charts, apply the same color to points
                 if (type === "line" || convertedDataset.type === "line") {
                   convertedDataset.pointBorderColor = parsedColor;
-                  convertedDataset.pointHoverBackgroundColor = 'white';
+                  convertedDataset.pointHoverBackgroundColor = "white";
                 }
               }
             }
           }
 
           const borderWidth = dataset.borderWidth;
-          
+
           if (type !== "line" && convertedDataset.type !== "line") {
             // Calculate border width based on total number of visible individual bars
-            const visibleBarDatasets = data.datasets.filter((ds, index) => ds.type !== "line" && !hiddenDatasets.has(index));
-            const totalVisibleBars = visibleBarDatasets.reduce((total, dataset) => {
-              return total + dataset.data.length;
-            }, 0);
-            const adaptiveBorderWidth = Math.max(1, Math.min(4, Math.floor(16 / Math.max(1, totalVisibleBars))));
-            
+            const visibleBarDatasets = data.datasets.filter(
+              (ds, index) => ds.type !== "line" && !hiddenDatasets.has(index)
+            );
+            const totalVisibleBars = visibleBarDatasets.reduce(
+              (total, dataset) => {
+                return total + dataset.data.length;
+              },
+              0
+            );
+            const adaptiveBorderWidth = Math.max(
+              1,
+              Math.min(4, Math.floor(16 / Math.max(1, totalVisibleBars)))
+            );
+
             convertedDataset.borderWidth = adaptiveBorderWidth;
-            convertedDataset.borderColor = 'transparent';
+            convertedDataset.borderColor = "transparent";
             convertedDataset.hoverBorderWidth = adaptiveBorderWidth;
           } else {
             convertedDataset.borderWidth = borderWidth;
             convertedDataset.hoverBorderWidth = borderWidth;
           }
 
-          convertedDataset.hoverBackgroundColor = convertedDataset.backgroundColor;
-          convertedDataset.hoverBorderColor = dataset.borderColor ? parseCustomColor(dataset.borderColor.toString()) || dataset.borderColor : dataset.borderColor;
+          convertedDataset.hoverBackgroundColor =
+            convertedDataset.backgroundColor;
+          convertedDataset.hoverBorderColor = dataset.borderColor
+            ? parseCustomColor(dataset.borderColor.toString()) ||
+              dataset.borderColor
+            : dataset.borderColor;
 
           return convertedDataset;
         }),
       };
     }, [data, useTransparency, hiddenDatasets, hiddenDataPoints, type]);
 
-    const defaultOptions: ChartOptions<any> = React.useMemo(() => ({
-      responsive: true,
-      maintainAspectRatio: false,
-      aspectRatio: window.innerWidth < 480 ? 1 : window.innerWidth < 768 ? 1.2 : 1.5,
-      interaction: type === "line" ? {
-        mode: 'index',
-        intersect: false,
-      } : {
-        mode: 'point',
-        intersect: true,
-      },
-      onHover: (
-        event: { native: { target: HTMLCanvasElement } },
-        elements: string | any[]
-      ) => {
-        const canvas = event.native?.target;
-        if (canvas) {
-          canvas.style.cursor = elements.length > 0 ? "pointer" : "default";
-        }
-      },
-      plugins: {
-        legend: {
-          display: false,
+    const defaultOptions: ChartOptions<any> = React.useMemo(
+      () => ({
+        responsive: true,
+        maintainAspectRatio: false,
+        aspectRatio:
+          window.innerWidth < 480 ? 1 : window.innerWidth < 768 ? 1.2 : 1.5,
+        interaction:
+          type === "line"
+            ? {
+                mode: "index",
+                intersect: false,
+              }
+            : {
+                mode: "point",
+                intersect: true,
+              },
+        onHover: (
+          event: { native: { target: HTMLCanvasElement } },
+          elements: string | any[]
+        ) => {
+          const canvas = event.native?.target;
+          if (canvas) {
+            canvas.style.cursor = elements.length > 0 ? "pointer" : "default";
+          }
         },
-        tooltip: {
-          enabled: false,
-          external: showTooltip ? externalTooltipHandler : undefined,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          tooltip: {
+            enabled: false,
+            external: showTooltip ? externalTooltipHandler : undefined,
+          },
+          ...(type === "pie" || type === "doughnut"
+            ? {
+                datalabels: {
+                  display: true,
+                  color: neutral[10],
+                  backgroundColor: neutral[99],
+                  borderColor: borderNeutral,
+                  borderWidth: 1,
+                  borderRadius: 8,
+                  padding: {
+                    top: 5,
+                    bottom: 2,
+                    left: 8,
+                    right: 8,
+                  },
+                  font: {
+                    size: typography.captionRegular.fontSize,
+                    family: typography.captionRegular.fontFamily,
+                  },
+                  formatter: (value: number) => value.toString(),
+                  textAlign: "center",
+                  textBaseline: "middle",
+                  anchor: "center",
+                  align: "center",
+                },
+              }
+            : {
+                datalabels: {
+                  display: false,
+                },
+              }),
         },
-        ...(type === "pie" || type === "doughnut"
+        ...(type === "line" || chartType === "bar"
           ? {
-              datalabels: {
-                display: true,
-                color: neutral[10],
-                backgroundColor: neutral[99],
-                borderColor: "#E6E7EA",
-                borderWidth: 1,
-                borderRadius: 8,
-                padding: {
-                  top: 5,
-                  bottom: 2,
-                  left: 8,
-                  right: 8,
+              scales: {
+                x: {
+                  grid: {
+                    display: showVerticalGrid,
+                    color: borderNeutral,
+                  },
+                  border: {
+                    dash: getGridLineStyle(verticalGridStyle),
+                  },
+                  ticks: {
+                    padding: 10,
+                    color: neutral[50],
+                    font: {
+                      family: typography.captionSemiBold.fontFamily,
+                      size: typography.captionSemiBold.fontSize,
+                    },
+                  },
                 },
-                font: {
-                  size: typography.captionRegular.fontSize,
-                  family: typography.captionRegular.fontFamily,
+                y: {
+                  grid: {
+                    display: showHorizontalGrid,
+                    color: borderNeutral,
+                    dash: getGridLineStyle(horizontalGridStyle),
+                  },
+                  border: {
+                    dash: getGridLineStyle(verticalGridStyle),
+                  },
+                  ticks: {
+                    padding: 10,
+                    color: neutral[50],
+                    font: {
+                      family: typography.captionSemiBold.fontFamily,
+                      size: typography.captionSemiBold.fontSize,
+                    },
+                  },
                 },
-                formatter: (value: number) => value.toString(),
-                textAlign: 'center',
-                textBaseline: 'middle',
-                anchor: 'center',
-                align: 'center',
+              },
+              ...(type === "line"
+                ? {
+                    elements: {
+                      line: {
+                        borderWidth: 3,
+                        tension: 0.4,
+                      },
+                      point: {
+                        radius: 5,
+                        hoverRadius: 5,
+                        backgroundColor: "white",
+                        borderWidth: 2,
+                      },
+                    },
+                  }
+                : {}),
+              ...(chartType === "bar"
+                ? {
+                    indexAxis,
+                    elements: {
+                      bar: {
+                        borderRadius:
+                          indexAxis === "y"
+                            ? {
+                                topLeft: 0,
+                                topRight: 4,
+                                bottomLeft: 0,
+                                bottomRight: 4,
+                              }
+                            : {
+                                topLeft: 4,
+                                topRight: 4,
+                                bottomLeft: 0,
+                                bottomRight: 0,
+                              },
+                      },
+                    },
+                  }
+                : {}),
+            }
+          : {}),
+        ...(type === "mixed"
+          ? {
+              scales: {
+                x: {
+                  grid: {
+                    display: showVerticalGrid,
+                    color: borderNeutral,
+                    ...(getGridLineStyle(verticalGridStyle) && {
+                      borderDash: getGridLineStyle(verticalGridStyle),
+                    }),
+                  },
+                  ticks: {
+                    padding: 10,
+                    color: neutral[50],
+                    font: {
+                      family: typography.captionSemiBold.fontFamily,
+                      size: typography.captionSemiBold.fontSize,
+                    },
+                  },
+                },
+                y: {
+                  type: "linear",
+                  display: true,
+                  position: "left",
+                  grid: {
+                    display: showHorizontalGrid,
+                    color: borderNeutral,
+                    ...(getGridLineStyle(horizontalGridStyle) && {
+                      borderDash: getGridLineStyle(horizontalGridStyle),
+                    }),
+                  },
+                  ticks: {
+                    padding: 10,
+                    color: neutral[50],
+                    font: {
+                      family: typography.captionSemiBold.fontFamily,
+                      size: typography.captionSemiBold.fontSize,
+                    },
+                  },
+                },
+                y1: {
+                  type: "linear",
+                  display: true,
+                  position: "right",
+                  grid: {
+                    drawOnChartArea: false,
+                  },
+                  ticks: {
+                    padding: 10,
+                    color: neutral[50],
+                    font: {
+                      family: typography.captionSemiBold.fontFamily,
+                      size: typography.captionSemiBold.fontSize,
+                    },
+                  },
+                },
               },
             }
-          : {
-              datalabels: {
-                display: false,
-              },
-            }),
-      },
-      ...(type === "line" || chartType === "bar"
-        ? {
-            scales: {
-              x: {
-                grid: {
-                  display: showVerticalGrid,
-                  color: "#E6E7EA",
-                },
-                ticks: {
-                  padding: 10,
-                  color: neutral[50],
-                  font: {
-                    family: typography.captionSemiBold.fontFamily,
-                    size: typography.captionSemiBold.fontSize,
-                  },
-                },
-              },
-              y: {
-                grid: {
-                  display: showHorizontalGrid,
-                  color: "#E6E7EA",
-                },
-                ticks: {
-                  padding: 10,
-                  color: neutral[50],
-                  font: {
-                    family: typography.captionSemiBold.fontFamily,
-                    size: typography.captionSemiBold.fontSize,
-                  },
-                },
-              },
-            },
-            ...(type === "line"
-              ? {
-                  elements: {
-                    line: {
-                      borderWidth: 3,
-                      tension: 0.4,
-                    },
-                    point: {
-                      radius: 5,
-                      hoverRadius: 5,
-                      backgroundColor: 'white',
-                      borderWidth: 2,
-                    },
-                  },
-                }
-              : {}),
-            ...(chartType === "bar"
-              ? {
-                  indexAxis,
-                  elements: {
-                    bar: {
-                      borderRadius:
-                        indexAxis === "y"
-                          ? {
-                              topLeft: 0,
-                              topRight: 4,
-                              bottomLeft: 0,
-                              bottomRight: 4,
-                            }
-                          : {
-                              topLeft: 4,
-                              topRight: 4,
-                              bottomLeft: 0,
-                              bottomRight: 0,
-                            },
-                    },
-                  },
-                }
-              : {}),
-          }
-        : {}),
-      ...(type === "mixed" ? {
-        scales: {
-          x: {
-            grid: {
-              display: showVerticalGrid,
-              color: "#E6E7EA",
-            },
-            ticks: {
-              padding: 10,
-              color: neutral[50],
-              font: {
-                family: typography.captionSemiBold.fontFamily,
-                size: typography.captionSemiBold.fontSize,
-              },
-            },
-          },
-          y: {
-            type: 'linear',
-            display: true,
-            position: 'left',
-            grid: {
-              display: showHorizontalGrid,
-              color: "#E6E7EA",
-            },
-            ticks: {
-              padding: 10,
-              color: neutral[50],
-              font: {
-                family: typography.captionSemiBold.fontFamily,
-                size: typography.captionSemiBold.fontSize,
-              },
-            },
-          },
-          y1: {
-            type: 'linear',
-            display: true,
-            position: 'right',
-            grid: {
-              drawOnChartArea: false,
-            },
-            ticks: {
-              padding: 10,
-              color: neutral[50],
-              font: {
-                family: typography.captionSemiBold.fontFamily,
-                size: typography.captionSemiBold.fontSize,
-              },
-            },
-          },
-        },
-      } : {}),
-      ...options,
-    }), [
-      type,
-      chartType,
-      indexAxis,
-      showVerticalGrid,
-      showHorizontalGrid,
-      showTooltip,
-      externalTooltipHandler,
-      options
-    ]);
+          : {}),
+        ...options,
+      }),
+      [
+        type,
+        chartType,
+        indexAxis,
+        showVerticalGrid,
+        showHorizontalGrid,
+        verticalGridStyle,
+        horizontalGridStyle,
+        showTooltip,
+        externalTooltipHandler,
+        options,
+      ]
+    );
 
     const renderChart = () => {
       const commonProps = {
@@ -887,67 +1033,91 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
           return <Bar {...commonProps} />;
         case "mixed":
           // Use custom overlay component for gauge effect
-          const hasOverlayBars = data.datasets.some(d => 
-            d.type === 'bar' && d.label?.toLowerCase().includes('prévision')
+          const hasOverlayBars = data.datasets.some(
+            (d) =>
+              d.type === "bar" && d.label?.toLowerCase().includes("prévision")
           );
-          
+
           if (hasOverlayBars) {
-            const handleOverlayHover = (datasetIndex: number, labelIndex: number, event: MouseEvent, barRect?: { x: number, y: number, width: number, height: number }) => {
+            const handleOverlayHover = (
+              datasetIndex: number,
+              labelIndex: number,
+              event: MouseEvent,
+              barRect?: { x: number; y: number; width: number; height: number }
+            ) => {
               // Simulate Chart.js tooltip structure for mixed charts
               const fakeTooltip = {
                 opacity: 1,
-                body: ['fake'],
-                dataPoints: [{
-                  datasetIndex: datasetIndex,
-                  dataIndex: labelIndex,
-                  dataset: data.datasets[datasetIndex],
-                  label: data.labels[labelIndex],
-                  formattedValue: data.datasets[datasetIndex].data[labelIndex]?.toLocaleString() || '0'
-                }]
+                body: ["fake"],
+                dataPoints: [
+                  {
+                    datasetIndex: datasetIndex,
+                    dataIndex: labelIndex,
+                    dataset: data.datasets[datasetIndex],
+                    label: data.labels[labelIndex],
+                    formattedValue:
+                      data.datasets[datasetIndex].data[
+                        labelIndex
+                      ]?.toLocaleString() || "0",
+                  },
+                ],
               };
               updateTooltipData(fakeTooltip);
-              
+
               // Position the tooltip
               const tooltipEl = tooltipRef.current;
               if (tooltipEl && barRect) {
                 const chartContainer = tooltipEl.parentElement;
                 if (chartContainer) {
                   const containerRect = chartContainer.getBoundingClientRect();
-                  
+
                   // Get tooltip dimensions
                   tooltipEl.style.display = "block";
                   tooltipEl.style.visibility = "hidden"; // Make visible to measure but hide visually
                   const tooltipRect = tooltipEl.getBoundingClientRect();
                   const tooltipWidth = tooltipRect.width;
                   const tooltipHeight = tooltipRect.height;
-                  
+
                   // Calculate available space
                   const containerWidth = containerRect.width;
                   const containerHeight = containerRect.height;
-                  
+
                   // Bar position relative to container
                   const barCenterX = barRect.x + barRect.width / 2;
                   const barCenterY = barRect.y + barRect.height / 2;
                   const barRightX = barRect.x + barRect.width;
                   const barLeftX = barRect.x;
-                  
+
                   let tooltipX, tooltipY;
-                  
+
                   // Try to position to the right first
                   const spaceRight = containerWidth - barRightX;
                   const spaceLeft = barLeftX;
                   const spaceTop = barRect.y;
-                  const spaceBottom = containerHeight - (barRect.y + barRect.height);
-                  
+                  const spaceBottom =
+                    containerHeight - (barRect.y + barRect.height);
+
                   if (spaceRight >= tooltipWidth + 10) {
                     // Position to the right
                     tooltipX = barRightX + 10;
-                    tooltipY = Math.max(10, Math.min(barCenterY - tooltipHeight / 2, containerHeight - tooltipHeight - 10));
+                    tooltipY = Math.max(
+                      10,
+                      Math.min(
+                        barCenterY - tooltipHeight / 2,
+                        containerHeight - tooltipHeight - 10
+                      )
+                    );
                     tooltipEl.style.transform = "none";
                   } else if (spaceLeft >= tooltipWidth + 10) {
                     // Position to the left
                     tooltipX = barLeftX - tooltipWidth - 10;
-                    tooltipY = Math.max(10, Math.min(barCenterY - tooltipHeight / 2, containerHeight - tooltipHeight - 10));
+                    tooltipY = Math.max(
+                      10,
+                      Math.min(
+                        barCenterY - tooltipHeight / 2,
+                        containerHeight - tooltipHeight - 10
+                      )
+                    );
                     tooltipEl.style.transform = "none";
                   } else if (spaceTop >= tooltipHeight + 10) {
                     // Position above
@@ -960,7 +1130,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                     tooltipY = barRect.y + barRect.height + 10;
                     tooltipEl.style.transform = "translateX(-50%)";
                   }
-                  
+
                   tooltipEl.style.left = `${tooltipX}px`;
                   tooltipEl.style.top = `${tooltipY}px`;
                   tooltipEl.style.visibility = "visible"; // Make visible again
@@ -976,7 +1146,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
             };
 
             return (
-              <OverlayBarChart 
+              <OverlayBarChart
                 data={data}
                 width={width}
                 height={height}
@@ -1026,8 +1196,11 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                   <Column gap={2}>
                     <Row gap={2} alignItems="center">
                       {getChartIcon(
-                        tooltipData.mainItem.type === "line" ? "line" : "verticalBar", 
-                        parseCustomColor(tooltipData.mainItem.color) || tooltipData.mainItem.color
+                        tooltipData.mainItem.type === "line"
+                          ? "line"
+                          : "verticalBar",
+                        parseCustomColor(tooltipData.mainItem.color) ||
+                          tooltipData.mainItem.color
                       )}
                       <Typography variant="captionRegular" color="white">
                         {tooltipData.mainItem.label}
@@ -1037,51 +1210,73 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                       {tooltipData.mainItem.value}
                     </Typography>
                   </Column>
-                  {tooltipData.otherItems && tooltipData.otherItems.length > 0 && (
-                    <Column gap={2}>
-                      {tooltipData.otherItems.map((item, index, array) => {
-                        const currentStack = item.label.includes('Prévision') ? 
-                          item.label.replace('Prévision ', '') : item.label;
-                        const nextItem = array[index + 1];
-                        const nextStack = nextItem ? (nextItem.label.includes('Prévision') ? 
-                          nextItem.label.replace('Prévision ', '') : nextItem.label) : null;
-                        const isLastInStack = !nextItem || currentStack !== nextStack;
-                        
-                        return (
-                          <React.Fragment key={index}>
-                            <Row gap={5} alignItems="center">
-                              {getChartIcon(
-                                item.type === "line" ? "line" : "verticalBar", 
-                                parseCustomColor(item.color) || item.color
+                  {tooltipData.otherItems &&
+                    tooltipData.otherItems.length > 0 && (
+                      <Column gap={2}>
+                        {tooltipData.otherItems.map((item, index, array) => {
+                          const currentStack = item.label.includes("Prévision")
+                            ? item.label.replace("Prévision ", "")
+                            : item.label;
+                          const nextItem = array[index + 1];
+                          const nextStack = nextItem
+                            ? nextItem.label.includes("Prévision")
+                              ? nextItem.label.replace("Prévision ", "")
+                              : nextItem.label
+                            : null;
+                          const isLastInStack =
+                            !nextItem || currentStack !== nextStack;
+
+                          return (
+                            <React.Fragment key={index}>
+                              <Row gap={5} alignItems="center">
+                                {getChartIcon(
+                                  item.type === "line" ? "line" : "verticalBar",
+                                  parseCustomColor(item.color) || item.color
+                                )}
+                                <Typography
+                                  variant="captionRegular"
+                                  color="white"
+                                  flex={1}
+                                >
+                                  {item.label}
+                                </Typography>
+                                <Typography
+                                  variant="captionSemiBold"
+                                  color="white"
+                                >
+                                  {item.value}
+                                </Typography>
+                              </Row>
+                              {isLastInStack && index < array.length - 1 && (
+                                <Box height={2} />
                               )}
-                              <Typography variant="captionRegular" color="white" flex={1}>
-                                {item.label}
-                              </Typography>
-                              <Typography variant="captionSemiBold" color="white">
-                                {item.value}
-                              </Typography>
-                            </Row>
-                            {isLastInStack && index < array.length - 1 && (
-                              <Box height={2} />
-                            )}
-                          </React.Fragment>
-                        );
-                      })}
-                    </Column>
-                  )}
-                  
+                            </React.Fragment>
+                          );
+                        })}
+                      </Column>
+                    )}
+
                   <TooltipDivider />
                   <Typography variant="captionSemiBold" color="neutral/80">
                     {tooltipData.x}
                   </Typography>
                 </>
-              ) : tooltipData.chartType === "line" && tooltipData.otherItems && tooltipData.otherItems.length > 1 ? (
+              ) : tooltipData.chartType === "line" &&
+                tooltipData.otherItems &&
+                tooltipData.otherItems.length > 1 ? (
                 <>
                   <Column gap={2}>
                     {tooltipData.otherItems.map((item, index) => (
                       <Row key={index} gap={5} alignItems="center">
-                        {getChartIcon("line", parseCustomColor(item.color) || item.color)}
-                        <Typography variant="captionRegular" color="white" flex={1}>
+                        {getChartIcon(
+                          "line",
+                          parseCustomColor(item.color) || item.color
+                        )}
+                        <Typography
+                          variant="captionRegular"
+                          color="white"
+                          flex={1}
+                        >
                           {item.label}
                         </Typography>
                         <Typography variant="captionSemiBold" color="white">
@@ -1090,7 +1285,7 @@ const ChartCore = React.forwardRef<HTMLDivElement, ChartCoreProps>(
                       </Row>
                     ))}
                   </Column>
-                  
+
                   <TooltipDivider />
                   <Typography variant="captionSemiBold" color="neutral/80">
                     {tooltipData.x}

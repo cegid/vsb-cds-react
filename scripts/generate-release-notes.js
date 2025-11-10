@@ -122,15 +122,25 @@ function generateReleaseNotes() {
     return;
   }
 
-  // Parse commits
-  const changes = [];
+  // Parse commits and group by component
+  const changesByComponent = new Map();
   let skippedCount = 0;
 
   commits.forEach(({ hash, message }) => {
     const parsed = parseCommit(message);
 
     if (parsed) {
-      changes.push(parsed);
+      const key = `${parsed.type}:${parsed.component || 'general'}`;
+
+      if (!changesByComponent.has(key)) {
+        changesByComponent.set(key, {
+          type: parsed.type,
+          component: parsed.component,
+          descriptions: []
+        });
+      }
+
+      changesByComponent.get(key).descriptions.push(parsed.description);
       console.log(`✅ ${message}`);
     } else {
       skippedCount++;
@@ -138,8 +148,17 @@ function generateReleaseNotes() {
     }
   });
 
+  // Convert grouped changes to array format
+  const changes = Array.from(changesByComponent.values()).map(change => ({
+    type: change.type,
+    component: change.component,
+    description: change.descriptions.length === 1
+      ? change.descriptions[0]
+      : change.descriptions
+  }));
+
   console.log(`\n📊 Summary:`);
-  console.log(`   - Included: ${changes.length} commits`);
+  console.log(`   - Included: ${changes.length} unique component changes`);
   console.log(`   - Skipped: ${skippedCount} commits`);
 
   if (changes.length === 0) {

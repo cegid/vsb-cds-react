@@ -23,11 +23,263 @@ interface ReleaseNote {
   changes: {
     component?: string;
     type: "new" | "fix" | "enhancement" | "style" | "breaking";
-    description: string;
+    description: string | string[];
   }[];
 }
 
 const releaseNotes: ReleaseNote[] = [
+  {
+    version: "1.22.7",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: "default filtered period 12 last month",
+      }
+    ],
+  },
+  {
+    version: "1.22.6",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: "close popper on click outside",
+      }
+    ],
+  },
+  {
+    version: "1.22.5",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: "remove chevron icons on toals detailed display",
+      }
+    ],
+  },
+  {
+    version: "1.22.4",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: "Chart period popper naming",
+      }
+    ],
+  },
+  {
+    version: "1.22.3",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: "period popper naming",
+      }
+    ],
+  },
+  {
+    version: "1.22.2",
+    changes: [
+      {
+        component: "Chart",
+        type: "enhancement",
+        description: [
+          "add filter date section",
+          "add props to remove chart type selector",
+          "add dash line options"
+        ],
+      },
+      {
+        component: "Select",
+        type: "fix",
+        description: "Design Fixes",
+      }
+    ],
+  },
+  {
+    version: "1.22.1",
+    changes: [
+      {
+        component: "Alert",
+        type: "fix",
+        description: "Design fixes",
+      },
+      {
+        component: "Switch",
+        type: "fix",
+        description: "design fixes",
+      },
+      {
+        component: "Checkbox",
+        type: "fix",
+        description: "design fixes",
+      },
+      {
+        component: "IconButton",
+        type: "fix",
+        description: "design fixes",
+      },
+      {
+        component: "Button",
+        type: "fix",
+        description: "Design fixes",
+      }
+    ],
+  },
+  {
+    version: "1.22.0",
+    changes: [
+      {
+        component: "Storybook",
+        type: "enhancement",
+        description: [
+          "add Jira story",
+          "add dash line chart exemple"
+        ],
+      },
+      {
+        component: "SnackBar",
+        type: "fix",
+        description: "fix shadow and button center align",
+      },
+      {
+        component: "SystemBanner",
+        type: "fix",
+        description: "center texte left",
+      },
+      {
+        component: "Badge",
+        type: "fix",
+        description: "many design fixes",
+      }
+    ],
+  },
+  {
+    version: "1.21.4",
+    changes: [
+      {
+        component: "SegmentedControl",
+        type: "fix",
+        description: "click not detected on grouped options",
+      }
+    ],
+  },
+  {
+    version: "1.21.3",
+    changes: [
+      {
+        component: "SegmentedControl",
+        type: "fix",
+        description: "fix padding",
+      },
+      {
+        component: "Chart",
+        type: "enhancement",
+        description: "allow custom badges for totals",
+      },
+      {
+        component: "DatePicker",
+        type: "enhancement",
+        description: "add icon on date picker segmented control",
+      },
+      {
+        component: "Badge",
+        type: "fix",
+        description: "border and background colors",
+      }
+    ],
+  },
+  {
+    version: "1.21.2",
+    changes: [
+      {
+        component: "Tabs",
+        type: "fix",
+        description: "fullwidth props",
+      }
+    ],
+  },
+  {
+    version: "1.21.1",
+    changes: [
+      {
+        component: "Tabs",
+        type: "fix",
+        description: "use tab value for selected style detection",
+      }
+    ],
+  },
+  {
+    version: "1.21.0",
+    changes: [
+      {
+        component: "Chart",
+        type: "fix",
+        description: [
+          "icon color on legend with mixed chart type",
+          "remove word \"total\" on totalsDisplayMode detailed",
+          "close popper on click outside",
+          "add actions to more actions buttons",
+          "add currency and number format"
+        ],
+      }
+    ],
+  },
+  {
+    version: "1.20.2",
+    changes: [
+      {
+        component: "Button",
+        type: "fix",
+        description: "remove bow shadow if disabled",
+      }
+    ],
+  },
+  {
+    version: "1.20.1",
+    changes: [
+      {
+        component: "Badge",
+        type: "enhancement",
+        description: "update design and add large size",
+      }
+    ],
+  },
+  {
+    version: "1.20.0",
+    changes: [
+      {
+        component: "SystemBanner",
+        type: "enhancement",
+        description: "Add Component",
+      }
+    ],
+  },
+  {
+    version: "1.19.13",
+    changes: [
+      {
+        component: "DatePicker",
+        type: "fix",
+        description: [
+          "Selected month is now color primary",
+          "Granularity year appears even if not range mode",
+          "allow range granularities to be selected even if it's not in range mode"
+        ],
+      }
+    ],
+  },
+  {
+    version: "1.19.12",
+    changes: [
+      {
+        component: "NavigationBar",
+        type: "fix",
+        description: "remove padding on custom side bar content",
+      }
+    ],
+  },
   {
     version: "1.19.11",
     changes: [
@@ -143,7 +395,7 @@ const releaseNotes: ReleaseNote[] = [
       {
         component: "ListItem",
         type: "fix",
-        description: "set divider border color to #E6E7EA",
+        description: "set divider border color to borderNeutral",
       }
     ],
   },
@@ -168,7 +420,7 @@ const releaseNotes: ReleaseNote[] = [
       {
         component: "ListItem",
         type: "fix",
-        description: "set divider border color to #E6E7EA",
+        description: "set divider border color to borderNeutral",
       }
     ],
   },
@@ -1556,12 +1808,15 @@ const ReleaseNotesContent = () => {
       }
 
       // Search in changes
-      return release.changes.some(
-        (change) =>
-          change.component?.toLowerCase().includes(lowerSearch) ||
-          change.description.toLowerCase().includes(lowerSearch) ||
-          change.type.toLowerCase().includes(lowerSearch)
-      );
+      return release.changes.some((change) => {
+        const matchesComponent = change.component?.toLowerCase().includes(lowerSearch);
+        const matchesType = change.type.toLowerCase().includes(lowerSearch);
+        const matchesDescription = Array.isArray(change.description)
+          ? change.description.some((desc) => desc.toLowerCase().includes(lowerSearch))
+          : change.description.toLowerCase().includes(lowerSearch);
+
+        return matchesComponent || matchesType || matchesDescription;
+      });
     });
   }, [searchTerm]);
 
@@ -1773,7 +2028,7 @@ const ReleaseNotesContent = () => {
                       icon={<Icon size={12}>{getTypeIcon(change.type)}</Icon>}
                     />
 
-                    <Row gap={2} flex={1}>
+                    <Column gap={2} flex={1}>
                       {change.component && (
                         <Typography
                           variant="bodyMSemiBold"
@@ -1783,10 +2038,22 @@ const ReleaseNotesContent = () => {
                           {change.component}:
                         </Typography>
                       )}
-                      <Typography variant="bodyMRegular" color="neutral/70">
-                        {change.description}
-                      </Typography>
-                    </Row>
+                      {Array.isArray(change.description) ? (
+                        <Box component="ul" m={0} pl={5}>
+                          {change.description.map((desc, descIndex) => (
+                            <Box component="li" key={descIndex}>
+                              <Typography variant="bodyMRegular" color="neutral/70">
+                                {desc}
+                              </Typography>
+                            </Box>
+                          ))}
+                        </Box>
+                      ) : (
+                        <Typography variant="bodyMRegular" color="neutral/70">
+                          {change.description}
+                        </Typography>
+                      )}
+                    </Column>
                   </Column>
                 </Box>
               ))}

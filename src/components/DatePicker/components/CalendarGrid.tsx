@@ -303,7 +303,7 @@ export const CalendarGrid: React.FC<CalendarGridProps> = ({
             justifyContent="center"
           >
             <Typography variant="captionSemiBold" color="neutral/50">
-              {dayShort}
+              {dayShort.charAt(0).toUpperCase() + dayShort.slice(1)}
             </Typography>
           </Box>
         ))}
