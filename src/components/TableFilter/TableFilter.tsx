@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Box from "../Box";
 import Row from "../Row";
+import Button from "../Button";
+import Icon from "../Icon";
 import FilterHeader from "./FilterHeader";
 import FilterChip from "./FilterChip";
 import FilterValuePopper from "./FilterValuePopper";
@@ -51,6 +53,7 @@ export interface TableFilterProps<T = any> {
   searchValue?: string;
   onSearchChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   searchPlaceholder?: string;
+  localStorageKey?: string;
 }
 
 const TableFilter = <T,>({
@@ -62,6 +65,7 @@ const TableFilter = <T,>({
   searchValue,
   onSearchChange,
   searchPlaceholder,
+  localStorageKey,
 }: TableFilterProps<T>) => {
   const [popperAnchor, setPopperAnchor] = useState<HTMLElement | null>(null);
   const [selectedKey, setSelectedKey] = useState<keyof T | null>(null);
@@ -74,6 +78,7 @@ const TableFilter = <T,>({
   const [filterValues, setFilterValues] = useState<Map<keyof T, string>>(
     new Map()
   );
+  const [showAddFilterButton, setShowAddFilterButton] = useState(false);
   const filterButtonRef = useRef<HTMLButtonElement>(null);
 
   const inferInputType = (key: keyof T): FilterInputType => {
@@ -133,11 +138,12 @@ const TableFilter = <T,>({
     setFilterValue(newValue);
 
     if (onFilterApply && selectedKey) {
-      const updatedActiveFilters = newValue === ""
-        ? activeFilters.filter((k) => k !== selectedKey)
-        : activeFilters.includes(selectedKey)
-          ? activeFilters
-          : [...activeFilters, selectedKey];
+      const updatedActiveFilters =
+        newValue === ""
+          ? activeFilters.filter((k) => k !== selectedKey)
+          : activeFilters.includes(selectedKey)
+            ? activeFilters
+            : [...activeFilters, selectedKey];
 
       onFilterApply(selectedKey, newValue, updatedActiveFilters);
       setFilterValues((prev) => {
@@ -148,8 +154,14 @@ const TableFilter = <T,>({
     }
   };
 
+  const addFilterButtonRef = useRef<HTMLButtonElement>(null);
+
   const handleFilterButtonClick = () => {
     setFilterButtonAnchor(filterButtonAnchor ? null : filterButtonRef.current);
+  };
+
+  const handleAddFilterClick = () => {
+    setFilterButtonAnchor(filterButtonAnchor ? null : addFilterButtonRef.current);
   };
 
   const handleFilterButtonClickAway = () => {
@@ -163,6 +175,8 @@ const TableFilter = <T,>({
         newSet.delete(key);
       } else {
         newSet.add(key);
+        // Hide add filter button once a filter is added
+        setShowAddFilterButton(false);
       }
 
       const totalFilters = Object.keys(filterConfig).length;
@@ -191,7 +205,9 @@ const TableFilter = <T,>({
     if (selectedKey) {
       setFilterValue("");
       if (onFilterApply) {
-        const updatedActiveFilters = activeFilters.filter((k) => k !== selectedKey);
+        const updatedActiveFilters = activeFilters.filter(
+          (k) => k !== selectedKey
+        );
         onFilterApply(selectedKey, "", updatedActiveFilters);
       }
       setFilterValues((prev) => {
@@ -201,6 +217,79 @@ const TableFilter = <T,>({
       });
     }
   };
+
+  const handleResetAllFilters = () => {
+    // Clear all visible filters
+    setVisibleFilters(new Set());
+    // Clear all filter values
+    setFilterValues(new Map());
+    // Show add filter button after reset
+    setShowAddFilterButton(true);
+    // Clear localStorage
+    if (localStorageKey) {
+      localStorage.removeItem(localStorageKey);
+    }
+    // Notify parent to clear active filters
+    if (onFilterApply) {
+      // Call onFilterApply for each active filter with empty value
+      activeFilters.forEach((key) => {
+        onFilterApply(key, "", []);
+      });
+    }
+  };
+
+  const handleSaveFilters = () => {
+    if (localStorageKey) {
+      const filtersToSave = {
+        visibleFilters: Array.from(visibleFilters),
+        filterValues: Object.fromEntries(filterValues),
+      };
+      localStorage.setItem(localStorageKey, JSON.stringify(filtersToSave));
+    }
+  };
+
+  useEffect(() => {
+    if (localStorageKey) {
+      const savedFilters = localStorage.getItem(localStorageKey);
+      if (savedFilters) {
+        try {
+          const {
+            visibleFilters: savedVisibleFilters,
+            filterValues: savedFilterValues,
+          } = JSON.parse(savedFilters);
+
+          if (savedVisibleFilters && Array.isArray(savedVisibleFilters)) {
+            setVisibleFilters(new Set(savedVisibleFilters));
+          }
+
+          if (savedFilterValues && typeof savedFilterValues === "object") {
+            const newMap = new Map(Object.entries(savedFilterValues)) as Map<
+              keyof T,
+              string
+            >;
+            setFilterValues(newMap);
+
+            // Notify parent about active filters (those with values)
+            if (onFilterApply) {
+              const activeKeys = Object.entries(savedFilterValues)
+                .filter(([_, value]) => value !== "")
+                .map(([key]) => key as keyof T);
+
+              // Call onFilterApply for each active filter to sync state
+              activeKeys.forEach((key) => {
+                const value = savedFilterValues[key as string];
+                if (value) {
+                  onFilterApply(key, value, activeKeys);
+                }
+              });
+            }
+          }
+        } catch (e) {
+          console.error("Failed to load filters from localStorage:", e);
+        }
+      }
+    }
+  }, [localStorageKey]);
 
   return (
     <Box width="100%">
@@ -213,13 +302,20 @@ const TableFilter = <T,>({
         searchPlaceholder={searchPlaceholder}
       />
 
-      {visibleFilters.size > 0 && (
+      <Row
+        gap={4}
+        flexWrap="wrap"
+        py={4}
+        borderTop={{ color: "borderNeutral" }}
+        alignItems="center"
+        justifyContent="flex-end"
+      >
         <Row
           gap={4}
           flexWrap="wrap"
-          py={4}
-          borderTop={{ color: "borderNeutral" }}
           alignItems="center"
+          width={"auto"}
+          flex={1}
         >
           {Object.entries(filterConfig).map(([key, item]) => {
             const filterItem = item as FilterConfigItem;
@@ -238,8 +334,42 @@ const TableFilter = <T,>({
               />
             );
           })}
+          {(visibleFilters.size > 0 || showAddFilterButton) && (
+            <Button
+              ref={addFilterButtonRef}
+              variant="text"
+              color="neutral"
+              size="small"
+              startIcon={<Icon size={14}>add-01</Icon>}
+              onClick={handleAddFilterClick}
+            >
+              Filtrer
+            </Button>
+          )}
         </Row>
-      )}
+        {visibleFilters.size > 0 && (
+          <Row gap={4} alignItems="center" width={"auto"}>
+            <Button
+              variant="text"
+              color="neutral"
+              size="small"
+              onClick={handleResetAllFilters}
+            >
+              Réinitialiser
+            </Button>
+            {localStorageKey && (
+              <Button
+                variant="tonal"
+                color="neutral"
+                size="small"
+                onClick={handleSaveFilters}
+              >
+                Enregistrer
+              </Button>
+            )}
+          </Row>
+        )}
+      </Row>
 
       <FilterValuePopper
         open={Boolean(popperAnchor)}
@@ -249,9 +379,7 @@ const TableFilter = <T,>({
         filterLabel={
           selectedKey ? (filterConfig[selectedKey]?.label ?? "") : ""
         }
-        filterIcon={
-          selectedKey ? filterConfig[selectedKey]?.icon : undefined
-        }
+        filterIcon={selectedKey ? filterConfig[selectedKey]?.icon : undefined}
         inputSuffix={
           selectedKey ? filterConfig[selectedKey]?.inputSuffix : undefined
         }

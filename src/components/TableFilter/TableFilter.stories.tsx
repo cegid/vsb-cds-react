@@ -233,6 +233,7 @@ export const Default: Story = {
             </Tabs>
           }
           searchPlaceholder="Cherchez par nom, tél, type..."
+          localStorageKey="tableFilter-products"
         />
         <Table aria-label="products table with filters">
           <TableHead>
