@@ -1,52 +1,51 @@
 "use client";
 
-import React, { useState } from "react";
-import { Popper, ClickAwayListener, Paper } from "@mui/material";
+import React, { useState, useRef } from "react";
 import Box from "../Box";
-import Chip from "../Chip";
 import Row from "../Row";
-import Column from "../Column";
-import Icon from "../Icon";
-import TextField from "../TextField";
-import Button from "../Button";
-import Checkbox from "../Checkbox";
-import Typography from "../Typography";
-import Tabs from "../Tabs";
-import Tab from "../Tab";
-import IconButton from "../IconButton";
-import { InputSearch } from "..";
+import FilterHeader from "./FilterHeader";
+import FilterChip from "./FilterChip";
+import FilterValuePopper from "./FilterValuePopper";
+import FilterSelectionPopper from "./FilterSelectionPopper";
+import { StatusColor } from "../Status";
 
 export type FilterInputType =
   | "text"
   | "number"
+  | "numberRange"
   | "date"
-  | "datetime-local"
-  | "email";
+  | "email"
+  | "select"
+  | "labels";
+
+export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface LabelOption {
+  value: string;
+  label: string;
+  color?: StatusColor;
+}
 
 export interface FilterConfigItem {
   label: string;
   icon?: React.ComponentType<any>;
   type?: FilterInputType;
+  inputSuffix?: React.ReactNode;
+  selectOptions?: SelectOption[];
+  labelOptions?: LabelOption[];
 }
 
 export interface TableFilterProps<T = any> {
-  /**
-   * Configuration mapping keys of type T to display labels, optional icons and input type
-   */
   filterConfig: Partial<Record<keyof T, FilterConfigItem>>;
-  /**
-   * Callback fired when a filter is applied
-   * @param attributeKey - The key of the attribute
-   * @param value - The filter value entered by the user
-   */
-  onFilterApply?: (attributeKey: keyof T, value: string) => void;
-  /**
-   * Array of currently active filter keys
-   */
+  onFilterApply?: (
+    attributeKey: keyof T,
+    value: string,
+    activeFilters: (keyof T)[]
+  ) => void;
   activeFilters?: (keyof T)[];
-  /**
-   * Sample object used to infer types at runtime
-   */
   sampleData?: T;
 }
 
@@ -61,21 +60,18 @@ const TableFilter = <T,>({
   const [filterValue, setFilterValue] = useState("");
   const [filterButtonAnchor, setFilterButtonAnchor] =
     useState<HTMLElement | null>(null);
-  const [visibleFilters, setVisibleFilters] = useState<Set<keyof T>>(
-    new Set(Object.keys(filterConfig) as (keyof T)[])
-  );
+  const [visibleFilters, setVisibleFilters] = useState<Set<keyof T>>(new Set());
   const [filterValues, setFilterValues] = useState<Map<keyof T, string>>(
     new Map()
   );
+  const filterButtonRef = useRef<HTMLButtonElement>(null);
 
   const inferInputType = (key: keyof T): FilterInputType => {
-    // First check if type is explicitly defined in filterConfig
     const configItem = filterConfig[key] as FilterConfigItem;
     if (configItem?.type) {
       return configItem.type;
     }
 
-    // If sampleData is provided, infer from the value type
     if (sampleData && typeof sampleData === "object" && sampleData !== null) {
       const value = (sampleData as any)[key];
       const valueType = typeof value;
@@ -87,11 +83,9 @@ const TableFilter = <T,>({
         return "date";
       }
       if (valueType === "string") {
-        // Check if it looks like an email
         if (value.includes("@")) {
           return "email";
         }
-        // Check if it looks like a date string
         if (!isNaN(Date.parse(value))) {
           return "date";
         }
@@ -109,23 +103,14 @@ const TableFilter = <T,>({
     const target = event.currentTarget;
 
     if (popperAnchor && selectedKey === key) {
-      // Close if clicking on the same chip
       setPopperAnchor(null);
       setSelectedKey(null);
       setFilterValue("");
     } else {
-      // Open popper for this chip
       setPopperAnchor(target);
       setSelectedKey(key);
-      // Load saved filter value if it exists
       setFilterValue(filterValues.get(key) || "");
     }
-  };
-
-  const [tabsValue, setTabsValue] = useState(0);
-
-  const handleTabsChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabsValue(newValue);
   };
 
   const handleClickAway = () => {
@@ -134,23 +119,27 @@ const TableFilter = <T,>({
     setFilterValue("");
   };
 
-  const handleFilterApply = () => {
+  const handleFilterChange = (newValue: string) => {
+    setFilterValue(newValue);
+
     if (onFilterApply && selectedKey) {
-      onFilterApply(selectedKey, filterValue);
-      // Save the filter value
+      const updatedActiveFilters = newValue === ""
+        ? activeFilters.filter((k) => k !== selectedKey)
+        : activeFilters.includes(selectedKey)
+          ? activeFilters
+          : [...activeFilters, selectedKey];
+
+      onFilterApply(selectedKey, newValue, updatedActiveFilters);
       setFilterValues((prev) => {
         const newMap = new Map(prev);
-        newMap.set(selectedKey, filterValue);
+        newMap.set(selectedKey, newValue);
         return newMap;
       });
     }
-    setPopperAnchor(null);
-    setSelectedKey(null);
-    setFilterValue("");
   };
 
-  const handleFilterButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-    setFilterButtonAnchor(filterButtonAnchor ? null : event.currentTarget);
+  const handleFilterButtonClick = () => {
+    setFilterButtonAnchor(filterButtonAnchor ? null : filterButtonRef.current);
   };
 
   const handleFilterButtonClickAway = () => {
@@ -165,149 +154,113 @@ const TableFilter = <T,>({
       } else {
         newSet.add(key);
       }
+
+      const totalFilters = Object.keys(filterConfig).length;
+      if (newSet.size === totalFilters) {
+        setFilterButtonAnchor(null);
+      }
+
       return newSet;
     });
   };
 
-  const [value, setValue] = useState("");
+  const handleDeleteFilter = () => {
+    if (selectedKey) {
+      setVisibleFilters((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(selectedKey);
+        return newSet;
+      });
+      setPopperAnchor(null);
+      setSelectedKey(null);
+      setFilterValue("");
+    }
+  };
+
+  const handleResetFilter = () => {
+    if (selectedKey) {
+      setFilterValue("");
+      if (onFilterApply) {
+        const updatedActiveFilters = activeFilters.filter((k) => k !== selectedKey);
+        onFilterApply(selectedKey, "", updatedActiveFilters);
+      }
+      setFilterValues((prev) => {
+        const newMap = new Map(prev);
+        newMap.set(selectedKey, "");
+        return newMap;
+      });
+    }
+  };
 
   return (
     <Box width="100%">
-      <Box py={4}>
-        <Row>
-          <Tabs
-            aria-label="Customer tabs"
-            value={tabsValue}
-            onChange={handleTabsChange}
-            bottomLine={false}
-          >
-            <Tab
-              aria-controls="simple-tabpanel-0"
-              id="individual-tab"
-              label="Particulier"
-            />
-            <Tab
-              aria-controls="simple-tabpanel-1"
-              id="company-tab"
-              label="Professionnel"
-            />
-          </Tabs>
-          <InputSearch
-            value={value}
-            defaultSize="short"
-            onChange={(e) => setValue(e.target.value)}
-            onFilterClick={() => {}}
-            fullWidth={false}
-            sx={{
-              justifyContent: "flex-end",
-              "& .MuiInputBase-input": {
-                flex: 0,
-              },
-            }}
-          />
-        </Row>
-      </Box>
-      <Row
-        gap={4}
-        flexWrap="wrap"
-        py={4}
-        borderTop={{ color: "borderNeutral" }}
-        alignItems="center"
-      >
-        {Object.entries(filterConfig).map(([key, item]) => {
-          const filterItem = item as FilterConfigItem;
-          const IconComponent = filterItem.icon;
+      <FilterHeader
+        ref={filterButtonRef}
+        onFilterClick={handleFilterButtonClick}
+      />
 
-          if (!visibleFilters.has(key as keyof T)) {
-            return null;
-          }
-
-          return (
-            <Chip
-              key={String(key)}
-              label={
-                <Typography color="neutral/50" variant="captionSemiBold">
-                  {filterItem.label}
-                </Typography>
-              }
-              onClick={(e) => handleChipClick(e, key as keyof T)}
-              clicked={activeFilters.includes(key as keyof T)}
-              color={
-                activeFilters.includes(key as keyof T) ? "primary" : "neutral"
-              }
-              startIcon={IconComponent ? <IconComponent /> : undefined}
-              endIcon={<Icon size={12}>arrow-down-01</Icon>}
-            />
-          );
-        })}
-        <Button
-          size="small"
-          color="neutral"
-          variant="text"
-          startIcon={<Icon size={16}>add-01</Icon>}
-          onClick={handleFilterButtonClick}
+      {visibleFilters.size > 0 && (
+        <Row
+          gap={4}
+          flexWrap="wrap"
+          py={4}
+          borderTop={{ color: "borderNeutral" }}
+          alignItems="center"
         >
-          Filter
-        </Button>
-      </Row>
+          {Object.entries(filterConfig).map(([key, item]) => {
+            const filterItem = item as FilterConfigItem;
 
-      <Popper
+            if (!visibleFilters.has(key as keyof T)) {
+              return null;
+            }
+
+            return (
+              <FilterChip
+                key={String(key)}
+                filterKey={key as keyof T}
+                filterItem={filterItem}
+                isActive={activeFilters.includes(key as keyof T)}
+                onClick={(e) => handleChipClick(e, key as keyof T)}
+              />
+            );
+          })}
+        </Row>
+      )}
+
+      <FilterValuePopper
         open={Boolean(popperAnchor)}
         anchorEl={popperAnchor}
-        placement="bottom-start"
-        style={{ zIndex: 1300 }}
-      >
-        <ClickAwayListener onClickAway={handleClickAway}>
-          <Paper elevation={3} sx={{ mt: 1 }}>
-            <Box p={6}>
-              <Column gap={4}>
-                <TextField
-                  placeholder="Entrez une valeur"
-                  type={selectedKey ? inferInputType(selectedKey) : "text"}
-                  value={filterValue}
-                  onChange={(e) => setFilterValue(e.target.value)}
-                  fullWidth
-                  autoFocus
-                />
-                <Button onClick={handleFilterApply} fullWidth>
-                  Filter
-                </Button>
-              </Column>
-            </Box>
-          </Paper>
-        </ClickAwayListener>
-      </Popper>
+        filterValue={filterValue}
+        inputType={selectedKey ? inferInputType(selectedKey) : "text"}
+        filterLabel={
+          selectedKey ? (filterConfig[selectedKey]?.label ?? "") : ""
+        }
+        filterIcon={
+          selectedKey ? filterConfig[selectedKey]?.icon : undefined
+        }
+        inputSuffix={
+          selectedKey ? filterConfig[selectedKey]?.inputSuffix : undefined
+        }
+        selectOptions={
+          selectedKey ? filterConfig[selectedKey]?.selectOptions : undefined
+        }
+        labelOptions={
+          selectedKey ? filterConfig[selectedKey]?.labelOptions : undefined
+        }
+        onFilterChange={handleFilterChange}
+        onClickAway={handleClickAway}
+        onDelete={handleDeleteFilter}
+        onReset={handleResetFilter}
+      />
 
-      <Popper
+      <FilterSelectionPopper
         open={Boolean(filterButtonAnchor)}
         anchorEl={filterButtonAnchor}
-        placement="bottom-start"
-        style={{ zIndex: 1300 }}
-      >
-        <ClickAwayListener onClickAway={handleFilterButtonClickAway}>
-          <Paper elevation={3} sx={{ mt: 1 }}>
-            <Box p={6} minWidth={200}>
-              <Column gap={2}>
-                {Object.entries(filterConfig).map(([key, item]) => {
-                  const filterItem = item as FilterConfigItem;
-                  return (
-                    <Row key={String(key)} alignItems="center" gap={2}>
-                      <Checkbox
-                        name={String(key)}
-                        checked={visibleFilters.has(key as keyof T)}
-                        onChange={() => handleVisibilityToggle(key as keyof T)}
-                      />
-                      <Typography variant="bodyMRegular">
-                        {filterItem.label}
-                      </Typography>
-                    </Row>
-                  );
-                })}
-              </Column>
-            </Box>
-          </Paper>
-        </ClickAwayListener>
-      </Popper>
+        filterConfig={filterConfig}
+        visibleFilters={visibleFilters}
+        onVisibilityToggle={handleVisibilityToggle}
+        onClickAway={handleFilterButtonClickAway}
+      />
     </Box>
   );
 };
