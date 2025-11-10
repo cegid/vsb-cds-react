@@ -10,7 +10,7 @@ import Typography from "../Typography/Typography";
 import Box from "../Box";
 import Icon from "../Icon";
 import Avatar from "../Avatar";
-
+export type StatusColor = PaletteNames | "white";
 export type StatusVariant = "dark" | "light" | "link";
 export interface StatusProps {
   /**
@@ -33,7 +33,7 @@ export interface StatusProps {
    * Falls back to 'primary' if an invalid color is provided.
    * @default 'primary'
    */
-  color?: PaletteNames | "white";
+  color?: StatusColor;
 
   /**
    * Controls the visual style of the status badge.
