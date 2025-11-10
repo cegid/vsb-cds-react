@@ -26,11 +26,6 @@ on:
           - demo
           - test
         default: demo
-      BRANCH:
-        description: "Branch to deploy (only for test environment)"
-        required: false
-        type: string
-        default: main
       SKIP_BUILD:
         description: "Skip build and deploy latest image"
         required: false
@@ -56,13 +51,14 @@ jobs:
       - name: Set environment variables
         id: set-vars
         run: |
+          # Extract branch name from github.ref (refs/heads/branch-name -> branch-name)
+          BRANCH="${{ github.ref_name }}"
+
           # Determine environment (push = demo, workflow_dispatch = from input)
           if [ "${{ github.event_name }}" == "push" ]; then
             ENV_NAME="demo"
-            BRANCH="main"
           else
             ENV_NAME="${{ github.event.inputs.ENVIRONMENT }}"
-            BRANCH="${{ github.event.inputs.BRANCH }}"
           fi
 
           # Set variables based on environment
