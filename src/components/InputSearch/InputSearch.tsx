@@ -43,8 +43,9 @@ export interface SearchInputProps
   filterButtonRef?: React.RefObject<HTMLButtonElement>;
 }
 
-const CustomTextField = styled(TextField)<{ $size?: SearchInputSize }>(
-  ({ theme, $size }) => ({
+const CustomTextField = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== "$size",
+})<{ $size?: SearchInputSize }>(({ theme, $size }) => ({
     "& .MuiInputBase-root": {
       paddingLeft: $size === "short" ? "9px" : "16px",
       paddingRight: $size === "short" ? "9px" : "10px",
