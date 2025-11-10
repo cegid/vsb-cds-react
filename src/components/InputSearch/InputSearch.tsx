@@ -134,7 +134,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   };
 
   return (
-    <Row gap={4} sx={props.sx}>
+    <Row gap={4} sx={props.sx} width={fullwidth ? "100%" : "auto"}>
       <Box
         onClick={() => {
           if (size === "short") {
@@ -143,12 +143,14 @@ const SearchInput: React.FC<SearchInputProps> = ({
             setTimeout(() => inputRef.current?.focus(), 0);
           }
         }}
+        width={fullwidth ? "100%" : "auto"}
       >
         <CustomTextField
           $size={size}
           placeholder={size === "short" ? "" : placeholder}
           value={value}
           onChange={(e) => handleChange(e)}
+          fullWidth={fullwidth}
           inputRef={inputRef}
           InputProps={{
             startAdornment: (
