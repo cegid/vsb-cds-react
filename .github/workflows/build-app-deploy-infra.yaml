@@ -98,6 +98,8 @@ jobs:
     name: Build Docker image
     runs-on: ubuntu-latest
     needs: setup
+    environment:
+      name: demo
 
     steps:
       - name: Checkout code
