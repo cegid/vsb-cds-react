@@ -37,6 +37,10 @@ export interface SearchInputProps
    * @default false
    */
   fullwidth?: boolean;
+  /**
+   * Ref to access the filter button element
+   */
+  filterButtonRef?: React.RefObject<HTMLButtonElement>;
 }
 
 const CustomTextField = styled(TextField)<{ $size?: SearchInputSize }>(
@@ -100,6 +104,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onFilterClick,
   defaultSize = "long",
   fullwidth = false,
+  filterButtonRef,
   ...props
 }) => {
   const [hasValue, setHasValue] = useState(false);
@@ -187,6 +192,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       </Box>
       {onFilterClick && (
         <IconButton
+          ref={filterButtonRef}
           variant="tonal"
           color="neutral"
           square
