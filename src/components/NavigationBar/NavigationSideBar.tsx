@@ -28,7 +28,7 @@ interface SidebarPanelProps {
   hasCustomContent?: boolean;
 }
 
-export const SIDEBAR_WIDTH = 'fit-content';
+export const SIDEBAR_WIDTH = 225;
 
 const SidebarPanel = styled(Paper, {
   shouldForwardProp: prop => prop !== 'open' && prop !== 'anchorWidth' && prop !== 'hasCustomContent',
@@ -42,7 +42,7 @@ const SidebarPanel = styled(Paper, {
   height: '100%',
   padding: hasCustomContent ? 0 : 16,
   pointerEvents: open ? 'auto'  : 'none',
-  width: SIDEBAR_WIDTH,
+  width: hasCustomContent ? 'fit-content' : SIDEBAR_WIDTH,
   zIndex: 1190,
   
   // ----- Animation ------
