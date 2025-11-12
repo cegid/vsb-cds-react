@@ -188,7 +188,7 @@ export const Default: Story = {
             },
             status: {
               label: "Statut",
-              icon: () => <Icon size={12}>check-circle</Icon>,
+              icon: () => <Icon size={12}>status</Icon>,
               type: "select",
               selectOptions: [
                 { value: "Available", label: "Disponible" },
@@ -203,12 +203,12 @@ export const Default: Story = {
             },
             expiryDate: {
               label: "Date d'expiration",
-              icon: () => <Icon size={12}>calendar-check-01</Icon>,
+              icon: () => <Icon size={12}>calendar-01</Icon>,
               type: "date",
             },
             labels: {
               label: "Étiquettes",
-              icon: () => <Icon size={12}>tag-01</Icon>,
+              icon: () => <Icon size={12}>tags</Icon>,
               type: "labels",
               labelOptions: [
                 { value: "urgent", label: "Urgent" },
