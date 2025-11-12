@@ -220,7 +220,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
             <NavListItemIcon>
               <MenuIcon
                 variant={iconVariant}
-                color="primary/10"
+                color="neutral/10"
                 size={isHovered && !navItem.isDisabled ? "18px" : "16px"}
                 expanded={isExpanded}
               >
@@ -244,7 +244,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
               variant="iconOnly"
               square
             >
-              <Icon variant="stroke" color="primary/10" size="12px">
+              <Icon variant="stroke" color="neutral/10" size="12px">
                 add-01
               </Icon>
             </IconButton>
@@ -252,7 +252,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
           {isSideBar && hasChildren && (
             <CollapseIcon
               variant="stroke"
-              color="primary/10"
+              color="neutral/10"
               size="12px"
               expandednavitem={isExpandedNavItem}
             >
