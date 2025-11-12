@@ -360,7 +360,7 @@ const TableFilter = <T,>({
             {localStorageKey && (
               <Button
                 variant="tonal"
-                color="neutral"
+                color="primary"
                 size="small"
                 onClick={handleSaveFilters}
               >
