@@ -11,7 +11,7 @@ import IconButton from "../IconButton";
 import Icon from "../Icon";
 import Box from "../Box";
 import { BadgeProps } from "../Badge";
-import { PaletteNames, parseCustomColor } from "../../theme";
+import { neutral, PaletteNames, parseCustomColor } from "../../theme";
 import { TotalsDisplayMode } from "./Chart";
 
 interface DetailedTotal {
@@ -126,7 +126,15 @@ const ChartModal: React.FC<ChartModalProps> = ({
             </IconButton>
           </Box>
 
-          <Column p={6} borderRadius={3} gap={6} backgroundColor="white">
+          <Column
+            p={6}
+            borderRadius={3}
+            gap={6}
+            backgroundColor="white"
+            sx={{
+              boxShadow: `0px 0px 25px 0px ${neutral[99]}`,
+            }}
+          >
             <Typography variant="displaySSemiBold" color="neutral/10">
               {title}
             </Typography>
@@ -151,12 +159,29 @@ const ChartModal: React.FC<ChartModalProps> = ({
               />
             )}
 
-            {totalsDisplayMode !== "detailed" && (isPieOrDoughnut ? (
-              <Row gap={6} alignItems="center">
-                <Box flex={1}>
-                  <ChartCore {...chartProps} data={filteredChartData} />
-                </Box>
-                <Column gap={2} minWidth="200px">
+            {totalsDisplayMode !== "detailed" &&
+              (isPieOrDoughnut ? (
+                <Row gap={6} alignItems="center">
+                  <Box flex={1}>
+                    <ChartCore {...chartProps} data={filteredChartData} />
+                  </Box>
+                  <Column gap={2} minWidth="200px">
+                    <ChartLegend
+                      datasets={chartProps.data.datasets}
+                      chartType={chartProps.type}
+                      hiddenDatasets={
+                        isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
+                      }
+                      hoveredDataset={hoveredDataset}
+                      onToggleDataset={onToggleDataset}
+                      onMouseEnter={onMouseEnter}
+                      onMouseLeave={onMouseLeave}
+                      labels={chartProps.data.labels}
+                    />
+                  </Column>
+                </Row>
+              ) : (
+                <>
                   <ChartLegend
                     datasets={chartProps.data.datasets}
                     chartType={chartProps.type}
@@ -169,31 +194,12 @@ const ChartModal: React.FC<ChartModalProps> = ({
                     onMouseLeave={onMouseLeave}
                     labels={chartProps.data.labels}
                   />
-                </Column>
-              </Row>
-            ) : (
-              <>
-                <ChartLegend
-                  datasets={chartProps.data.datasets}
-                  chartType={chartProps.type}
-                  hiddenDatasets={
-                    isPieOrDoughnut ? hiddenDataPoints : hiddenDatasets
-                  }
-                  hoveredDataset={hoveredDataset}
-                  onToggleDataset={onToggleDataset}
-                  onMouseEnter={onMouseEnter}
-                  onMouseLeave={onMouseLeave}
-                  labels={chartProps.data.labels}
-                />
-                <ChartCore {...chartProps} data={filteredChartData} />
-              </>
-            ))}
-            
+                  <ChartCore {...chartProps} data={filteredChartData} />
+                </>
+              ))}
+
             {totalsDisplayMode === "detailed" && (
-              <ChartCore 
-                {...chartProps} 
-                data={filteredChartData} 
-              />
+              <ChartCore {...chartProps} data={filteredChartData} />
             )}
           </Column>
         </Box>
