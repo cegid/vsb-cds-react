@@ -29,6 +29,63 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.23.0",
+    changes: [
+      {
+        component: "Status",
+        type: "enhancement",
+        description: "allow custom content on label",
+      },
+      {
+        component: "TextField",
+        type: "enhancement",
+        description: "add onDebouncedChange",
+      },
+      {
+        component: "TableFilter",
+        type: "enhancement",
+        description: "add filter on filter selection poppers",
+      },
+      {
+        component: "TableFilter",
+        type: "fix",
+        description: "save button primary",
+      },
+      {
+        component: "Table",
+        type: "enhancement",
+        description: "add bordered props to add border on table content",
+      },
+      {
+        component: "ButtonSplit",
+        type: "enhancement",
+        description: "add component",
+      },
+      {
+        component: "NavigationBar",
+        type: "fix",
+        description: [
+          "add highlight props on NavItem",
+          "color button to neutral/10",
+          "fixed size if not custom content"
+        ],
+      },
+      {
+        component: "Chart",
+        type: "fix",
+        description: [
+          "add shadow on graph modal",
+          "remove hovered border"
+        ],
+      },
+      {
+        component: "TableFilter",
+        type: "enhancement",
+        description: "add component to WIP",
+      }
+    ],
+  },
+  {
     version: "1.22.7",
     changes: [
       {
