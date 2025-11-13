@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import ButtonSplit from "./ButtonSplit";
-import type { ButtonSplitProps } from "./ButtonSplit";
 
 const meta = {
-  title: "Components/ButtonSplit",
+  title: "🚧 WIP/ButtonSplit",
   component: ButtonSplit,
   parameters: {
     layout: "centered",
