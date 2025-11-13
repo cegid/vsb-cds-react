@@ -6,6 +6,8 @@ import Box from "../Box";
 import Stack from "../Stack";
 import Typography from "../Typography";
 import Avatar from "../Avatar";
+import Icon from "../Icon";
+import Row from "../Row";
 
 const colorNames = [...Object.keys(colorPalettes), "white"];
 
@@ -149,7 +151,12 @@ export const Size: Story = {
               variant={index % 2 === 0 ? "light" : "dark"}
               color={colorName as PaletteNames}
               icon="information-circle"
-              label={colorName}
+              label={
+                <Row alignItems={"center"} gap={4}>
+                  <Typography variant="captionRegular">Test</Typography>
+                  <Icon size={14}>information-circle</Icon>
+                </Row>
+              }
             />
           ))}
         </Box>

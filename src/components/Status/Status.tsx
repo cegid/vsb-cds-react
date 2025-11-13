@@ -17,7 +17,7 @@ export interface StatusProps {
    * The text content displayed inside the status badge.
    * Text is rendered with ellipsis overflow handling for long content.
    */
-  label?: string;
+  label?: string | React.ReactElement;
 
   /**
    * Controls the size of the status badge.
