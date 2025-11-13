@@ -486,7 +486,7 @@ const ButtonSplit = React.forwardRef<HTMLDivElement, ButtonSplitProps>(
           ) : (
             <>
               {startIcon && (
-                <Icon size={sizeStyles.iconSize} color={white}>
+                <Icon size={sizeStyles.iconSize} color="white">
                   {startIcon}
                 </Icon>
               )}
@@ -503,7 +503,7 @@ const ButtonSplit = React.forwardRef<HTMLDivElement, ButtonSplitProps>(
           aria-haspopup="true"
           aria-expanded={open}
         >
-          <Icon size={sizeStyles.iconSize} color={white}>
+          <Icon size={sizeStyles.iconSize} color="white">
             chevron-down
           </Icon>
         </StyledSplitButton>
@@ -527,7 +527,7 @@ const ButtonSplit = React.forwardRef<HTMLDivElement, ButtonSplitProps>(
               disabled={item.disabled}
             >
               {item.icon && (
-                <Icon size={16} color={neutral[10]} style={{ marginRight: 8 }}>
+                <Icon size={16} color="neutral/10">
                   {item.icon}
                 </Icon>
               )}
