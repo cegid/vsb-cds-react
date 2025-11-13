@@ -5,6 +5,7 @@ import {
   TextFieldProps as CegidTextFieldProps,
   styled,
 } from "@cegid/cds-react";
+import { useEffect, useRef } from "react";
 
 import { colorPalettes } from "../../theme/colors";
 import { RADIUS } from "../../theme/radius";
@@ -15,7 +16,25 @@ import Typography from "../Typography";
 import Box from "../Box";
 import { color } from "chart.js/helpers";
 
-export interface TextFieldProps extends CegidTextFieldProps {}
+export interface TextFieldProps extends CegidTextFieldProps {
+  /**
+   * Callback appelé après un délai (debounce) suivant la dernière frappe
+   * @param event L'événement de changement
+   * @param delay Le délai en millisecondes avant l'appel (défaut: 300ms)
+   * @example
+   * <TextField
+   *   onDebouncedChange={(e) => performSearch(e.target.value)}
+   *   debounceDelay={500}
+   * />
+   */
+  onDebouncedChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+
+  /**
+   * Délai en millisecondes pour le debounce de onDebouncedChange
+   * @default 300
+   */
+  debounceDelay?: number;
+}
 
 const { primary, neutral, critical } = colorPalettes;
 
@@ -133,17 +152,35 @@ const StyledTextField = styled(CegidTextField)(
   })
 );
 
-const TextField = (props: CegidTextFieldProps) => {
+const TextField = (props: TextFieldProps) => {
+  const { onDebouncedChange, debounceDelay = 300, onChange, errorText, fullWidth, ...restProps } = props;
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event);
+
+    if (onDebouncedChange) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => onDebouncedChange(event), debounceDelay);
+    }
+  };
+
   return (
-    <Box width={props.fullWidth ? "100%" : "fit-content"}>
-      <StyledTextField {...props} />
-      {props.errorText && (
+    <Box width={fullWidth ? "100%" : "fit-content"}>
+      <StyledTextField {...restProps} fullWidth={fullWidth} onChange={handleChange} />
+      {errorText && (
         <Row gap={2} mt={4}>
           <Icon variant="stroke" size={16} color="critical/50">
             information-circle
           </Icon>
           <Typography variant="captionRegular" color="critical/50">
-            {props.errorText}
+            {errorText}
           </Typography>
         </Row>
       )}

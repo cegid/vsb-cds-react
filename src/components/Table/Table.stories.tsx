@@ -95,7 +95,11 @@ export const Default: Story = {
             ></Chip>
           </Row>
         </Column>
-        <Table aria-labelledby="tableTitle" aria-label="simple table">
+        <Table
+          aria-labelledby="tableTitle"
+          aria-label="simple table"
+          bordered={args.bordered}
+        >
           <TableHead>
             <TableRow>
               <TableCell>Dessert (100g serving)</TableCell>

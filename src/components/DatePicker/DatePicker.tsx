@@ -757,8 +757,7 @@ const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                 p={4}
                 gap={4}
                 backgroundColor="white"
-                border={{ color: "neutral/90", width: 1, style: "solid" }}
-                borderRadius="6px"
+                pt={6}
                 sx={{
                   boxShadow: "none",
                 }}

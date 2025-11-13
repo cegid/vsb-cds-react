@@ -82,6 +82,12 @@ export interface NavItem {
    * ```
    */
   renderSidebarContent?: (parent: NavItem | null, navItems: NavItem[]) => React.ReactNode;
+  /**
+   * Whether to highlight this navigation item with primary color.
+   * When true, the icon and text will use primary/60 color.
+   * @default false
+   */
+  highlight?: boolean;
 }
 
 /**

@@ -407,12 +407,6 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
         p={2}
         borderRadius={4}
         border={{ color: "borderNeutral" }}
-        sx={{
-          transition: "background-color 0.2s ease-in-out",
-          "&:hover": {
-            backgroundColor: parseCustomColor(`${backgroundColor}/95`),
-          },
-        }}
       >
         <Column
           ref={containerRef}

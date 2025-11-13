@@ -175,6 +175,8 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
   const [showTooltip, setShowTooltip] = useState(false);
   const tooltipTimer = useRef<number>();
   const iconVariant = navItem.isActive ? "solid" : "stroke";
+  const iconColor = navItem.highlight ? "primary/60" : "neutral/10";
+  const textColor = navItem.highlight ? "primary/60" : "primary/10";
   const hasChildren =
     Array.isArray(navItem.children) && navItem.children.length > 0;
   const handleMouseEnter = () => {
@@ -220,7 +222,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
             <NavListItemIcon>
               <MenuIcon
                 variant={iconVariant}
-                color="primary/10"
+                color={iconColor}
                 size={isHovered && !navItem.isDisabled ? "18px" : "16px"}
                 expanded={isExpanded}
               >
@@ -232,7 +234,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
             <ListItemText
               disableTypography
               primary={
-                <Typography variant="bodySMedium" color="primary/10" noWrap>
+                <Typography variant="bodySMedium" color={textColor} noWrap>
                   {navItem.label}
                 </Typography>
               }
@@ -244,7 +246,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
               variant="iconOnly"
               square
             >
-              <Icon variant="stroke" color="primary/10" size="12px">
+              <Icon variant="stroke" color="neutral/10" size="12px">
                 add-01
               </Icon>
             </IconButton>
@@ -252,7 +254,7 @@ const NavItemButton: React.FC<NavItemButtonProps> = ({
           {isSideBar && hasChildren && (
             <CollapseIcon
               variant="stroke"
-              color="primary/10"
+              color="neutral/10"
               size="12px"
               expandednavitem={isExpandedNavItem}
             >

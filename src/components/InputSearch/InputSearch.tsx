@@ -37,10 +37,15 @@ export interface SearchInputProps
    * @default false
    */
   fullwidth?: boolean;
+  /**
+   * Ref to access the filter button element
+   */
+  filterButtonRef?: React.RefObject<HTMLButtonElement>;
 }
 
-const CustomTextField = styled(TextField)<{ $size?: SearchInputSize }>(
-  ({ theme, $size }) => ({
+const CustomTextField = styled(TextField, {
+  shouldForwardProp: (prop) => prop !== "$size",
+})<{ $size?: SearchInputSize }>(({ theme, $size }) => ({
     "& .MuiInputBase-root": {
       paddingLeft: $size === "short" ? "9px" : "16px",
       paddingRight: $size === "short" ? "9px" : "10px",
@@ -100,6 +105,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onFilterClick,
   defaultSize = "long",
   fullwidth = false,
+  filterButtonRef,
   ...props
 }) => {
   const [hasValue, setHasValue] = useState(false);
@@ -134,7 +140,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   };
 
   return (
-    <Row gap={4}>
+    <Row gap={4} sx={props.sx} width={fullwidth ? "100%" : "auto"}>
       <Box
         onClick={() => {
           if (size === "short") {
@@ -143,13 +149,14 @@ const SearchInput: React.FC<SearchInputProps> = ({
             setTimeout(() => inputRef.current?.focus(), 0);
           }
         }}
-        flex={size === "long" ? 1 : 0}
+        width={fullwidth ? "100%" : "auto"}
       >
         <CustomTextField
           $size={size}
           placeholder={size === "short" ? "" : placeholder}
           value={value}
           onChange={(e) => handleChange(e)}
+          fullWidth={fullwidth}
           inputRef={inputRef}
           InputProps={{
             startAdornment: (
@@ -180,11 +187,13 @@ const SearchInput: React.FC<SearchInputProps> = ({
               </Box>
             ) : null,
           }}
+          sx={props.sx}
           {...props}
         />
       </Box>
       {onFilterClick && (
         <IconButton
+          ref={filterButtonRef}
           variant="tonal"
           color="neutral"
           square

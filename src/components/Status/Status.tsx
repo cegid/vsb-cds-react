@@ -10,14 +10,14 @@ import Typography from "../Typography/Typography";
 import Box from "../Box";
 import Icon from "../Icon";
 import Avatar from "../Avatar";
-
+export type StatusColor = PaletteNames | "white";
 export type StatusVariant = "dark" | "light" | "link";
 export interface StatusProps {
   /**
    * The text content displayed inside the status badge.
    * Text is rendered with ellipsis overflow handling for long content.
    */
-  label?: string;
+  label?: string | React.ReactElement;
 
   /**
    * Controls the size of the status badge.
@@ -33,7 +33,7 @@ export interface StatusProps {
    * Falls back to 'primary' if an invalid color is provided.
    * @default 'primary'
    */
-  color?: PaletteNames | "white";
+  color?: StatusColor;
 
   /**
    * Controls the visual style of the status badge.
