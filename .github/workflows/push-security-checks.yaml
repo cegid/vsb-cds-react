@@ -1,0 +1,45 @@
+name: Push - Security - BlackDuck and Secret Leaks
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      ACTIVATE_BLACKDUCK_DETECT:
+        required: false
+        type: boolean
+        default: false
+        description: "Activate Black Duck Detect scan"
+
+jobs:
+
+  checkout-and-scan:  # will be use for next new functionalities
+    name: Checkout Code and Prepare for Scans
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+
+  secrets-scan:
+    name: Secret Scan with TruffleHog
+    needs: checkout-and-scan
+    uses: cegid/vsb-devops/.github/workflows/template-security-scans.yaml@v4.1.0
+    with:
+      SCAN_TYPE: 'trufflehog'
+
+  blackduck-scan:
+    name: Black Duck Detect Scan
+    needs: [checkout-and-scan, secrets-scan]
+    uses: cegid/vsb-devops/.github/workflows/template-blackduck-scan.yaml@v4.1.0
+    with: 
+      DETECT_PROJECT_NAME: ${{ github.repository }}
+      DETECT_PROJECT_VERSION_NAME: ${{ github.ref_name }}
+      DETECT_SOURCE_PATH: '.'
+      DETECTOR_TYPE: 'ALL'
+      DETECT_PHASE: 'PLANNING'
+      ACTIVATE_BLACKDUCK_DETECT: ${{ inputs.ACTIVATE_BLACKDUCK_DETECT || github.event_name == 'push' }}
+    secrets: 
+      VSB_BLACKDUCK_API_TOKEN: ${{ secrets.VSB_BLACKDUCK_API_TOKEN }}
+      VSB_BLACKDUCK_URL: ${{ secrets.VSB_BLACKDUCK_URL }}
+
+  
