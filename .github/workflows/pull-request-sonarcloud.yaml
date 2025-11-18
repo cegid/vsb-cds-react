@@ -14,5 +14,5 @@ jobs:
       SONAR_EXCLUSIONS: ''
       EXTRA_SONAR_OPTIONS: ''
     secrets:
-      VSB_SONAR_TOKEN: ${{ secrets.VSB_SONAR_TOKEN}}
+      VSB_SONAR_TOKEN: ${{ secrets.VSB_SONAR_TOKEN }}
       HUGE_ICONS_AUTH_TOKEN: ${{ secrets.HUGE_ICONS_AUTH_TOKEN }}
