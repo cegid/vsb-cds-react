@@ -29,6 +29,19 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.23.1",
+    changes: [
+      {
+        component: "Select",
+        type: "fix",
+        description: [
+          "click on icon trigger select",
+          "open select before input if on bottom page"
+        ],
+      }
+    ],
+  },
+  {
     version: "1.23.0",
     changes: [
       {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useRef } from "react";
 import {
   styled,
   Select as CegidSelect,
@@ -9,10 +10,33 @@ import {
 import { borderNeutral, colorPalettes } from "../../theme/colors";
 import typography from "../../theme/typography";
 import Row from "../Row";
-import Icon from "../Icon";
+import Icon, { IconProps } from "../Icon";
 import Typography from "../Typography";
 
+function SelectIcon(props: IconProps) {
+  return (
+    <Icon size={16} {...props}>
+      arrow-down-01
+    </Icon>
+  );
+}
+
 const { primary, neutral, critical } = colorPalettes;
+
+const repositionMenuIfNeeded = (paperElement: HTMLElement) => {
+  const rect = paperElement.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+
+  if (rect.bottom > viewportHeight) {
+    const overflow = rect.bottom - viewportHeight;
+    const currentTop = parseFloat(paperElement.style.top) || rect.top;
+    const newTop = currentTop - overflow - 8;
+
+    if (newTop >= 8) {
+      paperElement.style.top = `${newTop}px`;
+    }
+  }
+};
 
 interface StyledSelectProps {
   outlined?: boolean;
@@ -25,6 +49,8 @@ const StyledSelect = styled(CegidSelect)<StyledSelectProps>(
       padding: "8px 8px 8px 16px",
       border: `1px solid ${borderNeutral}`,
       borderRadius: 8,
+      cursor: "pointer",
+      position: "relative",
       "&::before": {
         border: "none !important",
       },
@@ -34,9 +60,6 @@ const StyledSelect = styled(CegidSelect)<StyledSelectProps>(
           border: "none !important",
         },
       }),
-      "& .MuiInputAdornment-root": {
-        left: "8px",
-      },
       "&.Mui-error": {
         borderColor: outlined ? critical[80] : "transparent",
         backgroundColor: critical[99],
@@ -60,7 +83,9 @@ const StyledSelect = styled(CegidSelect)<StyledSelectProps>(
         },
       },
       "& .MuiSelect-icon": {
-        display: "none",
+        color: neutral[50],
+        right: 8,
+        pointerEvents: "none",
       },
       "&.Mui-focused::before": {
         borderColor: "transparent",
@@ -86,13 +111,6 @@ const StyledSelect = styled(CegidSelect)<StyledSelectProps>(
       },
       "&:focus": {
         backgroundColor: "transparent",
-      },
-    },
-    "& .MuiSelect-icon": {
-      color: neutral[50],
-      "&:hover": {
-        backgroundColor: "transparent",
-        color: neutral[10],
       },
     },
     "& .MuiMenu-paper": {
@@ -174,37 +192,62 @@ export interface SelectProps extends CegidSelectProps {
 }
 
 function Select(props: Readonly<SelectProps>) {
-  const { errorText, outlined = true, ...otherProps } = props;
+  const {
+    errorText,
+    outlined = true,
+    SelectProps: selectPropsProp,
+    ...otherProps
+  } = props;
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMenuEntered = useCallback(
+    (node: HTMLElement) => {
+      repositionMenuIfNeeded(node);
+
+      selectPropsProp?.MenuProps?.TransitionProps?.onEntered?.(node, false);
+    },
+    [selectPropsProp?.MenuProps?.TransitionProps?.onEntered]
+  );
+
+  const handleClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+
+    if (target.getAttribute("role") === "combobox") {
+      return;
+    }
+
+    const inputBase =
+      containerRef.current?.querySelector<HTMLElement>(".MuiInputBase-root");
+
+    if (inputBase && (inputBase === target || inputBase.contains(target))) {
+      const combobox =
+        containerRef.current?.querySelector<HTMLElement>('[role="combobox"]');
+      if (combobox) {
+        combobox.dispatchEvent(
+          new MouseEvent("mousedown", { bubbles: true, cancelable: true })
+        );
+      }
+    }
+  }, []);
 
   return (
     <>
       <StyledSelect
         {...otherProps}
+        ref={containerRef}
         outlined={outlined}
+        onClick={handleClick}
         SelectProps={{
+          ...selectPropsProp,
+          IconComponent: SelectIcon,
           MenuProps: {
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "left",
+            ...selectPropsProp?.MenuProps,
+            TransitionProps: {
+              ...selectPropsProp?.MenuProps?.TransitionProps,
+              onEntered: handleMenuEntered,
             },
-            transformOrigin: {
-              vertical: "top",
-              horizontal: "left",
-            },
-            disableScrollLock: true,
-            slotProps: {
-              paper: {
-                style: {
-                  marginTop: "4px",
-                },
-              },
-            },
-            ...otherProps.SelectProps?.MenuProps,
           },
-          ...otherProps.SelectProps,
-        }}
-        InputProps={{
-          endAdornment: <Icon size={16}>arrow-down-01</Icon>,
         }}
       />
 
