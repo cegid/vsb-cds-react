@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import {
   styled,
   Select as CegidSelect,
@@ -13,6 +14,27 @@ import Icon from "../Icon";
 import Typography from "../Typography";
 
 const { primary, neutral, critical } = colorPalettes;
+
+/**
+ * Repositionne le menu du Select si celui-ci déborde en bas de la fenêtre.
+ * Workaround pour un bug dans CegidSelect qui empêche le repositionnement automatique.
+ */
+const repositionMenuIfNeeded = (paperElement: HTMLElement) => {
+  const rect = paperElement.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+
+  // Si le menu déborde en bas
+  if (rect.bottom > viewportHeight) {
+    const overflow = rect.bottom - viewportHeight;
+    const currentTop = parseFloat(paperElement.style.top) || rect.top;
+    const newTop = currentTop - overflow - 8; // 8px de marge
+
+    // Vérifier qu'on ne sort pas par le haut
+    if (newTop >= 8) {
+      paperElement.style.top = `${newTop}px`;
+    }
+  }
+};
 
 interface StyledSelectProps {
   outlined?: boolean;
@@ -174,37 +196,33 @@ export interface SelectProps extends CegidSelectProps {
 }
 
 function Select(props: Readonly<SelectProps>) {
-  const { errorText, outlined = true, ...otherProps } = props;
+  const { errorText, outlined = true, SelectProps: selectPropsProp, ...otherProps } = props;
+
+  const handleMenuEntered = useCallback((node: HTMLElement) => {
+    // Le node est le Paper element du menu
+    repositionMenuIfNeeded(node);
+
+    // Appeler le callback original si défini
+    selectPropsProp?.MenuProps?.TransitionProps?.onEntered?.(node, false);
+  }, [selectPropsProp?.MenuProps?.TransitionProps?.onEntered]);
 
   return (
     <>
       <StyledSelect
         {...otherProps}
         outlined={outlined}
-        SelectProps={{
-          MenuProps: {
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "left",
-            },
-            transformOrigin: {
-              vertical: "top",
-              horizontal: "left",
-            },
-            disableScrollLock: true,
-            slotProps: {
-              paper: {
-                style: {
-                  marginTop: "4px",
-                },
-              },
-            },
-            ...otherProps.SelectProps?.MenuProps,
-          },
-          ...otherProps.SelectProps,
-        }}
         InputProps={{
           endAdornment: <Icon size={16}>arrow-down-01</Icon>,
+        }}
+        SelectProps={{
+          ...selectPropsProp,
+          MenuProps: {
+            ...selectPropsProp?.MenuProps,
+            TransitionProps: {
+              ...selectPropsProp?.MenuProps?.TransitionProps,
+              onEntered: handleMenuEntered,
+            },
+          },
         }}
       />
 
