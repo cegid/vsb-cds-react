@@ -1,6 +1,6 @@
-import { Fragment, useState } from "react";
+import React, { Fragment, useState } from "react";
 import Box from "../Box";
-import Icon from "../Icon";
+import Icon, { IconProps } from "../Icon";
 import Typography from "../Typography";
 import { BreadcrumbSegment } from "./Breadcrumbs";
 import { Menu, MenuItem, styled } from "@cegid/cds-react";
@@ -41,7 +41,7 @@ interface CollapseIconProps {
   expandedsibling: boolean;
 }
 
-export const CollapseIcon = styled(Icon, {
+export const CollapseIcon: React.FC<CollapseIconProps & IconProps> = styled(Icon, {
   shouldForwardProp: prop => prop !== 'expandedsibling',
 })<CollapseIconProps>(({ expandedsibling }) => ({
   marginLeft: 'auto',

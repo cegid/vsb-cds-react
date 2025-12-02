@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { List, styled, useMediaQuery } from "@cegid/cds-react";
 import Box from "../Box";
 import { primary } from "../../theme";
@@ -171,7 +171,7 @@ const NavContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-export const NavList = styled(List, {
+export const NavList: React.FC<ComponentWithExpandedProp & React.ComponentProps<typeof List>> = styled(List, {
   shouldForwardProp: prop => prop !== 'expanded',
 })<ComponentWithExpandedProp>(({ theme, expanded }) => ({
   display: 'flex',

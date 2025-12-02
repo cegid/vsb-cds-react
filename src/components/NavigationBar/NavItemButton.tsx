@@ -1,3 +1,4 @@
+import React, { useState, useRef, useEffect } from "react";
 import {
   ListItem,
   ListItemButton,
@@ -9,10 +10,9 @@ import type {
   ExtendedNavItem,
   ComponentWithExpandedProp,
 } from "./NavigationBar";
-import Icon from "../Icon";
+import Icon, { IconProps } from "../Icon";
 import Typography from "../Typography";
 import { primary } from "../../theme";
-import { useState, useRef, useEffect } from "react";
 import Tooltip from "../Tooltip";
 import IconButton from "../IconButton";
 
@@ -45,7 +45,9 @@ export interface NavListItemButtonProp {
   haschildren?: boolean;
 }
 
-export const NavListItemButton = styled(ListItemButton, {
+export const NavListItemButton: React.FC<
+  NavListItemButtonProp & React.ComponentProps<typeof ListItemButton>
+> = styled(ListItemButton, {
   shouldForwardProp: (prop) => {
     const key = String(prop);
     return !["active", "sidebar", "expanded", "haschildren"].includes(key);
@@ -81,7 +83,9 @@ export const NavListItemButton = styled(ListItemButton, {
   }
 );
 
-export const MenuIcon = styled(Icon, {
+export const MenuIcon: React.FC<
+  ComponentWithExpandedProp & IconProps
+> = styled(Icon, {
   shouldForwardProp: (prop) => prop !== "expanded",
 })<ComponentWithExpandedProp>(({ theme, expanded }) => ({
   alignItems: "center",
@@ -105,14 +109,14 @@ interface CollapseIconProps {
   expandednavitem?: boolean;
 }
 
-export const CollapseIcon = styled(Icon, {
+export const CollapseIcon: React.FC<CollapseIconProps & IconProps> = styled(Icon, {
   shouldForwardProp: (prop) => prop !== "expandednavitem",
 })<CollapseIconProps>(({ expandednavitem }) => ({
   transform: expandednavitem ? "rotate(180deg)" : undefined,
   transition: "transform 0.2s",
 }));
 
-export const NavListItemIcon = styled(ListItemIcon)(() => ({
+export const NavListItemIcon: React.FC<React.ComponentProps<typeof ListItemIcon>> = styled(ListItemIcon)(() => ({
   alignItems: "center",
   display: "flex",
   gap: "10px",
