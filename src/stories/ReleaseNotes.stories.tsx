@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.23.2",
+    changes: [
+      {
+        component: "NavigationBar",
+        type: "enhancement",
+        description: "add alwaysFloatingMenu prop",
+      }
+    ],
+  },
+  {
     version: "1.23.1",
     changes: [
       {
