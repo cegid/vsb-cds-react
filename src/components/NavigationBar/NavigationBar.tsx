@@ -203,14 +203,19 @@ export interface NavPanelProps extends ComponentWithExpandedProp {
    * Used for responsive layout adjustments.
    */
   sidebaropen?: boolean;
+  /**
+   * Whether the menu should always float, regardless of screen size.
+   */
+  alwaysfloatingmenu?: boolean;
+
 }
 
 const NavPanel = styled(Box, {
   shouldForwardProp: prop => {
     const key = String(prop);
-    return !['expanded', 'sidebaropen'].includes(key);
+    return !['expanded', 'sidebaropen', 'alwaysfloatingmenu'].includes(key);
   },
-})<NavPanelProps>(({ theme, expanded, sidebaropen = false })  => ({
+})<NavPanelProps>(({ theme, expanded, sidebaropen = false, alwaysfloatingmenu = false })  => ({
   display: 'flex',
   width: expanded ? '204px' : '48px' ,
   padding: theme.spacing(4),
@@ -231,7 +236,7 @@ const NavPanel = styled(Box, {
     /**
      * At or above 1535px we play on margin-right to simulate a relative position for the sidebar
      */
-    marginRight: sidebaropen ? SIDEBAR_WIDTH : 0,
+    marginRight: alwaysfloatingmenu ? undefined : (sidebaropen ? SIDEBAR_WIDTH : 0),
   },
 
 }));
@@ -296,6 +301,12 @@ interface NavigationBarProps {
    * ```
    */
   renderSidebarContent?: (parent: ExtendedNavItem | null, navItems: ExtendedNavItem[]) => React.ReactNode;
+
+  /**
+   * Whether the menu should always float, regardless of screen size.
+   */
+   alwaysFloatingMenu?: boolean;
+
 }
 
 const NavigationBar = ({
@@ -310,6 +321,7 @@ const NavigationBar = ({
   userTrigram,
   onLogOut,
   renderSidebarContent,
+  alwaysFloatingMenu
 }: NavigationBarProps) => {
 
   const [navItems, setNavItems] = useExtendedNavItems(headerNavItems, bodyNavItems, footerNavItems);
@@ -415,6 +427,7 @@ const NavigationBar = ({
         ref={navRef}
         expanded={isExpanded}
         sidebaropen={isSideBarOpen}
+        alwaysfloatingmenu={alwaysFloatingMenu}
       >
         <NavHeader
           headerNavItems={extandedHeaderNavItems}
