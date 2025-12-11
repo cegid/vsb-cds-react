@@ -14,7 +14,7 @@ import Typography from "../Typography";
 
 const { primary, neutral, critical } = colorPalettes;
 
-const CustomAutocomplete = styled(CegidAutocomplete)<{ hasError?: boolean }>(
+const CustomAutocomplete = styled(CegidAutocomplete, {shouldForwardProp: (prop) => prop !== 'hasError',})<{ hasError?: boolean }>(
   ({ hasError }) => ({
     "& .MuiInputBase-root": {
       padding: "6px 8px 4px 14px",

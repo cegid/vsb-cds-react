@@ -29,6 +29,16 @@ interface ReleaseNote {
 
 const releaseNotes: ReleaseNote[] = [
   {
+    version: "1.23.3",
+    changes: [
+      {
+        component: "Autocomplete",
+        type: "enhancement",
+        description: "patch for unit test",
+      }
+    ],
+  },
+  {
     version: "1.23.2",
     changes: [
       {
